@@ -91,6 +91,15 @@ class DirectoryMissionQueue:
         self._save(failed)
         return failed
 
+    def record_cycle(self, mission_id: str, cycle_count: int) -> Mission:
+        """Persist cycle progress for a running mission."""
+
+        mission = self.get(mission_id)
+        self._require_status(mission, {MissionStatus.RUNNING})
+        updated = mission.with_status(MissionStatus.RUNNING, cycle_count=cycle_count)
+        self._save(updated)
+        return updated
+
     def cancel(self, mission_id: str, reason: str | None = None) -> Mission:
         """Cancel a queued or running mission."""
 
