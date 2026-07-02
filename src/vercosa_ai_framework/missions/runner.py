@@ -10,6 +10,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Protocol
 
+from vercosa_ai_framework.guardian import (
+    GuardianAction,
+    GuardianDecision,
+    GuardianEvaluationContext,
+    GuardianMode,
+)
 from vercosa_ai_framework.missions.queue import DirectoryMissionQueue, MissionQueueError
 from vercosa_ai_framework.missions.types import Mission, MissionResult, MissionStatus
 from vercosa_ai_framework.runtime import RuntimeAdapter, RuntimeExecutionRequest, RuntimeStatus
@@ -40,6 +46,13 @@ class AutoCommitter(Protocol):
         """Commit files produced by the mission after validation."""
 
 
+class GuardianEvaluator(Protocol):
+    """Testable boundary for Guardian Engine integrations."""
+
+    def evaluate(self, context: GuardianEvaluationContext) -> GuardianDecision:
+        """Evaluate mission policy before runtime execution."""
+
+
 class MissionRunner:
     """Execute one queued mission at a time through a Runtime Adapter."""
 
@@ -49,11 +62,17 @@ class MissionRunner:
         runtime: RuntimeAdapter,
         *,
         auto_committer: AutoCommitter | None = None,
+        guardian: GuardianEvaluator | None = None,
+        guardian_mode: GuardianMode | str = GuardianMode.STANDARD,
+        interactive: bool = False,
         runner_id: str = "mission-runner",
     ) -> None:
         self.queue = queue
         self.runtime = runtime
         self.auto_committer = auto_committer
+        self.guardian = guardian
+        self.guardian_mode = GuardianMode(guardian_mode)
+        self.interactive = interactive
         self.runner_id = runner_id
         self.results: dict[str, MissionResult] = {}
         self.audit_log: list[str] = []
@@ -80,6 +99,14 @@ class MissionRunner:
         self._log(mission_id, "mission started")
 
         try:
+            guardian_decision = self._evaluate_guardian(running)
+            if guardian_decision is not None:
+                policy_result = self._result_from_guardian(running, guardian_decision)
+                if policy_result is not None:
+                    self.queue.fail(mission_id, self._error_summary(policy_result))
+                    self._record_result(policy_result)
+                    return policy_result
+
             max_cycles = self._max_cycles_for(running)
             if max_cycles < 1:
                 return self._fail(running, "mission requires max_cycles >= 1")
@@ -95,6 +122,7 @@ class MissionRunner:
 
                 if runtime_result.status == RuntimeStatus.DONE:
                     result = self._result_from_runtime(running, MissionStatus.DONE, runtime_result)
+                    result = self._apply_guardian_warnings(result, guardian_decision)
                     result = self._validate(running, result)
                     if result.status == MissionStatus.DONE:
                         result = self._auto_commit(running, result)
@@ -107,6 +135,7 @@ class MissionRunner:
 
                 if runtime_result.status in {RuntimeStatus.FAILED, RuntimeStatus.STOPPED}:
                     result = self._result_from_runtime(running, MissionStatus.FAILED, runtime_result)
+                    result = self._apply_guardian_warnings(result, guardian_decision)
                     self.queue.fail(mission_id, self._error_summary(result))
                     self._record_result(result)
                     return result
@@ -118,6 +147,7 @@ class MissionRunner:
                 last_result,
                 errors=(error,),
             )
+            result = self._apply_guardian_warnings(result, guardian_decision)
             self.queue.fail(mission_id, error)
             self._record_result(result)
             return result
@@ -148,6 +178,89 @@ class MissionRunner:
             logging_policy={"sanitize_secrets": True},
             approval_policy=dict(mission.commit_policy),
         )
+
+    def _evaluate_guardian(self, mission: Mission) -> GuardianDecision | None:
+        if self.guardian is None:
+            return None
+
+        mode = GuardianMode(mission.guardian_mode or self.guardian_mode)
+        context = GuardianEvaluationContext(
+            mission_id=mission.mission_id,
+            evaluation_type="mission_pre_execution",
+            guardian_mode=mode,
+            mission_goal=mission.goal,
+            spec_refs=mission.spec_refs,
+            guardian_refs=mission.guardian_refs,
+            workspace=mission.workspace,
+            requested_action=mission.title,
+            target_paths=self._tuple_from(mission.constraints.get("target_paths", ())),
+            data_sensitivity=mission.security_policy.get("data_sensitivity"),
+            network_policy=dict(mission.security_policy.get("network_policy", {})),
+            provider_policy=dict(mission.security_policy.get("provider_policy", {})),
+            budget_policy=dict(mission.budget_policy),
+            execution_limits=dict(mission.execution_limits),
+            metadata={
+                "acceptance_criteria": mission.acceptance_criteria,
+                "deliverables": mission.validation_policy.get("expected_artifacts", ()),
+                "requested_by": mission.requested_by,
+            },
+        )
+        decision = self.guardian.evaluate(context)
+        self._log(mission.mission_id, f"guardian decision={decision.decision.value} mode={decision.guardian_mode.value}")
+        return decision
+
+    def _tuple_from(self, value: object) -> tuple[str, ...]:
+        if value is None:
+            return ()
+        if isinstance(value, str):
+            return (value,)
+        return tuple(str(item) for item in value)
+
+    def _result_from_guardian(self, mission: Mission, decision: GuardianDecision) -> MissionResult | None:
+        if decision.decision == GuardianAction.ALLOW or decision.decision == GuardianAction.WARN:
+            return None
+
+        reason = self._guardian_reason(decision)
+        if decision.decision == GuardianAction.REQUIRE_APPROVAL:
+            error = f"guardian approval required: {reason}"
+            if not self.interactive:
+                return MissionResult(
+                    mission_id=mission.mission_id,
+                    status=MissionStatus.FAILED,
+                    warnings=self._guardian_warnings(decision),
+                    errors=(error,),
+                    requires_review=True,
+                )
+        else:
+            error = f"guardian blocked mission: {reason}"
+            return MissionResult(
+                mission_id=mission.mission_id,
+                status=MissionStatus.FAILED,
+                warnings=self._guardian_warnings(decision),
+                errors=(error,),
+            )
+
+        return MissionResult(
+            mission_id=mission.mission_id,
+            status=MissionStatus.FAILED,
+            warnings=self._guardian_warnings(decision),
+            errors=("guardian approval flow is not implemented",),
+            requires_review=True,
+        )
+
+    def _apply_guardian_warnings(self, result: MissionResult, decision: GuardianDecision | None) -> MissionResult:
+        if decision is None or decision.decision != GuardianAction.WARN:
+            return result
+        warnings = (*result.warnings, *self._guardian_warnings(decision))
+        return self._copy_result(result, warnings=warnings)
+
+    def _guardian_warnings(self, decision: GuardianDecision) -> tuple[str, ...]:
+        warnings = decision.warnings or decision.reasons
+        return tuple(f"guardian warning: {warning}" for warning in warnings)
+
+    def _guardian_reason(self, decision: GuardianDecision) -> str:
+        parts = decision.reasons or decision.approval_requirements or decision.blocked_items or decision.required_actions
+        return "; ".join(parts) or decision.decision.value
 
     def _validate(self, mission: Mission, result: MissionResult) -> MissionResult:
         expected = tuple(mission.validation_policy.get("expected_artifacts", ()))
@@ -279,6 +392,7 @@ class MissionRunner:
 __all__ = [
     "AutoCommitResult",
     "AutoCommitter",
+    "GuardianEvaluator",
     "MissionRunner",
     "MissionRunnerError",
 ]

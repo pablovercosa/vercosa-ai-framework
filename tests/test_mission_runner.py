@@ -97,6 +97,7 @@ def test_runner_executes_next_queued_mission_to_done(tmp_path):
     assert result.status == MissionStatus.DONE
     assert stored.status == MissionStatus.DONE
     assert stored.cycle_count == 1
+    assert result.warnings == ()
     assert runtime.requests[0].mission_id == mission.mission_id
     assert runtime.requests[0].context["mission_goal"] == "Write docs"
     assert runner.results[mission.mission_id].status == MissionStatus.DONE

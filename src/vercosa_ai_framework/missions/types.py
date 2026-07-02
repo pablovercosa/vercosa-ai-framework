@@ -39,6 +39,7 @@ class Mission:
     priority: int = 100
     spec_refs: tuple[str, ...] = field(default_factory=tuple)
     guardian_refs: tuple[str, ...] = field(default_factory=tuple)
+    guardian_mode: str = "standard"
     constraints: dict[str, Any] = field(default_factory=dict)
     acceptance_criteria: tuple[str, ...] = field(default_factory=tuple)
     validation_policy: dict[str, Any] = field(default_factory=dict)
