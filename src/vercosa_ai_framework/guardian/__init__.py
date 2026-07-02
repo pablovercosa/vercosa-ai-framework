@@ -1,5 +1,6 @@
 """Guardian Engine public contracts."""
 
+from vercosa_ai_framework.guardian.engine import GuardianEngine
 from vercosa_ai_framework.guardian.policies import (
     GuardianEvaluationContext,
     GuardianPolicy,
@@ -17,6 +18,7 @@ from vercosa_ai_framework.guardian.types import (
 __all__ = [
     "GuardianAction",
     "GuardianDecision",
+    "GuardianEngine",
     "GuardianEvaluationContext",
     "GuardianMode",
     "GuardianPolicy",
