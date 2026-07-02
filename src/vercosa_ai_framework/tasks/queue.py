@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
 from datetime import datetime
 from uuid import uuid4
 
@@ -172,6 +171,34 @@ class TaskQueue:
         self.updated_at = utc_now_iso()
         return self._result(False, task=failed, attempt=self._attempts[task_id][-1], errors=(error_message,) if error_message else ())
 
+    def skip_task(self, task_id: str, *, reason: str) -> TaskQueueResult:
+        """Mark a non-terminal task as skipped with a recorded reason."""
+
+        task = self._require_task(task_id)
+        if task.state in self.TERMINAL_STATES:
+            raise TaskQueueError(f"task is already terminal: {task_id}")
+        finished_at = utc_now_iso()
+        skipped = task.with_state(TaskQueueState.SKIPPED, finished_at=finished_at, last_error=reason)
+        self._tasks[task_id] = skipped
+        if task.state == TaskQueueState.RUNNING:
+            self._finish_latest_attempt(task_id, TaskQueueState.SKIPPED, finished_at=finished_at)
+        self.updated_at = utc_now_iso()
+        return self._result(True, task=skipped, message="task skipped", warnings=(reason,))
+
+    def cancel_task(self, task_id: str, *, reason: str) -> TaskQueueResult:
+        """Mark a non-terminal task as cancelled with a recorded reason."""
+
+        task = self._require_task(task_id)
+        if task.state in self.TERMINAL_STATES:
+            raise TaskQueueError(f"task is already terminal: {task_id}")
+        finished_at = utc_now_iso()
+        cancelled = task.with_state(TaskQueueState.CANCELLED, finished_at=finished_at, last_error=reason)
+        self._tasks[task_id] = cancelled
+        if task.state == TaskQueueState.RUNNING:
+            self._finish_latest_attempt(task_id, TaskQueueState.CANCELLED, finished_at=finished_at)
+        self.updated_at = utc_now_iso()
+        return self._result(False, task=cancelled, message="task cancelled", warnings=(reason,))
+
     def requeue_failed(self, task_id: str, *, next_attempt_at: str | None = None) -> TaskQueueResult:
         """Requeue a failed task when finite retry budget remains."""
 
@@ -190,6 +217,12 @@ class TaskQueue:
         self._tasks[task_id] = queued
         self.updated_at = utc_now_iso()
         return self._result(True, task=queued, message="task requeued")
+
+    def retry_remaining(self, task_id: str) -> bool:
+        """Return whether a failed task still has finite retry budget."""
+
+        task = self._require_task(task_id)
+        return task.attempt_count < task.max_attempts
 
     def block_task(self, task_id: str, *, reason: str, blocked_by: tuple[str, ...] = ()) -> TaskQueueResult:
         """Block a queued or running task with an auditable reason."""
@@ -212,6 +245,29 @@ class TaskQueue:
         self._tasks[task_id] = queued
         self.updated_at = utc_now_iso()
         return self._result(True, task=queued, message="task unblocked")
+
+    def block_tasks_with_failed_dependencies(self) -> tuple[TaskQueueResult, ...]:
+        """Block queued tasks whose required dependencies have failed."""
+
+        results: list[TaskQueueResult] = []
+        for task in self._ordered_tasks():
+            if task.state != TaskQueueState.QUEUED:
+                continue
+            failed_dependencies = tuple(
+                dependency
+                for dependency in task.dependencies
+                if dependency in self._tasks and self._tasks[dependency].state == TaskQueueState.FAILED
+            )
+            if not failed_dependencies:
+                continue
+            results.append(
+                self.block_task(
+                    task.task_id,
+                    reason="dependency failed",
+                    blocked_by=failed_dependencies,
+                )
+            )
+        return tuple(results)
 
     def _ordered_tasks(self) -> list[Task]:
         return sorted(
