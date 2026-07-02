@@ -22,3 +22,9 @@ node_modules/
 
 # OpenCode / OMO local runtime
 .omo/
+
+# Mission runtime
+logs/
+missions/running/
+missions/failed/
+*.pid
