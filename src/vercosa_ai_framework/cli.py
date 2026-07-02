@@ -8,11 +8,21 @@ import platform
 import sys
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 
 from vercosa_ai_framework import __version__
 from vercosa_ai_framework.guardian import GuardianDecision, GuardianEngine, GuardianEvaluationContext, GuardianMode
 from vercosa_ai_framework.missions import DirectoryMissionQueue, Mission, MissionResult, MissionRunner, MissionStatus
 from vercosa_ai_framework.runtime import OpenCodeRunOptions, OpenCodeRuntimeAdapter, RuntimeExecutionRequest
+from vercosa_ai_framework.workflows import (
+    TaskDependency,
+    TaskStatus,
+    Workflow,
+    WorkflowEngine,
+    WorkflowResult,
+    WorkflowStatus,
+    WorkflowTask,
+)
 
 
 DEFAULT_QUEUE_DIR = ".vaf/missions"
@@ -76,6 +86,32 @@ def build_parser() -> argparse.ArgumentParser:
     run_worker.add_argument("--model", help="OpenCode model id.")
     run_worker.add_argument("--small-model", help="OpenCode small model id.")
     run_worker.add_argument("--auto-approve", action="store_true", help="Pass --auto-approve to OpenCode.")
+
+    workflow_status = subparsers.add_parser("workflow-status", help="Print status for a workflow file.")
+    workflow_status.add_argument("file", help="Workflow JSON file to inspect.")
+
+    workflow_validate = subparsers.add_parser("workflow-validate", help="Validate a workflow file.")
+    workflow_validate.add_argument("file", help="Workflow JSON file to validate.")
+    workflow_validate.add_argument(
+        "--guardian-mode",
+        choices=[mode.value for mode in GuardianMode],
+        default=GuardianMode.STANDARD.value,
+        help="Guardian mode used for task validation. Defaults to standard.",
+    )
+
+    workflow_run = subparsers.add_parser("workflow-run", help="Run a workflow file through the Workflow Engine.")
+    workflow_run.add_argument("file", help="Workflow JSON file to run.")
+    workflow_run.add_argument("--workspace", default=".", help="Workspace used for task execution. Defaults to current directory.")
+    workflow_run.add_argument("--dry-run", action="store_true", help="Prepare task commands without executing OpenCode.")
+    workflow_run.add_argument(
+        "--guardian-mode",
+        choices=[mode.value for mode in GuardianMode],
+        default=GuardianMode.STANDARD.value,
+        help="Guardian mode used for task execution. Defaults to standard.",
+    )
+    workflow_run.add_argument("--model", help="OpenCode model id.")
+    workflow_run.add_argument("--small-model", help="OpenCode small model id.")
+    workflow_run.add_argument("--auto-approve", action="store_true", help="Pass --auto-approve to OpenCode.")
     return parser
 
 
@@ -106,6 +142,15 @@ def run(argv: list[str] | None = None) -> int:
 
     if args.command == "run-worker":
         return _run_worker(args)
+
+    if args.command == "workflow-status":
+        return _workflow_status(args.file)
+
+    if args.command == "workflow-validate":
+        return _workflow_validate(args.file, args.guardian_mode)
+
+    if args.command == "workflow-run":
+        return _workflow_run(args)
 
     parser.print_help()
     return 0
@@ -193,6 +238,312 @@ def _runtime_from_args(args: argparse.Namespace) -> OpenCodeRuntimeAdapter:
             auto_approve=bool(args.auto_approve),
         )
     )
+
+
+def _workflow_status(file_path: str) -> int:
+    try:
+        workflow = _load_workflow_file(Path(file_path))
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    print(f"workflow: {workflow.workflow_id}")
+    print(f"mission: {workflow.mission_id}")
+    print(f"status: {workflow.status.value}")
+    print(f"tasks: {len(workflow.tasks)}")
+    for status in TaskStatus:
+        count = sum(1 for task in workflow.tasks if task.status == status)
+        print(f"tasks.{status.value}: {count}")
+    return 0
+
+
+def _workflow_validate(file_path: str, guardian_mode: str) -> int:
+    try:
+        workflow = _load_workflow_file(Path(file_path))
+        _validate_workflow(workflow)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    print(f"workflow: {workflow.workflow_id}")
+    print("validation: ok")
+    for task in workflow.tasks:
+        decision = _evaluate_workflow_task(workflow, task, GuardianMode(guardian_mode), workspace=".")
+        print(f"task: {task.task_id}")
+        _print_guardian_decision(decision)
+        if not decision.allowed:
+            return 1
+    return 0
+
+
+def _workflow_run(args: argparse.Namespace) -> int:
+    try:
+        workflow = _load_workflow_file(Path(args.file))
+        _validate_workflow(workflow)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    runtime = _runtime_from_args(args)
+    guardian_mode = GuardianMode(args.guardian_mode)
+    if args.dry_run:
+        return _print_workflow_dry_run(runtime, workflow, guardian_mode, args.workspace)
+
+    result = WorkflowEngine(
+        runtime,
+        GuardianEngine(),
+        workspace=args.workspace,
+        guardian_mode=guardian_mode,
+    ).execute(workflow)
+    return _print_workflow_result(result)
+
+
+def _load_workflow_file(path: Path) -> Workflow:
+    if not path.exists() or not path.is_file():
+        msg = f"workflow file not found: {path}"
+        raise ValueError(msg)
+    if path.suffix.lower() != ".json":
+        goal = path.read_text(encoding="utf-8")
+        workflow_id = path.stem
+        mission_id = path.stem
+        return Workflow(
+            workflow_id=workflow_id,
+            mission_id=mission_id,
+            title=path.stem,
+            goal=goal,
+            tasks=(
+                WorkflowTask(
+                    workflow_id=workflow_id,
+                    mission_id=mission_id,
+                    title=path.stem,
+                    goal=goal,
+                ),
+            ),
+        )
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        msg = f"invalid workflow JSON: {exc}"
+        raise ValueError(msg) from exc
+    if not isinstance(data, dict):
+        msg = "invalid workflow JSON: expected object"
+        raise ValueError(msg)
+
+    required = ("mission_id", "title", "goal")
+    missing = [key for key in required if key not in data]
+    if missing:
+        msg = f"invalid workflow JSON: missing required field(s): {', '.join(missing)}"
+        raise ValueError(msg)
+
+    workflow_id = str(data.get("workflow_id") or data["mission_id"])
+    mission_id = str(data["mission_id"])
+    tasks_data = data.get("tasks", ())
+    if not isinstance(tasks_data, list | tuple):
+        msg = "invalid workflow JSON: tasks must be an array"
+        raise ValueError(msg)
+
+    tasks = tuple(_workflow_task_from_data(item, workflow_id, mission_id) for item in tasks_data)
+    workflow_kwargs = {
+        "workflow_id": workflow_id,
+        "mission_id": mission_id,
+        "title": str(data["title"]),
+        "goal": str(data["goal"]),
+        "status": WorkflowStatus(data.get("status", WorkflowStatus.DRAFT.value)),
+        "spec_refs": _tuple_from(data.get("spec_refs", ())),
+        "guardian_refs": _tuple_from(data.get("guardian_refs", ())),
+        "policy_refs": _tuple_from(data.get("policy_refs", ())),
+        "tasks": tasks,
+        "dependency_graph": _dict_of_tuples(data.get("dependency_graph", {})),
+        "execution_mode": str(data.get("execution_mode", "sequential")),
+        "execution_limits": _dict_from(data.get("execution_limits", {"max_parallel_tasks": 1})),
+        "budget_policy": _dict_from(data.get("budget_policy", {})),
+        "validation_policy": _dict_from(data.get("validation_policy", {})),
+        "retry_policy": _dict_from(data.get("retry_policy", {"max_replans": 0})),
+    }
+    return Workflow(**workflow_kwargs)
+
+
+def _workflow_task_from_data(data: object, workflow_id: str, mission_id: str) -> WorkflowTask:
+    if not isinstance(data, dict):
+        msg = "invalid workflow JSON: each task must be an object"
+        raise ValueError(msg)
+    required = ("title", "goal")
+    missing = [key for key in required if key not in data]
+    if missing:
+        msg = f"invalid workflow JSON: task missing required field(s): {', '.join(missing)}"
+        raise ValueError(msg)
+
+    dependencies = data.get("dependencies", ())
+    if not isinstance(dependencies, list | tuple):
+        msg = "invalid workflow JSON: task dependencies must be an array"
+        raise ValueError(msg)
+
+    task_kwargs = {
+        "workflow_id": workflow_id,
+        "mission_id": mission_id,
+        "title": str(data["title"]),
+        "goal": str(data["goal"]),
+        "task_id": str(data["task_id"]) if data.get("task_id") else WorkflowTask(title="", goal="", workflow_id=workflow_id, mission_id=mission_id).task_id,
+        "task_type": str(data.get("task_type", "generic")),
+        "status": TaskStatus(data.get("status", TaskStatus.PENDING.value)),
+        "inputs": _dict_from(data.get("inputs", {})),
+        "expected_outputs": _tuple_from(data.get("expected_outputs", ())),
+        "acceptance_criteria": _tuple_from(data.get("acceptance_criteria", ())),
+        "dependencies": tuple(_task_dependency_from_data(item) for item in dependencies),
+        "blocked_by": _tuple_from(data.get("blocked_by", ())),
+        "priority": int(data.get("priority", 100)),
+        "risk_level": str(data.get("risk_level", "low")),
+        "required_capabilities": _tuple_from(data.get("required_capabilities", ())),
+        "model_policy": _dict_from(data.get("model_policy", {})),
+        "execution_limits": _dict_from(data.get("execution_limits", {})),
+        "retry_policy": _dict_from(data.get("retry_policy", {"max_attempts": 1})),
+        "validation_policy": _dict_from(data.get("validation_policy", {})),
+        "assigned_agent_ref": data.get("assigned_agent_ref"),
+        "artifacts": _tuple_from(data.get("artifacts", ())),
+    }
+    return WorkflowTask(**task_kwargs)
+
+
+def _task_dependency_from_data(data: object) -> TaskDependency:
+    if not isinstance(data, dict):
+        msg = "invalid workflow JSON: task dependency must be an object"
+        raise ValueError(msg)
+    if "target_ref" not in data:
+        msg = "invalid workflow JSON: task dependency missing required field: target_ref"
+        raise ValueError(msg)
+    return TaskDependency(
+        dependency_type=str(data.get("dependency_type", "requires_completion")),
+        target_ref=str(data["target_ref"]),
+        reason=str(data.get("reason", "")),
+        required=bool(data.get("required", True)),
+        metadata=_dict_from(data.get("metadata", {})),
+    )
+
+
+def _validate_workflow(workflow: Workflow) -> None:
+    if workflow.execution_mode != "sequential":
+        msg = f"unsupported execution mode: {workflow.execution_mode}"
+        raise ValueError(msg)
+    task_ids = {task.task_id for task in workflow.tasks}
+    if len(task_ids) != len(workflow.tasks):
+        msg = "invalid workflow: duplicate task_id"
+        raise ValueError(msg)
+    for task in workflow.tasks:
+        for dependency in task.dependencies:
+            if dependency.required and dependency.target_ref not in task_ids:
+                msg = f"unresolvable dependency: task {task.task_id} requires {dependency.target_ref}"
+                raise ValueError(msg)
+
+
+def _dict_from(value: object) -> dict[str, Any]:
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        msg = "invalid workflow JSON: expected object"
+        raise ValueError(msg)
+    return dict(value)
+
+
+def _dict_of_tuples(value: object) -> dict[str, tuple[str, ...]]:
+    return {str(key): _tuple_from(item) for key, item in _dict_from(value).items()}
+
+
+def _print_workflow_dry_run(
+    runtime: OpenCodeRuntimeAdapter,
+    workflow: Workflow,
+    guardian_mode: GuardianMode,
+    workspace: str,
+) -> int:
+    print(f"workflow: {workflow.workflow_id}")
+    print("status: dry-run")
+    for task in workflow.tasks:
+        decision = _evaluate_workflow_task(workflow, task, guardian_mode, workspace)
+        print(f"task: {task.task_id}")
+        _print_guardian_decision(decision)
+        if not decision.allowed:
+            return 1
+        request = _request_for_workflow_task(workflow, task, workspace)
+        result = runtime.execute_task(request)
+        if result.errors:
+            print(f"task.status: blocked")
+            print(f"errors: {'; '.join(result.errors)}")
+            return 1
+        print("task.status: dry-run")
+        if result.commands_executed:
+            print(f"command: {result.commands_executed[0]}")
+    return 0
+
+
+def _evaluate_workflow_task(
+    workflow: Workflow,
+    task: WorkflowTask,
+    guardian_mode: GuardianMode,
+    workspace: str,
+) -> GuardianDecision:
+    return GuardianEngine().evaluate(
+        GuardianEvaluationContext(
+            mission_id=workflow.mission_id,
+            evaluation_type="workflow_task_pre_execution",
+            evaluation_id=f"{workflow.workflow_id}:{task.task_id}",
+            guardian_mode=guardian_mode,
+            mission_goal=workflow.goal,
+            spec_refs=workflow.spec_refs,
+            guardian_refs=workflow.guardian_refs,
+            workspace=workspace,
+            requested_action=f"{task.title}\n{task.goal}",
+            planned_command=str(task.inputs.get("planned_command")) if task.inputs.get("planned_command") else None,
+            target_paths=_tuple_from(task.inputs.get("target_paths", ())) + task.expected_outputs + task.artifacts,
+            budget_policy=dict(workflow.budget_policy),
+            execution_limits={**workflow.execution_limits, **task.execution_limits},
+            metadata={
+                "workflow_id": workflow.workflow_id,
+                "task_id": task.task_id,
+                "task_type": task.task_type,
+                "risk_level": task.risk_level,
+                "acceptance_criteria": task.acceptance_criteria,
+                "required": bool(task.validation_policy.get("required", True)),
+            },
+        )
+    )
+
+
+def _request_for_workflow_task(workflow: Workflow, task: WorkflowTask, workspace: str) -> RuntimeExecutionRequest:
+    return RuntimeExecutionRequest(
+        mission_id=workflow.mission_id,
+        workspace=workspace,
+        workflow_id=workflow.workflow_id,
+        task_id=task.task_id,
+        context={
+            "workflow_title": workflow.title,
+            "workflow_goal": workflow.goal,
+            "task_title": task.title,
+            "task_goal": task.goal,
+            "prompt": task.goal,
+            "task_type": task.task_type,
+            "inputs": task.inputs,
+            "expected_outputs": task.expected_outputs,
+            "acceptance_criteria": task.acceptance_criteria,
+            "model_policy": task.model_policy,
+        },
+        execution_limits=dict(task.execution_limits),
+        logging_policy={"sanitize_secrets": True},
+        approval_policy=dict(task.validation_policy),
+    )
+
+
+def _print_workflow_result(result: WorkflowResult) -> int:
+    print(f"workflow: {result.workflow_id}")
+    print(f"mission: {result.mission_id}")
+    print(f"status: {result.status.value}")
+    if result.summary:
+        print(f"summary: {result.summary}")
+    for task_result in result.task_results:
+        print(f"task: {task_result.task_id}")
+        print(f"task.status: {task_result.status.value}")
+    if result.errors:
+        print(f"errors: {'; '.join(result.errors)}")
+    return 0 if result.status == WorkflowStatus.DONE else 1
 
 
 def _check_mission(file_path: str, guardian_mode: str) -> int:
