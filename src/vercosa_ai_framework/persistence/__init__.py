@@ -1,5 +1,6 @@
 """Persistence Layer public contracts."""
 
+from vercosa_ai_framework.persistence.filesystem import FilesystemRepository
 from vercosa_ai_framework.persistence.repository import Repository
 from vercosa_ai_framework.persistence.types import (
     EntityRef,
@@ -10,6 +11,7 @@ from vercosa_ai_framework.persistence.types import (
 
 __all__ = [
     "EntityRef",
+    "FilesystemRepository",
     "PersistedRecord",
     "PersistenceResult",
     "QueryFilter",
