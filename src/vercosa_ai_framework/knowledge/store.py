@@ -133,9 +133,19 @@ def _result_from_document(query: KnowledgeQuery, document: KnowledgeDocument, sc
         content_hash=document.content_hash,
         sensitivity=document.sensitivity,
         trust_level=document.trust_level,
+        warnings=_document_warnings(document),
         redactions_applied=document.redactions_applied,
         metadata={"ranking_policy": query.ranking_policy},
     )
+
+
+def _document_warnings(document: KnowledgeDocument) -> tuple[str, ...]:
+    value = document.metadata.get("warnings", ())
+    if isinstance(value, str):
+        return (value,)
+    if isinstance(value, tuple | list | set):
+        return tuple(str(item) for item in value)
+    return ()
 
 
 def _citations(document: KnowledgeDocument) -> tuple[str, ...]:
