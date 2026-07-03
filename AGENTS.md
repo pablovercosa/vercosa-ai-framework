@@ -287,3 +287,20 @@ Ao trabalhar neste projeto:
 6. Nunca implemente sem Spec.
 7. Se faltar decisão, gere uma pergunta objetiva.
 8. Se houver risco arquitetural, proponha ADR.
+
+## Regras de documentação
+
+Toda documentação do framework deve seguir estas regras:
+
+1. Use o padrão oficial em docs/documentation/readme-standard.md para README.md principal, READMEs de módulos e novos mapas navegáveis.
+2. Use docs/templates/readme-template.md como base para novos README.md de módulos.
+3. Todo README.md de módulo deve linkar para o README.md principal.
+4. Todo README.md de módulo deve linkar para a Spec relacionada em specs/framework/.
+5. Todo README.md de módulo deve linkar para módulos imediatamente acima e abaixo na arquitetura quando existirem.
+6. docs/architecture/module-index.md deve ser mantido como mapa navegável dos módulos do framework.
+7. Links devem ser relativos.
+8. Documentação deve separar explicitamente objetivo, responsabilidades, não responsabilidades, entradas, saídas, dependências, status e próximos passos.
+9. Status permitido para módulos: spec, contracts, MVP, experimental ou stable.
+10. Não documente comportamento inexistente como estável.
+11. Não use linguagem genérica ou marketing quando houver responsabilidade técnica específica.
+12. Se houver inconsistência entre Spec, documentação e código, registre em docs/alignment/open-questions.md antes de expandir implementação.
