@@ -13,9 +13,12 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Implementa `DeterministicContextRouter` para candidatos explícitos de contexto.
 - Define a porta abstrata `TokenBudgetManager`.
 - Implementa `SimpleTokenBudgetManager` com estimativa determinística simples.
-- Deduplica candidatos por hash ou id.
+- Deduplica candidatos por id, hash ou conteúdo.
 - Respeita limite básico de tokens estimados.
+- Reserva tokens de output antes de preencher contexto.
 - Preserva citações e redactions já presentes nos itens.
+- Registra omissões por duplicação, orçamento insuficiente ou citação obrigatória ausente.
+- Gera warnings determinísticos para itens citáveis sem citação quando citação não for obrigatória.
 - Produz `ContextPackage` rastreável.
 
 ## O Que Este Módulo Não Faz
@@ -56,6 +59,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - `TokenBudget`: orçamento máximo e reserva de output.
 - `TokenEstimate`: estimativa determinística de tokens.
 - `TokenBudgetDecision`: decisão de inclusão ou omissão por orçamento.
+- `TokenBudgetResult`: resultado agregado com estimativa, reserva, tokens usados, tokens restantes, itens aceitos e omitidos.
 - `MemoryLayer`: descrição storage agnostic de uma camada de memória.
 - `ContextRouter`: contrato abstrato do roteador.
 - `DeterministicContextRouter`: roteador MVP sem efeitos externos.
@@ -67,12 +71,14 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 Entradas:
 
 - `ContextRequest` com objetivo, escopo, orçamento e candidatos explícitos.
+- Lista explícita de `ContextItem` passada para `DeterministicContextRouter.route()` quando o chamador não quiser armazenar candidatos no request.
 - `ContextSource` e `ContextItem` criados por chamadores autorizados.
 
 Saídas:
 
 - `ContextPackage` com itens, fontes, citações, estimativas, redactions e omissões.
 - `TokenBudgetDecision` para itens incluídos ou omitidos.
+- `TokenBudgetResult` produzido pelo `SimpleTokenBudgetManager` para avaliação agregada de orçamento.
 
 ## Dependências Internas
 
@@ -112,19 +118,31 @@ request = ContextRequest(
     request_id="req-1",
     request_goal="Selecionar contexto mínimo",
     token_budget=TokenBudget(max_input_tokens=1000, reserved_output_tokens=200),
-    candidate_items=(
-        ContextItem(context_item_id="item-1", source_ref="spec-0014", content="Texto citável."),
-    ),
 )
 
-package = DeterministicContextRouter().route(request)
+candidates = (
+    ContextItem(context_item_id="item-1", source_ref="spec-0014", content="Texto candidato."),
+)
+
+package = DeterministicContextRouter().route(request, candidates=candidates)
 ```
+
+O exemplo acima não executa busca, RAG, embeddings, banco, provider ou runtime. Os candidatos já precisam ter sido preparados pelo chamador.
 
 ## Status Atual
 
 Status: `MVP`.
 
 O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele ainda não integra Knowledge Hub, Policy Engine, Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
+
+Limitações atuais:
+
+- Não há RAG real.
+- Não há embeddings.
+- Não há pgvector ou PostgreSQL.
+- Não há recuperação automática de documentos.
+- Não há memória infinita.
+- Não há chamadas externas.
 
 ## Próximos Passos
 

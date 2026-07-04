@@ -9,6 +9,7 @@ from vercosa_ai_framework.context.types import (
     ContextOmissionReason,
     TokenBudget,
     TokenBudgetDecision,
+    TokenBudgetResult,
     TokenEstimate,
 )
 
@@ -36,6 +37,41 @@ class TokenBudgetManager(ABC):
         used_context_tokens: int = 0,
     ) -> TokenBudgetDecision:
         """Return whether an item fits in the remaining context budget."""
+
+    def evaluate_items(
+        self,
+        items: tuple[ContextItem, ...],
+        budget: TokenBudget,
+        used_context_tokens: int = 0,
+    ) -> TokenBudgetResult:
+        """Evaluate a deterministic sequence of items against the budget."""
+
+        accepted: list[str] = []
+        omitted: list[TokenBudgetDecision] = []
+        used_tokens = used_context_tokens
+
+        for item in items:
+            decision = self.decide_item(item, budget, used_tokens)
+            if decision.included:
+                accepted.append(item.context_item_id)
+                used_tokens = decision.tokens_after
+            else:
+                omitted.append(decision)
+
+        return TokenBudgetResult(
+            token_estimate=TokenEstimate(
+                estimated_tokens=used_tokens,
+                estimation_method="sum_item_estimates",
+                confidence="low",
+                content_chars=sum(len(item.content) for item in items if item.context_item_id in accepted),
+            ),
+            reserved_output_tokens=budget.reserved_output_tokens,
+            available_context_tokens=self.available_context_tokens(budget),
+            used_context_tokens=used_tokens,
+            remaining_context_tokens=max(0, self.available_context_tokens(budget) - used_tokens),
+            accepted_items=tuple(accepted),
+            omitted_items=tuple(omitted),
+        )
 
 
 class SimpleTokenBudgetManager(TokenBudgetManager):

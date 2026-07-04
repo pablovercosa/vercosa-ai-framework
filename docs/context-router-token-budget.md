@@ -1,22 +1,22 @@
-# Context Router And Token Budget
+# Context Router E Token Budget
 
 Links principais: [README principal](../README.md) | [Índice de módulos](architecture/module-index.md) | [Spec 0014](../specs/framework/0014-context-router-token-budget-memory.md)
 
 ## Objetivo
 
-Documentar o contrato inicial do Context Router e do Token Budget Manager no Vercosa AI Framework.
+Documentar o MVP determinístico do Context Router e do Token Budget Manager no Vercosa AI Framework.
 
 ## Escopo Atual
 
 O módulo `src/vercosa_ai_framework/context/` cria tipos, portas abstratas e implementações determinísticas mínimas para contexto, memória e orçamento de tokens.
 
-Este escopo implementa contratos iniciais autorizados pela missão atual. Ele não implementa RAG funcional, Semantic Index, embeddings, pgvector, PostgreSQL, chamadas a LLM, runtime ou providers.
+Este escopo implementa um MVP funcional sem LLM. Ele trabalha apenas com candidatos explícitos recebidos pelo chamador e não implementa RAG funcional, Semantic Index, embeddings, pgvector, PostgreSQL, chamadas a LLM, runtime ou providers.
 
 ## Componentes
 
-`Context Router` recebe uma `ContextRequest`, considera candidatos explícitos de contexto, deduplica itens por hash ou id, aplica orçamento simples de tokens e produz um `ContextPackage` rastreável.
+`Context Router` recebe uma `ContextRequest`, considera candidatos explícitos de contexto, deduplica itens por id, hash ou conteúdo, aplica orçamento simples de tokens e produz um `ContextPackage` rastreável.
 
-`Token Budget Manager` estima tokens de forma determinística, reserva tokens de output, calcula orçamento disponível para contexto e decide se um item cabe ou deve ser omitido.
+`Token Budget Manager` estima tokens de forma determinística, reserva tokens de output, calcula orçamento disponível para contexto, decide se um item cabe e também produz resultado agregado para uma sequência de itens.
 
 `MemoryLayer` descreve camadas conceituais de memória sem escolher storage, provider, runtime ou modelo.
 
@@ -34,14 +34,16 @@ ContextPackage
 
 ## Entradas
 
-- `ContextRequest` com objetivo, escopo, orçamento e candidatos explícitos.
+- `ContextRequest` com objetivo, escopo, orçamento e, opcionalmente, candidatos explícitos.
+- Lista explícita de `ContextItem` passada para `DeterministicContextRouter.route()` quando o chamador preferir separar request e candidatos.
 - `ContextSource` para fontes já conhecidas pelo chamador.
 - `ContextItem` para trechos, referências, evidências, instruções ou metadados candidatos.
 
 ## Saídas
 
 - `ContextPackage` com itens selecionados, fontes, citações, estimativa total, reserva de output, redactions agregadas e omissões.
-- `TokenBudgetDecision` para itens omitidos por duplicação ou limite de tokens.
+- `TokenBudgetDecision` para itens omitidos por duplicação, citação obrigatória ausente ou limite de tokens.
+- `TokenBudgetResult` com estimativa, reserva de output, orçamento disponível, tokens usados, tokens restantes, itens aceitos e itens omitidos.
 - `model_requirements` mínimos derivados do pacote, sem selecionar modelo concreto.
 
 ## Garantias Do MVP
@@ -54,11 +56,16 @@ ContextPackage
 - Sem RAG real.
 - Sem provider, runtime, OpenCode, Ollama, Gemini, OpenAI, Claude ou API externa.
 - Sem promessa de memória infinita.
+- Mesmo resultado para o mesmo request, candidatos, políticas e orçamento.
+- Preservação de citações e redactions já presentes nos itens selecionados.
+- Registro de omissões no `ContextPackage`.
 
 ## Limites Conhecidos
 
 - A estimativa de tokens usa heurística simples por caracteres.
 - O roteador só aceita candidatos explícitos; ele não busca documentos.
+- O MVP não executa busca semântica, reranking, chunking, sumarização nem recuperação automática.
+- Itens de evidência sem citação são omitidos; outros itens sem citação podem ser aceitos com warning quando `citation_required=False`.
 - Redaction é apenas preservada quando já existe no item; o módulo não executa redaction.
 - Policy Engine e Guardian Engine ainda não são integrados ao fluxo do pacote.
 - Semantic Index e cache persistido continuam como trabalho futuro.

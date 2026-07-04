@@ -172,6 +172,19 @@ class TokenBudgetDecision:
 
 
 @dataclass(frozen=True, slots=True)
+class TokenBudgetResult:
+    """Aggregate deterministic budget result for a set of context items."""
+
+    token_estimate: TokenEstimate
+    reserved_output_tokens: int
+    available_context_tokens: int
+    used_context_tokens: int
+    remaining_context_tokens: int
+    accepted_items: tuple[str, ...] = field(default_factory=tuple)
+    omitted_items: tuple[TokenBudgetDecision, ...] = field(default_factory=tuple)
+
+
+@dataclass(frozen=True, slots=True)
 class ContextItem:
     """Context payload candidate or selected item."""
 
@@ -293,6 +306,7 @@ __all__ = [
     "MemoryLayerType",
     "TokenBudget",
     "TokenBudgetDecision",
+    "TokenBudgetResult",
     "TokenEstimate",
     "stable_content_hash",
     "stable_id",

@@ -10,6 +10,7 @@ from vercosa_ai_framework.context.budget import SimpleTokenBudgetManager, TokenB
 from vercosa_ai_framework.context.types import (
     ContextCitation,
     ContextItem,
+    ContextItemType,
     ContextOmissionReason,
     ContextPackage,
     ContextRedaction,
@@ -26,7 +27,7 @@ class ContextRouter(ABC):
     """Abstract boundary for building governed context packages."""
 
     @abstractmethod
-    def route(self, request: ContextRequest) -> ContextPackage:
+    def route(self, request: ContextRequest, candidates: tuple[ContextItem, ...] | None = None) -> ContextPackage:
         """Produce a context package from explicit candidates."""
 
 
@@ -36,18 +37,30 @@ class DeterministicContextRouter(ContextRouter):
     def __init__(self, budget_manager: TokenBudgetManager | None = None) -> None:
         self.budget_manager = budget_manager or SimpleTokenBudgetManager()
 
-    def route(self, request: ContextRequest) -> ContextPackage:
+    def route(self, request: ContextRequest, candidates: tuple[ContextItem, ...] | None = None) -> ContextPackage:
         selected_items: list[ContextItem] = []
         omitted: list[TokenBudgetDecision] = []
-        seen_keys: set[str] = set()
+        seen_item_ids: set[str] = set()
+        seen_hashes: set[str] = set()
+        seen_contents: set[str] = set()
+        warnings: list[str] = []
         used_tokens = 0
 
-        for item in sorted(request.candidate_items, key=lambda candidate: (candidate.rank, candidate.context_item_id)):
-            dedupe_key = item.content_hash or item.context_item_id
-            if dedupe_key in seen_keys:
+        explicit_candidates = request.candidate_items if candidates is None else candidates
+
+        for item in sorted(explicit_candidates, key=_candidate_sort_key):
+            if _is_duplicate(item, seen_item_ids, seen_hashes, seen_contents):
                 omitted.append(_omitted_duplicate(item, request.token_budget, used_tokens, self.budget_manager.estimate_item(item)))
                 continue
-            seen_keys.add(dedupe_key)
+
+            _remember_item(item, seen_item_ids, seen_hashes, seen_contents)
+
+            if not item.citations:
+                if _requires_citation(item) or (request.citation_required and not _allows_missing_citation(item)):
+                    omitted.append(_omitted_missing_citation(item, request.token_budget, used_tokens, self.budget_manager.estimate_item(item)))
+                    continue
+                if not _allows_missing_citation(item):
+                    warnings.append(f"context_item_without_citation:{item.context_item_id}")
 
             decision = self.budget_manager.decide_item(item, request.token_budget, used_tokens)
             if not decision.included:
@@ -64,6 +77,7 @@ class DeterministicContextRouter(ContextRouter):
         redactions = _unique_redactions(selected_items)
         content_hash = _package_content_hash(selected_items)
         package_id = stable_id("context_package", request.request_id, content_hash, used_tokens, request.token_budget.reserved_output_tokens)
+        budget_result = self.budget_manager.evaluate_items(tuple(selected_items), request.token_budget)
 
         return ContextPackage(
             context_package_id=package_id,
@@ -91,8 +105,16 @@ class DeterministicContextRouter(ContextRouter):
             },
             content_hash=content_hash,
             cache_key=stable_id("context_cache", request.request_id, content_hash, tuple(request.policy_refs)),
-            warnings=(),
-            metadata={"router": "deterministic", "omitted_count": len(omitted)},
+            warnings=tuple(warnings),
+            metadata={
+                "router": "deterministic",
+                "omitted_count": len(omitted),
+                "available_context_tokens": request.token_budget.available_context_tokens,
+                "used_context_tokens": used_tokens,
+                "remaining_context_tokens": max(0, request.token_budget.available_context_tokens - used_tokens),
+                "accepted_items": tuple(item.context_item_id for item in selected_items),
+                "budget_result": budget_result,
+            },
         )
 
 
@@ -112,6 +134,69 @@ def _omitted_duplicate(
         omission_reason=ContextOmissionReason.DUPLICATE,
         reason="duplicate_context_item",
     )
+
+
+def _omitted_missing_citation(
+    item: ContextItem,
+    budget,
+    used_tokens: int,
+    estimate: TokenEstimate,
+) -> TokenBudgetDecision:
+    return TokenBudgetDecision(
+        item_ref=item.context_item_id,
+        included=False,
+        token_estimate=estimate,
+        tokens_before=used_tokens,
+        tokens_after=used_tokens,
+        available_context_tokens=budget.available_context_tokens,
+        omission_reason=ContextOmissionReason.MISSING_CITATION,
+        reason="missing_required_citation",
+    )
+
+
+def _candidate_sort_key(item: ContextItem) -> tuple[int, int, str, str, str]:
+    priority = item.metadata.get("priority", 0)
+    if not isinstance(priority, int):
+        priority = 0
+    return (item.rank, priority, item.source_ref, item.context_item_id, item.content_hash or stable_content_hash(item.content))
+
+
+def _is_duplicate(
+    item: ContextItem,
+    seen_item_ids: set[str],
+    seen_hashes: set[str],
+    seen_contents: set[str],
+) -> bool:
+    return (
+        bool(item.context_item_id and item.context_item_id in seen_item_ids)
+        or bool(item.content_hash and item.content_hash in seen_hashes)
+        or bool(item.content and item.content in seen_contents)
+    )
+
+
+def _remember_item(
+    item: ContextItem,
+    seen_item_ids: set[str],
+    seen_hashes: set[str],
+    seen_contents: set[str],
+) -> None:
+    if item.context_item_id:
+        seen_item_ids.add(item.context_item_id)
+    if item.content_hash:
+        seen_hashes.add(item.content_hash)
+    if item.content:
+        seen_contents.add(item.content)
+
+
+def _requires_citation(item: ContextItem) -> bool:
+    return item.item_type is ContextItemType.EVIDENCE
+
+
+def _allows_missing_citation(item: ContextItem) -> bool:
+    return item.item_type in {
+        ContextItemType.INSTRUCTION,
+        ContextItemType.METADATA,
+    }
 
 
 def _unique_citations(items: list[ContextItem]) -> tuple[ContextCitation, ...]:
