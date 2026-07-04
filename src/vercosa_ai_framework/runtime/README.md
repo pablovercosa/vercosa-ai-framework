@@ -1,4 +1,4 @@
-# Runtime Module
+# Módulo runtime
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0003](../../../specs/framework/0003-opencode-runtime-adapter.md)
 
@@ -73,8 +73,8 @@ Saídas:
 ## Docs Relacionadas
 
 - [OpenCode Runtime Adapter](../../../docs/opencode-runtime-adapter.md)
-- [External Framework Positioning](../../../docs/alignment/external-framework-positioning.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Posicionamento de frameworks externos](../../../docs/alignment/external-framework-positioning.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

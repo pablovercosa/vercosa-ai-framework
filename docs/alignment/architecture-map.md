@@ -1,10 +1,10 @@
-# Architecture Map
+# Mapa De Arquitetura
 
-## Architectural Spine
+## Espinha Arquitetural
 
-The framework architecture is mission-driven and specification-governed.
+A arquitetura do framework é orientada por missões e governada por especificações.
 
-Canonical chain:
+Cadeia canônica:
 
 ```text
 Mission
@@ -34,95 +34,48 @@ Provider Gateway
 Providers / MCPs / APIs / Runtimes
 ```
 
-The main rule is dependency inversion: upper layers express intent; lower layers provide replaceable execution mechanisms.
+Regra principal: camadas superiores expressam intenção; camadas inferiores fornecem mecanismos de execução substituíveis.
 
-## Layer Map
+## Mapa De Camadas
 
-| Layer | Purpose | Current State | Must Not Do |
+| Camada | Objetivo | Estado atual | Não deve fazer |
 | --- | --- | --- | --- |
-| Mission | User/system intent and required deliverables | Represented by `missions/types.py` and queue files | Encode runtime-specific commands as architecture |
-| Mission Runner | Operational lifecycle, queue, cycles, validation, final state | MVP exists in `missions/runner.py` and `missions/queue.py` | Replace Mission Orchestrator or Workflow Engine permanently |
-| Mission Orchestrator | Decide which workflow should satisfy a mission | Conceptual, not clearly implemented as distinct module | Become a runtime adapter or CLI command |
-| Workflow Engine | Build/execute workflow plan and task order | Sequential MVP exists in `workflows/engine.py` | Own mission lifecycle, agent registry, or provider execution |
-| Task Queue | Manage task states, dependencies, attempts, retries | MVP exists in `tasks/` | Execute concrete providers or choose agents by itself |
-| Agent Orchestrator | Select agent profile and prepare agent execution | MVP exists in `agents/` | Call OpenCode, MCPs, APIs, databases, or tools directly |
-| Agents/Subagents | Execute domain responsibilities through framework boundaries | Conceptual/MVP profile level | Know concrete providers or infrastructure |
-| Capabilities | Abstract requested abilities | MVP exists in `capabilities/` | Encode concrete tool/provider details |
-| Policy/Guardian | Enforce specs, risks, permissions, limits, approvals | Guardian MVP exists; Policy Engine boundary is still ambiguous | Execute commands or mutate state directly |
-| Skills | Reusable procedures implementing capabilities | MVP exists in `skills/` | Bypass tools or provider gateway for side effects |
-| Tools | Governed concrete action boundary | MVP exists in `tools/` | Hide direct provider calls from governance |
-| Provider Gateway | Normalize provider access after tool approval | MVP exists in `providers/` | Become model selector, runtime adapter, or agent layer |
-| Providers/MCPs/APIs/Runtimes | Concrete external mechanisms | OpenCode runtime MVP exists; providers are injectable MVP contracts | Leak into core or agent abstractions |
+| Mission | Intenção do usuário/sistema e entregáveis exigidos | Representada por `missions/types.py` e arquivos de fila | Codificar comandos específicos de runtime como arquitetura |
+| Mission Runner | Ciclo operacional, fila, ciclos, validação e estado final | MVP em `missions/runner.py` e `missions/queue.py` | Substituir Mission Orchestrator ou Workflow Engine permanentemente |
+| Mission Orchestrator | Decidir qual workflow satisfaz uma missão | Conceitual, ainda sem módulo distinto claro | Virar runtime adapter ou comando CLI |
+| Workflow Engine | Construir/executar plano de workflow e ordem de tasks | MVP sequencial em `workflows/engine.py` | Controlar ciclo de missão, registry de agentes ou execução de providers |
+| Task Queue | Gerenciar estados, dependências, tentativas e retries | MVP em `tasks/` | Executar providers concretos ou escolher agentes por conta própria |
+| Agent Orchestrator | Selecionar perfil de agente e preparar execução | MVP em `agents/` | Chamar OpenCode, MCPs, APIs, bancos ou tools diretamente |
+| Agents/Subagents | Executar responsabilidades por fronteiras do framework | Conceitual/MVP no nível de perfil | Conhecer providers ou infraestrutura concreta |
+| Capabilities | Representar capacidades abstratas solicitadas | MVP em `capabilities/` | Codificar detalhes concretos de tool/provider |
+| Policy/Guardian | Aplicar Specs, riscos, permissões, limites e aprovações | Guardian MVP existe; fronteira de Policy Engine segue ambígua | Executar comandos ou mutar estado diretamente |
+| Skills | Procedimentos reutilizáveis que implementam capabilities | MVP em `skills/` | Contornar tools ou Provider Gateway para efeitos |
+| Tools | Fronteira governada de ação concreta | MVP em `tools/` | Ocultar chamadas diretas a providers da governança |
+| Provider Gateway | Normalizar acesso a providers após aprovação por tool | MVP em `providers/` | Virar seletor de modelo, runtime adapter ou camada de agente |
+| Providers/MCPs/APIs/Runtimes | Mecanismos externos concretos | OpenCode runtime MVP; providers são contratos injetáveis | Vazar para o core ou abstrações de agentes |
 
-## Source Module Map
+## Mapa De Módulos Fonte
 
-`src/vercosa_ai_framework/core/`
+- `src/vercosa_ai_framework/core/`: modelos de domínio compartilhados e primitivas de política.
+- `src/vercosa_ai_framework/cli.py`: interface CLI; não é o núcleo de orquestração.
+- `src/vercosa_ai_framework/missions/`: registros, fila e runner de missão.
+- `src/vercosa_ai_framework/workflows/`: workflow e execução sequencial de tasks.
+- `src/vercosa_ai_framework/tasks/`: fila, scheduler, estado, elegibilidade e tentativas de tasks.
+- `src/vercosa_ai_framework/guardian/`: Guardian Engine MVP para decisões de política e risco.
+- `src/vercosa_ai_framework/model_selection/`: contratos e seleção de modelos por política.
+- `src/vercosa_ai_framework/runtime/`: fronteira de Runtime Adapter, incluindo OpenCode como MVP inicial.
+- `src/vercosa_ai_framework/agents/`: perfis de agentes, registry e orchestrator MVP.
+- `src/vercosa_ai_framework/capabilities/`: registry e resolver de capabilities.
+- `src/vercosa_ai_framework/skills/`: registry e executor de skills.
+- `src/vercosa_ai_framework/tools/`: registry e executor governado de tools.
+- `src/vercosa_ai_framework/providers/`: registry, contrato de adapter e Provider Gateway.
+- `src/vercosa_ai_framework/knowledge/`: documentos, ingestão Markdown, store em memória e busca textual.
+- `src/vercosa_ai_framework/canonicalizer/`: contratos e MVP de canonicalização de texto/Markdown.
+- `src/vercosa_ai_framework/persistence/`: contratos de persistência e repository filesystem MVP.
 
-Shared domain models and policy primitives. This should stay independent from external infrastructure.
+## Caminhos De Integração Atuais
 
-`src/vercosa_ai_framework/cli.py`
-
-User-facing CLI. It is an interface adapter, not the orchestration core.
-
-`src/vercosa_ai_framework/missions/`
-
-Mission records, queue, and runner. The current runner can execute bounded cycles through Guardian and RuntimeAdapter. It should eventually delegate workflow creation/replanning to Mission Orchestrator and Workflow Engine.
-
-`src/vercosa_ai_framework/workflows/`
-
-Workflow and task execution. Current MVP is sequential and dependency-aware. It uses Guardian before runtime execution.
-
-`src/vercosa_ai_framework/tasks/`
-
-Task queue and scheduler. It tracks task state, dependency eligibility, attempts, and deterministic selection.
-
-`src/vercosa_ai_framework/guardian/`
-
-Policy decision engine MVP. It detects dangerous commands, probable secrets, `sudo`, global config changes, and applies modes. It currently stands in for broader policy behavior.
-
-`src/vercosa_ai_framework/model_selection/`
-
-Model policy and selection contracts. This should sit below policy resolution and above runtime/provider execution.
-
-`src/vercosa_ai_framework/runtime/`
-
-Runtime adapter boundary. Current OpenCode adapter builds controlled `opencode run` commands, supports dry-run, avoids shell expansion, avoids global config mutation, and redacts secret-like metadata.
-
-`src/vercosa_ai_framework/agents/`
-
-Agent profile registry and orchestrator MVP. It prepares provider-neutral agent execution requests and delegates concrete execution to RuntimeAdapter.
-
-`src/vercosa_ai_framework/capabilities/`
-
-Capability registry and resolver. It maps requested capabilities to compatible skills.
-
-`src/vercosa_ai_framework/skills/`
-
-Skill registry and executor. It converts authorized skill execution into tool execution.
-
-`src/vercosa_ai_framework/tools/`
-
-Tool registry and executor. It validates permissions/effects, consults Guardian, supports dry-run, and invokes only injected adapters/callables.
-
-`src/vercosa_ai_framework/providers/`
-
-Provider registry, adapter contract, and provider gateway. The MVP is intentionally side-effect-free unless an adapter/callable is injected.
-
-`src/vercosa_ai_framework/knowledge/`
-
-Knowledge document types, Markdown ingestion, in-memory store, and deterministic text search. This is not yet the semantic Knowledge Hub.
-
-`src/vercosa_ai_framework/canonicalizer/`
-
-Canonicalization contracts and text/Markdown MVP. It prepares canonical Markdown-like documents before indexing or knowledge use.
-
-`src/vercosa_ai_framework/persistence/`
-
-Persistence records, repository abstractions, and filesystem repository MVP. Database adapters are future work.
-
-## Current Integration Paths
-
-Mission Runner path:
+Caminho de Mission Runner:
 
 ```text
 Mission file or queued Mission
@@ -140,7 +93,7 @@ OpenCodeRuntimeAdapter or injected fake adapter
 MissionResult
 ```
 
-Workflow path:
+Caminho de Workflow:
 
 ```text
 Workflow file
@@ -154,7 +107,7 @@ RuntimeAdapter.execute_task()
 WorkflowResult
 ```
 
-Capability path:
+Caminho de Capability:
 
 ```text
 CapabilityRequest
@@ -172,115 +125,34 @@ ToolAdapter or ProviderGateway
 ProviderAdapter or callable
 ```
 
-Knowledge path:
+## Pontes Ausentes
 
-```text
-Markdown source
-↓
-Markdown parser or Canonicalizer
-↓
-KnowledgeDocument or CanonicalDocument
-↓
-InMemoryKnowledgeStore
-↓
-Deterministic text search
-```
+- Mission Orchestrator para Workflow Engine.
+- Workflow Engine para Task Queue como substrato padrão de execução.
+- Task Queue para Agent Orchestrator como executor padrão de tasks.
+- Agent Orchestrator para Capability Resolver em capabilities solicitadas por agentes.
+- Caminho Capability/Skill/Tool para Provider Gateway como fluxo padrão de efeitos.
+- Recuperação do Knowledge Hub para Context Router.
+- Context Router para Mission Runner, Workflow Engine, Agent Orchestrator e Model Selection.
+- Persistence Layer para missões, workflows, tasks, decisões Guardian, decisões de modelo, documentos e audit logs.
 
-Persistence path:
+## Decisões De Fronteira Necessárias
 
-```text
-PersistedRecord
-↓
-Repository contract
-↓
-FilesystemRepository
-↓
-Deterministic JSON file
-```
+- Policy Engine versus Guardian Engine: definir se Guardian Engine é o policy engine concreto ou se Policy Engine será um resolvedor mais amplo que delega risco/segurança ao Guardian Engine.
+- Mission Runner versus Mission Orchestrator: separar estado operacional de escolha de workflow e estratégia de orquestração.
+- Workflow Engine versus Task Queue: separar semântica de workflow do estado, elegibilidade e tentativas de tasks.
+- Runtime Adapter versus Provider Gateway: separar execução de sessões de runtime de acesso normalizado a providers atrás de tools.
+- Knowledge Hub versus Context Router: separar armazenamento/recuperação de conhecimento da decisão do que entra no contexto.
+- Semantic Index versus memória persistente: separar infraestrutura de recuperação semântica de registros duráveis.
 
-## Missing Bridges
+## Guardrails Arquiteturais
 
-The main missing bridges are:
-
-- Mission Orchestrator to Workflow Engine.
-- Workflow Engine to Task Queue as the default execution substrate.
-- Task Queue to Agent Orchestrator as the default task executor.
-- Agent Orchestrator to Capability Resolver for agent-requested capabilities.
-- Capability/Skill/Tool path to Provider Gateway as the default side-effect path.
-- Knowledge Hub retrieval to Context Router.
-- Context Router to Mission Runner, Workflow Engine, Agent Orchestrator, and Model Selection.
-- Persistence Layer to missions, workflows, tasks, Guardian decisions, model decisions, knowledge documents, and audit logs.
-
-## Boundary Decisions Needed
-
-Policy Engine versus Guardian Engine:
-
-The specs mention both. Current code implements Guardian Engine. The architecture needs one clear decision: either Guardian Engine is the concrete policy engine, or Policy Engine is a broader resolver that delegates risk/security decisions to Guardian Engine.
-
-Mission Runner versus Mission Orchestrator:
-
-Mission Runner owns operational state. Mission Orchestrator should choose workflows and orchestration strategy. Current MVP risks accumulating orchestration logic inside Mission Runner if this is not separated.
-
-Workflow Engine versus Task Queue:
-
-Workflow Engine should define workflow/task graph semantics. Task Queue should own task state, dependency eligibility, attempts, and scheduling. Current sequential workflow execution can remain MVP, but future execution should use Task Queue intentionally.
-
-Runtime Adapter versus Provider Gateway:
-
-Runtime Adapter executes agent/runtime sessions such as OpenCode. Provider Gateway normalizes concrete provider access behind tools. They should not collapse into one abstraction.
-
-Knowledge Hub versus Context Router:
-
-Knowledge Hub stores and retrieves knowledge. Context Router decides what context to include for a mission/task/agent/model call under token, risk, and policy constraints.
-
-Semantic Index versus Persistent Memory:
-
-Semantic Index is retrieval infrastructure. Persistent memory is durable stored facts, artifacts, decisions, logs, and documents. They overlap but are not the same.
-
-## Memory Terms
-
-Infinite memory:
-
-Not an architectural component. It is a product promise or user-facing shorthand that should mean controlled long-term recall through durable storage, retrieval, summarization, indexing, and policy filtering. The framework should avoid claiming literal infinite memory. Real systems have retention, cost, privacy, storage, token, and relevance limits.
-
-Persistent memory:
-
-Durable stored information that survives a process, agent session, model context window, CLI invocation, or runtime restart. It can include specs, ADRs, decisions, audit logs, missions, workflows, tasks, validation results, conversations, summaries, canonical documents, and learned project facts. Persistent memory is about durability, not necessarily semantic retrieval.
-
-Knowledge Hub:
-
-The governed knowledge subsystem. It owns canonical documents, metadata, provenance, citations, source classification, sensitivity, and retrieval surfaces. It can contain specs, documentation, code references, ADRs, conversations, decisions, legal documents, books, commands, hooks, agents, skills, and project knowledge.
-
-Semantic Index:
-
-An index optimized for semantic retrieval, usually based on embeddings and vector search. It is derived from canonical documents or approved sources. It is not the source of truth; it is a retrieval acceleration and relevance mechanism. It must preserve references back to canonical sources.
-
-Context Router:
-
-The decision component that chooses what context is sent to a model, agent, skill, runtime, or validation step. It should consider mission goal, task, agent role, model context window, token budget, risk, privacy, Guardian decisions, retrieval results, citations, redactions, and required evidence. Context Router consumes Knowledge Hub and Semantic Index results, but it is not a storage layer.
-
-Relationship:
-
-```text
-Persistent Memory
-↓ durable records and documents
-Knowledge Hub
-↓ canonical documents and governed retrieval
-Semantic Index
-↓ similarity candidates with citations
-Context Router
-↓ policy-filtered context bundle
-Agent / Model / Runtime
-```
-
-## Architecture Guardrails
-
-- Agents request capabilities; they do not call MCPs, providers, APIs, databases, or shell directly.
-- Skills use tools; tools use provider/MCP/API adapters.
-- OpenCode, Claude Code, Codex CLI, Cursor, IDEs, Web UI, and API are runtime/interface adapters.
-- LangGraph, MetaGPT, and AutoGen can be optional workflow/agent orchestration adapters or references, not the core dependency.
-- PostgreSQL, pgvector, Ollama, and tree-sitter are valid local-first adapters, not mandatory assumptions.
-- Every loop needs a stop condition.
-- Every implementation needs an approved Spec.
-- Every external side effect needs Guardian/policy evaluation.
-- Every material architectural boundary change should produce a Spec update or ADR.
+- Agentes solicitam capabilities; não chamam MCPs, providers, APIs, bancos ou shell diretamente.
+- Skills usam tools; tools usam adapters de providers/MCPs/APIs.
+- OpenCode, Claude Code, Codex CLI, Cursor, IDEs, Web UI e API são runtime/interface adapters.
+- LangGraph, MetaGPT e AutoGen podem ser adapters opcionais ou referências, não dependências centrais.
+- PostgreSQL, pgvector, Ollama e tree-sitter são adapters local-first válidos, não premissas obrigatórias.
+- Todo loop precisa de condição de parada.
+- Toda implementação precisa de Spec aprovada.
+- Todo efeito externo material precisa de avaliação Guardian/policy.
+- Toda mudança material de fronteira arquitetural deve gerar atualização de Spec ou ADR.

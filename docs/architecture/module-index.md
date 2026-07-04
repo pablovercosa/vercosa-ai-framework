@@ -1,6 +1,6 @@
-# Module Index
+# Índice De Módulos
 
-Links principais: [README principal](../../README.md) | [Architecture Map](../alignment/architecture-map.md) | [README Standard](../documentation/readme-standard.md)
+Links principais: [README principal](../../README.md) | [Mapa de arquitetura](../alignment/architecture-map.md) | [Padrão de README](../documentation/readme-standard.md) | [Política de documentação](../documentation/documentation-update-policy.md)
 
 ## Objetivo
 
@@ -38,7 +38,7 @@ Providers / MCPs / APIs / Runtimes
 
 | Camada | Módulo | README | Status | Spec | Docs |
 | --- | --- | --- | --- | --- | --- |
-| Fundacional | `core/` | [core](../../src/vercosa_ai_framework/core/README.md) | MVP | [0001](../../specs/framework/0001-framework-foundation.md) | [Architecture Map](../alignment/architecture-map.md) |
+| Fundacional | `core/` | [core](../../src/vercosa_ai_framework/core/README.md) | MVP | [0001](../../specs/framework/0001-framework-foundation.md) | [Mapa de arquitetura](../alignment/architecture-map.md) |
 | Missões | `missions/` | [missions](../../src/vercosa_ai_framework/missions/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [Mission Runner](../mission-runner.md) |
 | Workflows | `workflows/` | [workflows](../../src/vercosa_ai_framework/workflows/README.md) | MVP | [0006](../../specs/framework/0006-workflow-engine.md) | [Workflow Engine](../workflow-engine.md) |
 | Tarefas | `tasks/` | [tasks](../../src/vercosa_ai_framework/tasks/README.md) | MVP | [0007](../../specs/framework/0007-task-queue.md) | [Task Queue](../task-queue.md) |
@@ -49,8 +49,8 @@ Providers / MCPs / APIs / Runtimes
 | Tools | `tools/` | [tools](../../src/vercosa_ai_framework/tools/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
 | Providers | `providers/` | [providers](../../src/vercosa_ai_framework/providers/README.md) | MVP | [0010](../../specs/framework/0010-provider-gateway.md) | [Provider Gateway](../provider-gateway.md) |
 | Runtime | `runtime/` | [runtime](../../src/vercosa_ai_framework/runtime/README.md) | MVP | [0003](../../specs/framework/0003-opencode-runtime-adapter.md) | [OpenCode Runtime Adapter](../opencode-runtime-adapter.md) |
-| Modelos | `model_selection/` | [model_selection](../../src/vercosa_ai_framework/model_selection/README.md) | MVP | [0002](../../specs/framework/0002-model-selection-engine.md) | [Architecture Map](../alignment/architecture-map.md) |
-| Contexto | `context/` | [context](../../src/vercosa_ai_framework/context/README.md) | MVP | [0014](../../specs/framework/0014-context-router-token-budget-memory.md) | [Context Router And Token Budget](../context-router-token-budget.md) |
+| Modelos | `model_selection/` | [model_selection](../../src/vercosa_ai_framework/model_selection/README.md) | MVP | [0002](../../specs/framework/0002-model-selection-engine.md) | [Mapa de arquitetura](../alignment/architecture-map.md) |
+| Contexto | `context/` | [context](../../src/vercosa_ai_framework/context/README.md) | MVP | [0014](../../specs/framework/0014-context-router-token-budget-memory.md) | [Context Router e Token Budget](../context-router-token-budget.md) |
 | Conhecimento | `knowledge/` | [knowledge](../../src/vercosa_ai_framework/knowledge/README.md) | MVP | [0011](../../specs/framework/0011-knowledge-hub.md) | [Knowledge Hub](../knowledge-hub.md) |
 | Canonicalização | `canonicalizer/` | [canonicalizer](../../src/vercosa_ai_framework/canonicalizer/README.md) | MVP | [0012](../../specs/framework/0012-canonicalizer.md) | [Canonicalizer](../canonicalizer.md) |
 | Persistência | `persistence/` | [persistence](../../src/vercosa_ai_framework/persistence/README.md) | MVP | [0013](../../specs/framework/0013-persistence-layer.md) | [Persistence Layer](../persistence-layer.md) |
@@ -70,7 +70,7 @@ Providers / MCPs / APIs / Runtimes
 
 ## Lacunas Registradas
 
-As principais lacunas arquiteturais já estão listadas em [Open Questions](../alignment/open-questions.md), especialmente:
+As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto](../alignment/open-questions.md), especialmente:
 
 - fronteira entre Guardian Engine e Policy Engine;
 - fronteira entre Mission Runner e Mission Orchestrator;

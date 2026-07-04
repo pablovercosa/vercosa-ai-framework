@@ -1,4 +1,4 @@
-# Model Selection Module
+# Módulo model_selection
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0002](../../../specs/framework/0002-model-selection-engine.md)
 
@@ -65,8 +65,8 @@ Saídas:
 
 ## Docs Relacionadas
 
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
-- [Current State](../../../docs/alignment/current-state.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
+- [Estado atual](../../../docs/alignment/current-state.md)
 
 ## Exemplo Mínimo
 

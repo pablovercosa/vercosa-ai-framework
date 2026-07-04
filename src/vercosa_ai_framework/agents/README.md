@@ -1,4 +1,4 @@
-# Agents Module
+# Módulo agents
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0008](../../../specs/framework/0008-agent-orchestrator.md)
 
@@ -73,7 +73,7 @@ Saídas:
 
 - [Agent Orchestrator](../../../docs/agent-orchestrator.md)
 - [Capabilities, Skills, Tools](../../../docs/capabilities-skills-tools.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

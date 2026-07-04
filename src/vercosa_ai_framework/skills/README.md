@@ -1,4 +1,4 @@
-# Skills Module
+# Módulo skills
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0009](../../../specs/framework/0009-capabilities-skills-tools.md)
 
@@ -66,7 +66,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Capabilities, Skills, Tools](../../../docs/capabilities-skills-tools.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

@@ -1,4 +1,4 @@
-# Canonicalizer Module
+# Módulo canonicalizer
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0012](../../../specs/framework/0012-canonicalizer.md)
 
@@ -77,7 +77,7 @@ Saídas:
 
 - [Canonicalizer](../../../docs/canonicalizer.md)
 - [Knowledge Hub](../../../docs/knowledge-hub.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

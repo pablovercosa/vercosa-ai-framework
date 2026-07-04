@@ -1,4 +1,4 @@
-# Tasks Module
+# Módulo tasks
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0007](../../../specs/framework/0007-task-queue.md)
 
@@ -70,7 +70,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Task Queue](../../../docs/task-queue.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

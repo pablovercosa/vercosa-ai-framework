@@ -1,259 +1,177 @@
 # Roadmap
 
-## Roadmap Purpose
+## Objetivo Do Roadmap
 
-This roadmap recommends the next architectural blocks after the current alignment checkpoint. It is not an implementation authorization by itself.
+Recomendar os próximos blocos arquiteturais após o checkpoint de alinhamento atual. Este documento não autoriza implementação por si só.
 
-No source code should be implemented from this document alone. Each implementation block still needs an approved Spec or an explicit update to an existing approved Spec.
+Nenhum código fonte deve ser implementado apenas com base neste documento. Cada bloco de implementação ainda precisa de Spec aprovada ou atualização explícita de Spec existente.
 
-## Guiding Principle
+## Princípio Orientador
 
-Prefer integration of existing MVP contracts before adding new frameworks, new providers, new databases, or new agent behaviors.
+Prefira integrar contratos MVP existentes antes de adicionar novos frameworks, providers, bancos ou comportamentos de agentes.
 
-The next phase should reduce ambiguity, not increase feature surface.
+A próxima fase deve reduzir ambiguidade, não aumentar superfície funcional.
 
-## Block 0: Alignment Freeze
+## Bloco 0: Congelamento De Alinhamento
 
-Goal: make the current architecture explicit before further implementation.
+Objetivo: tornar explícita a arquitetura atual antes de nova implementação.
 
-Recommended actions:
+Ações recomendadas:
 
-- Review the six `docs/alignment/` documents.
-- Confirm vocabulary for Mission Runner, Mission Orchestrator, Workflow Engine, Task Queue, Agent Orchestrator, Policy Engine, Guardian Engine, Knowledge Hub, Context Router, and Semantic Index.
-- Identify conflicts between current code, MVP docs, and specs.
-- Convert unresolved architectural decisions into ADRs.
+- Revisar documentos em `docs/alignment/`.
+- Confirmar vocabulário de Mission Runner, Mission Orchestrator, Workflow Engine, Task Queue, Agent Orchestrator, Policy Engine, Guardian Engine, Knowledge Hub, Context Router e Semantic Index.
+- Identificar conflitos entre código atual, docs MVP e Specs.
+- Converter decisões arquiteturais não resolvidas em ADRs.
 
-Exit criteria:
+Critério de saída: a equipe concorda sobre quais componentes são core, adapters e integrações opcionais futuras.
 
-- The team agrees which components are core, which are adapters, and which are future optional integrations.
-- No new implementation proceeds through ambiguous boundaries.
+## Bloco 1: Fronteira De Política
 
-## Block 1: Policy Boundary Decision
+Objetivo: resolver Policy Engine versus Guardian Engine.
 
-Goal: resolve Policy Engine versus Guardian Engine.
+Saídas recomendadas:
 
-Recommended decision paths:
+- ADR sobre a fronteira Policy Engine e Guardian Engine.
+- Atualização de Specs afetadas quando a decisão alterar terminologia.
+- Definição de onde a precedência de políticas é resolvida.
 
-- Option A: Guardian Engine is the concrete Policy Engine for the current framework phase.
-- Option B: Policy Engine becomes a resolver/orchestrator of policies, and Guardian Engine becomes the risk/security/approval evaluator.
+Esta decisão vem primeiro porque afeta missões, tools, providers, runtimes, context routing, seleção de modelos, logs, aprovações e validação.
 
-Recommended output:
+## Bloco 2: Arquitetura De Contexto
 
-- ADR for Policy Engine and Guardian Engine boundary.
-- Update affected specs if the decision changes terminology.
-- Define where policy precedence is resolved.
+Objetivo: separar memória persistente, Knowledge Hub, Semantic Index e Context Router.
 
-Why this comes first:
+Ações recomendadas:
 
-Policy decisions affect every other layer: mission execution, tools, providers, runtimes, context routing, model selection, logs, approvals, and validation.
+- Definir Context Router como componente de primeira classe.
+- Definir entradas: missão, refs de Spec, task, papel de agente, risco, token budget, decisão de modelo e necessidades de retrieval.
+- Definir saídas: pacote de contexto, citações, redactions, warnings e motivos de omissão.
+- Definir como Knowledge Hub serve documentos canônicos e resultados de retrieval.
+- Definir como Semantic Index apoia retrieval sem virar memória.
 
-## Block 2: Context Architecture
+Saída recomendada: Spec ou ADR para Context Router e contrato mínimo de retrieval antes de embeddings.
 
-Goal: separate persistent memory, Knowledge Hub, Semantic Index, and Context Router.
+## Bloco 3: Integração Mission-To-Task
 
-Recommended actions:
+Objetivo: conectar MVPs de missão, workflow e task por contratos explícitos.
 
-- Define Context Router as a first-class component.
-- Define what inputs it receives: mission, spec refs, task, agent role, risk, token budget, model decision, and retrieval needs.
-- Define what outputs it produces: context bundle, citations, redactions, warnings, and omitted-context reasons.
-- Define how Knowledge Hub serves canonical documents and retrieval results.
-- Define how Semantic Index supports retrieval without becoming memory itself.
+Ações recomendadas:
 
-Recommended output:
+- Definir Mission Orchestrator como distinto de Mission Runner.
+- Definir saída de Mission Orchestrator como Workflow Plan ou decisão de seleção de workflow.
+- Definir handoff de Workflow Engine para Task Queue.
+- Definir retorno de estado de Task Queue para Workflow Engine e Mission Runner.
 
-- Spec or ADR for Context Router.
-- Update Spec 0011 if needed.
-- Define minimal retrieval contract before implementing embeddings.
+Implementação deve permanecer sequencial até existirem políticas de paralelismo e locks.
 
-Why this comes before pgvector:
+## Bloco 4: Integração Task-To-Agent
 
-Without a Context Router contract, semantic search can become an ungoverned prompt-expansion mechanism that wastes tokens and bypasses policy.
+Objetivo: conectar execução de tasks ao Agent Orchestrator sem dar acesso de infraestrutura a agentes.
 
-## Block 3: Mission-To-Task Integration
+Ações recomendadas:
 
-Goal: connect existing mission, workflow, and task MVPs through explicit contracts.
+- Definir executor padrão de Task Queue para Agent Orchestrator.
+- Definir ciclo de vida de Agent Assignment.
+- Definir como agente solicita capabilities.
+- Definir como saída de agente vira saída de task, evidência de validação e registro de auditoria.
 
-Recommended actions:
+Guardrail: agentes não devem chamar tools, providers, MCPs, runtime adapters, shell ou bancos diretamente.
 
-- Define Mission Orchestrator as distinct from Mission Runner.
-- Define Mission Orchestrator output as Workflow Plan or workflow selection decision.
-- Define Workflow Engine handoff to Task Queue.
-- Define how Task Queue returns task execution state to Workflow Engine and Mission Runner.
+## Bloco 5: Integração Capability-To-Provider
 
-Recommended output:
+Objetivo: tornar o caminho Capabilities -> Skills -> Tools -> Provider Gateway o padrão para efeitos concretos.
 
-- ADR or Spec update for Mission Orchestrator boundary.
-- Contract between Mission Runner and Workflow Engine.
-- Contract between Workflow Engine and Task Queue.
+Ações recomendadas:
 
-Implementation should remain sequential until policy for parallelism and locks exists.
+- Definir catálogo essencial de capabilities.
+- Definir catálogo essencial de skills.
+- Definir tools locais permitidas e modelo de permissões/efeitos.
+- Definir eventos de auditoria do Provider Gateway.
+- Definir formato de adapter MCP abaixo de tools/providers, não abaixo de agentes.
 
-## Block 4: Task-To-Agent Integration
+## Bloco 6: Integração De Persistência
 
-Goal: connect task execution to Agent Orchestrator without giving agents infrastructure access.
+Objetivo: persistir registros críticos por portas antes de adapters específicos de banco.
 
-Recommended actions:
+Ações recomendadas:
 
-- Define default executor from Task Queue to Agent Orchestrator.
-- Define Agent Assignment lifecycle.
-- Define how an agent requests capabilities.
-- Define how agent output becomes task output, validation evidence, and audit records.
+- Definir stores para missões, workflows, tasks, decisões Guardian, decisões de modelo, audit logs, documentos canônicos e documentos de conhecimento.
+- Usar filesystem adapter como primeira implementação governada.
+- Definir registros JSON determinísticos e semântica de hash.
+- Definir política de retenção de logs.
 
-Recommended output:
+Guardrail: não tornar PostgreSQL obrigatório antes de estabilizar portas de persistência.
 
-- Contract between Task Queue and Agent Orchestrator.
-- Contract between Agent Orchestrator and Capability Resolver.
-- Agent profile registry persistence decision.
+## Bloco 7: Semantic Index MVP
 
-Guardrail:
+Objetivo: adicionar retrieval semântico apenas após estabilização dos contratos de Context Router e Knowledge Hub.
 
-Agents must not call tools, providers, MCPs, runtime adapters, shell, or databases directly.
+Ações recomendadas:
 
-## Block 5: Capability-To-Provider Integration
+- Definir estratégia de chunking.
+- Definir contrato de embedding provider adapter.
+- Definir contrato de vector store adapter.
+- Definir pgvector como uma implementação possível, não a única.
+- Definir embedding local padrão como detecção de capability, não premissa.
 
-Goal: make the Capabilities -> Skills -> Tools -> Provider Gateway path the default for concrete side effects.
+Guardrail: busca semântica deve retornar contexto citável e filtrado por política; não deve despejar texto bruto em prompts sem aprovação do Context Router.
 
-Recommended actions:
+## Bloco 8: Expansão De Runtime Adapters
 
-- Define essential capability catalog.
-- Define essential skill catalog.
-- Define allowed local tools and their permission/effect model.
-- Define Provider Gateway audit events.
-- Define MCP adapter shape under tools/providers, not under agents.
+Objetivo: manter OpenCode como runtime inicial enquanto prepara paridade para outros runtimes.
 
-Recommended output:
+Ações recomendadas:
 
-- Capability catalog MVP.
-- Skill catalog MVP.
-- Tool permission matrix.
-- Provider Gateway contract tests.
+- Formalizar operações comuns de RuntimeAdapter.
+- Definir schema de detecção de capabilities.
+- Definir schema de descoberta de modelos.
+- Definir schema de resultado de execução.
+- Definir testes de conformidade de adapter.
 
-Guardrail:
+Adapters futuros candidatos: Claude Code, Codex CLI, Cursor, VS Code, JetBrains, Web UI e API.
 
-MCPs are external mechanisms behind tools/providers. They are not agent dependencies.
+## Bloco 9: Avaliação De Frameworks Externos
 
-## Block 6: Persistence Integration
+Objetivo: decidir se LangGraph, MetaGPT ou AutoGen devem ser usados como adapters opcionais, referências ou não usados.
 
-Goal: persist critical records through ports before adding database-specific adapters.
+Ações recomendadas:
 
-Recommended actions:
+- Avaliar cada framework contra agnosticismo de provider, suporte local-first, máquinas de estado, auditabilidade, footprint de dependências e viabilidade de adapter.
+- Mapear cada framework para papéis possíveis: backend de workflow, backend de agent runtime, simulação/referência ou adapter externo.
+- Evitar adotar frameworks externos como core antes da estabilização dos contratos do Vercosa.
 
-- Define stores for missions, workflows, tasks, Guardian decisions, model decisions, audit logs, canonical documents, and knowledge documents.
-- Use filesystem adapter as the first governed persistence implementation.
-- Define deterministic JSON records and hash semantics.
-- Define retention policy for logs.
+## Bloco 10: Validação E Governança De Commit
 
-Recommended output:
+Objetivo: tornar Spec -> Plan -> Tasks -> Implement -> Validate -> Commit aplicável.
 
-- Persistence contract tests.
-- Filesystem layout decision.
-- Migration path document for future SQLite/PostgreSQL adapters.
+Ações recomendadas:
 
-Guardrail:
+- Definir registros de resultado de validação.
+- Definir como testes, checks estáticos, revisão humana, decisões Guardian e revisões por agentes se vinculam a tasks e missões.
+- Definir política de auto-commit e comportamento padrão desabilitado.
+- Definir como commits referenciam mission IDs, Specs e evidências de validação.
 
-Do not make PostgreSQL the required default before persistence ports are stable.
+## Ordem Recomendada De Curto Prazo
 
-## Block 7: Semantic Index MVP
-
-Goal: add semantic retrieval only after Context Router and Knowledge Hub contracts are stable.
-
-Recommended actions:
-
-- Define document chunking strategy.
-- Define embedding provider adapter contract.
-- Define vector store adapter contract.
-- Define pgvector adapter as one implementation, not the only option.
-- Define local embedding default as capability detection, not assumption.
-
-Recommended output:
-
-- Semantic Index Spec or Spec 0011 update.
-- ADR for initial pgvector/Ollama/nomic-embed-text adapter if selected.
-- Tests for retrieval determinism, citation preservation, and redaction behavior.
-
-Guardrail:
-
-Semantic search must return cited, policy-filtered context. It must not dump raw retrieved text into prompts without Context Router approval.
-
-## Block 8: Runtime Adapter Expansion
-
-Goal: keep OpenCode initial while preparing parity for other runtimes.
-
-Recommended actions:
-
-- Formalize common RuntimeAdapter operations.
-- Define capability detection schema.
-- Define model discovery schema.
-- Define execution result schema.
-- Define adapter conformance tests.
-
-Candidate future adapters:
-
-- Claude Code;
-- Codex CLI;
-- Cursor;
-- VS Code;
-- JetBrains;
-- Web UI;
-- API.
-
-Guardrail:
-
-Do not add runtime-specific behavior to core modules.
-
-## Block 9: External Orchestration Framework Evaluation
-
-Goal: decide if LangGraph, MetaGPT, or AutoGen should be used as optional adapters, references, or not at all.
-
-Recommended actions:
-
-- Evaluate each framework against provider agnosticism, local-first support, state machine support, auditability, dependency footprint, and adapter feasibility.
-- Map each framework to possible roles: workflow backend, agent runtime backend, simulation/reference implementation, or external adapter.
-- Avoid adopting any external orchestration framework as the core until Vercosa contracts are stable.
-
-Recommended output:
-
-- ADR for external orchestration framework positioning.
-
-## Block 10: Validation And Commit Governance
-
-Goal: make Spec -> Plan -> Tasks -> Implement -> Validate -> Commit enforceable.
-
-Recommended actions:
-
-- Define validation result records.
-- Define how tests, static checks, human review, Guardian decisions, and agent reviews are attached to tasks and missions.
-- Define auto-commit policy and default disabled behavior.
-- Define how commits reference mission IDs, specs, and validation evidence.
-
-Recommended output:
-
-- SDD lifecycle contract.
-- Commit policy ADR or Spec update.
-
-## Recommended Near-Term Order
-
-1. Review alignment docs.
+1. Revisar docs de alinhamento.
 2. ADR: Policy Engine versus Guardian Engine.
-3. ADR or Spec: Context Router and memory architecture.
-4. ADR or Spec: Mission Orchestrator boundary.
-5. Contract: Mission Runner -> Workflow Engine -> Task Queue.
-6. Contract: Task Queue -> Agent Orchestrator -> Capability Resolver.
-7. Contract tests for existing MVP boundaries.
-8. Persistence integration through filesystem adapter.
-9. Knowledge Hub semantic index design.
-10. Runtime adapter conformance before adding new runtimes.
+3. ADR ou Spec: Context Router e arquitetura de memória.
+4. ADR ou Spec: fronteira de Mission Orchestrator.
+5. Contrato: Mission Runner -> Workflow Engine -> Task Queue.
+6. Contrato: Task Queue -> Agent Orchestrator -> Capability Resolver.
+7. Testes de contrato para fronteiras MVP existentes.
+8. Integração de persistência por filesystem adapter.
+9. Design de Semantic Index do Knowledge Hub.
+10. Conformidade de Runtime Adapter antes de novos runtimes.
 
-## Work To Avoid For Now
+## Trabalho A Evitar Por Enquanto
 
-Avoid these until the above boundaries are settled:
-
-- hardcoding LangGraph, MetaGPT, or AutoGen into the core;
-- connecting agents directly to MCPs;
-- making pgvector mandatory;
-- making Ollama mandatory;
-- expanding OpenCode behavior into core orchestration;
-- adding autonomous multi-agent parallelism without locks, budgets, and validation;
-- implementing infinite memory claims without precise retrieval, retention, and policy rules;
-- auto-committing by default;
-- adding provider-specific code outside adapters.
+- Hardcodar LangGraph, MetaGPT ou AutoGen no core.
+- Conectar agentes diretamente a MCPs.
+- Tornar pgvector obrigatório.
+- Tornar Ollama obrigatório.
+- Expandir OpenCode para o core de orquestração.
+- Adicionar paralelismo multiagente autônomo sem locks, budgets e validação.
+- Implementar promessas de memória infinita sem retrieval, retenção e políticas precisas.
+- Auto-commit por padrão.
+- Adicionar código específico de provider fora de adapters.

@@ -1,141 +1,121 @@
-# External Framework Positioning
+# Posicionamento De Frameworks Externos
 
-## Purpose
+## Objetivo
 
-This document positions external orchestration frameworks, runtimes, and MCPs relative to the Vercosa AI Framework.
+Posicionar frameworks de orquestração externos, runtimes e MCPs em relação ao Vercosa AI Framework.
 
-The core rule: Vercosa owns the architecture. External frameworks and runtimes may provide execution mechanisms, but they must sit behind Vercosa contracts.
+Regra central: o Vercosa é dono da arquitetura. Frameworks e runtimes externos podem fornecer mecanismos de execução, mas devem permanecer atrás de contratos do Vercosa.
 
-## Summary
+## Resumo
 
-| Technology | Role In Vercosa | Core Dependency? |
+| Tecnologia | Papel no Vercosa | Dependência do core? |
 | --- | --- | --- |
-| LangGraph | Optional Workflow Engine backend or state-machine reference | No |
-| MetaGPT | Optional agent-organization reference or adapter | No |
-| AutoGen | Optional multi-agent conversation backend adapter | No |
-| OpenCode | Initial Runtime Adapter and development laboratory | No |
-| Claude Code | Future Runtime Adapter | No |
-| Codex CLI | Future Runtime Adapter | No |
-| MCPs | External tool/provider mechanisms behind tools and policy gates | No |
+| LangGraph | Backend opcional de Workflow Engine ou referência de máquina de estados | Não |
+| MetaGPT | Referência opcional de organização de agentes ou adapter | Não |
+| AutoGen | Adapter opcional para conversas multiagente | Não |
+| OpenCode | Runtime Adapter inicial e laboratório de desenvolvimento | Não |
+| Claude Code | Runtime Adapter futuro | Não |
+| Codex CLI | Runtime Adapter futuro | Não |
+| MCPs | Mecanismos externos de tools/providers atrás de tools e políticas | Não |
 
 ## LangGraph
 
-LangGraph can be useful for graph execution, state machines, controlled loops, and workflow composition.
+LangGraph pode ser útil para execução em grafo, máquinas de estado, loops controlados e composição de workflows.
 
-Acceptable use:
+Uso aceitável:
 
-- optional backend behind Workflow Engine;
-- reference for explicit graph/state design;
-- adapter for complex workflows after Vercosa task/workflow contracts stabilize.
+- backend opcional atrás de Workflow Engine;
+- referência para design explícito de grafo/estado;
+- adapter para workflows complexos após estabilização dos contratos de task/workflow do Vercosa.
 
-Not acceptable:
+Uso não aceitável:
 
-- replacing Vercosa Mission, Workflow, Task, Policy, Agent, Capability, Skill, Tool, or Provider contracts;
-- allowing graph nodes to call tools/providers outside Vercosa governance;
-- making LangGraph a required dependency of the core.
+- substituir contratos de Mission, Workflow, Task, Policy, Agent, Capability, Skill, Tool ou Provider do Vercosa;
+- permitir que nós do grafo chamem tools/providers fora da governança do Vercosa;
+- tornar LangGraph dependência obrigatória do core.
 
-Recommendation:
-
-Do not adopt LangGraph in the core during the next implementation wave. Revisit after Workflow Engine, Task Queue, and audit contracts are stable.
+Recomendação: não adotar LangGraph no core na próxima onda de implementação. Reavaliar após estabilização de Workflow Engine, Task Queue e contratos de auditoria.
 
 ## MetaGPT
 
-MetaGPT can be useful as inspiration for role-based software teams and multi-agent deliverables.
+MetaGPT pode ser útil como inspiração para equipes de software baseadas em papéis e entregáveis multiagente.
 
-Acceptable use:
+Uso aceitável:
 
-- reference for role decomposition;
-- optional adapter for experiments with structured agent teams;
-- source of ideas for agent profiles and review handoffs.
+- referência para decomposição por papéis;
+- adapter opcional para experimentos com equipes estruturadas de agentes;
+- fonte de ideias para perfis de agentes e handoffs de revisão.
 
-Not acceptable:
+Uso não aceitável:
 
-- replacing Agent Orchestrator;
-- letting MetaGPT agents call tools, MCPs, APIs, providers, or filesystems directly;
-- bypassing Vercosa specs, Guardian decisions, validation, or task state.
+- substituir Agent Orchestrator;
+- permitir que agentes MetaGPT chamem tools, MCPs, APIs, providers ou filesystems diretamente;
+- contornar Specs, decisões Guardian, validação ou estado de task do Vercosa.
 
-Recommendation:
-
-Use MetaGPT as reference only until Vercosa agent profiles, assignments, capabilities, and validation records are formalized.
+Recomendação: usar MetaGPT apenas como referência até perfis, assignments, capabilities e registros de validação de agentes serem formalizados.
 
 ## AutoGen
 
-AutoGen can be useful for multi-agent conversation patterns.
+AutoGen pode ser útil para padrões de conversa multiagente.
 
-Acceptable use:
+Uso aceitável:
 
-- optional backend for bounded subagent conversations;
-- reference for turn-taking and collaboration patterns;
-- adapter after Vercosa owns loop limits, context routing, and tool governance.
+- backend opcional para conversas limitadas de subagentes;
+- referência para padrões de turnos e colaboração;
+- adapter após o Vercosa controlar limites de loop, roteamento de contexto e governança de tools.
 
-Not acceptable:
+Uso não aceitável:
 
-- unbounded agent chats;
-- direct tool calls outside Vercosa ToolExecutor or ProviderGateway;
-- ungoverned conversation memory;
-- model/provider selection outside Model Selection Engine.
+- chats de agentes sem limite;
+- chamadas diretas de tools fora de ToolExecutor ou ProviderGateway;
+- memória de conversa sem governança;
+- seleção de modelo/provider fora do Model Selection Engine.
 
-Recommendation:
-
-Do not adopt AutoGen in core. Consider later as an adapter if its execution can be constrained by Vercosa policies.
+Recomendação: não adotar AutoGen no core. Considerar depois como adapter se sua execução puder ser restringida por políticas do Vercosa.
 
 ## OpenCode
 
-OpenCode is the initial runtime and lab environment.
+OpenCode é o runtime e ambiente de laboratório inicial.
 
-Acceptable use:
+Uso aceitável:
 
-- RuntimeAdapter implementation;
-- local execution backend;
-- model/runtime capability discovery source when wrapped by adapter;
-- development laboratory for framework evolution.
+- implementação de RuntimeAdapter;
+- backend de execução local;
+- fonte de descoberta de capacidades de runtime/modelos quando encapsulada por adapter;
+- laboratório de desenvolvimento para evolução do framework.
 
-Not acceptable:
+Uso não aceitável:
 
-- core framework;
+- core do framework;
 - policy engine;
 - model selection engine;
 - Knowledge Hub;
 - persistence layer;
-- direct dependency of agents;
-- source of architecture truth.
+- dependência direta de agentes;
+- fonte da verdade arquitetural.
 
-Recommendation:
+Recomendação: continuar usando OpenCode como primeiro RuntimeAdapter, mantendo comportamento específico do OpenCode dentro de `runtime/` ou pacotes de adapter.
 
-Continue using OpenCode as the first RuntimeAdapter, but keep all OpenCode-specific behavior inside `runtime/` or adapter packages.
+## Claude Code E Codex CLI
 
-## Claude Code
+Claude Code e Codex CLI devem ser tratados como Runtime Adapters futuros.
 
-Claude Code should be treated as a future RuntimeAdapter.
+Eles devem expor as mesmas operações conceituais de outros runtime adapters:
 
-It should expose the same conceptual operations as other runtime adapters:
+- detectar runtime;
+- reportar capabilities;
+- preparar execução;
+- executar missão ou task;
+- coletar logs;
+- validar artefatos quando aplicável.
 
-- detect runtime;
-- report capabilities;
-- prepare execution;
-- execute mission or task;
-- collect logs;
-- validate artifacts when applicable.
-
-Recommendation:
-
-Do not implement until RuntimeAdapter conformance tests exist.
-
-## Codex CLI
-
-Codex CLI should also be treated as a future RuntimeAdapter.
-
-It should not introduce provider-specific assumptions into Mission Runner, Workflow Engine, Agent Orchestrator, or Model Selection.
-
-Recommendation:
-
-Do not implement until RuntimeAdapter conformance tests exist.
+Recomendação: não implementar antes de existirem testes de conformidade de RuntimeAdapter.
 
 ## MCPs
 
-MCPs belong below tools/providers, not inside agents.
+MCPs pertencem abaixo de tools/providers, não dentro de agentes.
 
-Correct placement:
+Posicionamento correto:
 
 ```text
 Agent
@@ -153,29 +133,29 @@ MCP Tool Adapter or Provider Gateway
 MCP Server
 ```
 
-Rules:
+Regras:
 
-- Agents must not know MCP servers directly.
-- MCPs require explicit permissions.
-- MCP calls must be auditable.
-- MCP outputs may contain prompt injection and must be treated as external content.
-- MCP servers must pass safety review before being enabled.
+- Agentes não devem conhecer MCP servers diretamente.
+- MCPs exigem permissões explícitas.
+- Chamadas MCP devem ser auditáveis.
+- Saídas de MCP podem conter prompt injection e devem ser tratadas como conteúdo externo.
+- MCP servers devem passar por revisão de segurança antes de serem habilitados.
 
-## Admission Criteria For External Integrations
+## Critérios De Admissão Para Integrações Externas
 
-An external framework or runtime can be considered only when it:
+Um framework ou runtime externo só deve ser considerado quando:
 
-- fits behind a Vercosa-owned adapter contract;
-- supports explicit state mapping;
-- can be audited;
-- can be constrained by Guardian decisions;
-- can respect model selection and privacy policies;
-- can run with bounded loops;
-- can be disabled or replaced;
-- does not force a specific provider, model, IDE, OS, vector store, or database.
+- couber atrás de contrato de adapter controlado pelo Vercosa;
+- suportar mapeamento explícito de estados;
+- puder ser auditado;
+- puder ser restringido por decisões Guardian;
+- respeitar políticas de seleção de modelo e privacidade;
+- executar com loops limitados;
+- puder ser desabilitado ou substituído;
+- não obrigar provedor, modelo, IDE, sistema operacional, vector store ou banco específico.
 
-## Recommendation
+## Recomendação
 
-For the next implementation wave, prioritize Vercosa's own contracts before integrating external orchestration frameworks.
+Para a próxima onda de implementação, priorizar contratos próprios do Vercosa antes de integrar frameworks externos de orquestração.
 
-OpenCode remains the only active runtime adapter target because it already has an MVP boundary. LangGraph, MetaGPT, AutoGen, Claude Code, Codex CLI, and MCP expansion should wait for adapter conformance, policy, context routing, and audit contracts.
+OpenCode permanece o único alvo ativo de runtime adapter porque já possui uma fronteira MVP. LangGraph, MetaGPT, AutoGen, Claude Code, Codex CLI e expansão MCP devem aguardar conformidade de adapters, políticas, Context Router e contratos de auditoria.

@@ -1,4 +1,4 @@
-# Persistence Module
+# Módulo persistence
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0013](../../../specs/framework/0013-persistence-layer.md)
 
@@ -68,8 +68,8 @@ Saídas:
 ## Docs Relacionadas
 
 - [Persistence Layer](../../../docs/persistence-layer.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
-- [Open Questions](../../../docs/alignment/open-questions.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
+- [Perguntas em aberto](../../../docs/alignment/open-questions.md)
 
 ## Exemplo Mínimo
 

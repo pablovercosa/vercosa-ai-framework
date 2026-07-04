@@ -1,4 +1,4 @@
-# Tools Module
+# Módulo tools
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0009](../../../specs/framework/0009-capabilities-skills-tools.md)
 

@@ -1,4 +1,4 @@
-# Core Module
+# Módulo core
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0001](../../../specs/framework/0001-framework-foundation.md)
 
@@ -57,8 +57,8 @@ Saídas:
 
 ## Docs Relacionadas
 
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
-- [Current State](../../../docs/alignment/current-state.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
+- [Estado atual](../../../docs/alignment/current-state.md)
 
 ## Exemplo Mínimo
 

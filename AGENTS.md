@@ -25,6 +25,19 @@ Permitir que qualquer pessoa desenvolva software orientado por especificações 
 
 Nenhum código deve ser implementado sem uma Spec aprovada.
 
+## Idioma oficial
+
+O idioma oficial da documentação do Vercosa AI Framework é português do Brasil.
+
+Regras obrigatórias:
+
+1. Documentação explicativa, READMEs, guias, políticas, mapas navegáveis e notas de alinhamento devem ser escritos em português do Brasil.
+2. Specs e ADRs também devem usar português do Brasil no texto explicativo, podendo manter termos técnicos em inglês quando forem nomes arquiteturais consolidados.
+3. Nomes técnicos como Context Router, Token Budget Manager, Policy Engine, Guardian Engine, Provider Gateway, Runtime Adapter e Knowledge Hub podem permanecer em inglês.
+4. Nomes de arquivos, pacotes, classes, funções, enums, comandos, módulos e APIs públicas não devem ser traduzidos apenas por idioma.
+5. Não renomeie arquivos existentes sem necessidade arquitetural forte.
+6. Não altere APIs públicas para traduzir nomes técnicos.
+
 ## Ambiente atual do usuário
 
 O ambiente principal do usuário atualmente é:
@@ -287,6 +300,8 @@ Ao trabalhar neste projeto:
 6. Nunca implemente sem Spec.
 7. Se faltar decisão, gere uma pergunta objetiva.
 8. Se houver risco arquitetural, proponha ADR.
+9. Use português do Brasil em documentação e mensagens de commit futuras.
+10. Não reescreva histórico Git já publicado.
 
 ## Regras de documentação
 
@@ -304,3 +319,18 @@ Toda documentação do framework deve seguir estas regras:
 10. Não documente comportamento inexistente como estável.
 11. Não use linguagem genérica ou marketing quando houver responsabilidade técnica específica.
 12. Se houver inconsistência entre Spec, documentação e código, registre em docs/alignment/open-questions.md antes de expandir implementação.
+13. Toda missão que criar, alterar ou expandir funcionalidade deve revisar e, quando necessário, atualizar o README.md principal, o README.md do módulo afetado, docs/architecture/module-index.md, docs relacionados, Specs relacionadas, ADRs relacionadas e links relativos entre documentos.
+14. Missões de documentação devem verificar se os documentos alterados seguem o idioma oficial e o padrão em docs/documentation/readme-standard.md.
+15. Não documente comportamento futuro como existente; quando necessário, marque como futuro, lacuna, próximo passo ou decisão pendente.
+
+## Regras de commit
+
+A partir da missão que definiu este padrão, mensagens de commit do projeto devem usar português do Brasil.
+
+Regras obrigatórias:
+
+1. Não reescreva histórico Git já publicado para traduzir commits antigos.
+2. Não faça force push para corrigir idioma de commits já publicados.
+3. Use descrições claras, curtas e rastreáveis.
+4. Evite misturar português e inglês em frases de commit, salvo nomes técnicos, nomes de módulos, APIs, classes, arquivos, comandos e componentes arquiteturais consolidados.
+5. Prefixos recomendados: `missão:`, `docs:`, `arquitetura:`, `implementação:`, `teste:`, `correção:`, `refatoração:` e `chore:`.

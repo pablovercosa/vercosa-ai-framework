@@ -1,10 +1,15 @@
-# README Standard
+# Padrão De README
 
 ## Objetivo
 
 Definir o padrão oficial de `README.md` para o Vercosa AI Framework.
 
 Este padrão existe para tornar cada módulo navegável, rastreável até Specs e claro sobre responsabilidades, limites e estado atual.
+
+Este documento deve ser lido junto com:
+
+- [Padrão de idioma e commits](language-and-commit-standard.md)
+- [Política de atualização de documentação](documentation-update-policy.md)
 
 ## Escopo
 
@@ -16,6 +21,8 @@ Este padrão se aplica a:
 
 ## Regras Gerais
 
+- Escreva documentação explicativa em português do Brasil.
+- Mantenha nomes técnicos, módulos, classes, funções, arquivos, comandos e APIs públicas em inglês quando forem nomes existentes ou parte da arquitetura.
 - Use links relativos.
 - Todo README de módulo deve linkar para o [README principal](../../README.md).
 - Todo README de módulo deve linkar para a Spec relacionada.
@@ -26,6 +33,7 @@ Este padrão se aplica a:
 - Não use linguagem de marketing quando uma descrição técnica direta bastar.
 - Não duplique Specs completas; referencie-as e resuma apenas o necessário para orientar navegação.
 - Se houver inconsistência entre código, Spec e arquitetura, registre em [open-questions](../alignment/open-questions.md).
+- Toda missão que criar, alterar ou expandir funcionalidade deve revisar e atualizar READMEs, docs, Specs e ADRs relacionados quando necessário.
 
 ## Estrutura Obrigatória Para README De Módulo
 
@@ -71,6 +79,7 @@ O `README.md` principal deve conter:
 - mapa de módulos;
 - links para Specs, docs e índice de módulos;
 - regras de contribuição e documentação;
+- política de idioma e commits;
 - aviso explícito de que OpenCode é runtime inicial, não núcleo.
 
 ## Regras Para Índice De Módulos
@@ -99,3 +108,5 @@ Antes de concluir documentação de módulo, verifique:
 - Os tipos/classes/funções citados existem ou estão marcados como conceituais.
 - O status é compatível com o código atual.
 - Links relativos resolvem corretamente a partir do arquivo.
+- O texto explicativo está em português do Brasil.
+- A missão revisou README principal, README do módulo afetado, índice de módulos, docs, Specs e ADRs relacionados quando a mudança criou, alterou ou expandiu funcionalidade.

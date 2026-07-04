@@ -1,4 +1,4 @@
-# Missions Module
+# Módulo missions
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0004](../../../specs/framework/0004-mission-runner.md)
 
@@ -72,7 +72,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Mission Runner](../../../docs/mission-runner.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 - [SDD Lifecycle](../../../docs/alignment/sdd-lifecycle.md)
 
 ## Exemplo Mínimo

@@ -1,161 +1,161 @@
-# Open Questions
+# Perguntas Em Aberto
 
-## Purpose
+## Objetivo
 
-This document lists architectural questions that should be answered before the next significant implementation wave.
+Este documento lista perguntas arquiteturais que devem ser respondidas antes da próxima onda significativa de implementação.
 
-Questions are grouped by decision area. Each unresolved item should become an ADR, Spec update, or explicit project decision when it affects implementation.
+As perguntas são agrupadas por área de decisão. Cada item não resolvido deve gerar uma ADR, uma atualização de Spec ou uma decisão explícita do projeto quando afetar implementação.
 
-## Core Boundaries
+## Fronteiras Centrais
 
-1. Is Guardian Engine the concrete Policy Engine for the current phase, or should Policy Engine be a separate component that delegates to Guardian Engine?
-2. Where is policy precedence resolved: Guardian Engine, Policy Engine, Mission Runner, or a dedicated resolver?
-3. Should Mission Orchestrator be implemented as a separate module before expanding Mission Runner?
-4. What is the exact boundary between Mission Runner and Mission Orchestrator?
-5. What is the exact boundary between Workflow Engine and Task Queue?
-6. Should Workflow Engine always use Task Queue, or can it retain a direct sequential executor for simple local workflows?
-7. What component owns re-planning after validation failure?
-8. What component owns final mission closure and validation evidence aggregation?
+1. Guardian Engine é o Policy Engine concreto da fase atual ou Policy Engine deve ser um componente separado que delega ao Guardian Engine?
+2. Onde a precedência de políticas é resolvida: Guardian Engine, Policy Engine, Mission Runner ou um resolvedor dedicado?
+3. Mission Orchestrator deve ser implementado como módulo separado antes de expandir Mission Runner?
+4. Qual é a fronteira exata entre Mission Runner e Mission Orchestrator?
+5. Qual é a fronteira exata entre Workflow Engine e Task Queue?
+6. Workflow Engine deve sempre usar Task Queue ou pode manter um executor sequencial direto para workflows locais simples?
+7. Qual componente é responsável por replanejamento após falha de validação?
+8. Qual componente é responsável pelo encerramento final da missão e pela agregação de evidências de validação?
 
-## SDD Lifecycle
+## Ciclo De Vida SDD
 
-1. What counts as an approved Spec for implementation?
-2. Where is Spec approval recorded?
-3. Can documentation-only missions proceed without an approved feature Spec?
-4. What minimum Plan artifact is required before Tasks are created?
-5. What minimum Task artifact is required before implementation starts?
-6. What validations are mandatory before a task can be marked done?
-7. What validations are mandatory before a mission can be marked done?
-8. What metadata must be included in a commit created by the framework?
-9. Should auto-commit remain disabled globally unless explicitly enabled per mission?
-10. How should failed validation loop back into Plan or Tasks?
+1. O que conta como Spec aprovada para implementação?
+2. Onde a aprovação de Spec é registrada?
+3. Missões apenas documentais podem prosseguir sem uma Spec de funcionalidade aprovada?
+4. Qual artefato mínimo de Plan é obrigatório antes da criação de Tasks?
+5. Qual artefato mínimo de Task é obrigatório antes do início da implementação?
+6. Quais validações são obrigatórias antes de uma task ser marcada como concluída?
+7. Quais validações são obrigatórias antes de uma missão ser marcada como concluída?
+8. Quais metadados devem ser incluídos em um commit criado pelo framework?
+9. Auto-commit deve permanecer desabilitado globalmente salvo quando explicitamente habilitado por missão?
+10. Como uma validação com falha deve retornar para Plan ou Tasks?
 
-## Memory And Context
+## Memória E Contexto
 
-1. What is the formal difference between persistent memory, Knowledge Hub, Semantic Index, and Context Router?
-2. Should Context Router be a new top-level module?
-3. What is the minimal Context Router request and response contract?
-4. What policies can exclude context from a prompt?
-5. How should context redaction be represented in audit logs?
-6. How should citations be preserved from retrieval to final agent output?
-7. What should be stored permanently versus recomputed from canonical documents?
-8. What retention policy applies to conversations, prompts, logs, and decisions?
-9. Should conversation history be part of Knowledge Hub by default or opt-in?
-10. How should sensitive knowledge be indexed without exposing secrets?
+1. Qual é a diferença formal entre memória persistente, Knowledge Hub, Semantic Index e Context Router?
+2. Context Router deve ser um novo módulo de primeiro nível?
+3. Qual é o contrato mínimo de request e response do Context Router?
+4. Quais políticas podem excluir contexto de um prompt?
+5. Como redaction de contexto deve ser representada em logs de auditoria?
+6. Como citações devem ser preservadas da recuperação até a saída final do agente?
+7. O que deve ser armazenado permanentemente versus recomputado a partir de documentos canônicos?
+8. Qual política de retenção se aplica a conversas, prompts, logs e decisões?
+9. Histórico de conversa deve fazer parte do Knowledge Hub por padrão ou por opt-in?
+10. Como conhecimento sensível deve ser indexado sem expor segredos?
 
-## Knowledge Hub And Semantic Index
+## Knowledge Hub E Semantic Index
 
-1. What are the first canonical document types beyond Markdown?
-2. Should PDF/DOCX/PPTX support wait for separate adapter specs?
-3. What chunking strategy should be used for semantic indexes?
-4. What metadata is mandatory for every indexed chunk?
-5. What is the first embedding provider adapter contract?
-6. Is `nomic-embed-text` the initial local default only when detected, or a documented recommended adapter?
-7. Is pgvector the first vector store adapter or only the current environment target?
-8. How should semantic indexes be invalidated when canonical documents change?
-9. What is the fallback when embeddings are unavailable?
-10. How should Code Intelligence share or separate indexes from Knowledge Hub?
+1. Quais são os primeiros tipos de documento canônico além de Markdown?
+2. O suporte a PDF/DOCX/PPTX deve aguardar Specs separadas de adapter?
+3. Qual estratégia de chunking deve ser usada para índices semânticos?
+4. Quais metadados são obrigatórios para cada chunk indexado?
+5. Qual é o primeiro contrato de adapter para embedding provider?
+6. `nomic-embed-text` é o padrão local inicial apenas quando detectado ou um adapter recomendado documentado?
+7. pgvector é o primeiro vector store adapter ou apenas o alvo do ambiente atual?
+8. Como índices semânticos devem ser invalidados quando documentos canônicos mudam?
+9. Qual é o fallback quando embeddings não estão disponíveis?
+10. Como Code Intelligence deve compartilhar ou separar índices do Knowledge Hub?
 
-## Agents And Capabilities
+## Agentes E Capabilities
 
-1. What is the minimum agent profile schema for real use?
-2. How are agent profiles approved, versioned, and stored?
-3. Can agents request multiple capabilities in one task, or must capabilities be resolved one at a time?
-4. What component decides whether to delegate to subagents?
-5. What is the maximum delegation depth?
-6. What is the default stop condition for agent loops?
-7. What capabilities are essential for the first end-to-end implementation path?
-8. What capabilities require human approval?
-9. How are agent outputs validated before becoming task outputs?
-10. How is agent confidence represented without letting the model self-certify completion?
+1. Qual é o schema mínimo de perfil de agente para uso real?
+2. Como perfis de agentes são aprovados, versionados e armazenados?
+3. Agentes podem solicitar várias capabilities em uma task ou capabilities devem ser resolvidas uma por vez?
+4. Qual componente decide se deve delegar para subagentes?
+5. Qual é a profundidade máxima de delegação?
+6. Qual é a condição de parada padrão para loops de agente?
+7. Quais capabilities são essenciais para o primeiro caminho de implementação ponta a ponta?
+8. Quais capabilities exigem aprovação humana?
+9. Como saídas de agentes são validadas antes de se tornarem saídas de task?
+10. Como a confiança do agente é representada sem permitir que o modelo autocertifique conclusão?
 
-## Skills, Tools, Providers, And MCPs
+## Skills, Tools, Providers E MCPs
 
-1. What is the first approved capability catalog?
-2. What is the first approved skill catalog?
-3. What local tools are allowed in the initial safe profile?
-4. What effects must every tool declare?
-5. How should tool permissions map to Guardian decisions?
-6. Where do MCP adapters live: tools, providers, runtime, or a distinct adapter package?
-7. What is the safety review process for an MCP server?
-8. Can a tool call a runtime adapter, or should runtimes remain separate from provider/tool execution?
-9. What provider operations are allowed in dry-run only?
-10. How should provider fallback be audited?
+1. Qual é o primeiro catálogo aprovado de capabilities?
+2. Qual é o primeiro catálogo aprovado de skills?
+3. Quais tools locais são permitidas no perfil seguro inicial?
+4. Quais efeitos toda tool deve declarar?
+5. Como permissões de tools devem mapear para decisões Guardian?
+6. Onde adapters MCP ficam: tools, providers, runtime ou um pacote distinto de adapters?
+7. Qual é o processo de revisão de segurança para um MCP server?
+8. Uma tool pode chamar um runtime adapter ou runtimes devem permanecer separados da execução de providers/tools?
+9. Quais operações de provider são permitidas apenas em dry-run?
+10. Como fallback de provider deve ser auditado?
 
 ## Runtime Adapters
 
-1. What is the formal RuntimeAdapter conformance contract?
-2. What capabilities must every runtime adapter report?
-3. What does model discovery mean across OpenCode, Claude Code, Codex CLI, IDEs, Web UI, and API?
-4. How should runtime-specific features be represented without leaking into core?
-5. Should Claude Code and Codex CLI be treated identically to OpenCode at the adapter level?
-6. How should runtimes without headless execution be supported?
-7. How should interactive approval be represented across CLI, Web UI, and IDEs?
-8. How should runtime logs be normalized?
-9. What runtime failures are retryable?
-10. Can one mission switch runtime mid-execution?
+1. Qual é o contrato formal de conformidade de RuntimeAdapter?
+2. Quais capabilities todo runtime adapter deve reportar?
+3. O que model discovery significa em OpenCode, Claude Code, Codex CLI, IDEs, Web UI e API?
+4. Como funcionalidades específicas de runtime devem ser representadas sem vazar para o core?
+5. Claude Code e Codex CLI devem ser tratados de forma idêntica ao OpenCode no nível de adapter?
+6. Como runtimes sem execução headless devem ser suportados?
+7. Como aprovação interativa deve ser representada em CLI, Web UI e IDEs?
+8. Como logs de runtime devem ser normalizados?
+9. Quais falhas de runtime podem ser retentadas?
+10. Uma missão pode trocar de runtime durante a execução?
 
-## External Frameworks
+## Frameworks Externos
 
-1. Should LangGraph be used as a workflow backend, a reference, or not at all?
-2. Should MetaGPT be used as an agent organization reference, an adapter, or not at all?
-3. Should AutoGen be used as a multi-agent conversation backend, an adapter, or not at all?
-4. What dependency footprint is acceptable for optional framework adapters?
-5. Can external frameworks satisfy Vercosa audit and policy requirements without invasive wrappers?
-6. How are external framework states mapped to Vercosa mission/workflow/task states?
-7. How are external framework tool calls forced through Vercosa capabilities/skills/tools?
-8. What features from external frameworks should influence Vercosa design without being copied?
-9. What disqualifies an external framework from core use?
-10. Should external framework adapters live outside the core package?
+1. LangGraph deve ser usado como backend de workflow, referência ou não deve ser usado?
+2. MetaGPT deve ser usado como referência de organização de agentes, adapter ou não deve ser usado?
+3. AutoGen deve ser usado como backend de conversa multiagente, adapter ou não deve ser usado?
+4. Qual footprint de dependências é aceitável para adapters opcionais de frameworks?
+5. Frameworks externos conseguem cumprir requisitos de auditoria e política do Vercosa sem wrappers invasivos?
+6. Como estados de frameworks externos são mapeados para estados de missão/workflow/task do Vercosa?
+7. Como chamadas de tools de frameworks externos são forçadas a passar por capabilities/skills/tools do Vercosa?
+8. Quais recursos de frameworks externos devem influenciar o design do Vercosa sem serem copiados?
+9. O que desqualifica um framework externo para uso no core?
+10. Adapters de frameworks externos devem viver fora do pacote core?
 
-## Persistence And Audit
+## Persistência E Auditoria
 
-1. What stores are required for the first integrated MVP?
-2. What data must be persisted for mission recovery after crash?
-3. What data must never be persisted in cleartext?
-4. What is the audit log schema?
-5. What is the retention policy for audit logs?
-6. Should filesystem persistence remain the default until database adapters mature?
-7. What is the first database adapter: SQLite, PostgreSQL, or both?
-8. How are migrations represented and validated?
-9. How are record hashes computed across adapters?
-10. How are backups and restores handled without leaking secrets?
+1. Quais stores são obrigatórios para o primeiro MVP integrado?
+2. Quais dados devem ser persistidos para recuperação de missão após crash?
+3. Quais dados nunca devem ser persistidos em texto claro?
+4. Qual é o schema de audit log?
+5. Qual é a política de retenção para audit logs?
+6. Persistência em filesystem deve permanecer padrão até adapters de banco amadurecerem?
+7. Qual é o primeiro adapter de banco: SQLite, PostgreSQL ou ambos?
+8. Como migrations são representadas e validadas?
+9. Como hashes de registros são calculados entre adapters?
+10. Como backups e restores são tratados sem vazar segredos?
 
-## Security And Governance
+## Segurança E Governança
 
-1. What is the default Guardian mode for local development?
-2. What is the default Guardian mode for automation or daemon execution?
-3. What commands are blocked across all operating systems?
-4. What commands require approval across all operating systems?
-5. How are false-positive secret detections approved without exposing values?
-6. What policy controls network access?
-7. What policy controls paid provider access?
-8. What policy controls external provider access with project context?
-9. How are policy exceptions approved, scoped, and expired?
-10. What governance records are required before changing architecture?
+1. Qual é o modo Guardian padrão para desenvolvimento local?
+2. Qual é o modo Guardian padrão para automação ou execução daemon?
+3. Quais comandos são bloqueados em todos os sistemas operacionais?
+4. Quais comandos exigem aprovação em todos os sistemas operacionais?
+5. Como detecções falso-positivas de segredos são aprovadas sem expor valores?
+6. Qual política controla acesso à rede?
+7. Qual política controla acesso a providers pagos?
+8. Qual política controla acesso de provider externo com contexto do projeto?
+9. Como exceções de política são aprovadas, escopadas e expiradas?
+10. Quais registros de governança são obrigatórios antes de alterar arquitetura?
 
 ## Model Selection
 
-1. Where is Model Registry persisted?
-2. What is the minimal Model Profile schema for the next phase?
-3. How are OpenCode-discovered models merged with configured provider models?
-4. How should model cost be represented when providers do not expose accurate cost?
-5. What qualifies as `small_model`?
-6. How should model fallback be audited?
-7. Can a model decision expire?
-8. When is cross-review mandatory?
-9. How does Model Selection consume Context Router estimates?
-10. How are local-only privacy policies enforced across model selection and runtime execution?
+1. Onde o Model Registry é persistido?
+2. Qual é o schema mínimo de Model Profile para a próxima fase?
+3. Como modelos descobertos pelo OpenCode são mesclados com modelos de providers configurados?
+4. Como custo de modelo deve ser representado quando providers não expõem custo preciso?
+5. O que qualifica um `small_model`?
+6. Como fallback de modelo deve ser auditado?
+7. Uma decisão de modelo pode expirar?
+8. Quando cross-review é obrigatório?
+9. Como Model Selection consome estimativas do Context Router?
+10. Como políticas de privacidade local-only são aplicadas em model selection e execução de runtime?
 
-## Recommended ADRs
+## ADRs Recomendadas
 
-Create ADRs for these decisions before new code if possible:
+Crie ADRs para estas decisões antes de novo código quando possível:
 
-- Policy Engine versus Guardian Engine boundary.
-- Mission Runner versus Mission Orchestrator boundary.
-- Context Router and memory architecture.
-- Knowledge Hub versus Semantic Index boundary.
-- Runtime Adapter conformance model.
-- External framework positioning for LangGraph, MetaGPT, and AutoGen.
-- MCP adapter placement and safety review process.
-- Persistence adapter order: filesystem, SQLite, PostgreSQL.
+- Fronteira entre Policy Engine e Guardian Engine.
+- Fronteira entre Mission Runner e Mission Orchestrator.
+- Context Router e arquitetura de memória.
+- Fronteira entre Knowledge Hub e Semantic Index.
+- Modelo de conformidade de Runtime Adapter.
+- Posicionamento de frameworks externos para LangGraph, MetaGPT e AutoGen.
+- Local de adapters MCP e processo de revisão de segurança.
+- Ordem de adapters de persistência: filesystem, SQLite, PostgreSQL.

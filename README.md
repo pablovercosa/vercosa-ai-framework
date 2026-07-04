@@ -105,6 +105,17 @@ Módulos principais:
 - `knowledge/`: visão, princípios e arquitetura de referência.
 - `.opencode/`: integração inicial com OpenCode.
 
+## Idioma E Commits
+
+O idioma oficial da documentação do projeto é português do Brasil. Termos técnicos e nomes arquiteturais consolidados podem permanecer em inglês quando fizerem parte da API, arquitetura ou vocabulário do framework.
+
+Mensagens de commit futuras devem usar português do Brasil. O histórico Git já publicado não deve ser reescrito apenas para traduzir mensagens antigas.
+
+Políticas detalhadas:
+
+- [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
+- [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)
+
 ## Specs Principais
 
 - [Spec 0001: Framework Foundation](specs/framework/0001-framework-foundation.md)
@@ -124,18 +135,22 @@ Módulos principais:
 
 ## Documentação Técnica
 
-- [Architecture Map](docs/alignment/architecture-map.md)
-- [Current State](docs/alignment/current-state.md)
-- [Open Questions](docs/alignment/open-questions.md)
+- [Mapa de arquitetura](docs/alignment/architecture-map.md)
+- [Estado atual](docs/alignment/current-state.md)
+- [Perguntas em aberto](docs/alignment/open-questions.md)
 - [SDD Lifecycle](docs/alignment/sdd-lifecycle.md)
 - [Roadmap](docs/alignment/roadmap.md)
-- [README Standard](docs/documentation/readme-standard.md)
-- [Context Router And Token Budget](docs/context-router-token-budget.md)
+- [Padrão de README](docs/documentation/readme-standard.md)
+- [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
+- [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)
+- [Context Router e Token Budget](docs/context-router-token-budget.md)
 
 ## Regras De Trabalho
 
 - Nenhum código deve ser implementado sem Spec aprovada.
 - Documentação deve refletir o estado real do código e das Specs.
+- Toda missão que criar, alterar ou expandir funcionalidade deve revisar e atualizar READMEs, docs, Specs e ADRs relacionados quando necessário.
+- Mensagens de commit futuras devem usar português do Brasil.
 - Mudanças arquiteturais materiais devem gerar ADR, Spec update ou pergunta registrada.
 - Agentes não devem chamar providers, MCPs, APIs, bancos ou filesystem diretamente.
 - Links de documentação devem ser relativos.

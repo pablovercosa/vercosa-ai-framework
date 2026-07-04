@@ -1,4 +1,4 @@
-# Context Module
+# Módulo context
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0014](../../../specs/framework/0014-context-router-token-budget-memory.md)
 
@@ -92,9 +92,9 @@ Saídas:
 
 ## Docs Relacionadas
 
-- [Context Router And Token Budget](../../../docs/context-router-token-budget.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
-- [Current State](../../../docs/alignment/current-state.md)
+- [Context Router e Token Budget](../../../docs/context-router-token-budget.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
+- [Estado atual](../../../docs/alignment/current-state.md)
 - [ADR: Context Router, Token Budget Manager e arquitetura de memoria](../../../knowledge/decisions/2026-07-04-context-router-token-budget-memory-architecture.md)
 - [ADR: Policy Engine e Guardian Engine](../../../knowledge/decisions/2026-07-04-policy-engine-vs-guardian-engine.md)
 

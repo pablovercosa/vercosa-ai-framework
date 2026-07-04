@@ -1,156 +1,125 @@
-# SDD Lifecycle
+# Ciclo De Vida SDD
 
-## Purpose
+## Objetivo
 
-This document defines the desired Specification-Driven Development lifecycle for the Vercosa AI Framework.
+Definir o ciclo de vida desejado de Specification-Driven Development para o Vercosa AI Framework.
 
-Target lifecycle:
+Ciclo alvo:
 
 ```text
 Spec → Plan → Tasks → Implement → Validate → Commit
 ```
 
-The lifecycle is intended to make AI-assisted development reproducible, auditable, policy-governed, and provider-agnostic.
+O ciclo torna o desenvolvimento assistido por IA reproduzível, auditável, governado por políticas e agnóstico de provider.
 
-## Lifecycle Principles
+## Princípios Do Ciclo
 
-- Specs are the source of truth.
-- Implementation does not start without an approved Spec.
-- Plans explain how a Spec will be satisfied before code changes begin.
-- Tasks are bounded, traceable units of execution.
-- Implementation occurs through governed agents, capabilities, skills, tools, and runtime adapters.
-- Validation is mandatory before completion.
-- Commits are evidence-bearing checkpoints, not automatic side effects by default.
-- Every loop has a stop condition.
-- Every external side effect is policy-evaluated.
+- Specs são a fonte da verdade.
+- Implementação não começa sem Spec aprovada.
+- Plans explicam como uma Spec será satisfeita antes de mudanças de código.
+- Tasks são unidades de execução limitadas e rastreáveis.
+- Implementação ocorre por agentes, capabilities, skills, tools e runtime adapters governados.
+- Validação é obrigatória antes da conclusão.
+- Commits são checkpoints com evidência, não efeitos automáticos por padrão.
+- Todo loop possui condição de parada.
+- Todo efeito externo é avaliado por política.
 
-## Stage 1: Spec
+## Etapa 1: Spec
 
-Purpose:
+Objetivo: definir problema, escopo, restrições, requisitos de política, critérios de aceite e fronteiras.
 
-Define the problem, scope, constraints, policy requirements, acceptance criteria, and boundaries.
+Entradas:
 
-Inputs:
-
-- user mission;
-- existing specs;
+- missão do usuário;
+- Specs existentes;
 - Guardian Specs;
 - ADRs;
-- project context;
-- relevant knowledge documents.
+- contexto do projeto;
+- documentos de conhecimento relevantes.
 
-Required outputs:
+Saídas obrigatórias:
 
-- Spec reference;
+- referência de Spec;
 - status;
-- objective;
-- scope;
-- non-scope;
-- architectural decisions or decision candidates;
-- acceptance criteria;
-- security, privacy, cost, token, quality, and validation constraints;
-- pending questions.
+- objetivo;
+- escopo;
+- fora de escopo;
+- decisões arquiteturais ou candidatas;
+- critérios de aceite;
+- restrições de segurança, privacidade, custo, tokens, qualidade e validação;
+- perguntas pendentes.
 
-Approval rule:
+Regra de aprovação: implementação exige Spec aprovada. Trabalho apenas documental pode prosseguir quando a missão restringe explicitamente mudanças à documentação e não cria funcionalidade nem altera código fonte.
 
-Implementation requires an approved Spec. Documentation-only alignment work can proceed when the mission explicitly restricts changes to documentation and does not create features or source changes.
+## Etapa 2: Plan
 
-Framework implication:
+Objetivo: traduzir a Spec em abordagem de execução sem alterar artefatos de implementação.
 
-Mission Runner or Guardian Engine should block implementation missions without an approved Spec reference.
+Entradas:
 
-## Stage 2: Plan
+- Spec aprovada;
+- mapa de arquitetura;
+- módulos afetados;
+- análise de dependências e riscos;
+- capacidades disponíveis de runtime e provider;
+- saída do Context Router quando existir.
 
-Purpose:
+Saídas obrigatórias:
 
-Translate the Spec into an execution approach without changing implementation artifacts yet.
+- estratégia de implementação;
+- arquivos/módulos afetados;
+- tasks esperadas;
+- estratégia de validação;
+- classificação de risco;
+- aprovações necessárias;
+- pedido de política de modelo/provider;
+- condições de parada;
+- estratégia de rollback ou revisão manual.
 
-Inputs:
+Responsabilidade: Mission Orchestrator deve escolher workflow; Workflow Engine deve estruturar o plano; Agent Orchestrator não deve inventar o plano inteiro sozinho.
 
-- approved Spec;
-- architecture map;
-- affected modules;
-- dependency and risk analysis;
-- available runtime and provider capabilities;
-- Context Router output when implemented.
+## Etapa 3: Tasks
 
-Required outputs:
+Objetivo: dividir o plano em unidades de trabalho limitadas, ordenadas e validáveis.
 
-- implementation strategy;
-- affected files/modules;
-- expected tasks;
-- validation strategy;
-- risk classification;
-- required approvals;
-- model/provider policy request;
-- stop conditions;
-- rollback or manual review strategy.
-
-Owner:
-
-Mission Orchestrator should own workflow choice. Workflow Engine should own workflow plan structure. Agent Orchestrator should not invent the full plan independently.
-
-Guardrails:
-
-- The plan should prefer smallest correct changes.
-- The plan should not add providers, MCPs, frameworks, databases, or runtime assumptions unless the Spec requires them.
-- The plan should identify whether an ADR is needed before implementation.
-
-## Stage 3: Tasks
-
-Purpose:
-
-Break the plan into bounded, ordered, validated work units.
-
-Inputs:
+Entradas:
 
 - plan;
-- workflow policy;
-- dependency graph;
-- risk and validation requirements;
-- available agents/capabilities.
+- política de workflow;
+- grafo de dependências;
+- riscos e requisitos de validação;
+- agentes/capabilities disponíveis.
 
-Required outputs:
+Saídas obrigatórias:
 
-- task IDs;
-- task goals;
-- dependencies;
-- required capabilities;
-- acceptance criteria per task;
-- allowed paths;
-- denied paths;
-- execution limits;
-- validation requirements;
-- expected artifacts.
+- IDs de task;
+- objetivos de task;
+- dependências;
+- capabilities necessárias;
+- critérios de aceite por task;
+- caminhos permitidos;
+- caminhos negados;
+- limites de execução;
+- requisitos de validação;
+- artefatos esperados.
 
-Owner:
+Responsabilidade: Workflow Engine deve produzir ou normalizar a estrutura de tasks. Task Queue deve controlar estado, elegibilidade, tentativas, retries e agendamento.
 
-Workflow Engine should produce or normalize task structure. Task Queue should own task state, dependency eligibility, attempts, retries, and scheduling.
+## Etapa 4: Implement
 
-Guardrails:
+Objetivo: executar tasks por fronteiras governadas do framework.
 
-- Tasks should be small enough to validate independently.
-- Dependencies should be explicit.
-- Parallelism should remain disabled until artifact locks and policy exist.
-- Each task should know when it is done or failed.
-
-## Stage 4: Implement
-
-Purpose:
-
-Execute tasks through governed framework boundaries.
-
-Inputs:
+Entradas:
 
 - task;
-- agent profile;
+- perfil de agente;
 - capability request;
-- policy decisions;
-- context bundle;
-- model decision;
-- runtime/tool permissions.
+- decisões de política;
+- pacote de contexto;
+- decisão de modelo;
+- permissões de runtime/tool.
 
-Expected execution path:
+Caminho esperado:
 
 ```text
 Task Queue
@@ -172,7 +141,7 @@ Provider Gateway or Runtime Adapter
 Concrete provider, MCP, API, runtime, or filesystem adapter
 ```
 
-Current MVP path may be simpler:
+Caminho MVP atual possível:
 
 ```text
 Mission Runner or Workflow Engine
@@ -184,93 +153,88 @@ Runtime Adapter
 OpenCode adapter or fake adapter
 ```
 
-Implementation rules:
+Regras de implementação:
 
-- Do not bypass Guardian decisions.
-- Do not call providers or MCPs directly from agents.
-- Do not mutate global config unless explicitly approved by policy and Spec.
-- Do not use `sudo` by default.
-- Do not expose secrets to logs, prompts, commits, or external providers.
-- Do not hardcode provider, model, database, runtime, IDE, OS, or architecture.
-- Do not continue loops without finite limits.
+- Não contornar decisões Guardian.
+- Não chamar providers ou MCPs diretamente de agentes.
+- Não alterar configuração global sem aprovação explícita por política e Spec.
+- Não usar `sudo` por padrão.
+- Não expor segredos em logs, prompts, commits ou providers externos.
+- Não hardcodar provider, modelo, banco, runtime, IDE, sistema operacional ou arquitetura.
+- Não continuar loops sem limites finitos.
 
-## Stage 5: Validate
+## Etapa 5: Validate
 
-Purpose:
+Objetivo: provar que entregas de task e missão satisfazem Spec, plan, critérios de task, Guardian Specs e requisitos de qualidade.
 
-Prove that task and mission outputs satisfy the Spec, plan, task criteria, Guardian Specs, and quality requirements.
+Fontes de validação:
 
-Validation sources:
-
-- automated tests;
-- syntax checks;
-- lint/static analysis;
+- testes automatizados;
+- checks de sintaxe;
+- lint/análise estática;
 - type checks;
-- architectural review;
-- security review;
-- documentation review;
-- acceptance criteria checks;
-- artifact existence checks;
-- human approval;
-- cross-review by another agent/model when policy requires it.
+- revisão arquitetural;
+- revisão de segurança;
+- revisão documental;
+- critérios de aceite;
+- existência de artefatos;
+- aprovação humana;
+- revisão cruzada por outro agente/modelo quando política exigir.
 
-Required outputs:
+Saídas obrigatórias:
 
-- validation result;
-- commands or checks run;
-- pass/fail status;
+- resultado de validação;
+- comandos ou checks executados;
+- status pass/fail;
 - warnings;
-- skipped validations and reasons;
-- policy decisions referenced;
-- artifacts validated;
-- residual risks.
+- validações puladas e motivos;
+- decisões de política referenciadas;
+- artefatos validados;
+- riscos residuais.
 
-Rules:
+Regras:
 
-- A task should not be marked done without applicable validation or a recorded policy-approved reason.
-- A mission should not be marked done until required tasks and deliverables are validated.
-- Failure should route to replan, retry, manual review, or mission failure according to policy.
-- Critical validation should not rely only on the same agent that performed implementation.
+- Uma task não deve ser marcada como concluída sem validação aplicável ou motivo aprovado por política.
+- Uma missão não deve ser marcada como concluída até que tasks e entregáveis obrigatórios sejam validados.
+- Falha deve retornar para replanejamento, retry, revisão manual ou falha de missão conforme política.
+- Validação crítica não deve depender apenas do mesmo agente que executou a implementação.
 
-## Stage 6: Commit
+## Etapa 6: Commit
 
-Purpose:
+Objetivo: criar checkpoint de versionamento após validação.
 
-Create a version-control checkpoint after validation.
+Política padrão: auto-commit permanece desabilitado salvo autorização explícita.
 
-Default policy:
+Pré-requisitos de commit:
 
-Auto-commit is disabled unless explicitly authorized.
+- referência de Spec aprovada;
+- plan/tasks concluídos;
+- evidência de validação;
+- arquivos alterados revisados;
+- nenhuma mudança não relacionada do usuário incluída;
+- nenhum segredo;
+- nenhum artefato sensível gerado;
+- política de commit permitindo a ação.
 
-Commit prerequisites:
+Metadados recomendados:
 
-- approved Spec reference;
-- completed plan/tasks;
-- validation evidence;
-- reviewed changed files;
-- no unrelated user changes included;
-- no secrets;
-- no generated sensitive artifacts;
-- commit policy permits it.
+- ID da missão;
+- referências de Specs;
+- resumo das mudanças;
+- validação realizada;
+- limitações conhecidas quando existirem.
 
-Commit metadata should include:
+Regras:
 
-- mission ID;
-- Spec references;
-- summary of changes;
-- validation performed;
-- known limitations if any.
+- Não commitar mudanças fora do escopo da missão.
+- Não fazer amend nem reescrever histórico salvo pedido explícito.
+- Não fazer push automaticamente sem política e aprovação separadas.
+- Ambiguidade na worktree deve bloquear commit automático ou exigir revisão manual.
+- Mensagens de commit futuras devem usar português do Brasil, conforme [padrão de idioma e commits](../documentation/language-and-commit-standard.md).
 
-Rules:
+## Máquina De Estados Desejada
 
-- Do not commit changes outside the mission scope.
-- Do not amend or rewrite history unless explicitly requested.
-- Do not push automatically without separate policy and approval.
-- Worktree ambiguity should block automatic commit or require manual review.
-
-## Desired State Machine
-
-Mission state:
+Estado de missão:
 
 ```text
 created
@@ -288,7 +252,7 @@ validating
 done | failed | cancelled | requires_review
 ```
 
-Task state:
+Estado de task:
 
 ```text
 pending
@@ -302,7 +266,7 @@ validating
 done | failed | blocked | skipped | cancelled | requires_review
 ```
 
-Agent loop state:
+Loop de agente:
 
 ```text
 IDLE
@@ -320,43 +284,43 @@ REPLANNING
 DONE
 ```
 
-Every loop must include maximum cycles, retry limits, budget limits, and stop conditions.
+Todo loop deve incluir máximo de ciclos, limites de retry, limites de budget e condições de parada.
 
-## Mapping To Current MVP
+## Mapeamento Para O MVP Atual
 
-Current repository support:
+Suporte atual do repositório:
 
-- Spec artifacts exist under `specs/framework/`.
-- Mission Runner MVP supports queued/running/done/failed/cancelled style execution.
-- Workflow Engine MVP supports sequential task execution and Guardian checks.
-- Task Queue MVP supports task states, dependencies, attempts, retries, and deterministic scheduling.
-- Guardian Engine MVP supports structured allow/warn/block/require_approval decisions.
-- OpenCode Runtime Adapter MVP supports governed runtime execution and dry-run.
-- CLI supports mission checks, run-one, worker, workflow status, validation, and workflow run/dry-run.
+- Specs existem em `specs/framework/`.
+- Mission Runner MVP suporta estados como queued/running/done/failed/cancelled.
+- Workflow Engine MVP suporta execução sequencial e checks Guardian.
+- Task Queue MVP suporta estados, dependências, tentativas, retries e agendamento determinístico.
+- Guardian Engine MVP suporta decisões `allow`, `warn`, `block` e `require_approval`.
+- OpenCode Runtime Adapter MVP suporta execução governada e dry-run.
+- CLI suporta checks de missão, run-one, worker, status, validação e execução/dry-run de workflow.
 
-Missing or partial:
+Lacunas ou itens parciais:
 
-- formal Spec approval registry;
-- formal Plan artifact;
-- Mission Orchestrator layer;
-- full Task Queue integration into Workflow Engine;
-- full Agent Orchestrator integration into task execution;
+- registry formal de aprovação de Specs;
+- artefato formal de Plan;
+- camada Mission Orchestrator;
+- integração completa de Task Queue no Workflow Engine;
+- integração completa de Agent Orchestrator na execução de tasks;
 - Context Router;
-- persistent audit log integration;
-- validation evidence store;
-- commit governance automation;
-- cross-review policy execution.
+- integração de audit log persistente;
+- store de evidências de validação;
+- automação de governança de commit;
+- execução de política de revisão cruzada.
 
-## Recommended Next SDD Improvement
+## Próxima Melhoria SDD Recomendada
 
-Before implementing more features, define the minimal artifact schemas for:
+Antes de implementar mais funcionalidades, definir schemas mínimos para:
 
-- Spec approval record;
-- Plan record;
-- Task record;
-- Validation result;
-- Guardian decision reference;
-- Model decision reference;
-- Commit decision record.
+- registro de aprovação de Spec;
+- registro de Plan;
+- registro de Task;
+- resultado de validação;
+- referência de decisão Guardian;
+- referência de decisão de modelo;
+- registro de decisão de commit.
 
-These records should be persisted through the Persistence Layer rather than embedded only in CLI output or in-memory state.
+Esses registros devem ser persistidos pela Persistence Layer em vez de ficarem apenas em saída de CLI ou estado em memória.

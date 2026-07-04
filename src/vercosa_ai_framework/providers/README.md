@@ -1,4 +1,4 @@
-# Providers Module
+# Módulo providers
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0010](../../../specs/framework/0010-provider-gateway.md)
 
@@ -71,8 +71,8 @@ Saídas:
 ## Docs Relacionadas
 
 - [Provider Gateway](../../../docs/provider-gateway.md)
-- [External Framework Positioning](../../../docs/alignment/external-framework-positioning.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Posicionamento de frameworks externos](../../../docs/alignment/external-framework-positioning.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

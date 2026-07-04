@@ -1,4 +1,4 @@
-# Knowledge Module
+# Módulo knowledge
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0011](../../../specs/framework/0011-knowledge-hub.md)
 
@@ -75,7 +75,7 @@ Saídas:
 
 - [Knowledge Hub](../../../docs/knowledge-hub.md)
 - [Canonicalizer](../../../docs/canonicalizer.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

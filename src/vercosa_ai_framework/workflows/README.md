@@ -1,4 +1,4 @@
-# Workflows Module
+# Módulo workflows
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0006](../../../specs/framework/0006-workflow-engine.md)
 
@@ -70,7 +70,7 @@ Saídas:
 
 - [Workflow Engine](../../../docs/workflow-engine.md)
 - [Task Queue](../../../docs/task-queue.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

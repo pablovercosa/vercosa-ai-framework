@@ -1,4 +1,4 @@
-# Guardian Module
+# Módulo guardian
 
 Links principais: [README principal](../../../README.md) | [Índice de módulos](../../../docs/architecture/module-index.md) | [Spec 0005](../../../specs/framework/0005-guardian-engine.md)
 
@@ -71,8 +71,8 @@ Saídas:
 ## Docs Relacionadas
 
 - [Guardian Engine](../../../docs/guardian-engine.md)
-- [Open Questions](../../../docs/alignment/open-questions.md)
-- [Architecture Map](../../../docs/alignment/architecture-map.md)
+- [Perguntas em aberto](../../../docs/alignment/open-questions.md)
+- [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 

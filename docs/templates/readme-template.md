@@ -53,7 +53,7 @@ Saídas:
 
 ## Docs Relacionadas
 
-- [Architecture Map](../alignment/architecture-map.md)
+- [Mapa de arquitetura](../alignment/architecture-map.md)
 
 ## Exemplo Mínimo
 
@@ -70,3 +70,10 @@ Explique a razão do status em uma frase.
 ## Próximos Passos
 
 - Próximo passo técnico ou documental.
+
+## Checklist De Manutenção
+
+- Verificar o [padrão de README](../documentation/readme-standard.md).
+- Verificar a [política de atualização de documentação](../documentation/documentation-update-policy.md).
+- Manter o texto explicativo em português do Brasil.
+- Manter nomes técnicos, APIs, classes, funções, módulos e arquivos sem tradução artificial.
