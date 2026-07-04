@@ -10,7 +10,7 @@ Documentar o MVP determinístico do Context Router e do Token Budget Manager no 
 
 O módulo `src/vercosa_ai_framework/context/` cria tipos, portas abstratas e implementações determinísticas mínimas para contexto, memória e orçamento de tokens.
 
-Este escopo implementa um MVP funcional sem LLM. Ele trabalha apenas com candidatos explícitos recebidos pelo chamador e não implementa RAG funcional, Semantic Index, embeddings, pgvector, PostgreSQL, chamadas a LLM, runtime ou providers.
+Este escopo implementa um MVP funcional sem LLM. Ele trabalha apenas com candidatos explícitos recebidos pelo chamador ou convertidos deterministicamente a partir de registros já disponíveis do Knowledge Hub. Ele não implementa RAG funcional, Semantic Index, embeddings, pgvector, PostgreSQL, chamadas a LLM, runtime ou providers.
 
 ## Componentes
 
@@ -19,6 +19,8 @@ Este escopo implementa um MVP funcional sem LLM. Ele trabalha apenas com candida
 `Token Budget Manager` estima tokens de forma determinística, reserva tokens de output, calcula orçamento disponível para contexto, decide se um item cabe e também produz resultado agregado para uma sequência de itens.
 
 `MemoryLayer` descreve camadas conceituais de memória sem escolher storage, provider, runtime ou modelo.
+
+`knowledge.context_adapter` converte `KnowledgeDocument` e `KnowledgeSearchResult` em pares `ContextSource` e `ContextItem`. O adaptador apenas mapeia objetos recebidos; ele não consulta store, não lê filesystem, não acessa banco, não faz busca semântica e não chama provider.
 
 ## Fluxo MVP
 
@@ -38,6 +40,7 @@ ContextPackage
 - Lista explícita de `ContextItem` passada para `DeterministicContextRouter.route()` quando o chamador preferir separar request e candidatos.
 - `ContextSource` para fontes já conhecidas pelo chamador.
 - `ContextItem` para trechos, referências, evidências, instruções ou metadados candidatos.
+- Pares `ContextSource` e `ContextItem` convertidos pelo Knowledge Hub a partir de `KnowledgeDocument` ou `KnowledgeSearchResult` já existentes.
 
 ## Saídas
 
@@ -58,13 +61,16 @@ ContextPackage
 - Sem promessa de memória infinita.
 - Mesmo resultado para o mesmo request, candidatos, políticas e orçamento.
 - Preservação de citações e redactions já presentes nos itens selecionados.
+- Conversão determinística de registros do Knowledge Hub em candidatos de contexto, preservando id, título, referência, tipo de fonte, hash e citações ou referência rastreável mínima.
 - Registro de omissões no `ContextPackage`.
 
 ## Limites Conhecidos
 
 - A estimativa de tokens usa heurística simples por caracteres.
-- O roteador só aceita candidatos explícitos; ele não busca documentos.
+- O roteador só aceita candidatos explícitos; ele não busca documentos nem consulta Knowledge Hub diretamente.
+- O Knowledge Hub fornece candidatos, não memória infinita e não pacote final de contexto.
 - O MVP não executa busca semântica, reranking, chunking, sumarização nem recuperação automática.
+- A integração atual não implementa Semantic Index, embeddings, pgvector, PostgreSQL ou RAG semântico; esses pontos continuam como etapas futuras.
 - Itens de evidência sem citação são omitidos; outros itens sem citação podem ser aceitos com warning quando `citation_required=False`.
 - Redaction é apenas preservada quando já existe no item; o módulo não executa redaction.
 - Policy Engine e Guardian Engine ainda não são integrados ao fluxo do pacote.
@@ -72,7 +78,7 @@ ContextPackage
 
 ## Relação Com Outros Módulos
 
-- `knowledge/` poderá fornecer candidatos citáveis no futuro; hoje o Context Router não chama Knowledge Hub.
+- `knowledge/` fornece um adaptador determinístico para transformar documentos e resultados textuais já disponíveis em candidatos citáveis. O Context Router continua sem chamar Knowledge Hub diretamente.
 - `canonicalizer/` prepara documentos canônicos, mas não é chamado por este MVP.
 - `persistence/` poderá persistir pacotes e registros futuros, mas este MVP não persiste nada.
 - `model_selection/` poderá receber requisitos de janela de contexto; este MVP apenas prepara metadados.
@@ -82,4 +88,4 @@ ContextPackage
 
 Status: `MVP`.
 
-O código possui contratos e implementação mínima determinística, com testes de contrato. Ele ainda não representa o fluxo completo de memória governada ou RAG.
+O código possui contratos, implementação mínima determinística e integração inicial com candidatos vindos do Knowledge Hub. Ele ainda não representa o fluxo completo de memória governada, Semantic Index ou RAG semântico.

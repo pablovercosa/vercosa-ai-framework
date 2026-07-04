@@ -64,7 +64,7 @@ Providers / MCPs / APIs / Runtimes
 - `guardian/` é transversal e avalia riscos, permissões e bloqueios antes de ações sensíveis.
 - `model_selection/` é transversal e deve decidir modelos por política, não por hardcode.
 - `context/` monta pacotes de contexto e aplica orçamento de tokens sem buscar, indexar, persistir ou chamar providers diretamente.
-- `knowledge/` organiza documentos e busca textual MVP; `canonicalizer/` prepara documentos canônicos antes de ingestão.
+- `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
 - `runtime/` isola execução concreta em runtimes como OpenCode.
 
@@ -75,5 +75,5 @@ As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto]
 - fronteira entre Guardian Engine e Policy Engine;
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
-- Context Router integrado aos fluxos de missão, agente, modelo, Guardian e Knowledge Hub;
+- Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;
 - Semantic Index e persistência final.

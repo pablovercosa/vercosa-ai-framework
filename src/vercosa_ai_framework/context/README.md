@@ -20,6 +20,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Registra omissões por duplicação, orçamento insuficiente ou citação obrigatória ausente.
 - Gera warnings determinísticos para itens citáveis sem citação quando citação não for obrigatória.
 - Produz `ContextPackage` rastreável.
+- Recebe normalmente candidatos `ContextItem` originados do Knowledge Hub quando eles já foram convertidos por adaptador externo ao roteador.
 
 ## O Que Este Módulo Não Faz
 
@@ -28,6 +29,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Não usa PostgreSQL, pgvector, SQLite ou qualquer banco.
 - Não implementa RAG funcional.
 - Não acessa filesystem.
+- Não consulta Knowledge Hub diretamente; o Knowledge Hub fornece candidatos por adaptador determinístico.
 - Não chama providers, LLMs, APIs, MCPs, OpenCode, Ollama, Gemini, OpenAI, Claude ou runtimes.
 - Não escolhe modelos concretos.
 - Não executa redaction; apenas preserva registros já recebidos.
@@ -73,6 +75,7 @@ Entradas:
 - `ContextRequest` com objetivo, escopo, orçamento e candidatos explícitos.
 - Lista explícita de `ContextItem` passada para `DeterministicContextRouter.route()` quando o chamador não quiser armazenar candidatos no request.
 - `ContextSource` e `ContextItem` criados por chamadores autorizados.
+- `ContextSource` e `ContextItem` produzidos por `knowledge_document_to_context_candidate()` ou `knowledge_search_result_to_context_candidate()` quando a origem for o Knowledge Hub.
 
 Saídas:
 
@@ -83,6 +86,7 @@ Saídas:
 ## Dependências Internas
 
 - Não depende de outros módulos do framework na implementação atual.
+- A integração com `knowledge/` é feita no módulo `knowledge`, por adaptador que produz tipos de `context/` sem fazer o roteador buscar documentos.
 
 ## Módulos Relacionados
 
@@ -133,7 +137,7 @@ O exemplo acima não executa busca, RAG, embeddings, banco, provider ou runtime.
 
 Status: `MVP`.
 
-O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele ainda não integra Knowledge Hub, Policy Engine, Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
+O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub, mas não consulta Knowledge Hub diretamente e ainda não integra Policy Engine, Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
 
 Limitações atuais:
 
@@ -141,6 +145,8 @@ Limitações atuais:
 - Não há embeddings.
 - Não há pgvector ou PostgreSQL.
 - Não há recuperação automática de documentos.
+- Não há busca semântica.
+- Knowledge Hub fornece candidatos explícitos; ele não representa memória infinita.
 - Não há memória infinita.
 - Não há chamadas externas.
 
@@ -148,6 +154,6 @@ Limitações atuais:
 
 - Definir contrato formal com Policy Engine quando existir.
 - Definir avaliação Guardian para Context Packages sensíveis.
-- Definir candidatos vindos de Knowledge Hub sem acoplar a storage.
+- Expandir o contrato de candidatos vindos de Knowledge Hub somente após novas Specs ou ADRs para ranking, chunking e governança adicional.
 - Definir persistência futura de Context Packages e Token Budget Records por `persistence/`.
 - Definir Semantic Index apenas após estabilizar contratos e governança.

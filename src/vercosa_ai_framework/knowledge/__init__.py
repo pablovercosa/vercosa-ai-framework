@@ -1,6 +1,11 @@
 """Knowledge Hub public contracts."""
 
 from vercosa_ai_framework.knowledge.store import InMemoryKnowledgeStore, KnowledgeStore, KnowledgeStoreError
+from vercosa_ai_framework.knowledge.context_adapter import (
+    knowledge_document_to_context_candidate,
+    knowledge_search_result_to_context_candidate,
+    knowledge_search_results_to_context_candidates,
+)
 from vercosa_ai_framework.knowledge.markdown import (
     PROMPT_INJECTION_WARNING,
     detect_prompt_injection_warnings,
@@ -35,6 +40,9 @@ __all__ = [
     "detect_prompt_injection_warnings",
     "index_document",
     "ingest_markdown_file",
+    "knowledge_document_to_context_candidate",
+    "knowledge_search_result_to_context_candidate",
+    "knowledge_search_results_to_context_candidates",
     "load_markdown_document",
     "markdown_to_document",
     "parse_markdown_frontmatter",
