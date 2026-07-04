@@ -11,7 +11,7 @@ O Vercosa AI Framework organiza engenharia de software em torno de Specs, missõ
 - Um framework Specification First para desenvolvimento assistido por IA.
 - Uma arquitetura AI Native com governança, rastreabilidade e validação explícitas.
 - Um núcleo provider agnostic para modelos, runtimes, bancos, vetores, IDEs, MCPs e APIs.
-- Um conjunto de contratos e MVPs iniciais em Python para missão, workflow, task queue, agentes, Guardian, runtime, knowledge, canonicalização, providers e persistência.
+- Um conjunto de contratos e MVPs iniciais em Python para missão, workflow, task queue, agentes, Guardian, runtime, knowledge, context routing, token budget, canonicalização, providers e persistência.
 
 ## O Que O Framework Não É
 
@@ -89,6 +89,7 @@ Módulos principais:
 - [providers](src/vercosa_ai_framework/providers/README.md)
 - [runtime](src/vercosa_ai_framework/runtime/README.md)
 - [model_selection](src/vercosa_ai_framework/model_selection/README.md)
+- [context](src/vercosa_ai_framework/context/README.md)
 - [knowledge](src/vercosa_ai_framework/knowledge/README.md)
 - [canonicalizer](src/vercosa_ai_framework/canonicalizer/README.md)
 - [persistence](src/vercosa_ai_framework/persistence/README.md)
@@ -119,6 +120,7 @@ Módulos principais:
 - [Spec 0011: Knowledge Hub](specs/framework/0011-knowledge-hub.md)
 - [Spec 0012: Canonicalizer](specs/framework/0012-canonicalizer.md)
 - [Spec 0013: Persistence Layer](specs/framework/0013-persistence-layer.md)
+- [Spec 0014: Context Router, Token Budget Manager e Memory Architecture](specs/framework/0014-context-router-token-budget-memory.md)
 
 ## Documentação Técnica
 
@@ -128,6 +130,7 @@ Módulos principais:
 - [SDD Lifecycle](docs/alignment/sdd-lifecycle.md)
 - [Roadmap](docs/alignment/roadmap.md)
 - [README Standard](docs/documentation/readme-standard.md)
+- [Context Router And Token Budget](docs/context-router-token-budget.md)
 
 ## Regras De Trabalho
 

@@ -50,6 +50,7 @@ Providers / MCPs / APIs / Runtimes
 | Providers | `providers/` | [providers](../../src/vercosa_ai_framework/providers/README.md) | MVP | [0010](../../specs/framework/0010-provider-gateway.md) | [Provider Gateway](../provider-gateway.md) |
 | Runtime | `runtime/` | [runtime](../../src/vercosa_ai_framework/runtime/README.md) | MVP | [0003](../../specs/framework/0003-opencode-runtime-adapter.md) | [OpenCode Runtime Adapter](../opencode-runtime-adapter.md) |
 | Modelos | `model_selection/` | [model_selection](../../src/vercosa_ai_framework/model_selection/README.md) | MVP | [0002](../../specs/framework/0002-model-selection-engine.md) | [Architecture Map](../alignment/architecture-map.md) |
+| Contexto | `context/` | [context](../../src/vercosa_ai_framework/context/README.md) | MVP | [0014](../../specs/framework/0014-context-router-token-budget-memory.md) | [Context Router And Token Budget](../context-router-token-budget.md) |
 | Conhecimento | `knowledge/` | [knowledge](../../src/vercosa_ai_framework/knowledge/README.md) | MVP | [0011](../../specs/framework/0011-knowledge-hub.md) | [Knowledge Hub](../knowledge-hub.md) |
 | Canonicalização | `canonicalizer/` | [canonicalizer](../../src/vercosa_ai_framework/canonicalizer/README.md) | MVP | [0012](../../specs/framework/0012-canonicalizer.md) | [Canonicalizer](../canonicalizer.md) |
 | Persistência | `persistence/` | [persistence](../../src/vercosa_ai_framework/persistence/README.md) | MVP | [0013](../../specs/framework/0013-persistence-layer.md) | [Persistence Layer](../persistence-layer.md) |
@@ -62,6 +63,7 @@ Providers / MCPs / APIs / Runtimes
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
 - `guardian/` é transversal e avalia riscos, permissões e bloqueios antes de ações sensíveis.
 - `model_selection/` é transversal e deve decidir modelos por política, não por hardcode.
+- `context/` monta pacotes de contexto e aplica orçamento de tokens sem buscar, indexar, persistir ou chamar providers diretamente.
 - `knowledge/` organiza documentos e busca textual MVP; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
 - `runtime/` isola execução concreta em runtimes como OpenCode.
@@ -73,5 +75,5 @@ As principais lacunas arquiteturais já estão listadas em [Open Questions](../a
 - fronteira entre Guardian Engine e Policy Engine;
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
-- Context Router como módulo futuro;
+- Context Router integrado aos fluxos de missão, agente, modelo, Guardian e Knowledge Hub;
 - Semantic Index e persistência final.
