@@ -32,6 +32,22 @@ As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `s
 
 OpenCode é o runtime e laboratório inicial. Ele deve permanecer atrás de adapter em `runtime/` e não define o núcleo do framework.
 
+## Worker Local
+
+Os scripts em `scripts/` permitem processar missões locais em fila usando OpenCode no ambiente atual.
+
+Variáveis relevantes:
+
+- `VAF_AUTO_COMMIT`: quando definido como `1`, o runner cria commit automático ao concluir uma missão com alterações staged.
+- `VAF_COMMIT_MESSAGE`: quando definida e não vazia, substitui a mensagem automática do commit.
+- Com `VAF_AUTO_COMMIT=1` e sem `VAF_COMMIT_MESSAGE`, a mensagem padrão é `missão: nome-da-missao`.
+
+Exemplo:
+
+```bash
+VAF_AUTO_COMMIT=1 VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-worker.sh
+```
+
 ## Princípios
 
 - Specification First

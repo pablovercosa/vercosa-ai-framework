@@ -13,6 +13,7 @@ fi
 VAF_MAX_CYCLES="${VAF_MAX_CYCLES:-3}" \
 VAF_AUTO_APPROVE="${VAF_AUTO_APPROVE:-1}" \
 VAF_AUTO_COMMIT="${VAF_AUTO_COMMIT:-1}" \
+VAF_COMMIT_MESSAGE="${VAF_COMMIT_MESSAGE:-}" \
 nohup ./scripts/vaf-worker.sh > logs/vaf-worker.out 2>&1 &
 
 echo $! > logs/vaf-worker.pid

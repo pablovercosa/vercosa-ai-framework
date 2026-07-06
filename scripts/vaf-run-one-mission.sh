@@ -49,7 +49,11 @@ if [ "$STATUS" -eq 0 ]; then
   if [ "${VAF_AUTO_COMMIT:-0}" = "1" ]; then
     git add -A
     if ! git diff --cached --quiet; then
-      git commit -m "mission: ${NAME}"
+      COMMIT_MESSAGE="${VAF_COMMIT_MESSAGE:-}"
+      if [ -z "$COMMIT_MESSAGE" ]; then
+        COMMIT_MESSAGE="missão: ${NAME}"
+      fi
+      git commit -m "$COMMIT_MESSAGE"
     else
       echo "Nenhuma alteração para commit."
     fi

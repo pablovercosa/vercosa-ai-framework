@@ -10,6 +10,9 @@ echo "VAF Worker iniciado."
 echo "MAX_CYCLES=$MAX_CYCLES"
 echo "VAF_AUTO_APPROVE=${VAF_AUTO_APPROVE:-0}"
 echo "VAF_AUTO_COMMIT=${VAF_AUTO_COMMIT:-0}"
+if [ "${VAF_AUTO_COMMIT:-0}" = "1" ] && [ -n "${VAF_COMMIT_MESSAGE:-}" ]; then
+  echo "VAF_COMMIT_MESSAGE=${VAF_COMMIT_MESSAGE}"
+fi
 echo
 
 cycle=1
