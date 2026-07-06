@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 
@@ -23,3 +24,28 @@ def test_worker_logs_custom_commit_message_when_auto_commit_is_enabled():
     script = (ROOT / "scripts" / "vaf-worker.sh").read_text(encoding="utf-8")
 
     assert 'echo "VAF_COMMIT_MESSAGE=${VAF_COMMIT_MESSAGE}"' in script
+
+
+def test_run_next_safe_script_exists_and_is_executable():
+    script_path = ROOT / "scripts" / "vaf-run-next-safe.sh"
+
+    assert script_path.exists()
+    assert script_path.stat().st_mode & 0o111
+
+
+def test_run_next_safe_script_has_expected_safety_checks():
+    script = (ROOT / "scripts" / "vaf-run-next-safe.sh").read_text(encoding="utf-8")
+
+    assert "set -euo pipefail" in script
+    assert "VAF_AUTO_PUSH" in script
+    assert "VAF_AUTO_COMMIT" in script
+    assert "pytest" in script
+    assert "compileall" in script
+    assert "git push" in script
+    assert "git status --porcelain" in script
+
+
+def test_run_next_safe_script_has_valid_bash_syntax():
+    script_path = ROOT / "scripts" / "vaf-run-next-safe.sh"
+
+    subprocess.run(["bash", "-n", str(script_path)], check=True)

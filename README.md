@@ -48,6 +48,30 @@ Exemplo:
 VAF_AUTO_COMMIT=1 VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-worker.sh
 ```
 
+### Runner Seguro De Próxima Missão
+
+O script `scripts/vaf-run-next-safe.sh` executa a próxima missão da fila com validações locais antes e depois do worker. Ele aborta se o Git não estiver limpo antes de iniciar, verifica se não há worker em execução, roda apenas uma missão por padrão, executa `pytest`, executa `python3 -m compileall src` e só permite push automático quando solicitado explicitamente.
+
+Uso básico:
+
+```bash
+./scripts/vaf-run-next-safe.sh
+```
+
+Uso com push automático opcional:
+
+```bash
+VAF_AUTO_PUSH=1 ./scripts/vaf-run-next-safe.sh
+```
+
+Uso com mensagem de commit customizada:
+
+```bash
+VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-run-next-safe.sh
+```
+
+Por padrão, o runner define `VAF_MAX_CYCLES=1`, `VAF_AUTO_APPROVE=1` e `VAF_AUTO_COMMIT=1`. O push automático nunca é padrão; quando `VAF_AUTO_PUSH=1`, o script exige branch `main`, Git limpo, testes aprovados, `compileall` aprovado, worker parado, nenhuma missão em `missions/failed` e remoto `origin` configurado.
+
 ## Princípios
 
 - Specification First
