@@ -12,6 +12,7 @@ from vercosa_ai_framework.guardian.types import (
     GuardianMode,
     GuardianSeverity,
 )
+from vercosa_ai_framework.policy.types import ResolvedPolicySet
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,6 +38,7 @@ class GuardianEvaluationContext:
     current_cycle: int | None = None
     risk_overrides: tuple[str, ...] = field(default_factory=tuple)
     prior_decision_refs: tuple[str, ...] = field(default_factory=tuple)
+    resolved_policy_set: ResolvedPolicySet | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
 

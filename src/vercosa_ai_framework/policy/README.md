@@ -15,6 +15,7 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Ordena políticas de forma determinística e aplica precedência simples por prioridade.
 - Detecta conflitos básicos entre regras habilitadas com o mesmo escopo e chave quando efeitos ou valores divergem.
 - Produz `ResolvedPolicySet` e `PolicyResolutionResult` rastreáveis.
+- Fornece `ResolvedPolicySet` para consumidores como o Guardian Engine quando o chamador decidir passar políticas resolvidas adiante.
 
 ## O Que Este Módulo Não Faz
 
@@ -25,7 +26,8 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Não implementa DSL completa de políticas.
 - Não implementa parser externo de arquivos de política.
 - Não carrega política dinâmica remota.
-- Não faz integração profunda com `guardian/` nesta etapa.
+- Não chama `guardian/` e não aplica enforcement operacional.
+- Não transforma `ResolvedPolicySet` em decisão Guardian por conta própria.
 
 ## Principais Arquivos
 
@@ -62,9 +64,12 @@ Saídas:
 
 - `PolicyResolutionResult` com `ResolvedPolicySet`, ordem determinística dos conjuntos, conflitos e warnings.
 
+O `ResolvedPolicySet` pode ser passado pelo chamador ao Guardian Engine. Essa integração é inicial e unidirecional: Policy Engine resolve políticas declarativas; Guardian Engine avalia ação concreta e pode elevar a decisão operacional com base nos efeitos resolvidos.
+
 ## Dependências Internas
 
 - Nenhuma dependência interna obrigatória além do próprio pacote `policy/`.
+- O módulo `policy/` não importa `guardian/`.
 
 ## Módulos Relacionados
 
@@ -107,15 +112,28 @@ result = DeterministicPolicyEngine().resolve([policy_set])
 
 O resultado é declarativo. A avaliação operacional de uma ação concreta continua pertencendo ao Guardian Engine.
 
+## Integração Inicial Com Guardian Engine
+
+O contrato atual permite que um chamador resolva políticas com `DeterministicPolicyEngine` e entregue o `ResolvedPolicySet` ao contexto de avaliação do Guardian Engine.
+
+Limites atuais:
+
+- `allow` não bloqueia por si só.
+- `warn` pode elevar a decisão Guardian para `warn`.
+- `require_approval` pode elevar a decisão Guardian para `require_approval`.
+- `deny` pode elevar a decisão Guardian para `block`.
+- conflitos de política resolvida podem gerar `warn` ou `require_approval`, conforme severidade.
+- efeitos como `set_limit` e `prefer` continuam declarativos nesta etapa e não viram enforcement operacional automático.
+
 ## Status Atual
 
 Status: `MVP`.
 
-O módulo possui contratos iniciais e resolução determinística simples. A integração com Guardian Engine, Context Router, Model Selection Engine, Token Budget Manager e Persistence Layer ainda não foi implementada.
+O módulo possui contratos iniciais e resolução determinística simples. Existe integração inicial e unidirecional com Guardian Engine via `ResolvedPolicySet` opcional no contexto do Guardian. A integração com Context Router, Model Selection Engine, Token Budget Manager e Persistence Layer ainda não foi implementada.
 
 ## Próximos Passos
 
 - Definir uma Spec própria ou atualização explícita de Spec para Policy Engine quando a superfície crescer além do MVP.
 - Definir formato persistível de `Policy Resolution Record` pela Persistence Layer.
-- Integrar políticas resolvidas ao Guardian Engine sem fundir responsabilidades.
+- Evoluir a integração com Guardian Engine sem fundir responsabilidades.
 - Evoluir composição de políticas sem introduzir DSL complexa antes de estabilizar contratos.

@@ -27,6 +27,7 @@ from vercosa_ai_framework.guardian.types import (
     GuardianSeverity,
     GuardianViolation,
 )
+from vercosa_ai_framework.policy.types import PolicyEffect, PolicySeverity
 
 
 SPEC_REF = "specs/framework/0005-guardian-engine.md"
@@ -100,6 +101,7 @@ class GuardianEngine:
         matches.extend(self._detect_secrets(action_text, "requested_action"))
         matches.extend(self._detect_sudo(command, context.guardian_mode))
         matches.extend(self._detect_global_config(action_text, context.guardian_mode))
+        matches.extend(self._evaluate_resolved_policies(context))
 
         return self._decision_from_matches(context, matches)
 
@@ -578,6 +580,43 @@ class GuardianEngine:
                 )
         return matches
 
+    def _evaluate_resolved_policies(self, context: GuardianEvaluationContext) -> list[GuardianRuleMatch]:
+        resolved_policy_set = context.resolved_policy_set
+        if resolved_policy_set is None:
+            return []
+
+        matches: list[GuardianRuleMatch] = []
+        for rule in resolved_policy_set.resolved_rules:
+            if rule.effect == PolicyEffect.ALLOW:
+                continue
+            action = self._guardian_action_from_policy_effect(rule.effect)
+            if action is None:
+                continue
+            matches.append(
+                GuardianRuleMatch(
+                    policy_id=rule.rule_id,
+                    action=action,
+                    severity=self._guardian_severity_from_policy_severity(rule.severity),
+                    message=f"politica resolvida '{rule.rule_id}' declarou efeito {rule.effect.value}",
+                    target_ref=f"{rule.scope.value}.{rule.key}",
+                    safe_alternative="Revise a politica resolvida ou solicite aprovacao explicita com escopo limitado.",
+                )
+            )
+
+        for conflict in resolved_policy_set.conflicts:
+            action = self._action_from_policy_conflict_severity(conflict.severity)
+            matches.append(
+                GuardianRuleMatch(
+                    policy_id=conflict.conflict_id,
+                    action=action,
+                    severity=self._guardian_severity_from_policy_severity(conflict.severity),
+                    message=f"conflito de politica resolvida em {conflict.scope.value}.{conflict.key}",
+                    target_ref=f"{conflict.scope.value}.{conflict.key}",
+                    safe_alternative="Resolva o conflito declarativo antes de executar a acao sensivel.",
+                )
+            )
+        return matches
+
     def _decision_from_matches(self, context: GuardianEvaluationContext, matches: list[GuardianRuleMatch]) -> GuardianDecision:
         if not matches:
             return GuardianDecision(
@@ -644,6 +683,26 @@ class GuardianEngine:
         if mode == GuardianMode.STRICT:
             return GuardianAction.BLOCK
         return GuardianAction.REQUIRE_APPROVAL
+
+    def _guardian_action_from_policy_effect(self, effect: PolicyEffect) -> GuardianAction | None:
+        return {
+            PolicyEffect.WARN: GuardianAction.WARN,
+            PolicyEffect.REQUIRE_APPROVAL: GuardianAction.REQUIRE_APPROVAL,
+            PolicyEffect.DENY: GuardianAction.BLOCK,
+        }.get(effect)
+
+    def _guardian_severity_from_policy_severity(self, severity: PolicySeverity) -> GuardianSeverity:
+        return {
+            PolicySeverity.LOW: GuardianSeverity.LOW,
+            PolicySeverity.MEDIUM: GuardianSeverity.MEDIUM,
+            PolicySeverity.HIGH: GuardianSeverity.HIGH,
+            PolicySeverity.CRITICAL: GuardianSeverity.CRITICAL,
+        }[severity]
+
+    def _action_from_policy_conflict_severity(self, severity: PolicySeverity) -> GuardianAction:
+        if severity in {PolicySeverity.HIGH, PolicySeverity.CRITICAL}:
+            return GuardianAction.REQUIRE_APPROVAL
+        return GuardianAction.WARN
 
     def _most_restrictive(self, actions: object) -> GuardianAction:
         rank = {

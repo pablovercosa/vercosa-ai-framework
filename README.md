@@ -198,3 +198,9 @@ Políticas detalhadas:
 - Mudanças arquiteturais materiais devem gerar ADR, Spec update ou pergunta registrada.
 - Agentes não devem chamar providers, MCPs, APIs, bancos ou filesystem diretamente.
 - Links de documentação devem ser relativos.
+
+## Integração Policy E Guardian
+
+O Policy Engine e o Guardian Engine permanecem separados. O Policy Engine resolve políticas declarativas em `ResolvedPolicySet`; o Guardian Engine avalia ações concretas e pode considerar esse conjunto opcional para elevar decisões operacionais como `warn`, `require_approval` ou `block`.
+
+Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa DSL, parser de políticas, carregamento remoto, RAG, embeddings, banco ou provider.

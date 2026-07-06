@@ -62,7 +62,7 @@ Providers / MCPs / APIs / Runtimes
 - `workflows/` define plano e execução sequencial MVP; `tasks/` concentra estado, elegibilidade e tentativas de tasks.
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
-- `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/` avalia riscos, permissões, bloqueios e Context Packages já montados antes de ações sensíveis ou entrega governada.
+- `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/` avalia riscos, permissões, bloqueios, Context Packages já montados e pode considerar `ResolvedPolicySet` opcional antes de ações sensíveis ou entrega governada.
 - `model_selection/` é transversal e deve decidir modelos por política, não por hardcode.
 - `context/` monta pacotes de contexto e aplica orçamento de tokens sem buscar, indexar, persistir, chamar providers diretamente ou decidir enforcement operacional.
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
@@ -73,7 +73,7 @@ Providers / MCPs / APIs / Runtimes
 
 As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto](../alignment/open-questions.md), especialmente:
 
-- integração completa entre Policy Engine e Guardian Engine após os contratos iniciais;
+- integração completa entre Policy Engine e Guardian Engine após a ponte inicial via `ResolvedPolicySet` opcional;
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;
