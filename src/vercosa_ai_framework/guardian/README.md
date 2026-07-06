@@ -4,7 +4,7 @@ Links principais: [README principal](../../../README.md) | [Índice de módulos]
 
 ## Objetivo
 
-Avaliar missões, tasks, comandos e ações sensíveis contra políticas de segurança, risco e governança.
+Avaliar missões, tasks, comandos, ações sensíveis e Context Packages contra políticas de segurança, risco e governança.
 
 ## O Que Este Módulo Faz
 
@@ -12,12 +12,15 @@ Avaliar missões, tasks, comandos e ações sensíveis contra políticas de segu
 - Implementa políticas estáticas e contexto de avaliação.
 - Fornece `GuardianEngine` determinístico MVP.
 - Detecta padrões perigosos como `sudo`, comandos destrutivos, segredos prováveis e alterações globais.
+- Avalia riscos básicos de `ContextPackage` já produzido pelo Context Router, incluindo rastreabilidade, fonte, warnings, redactions, orçamento, sensibilidade e omissões críticas.
 
 ## O Que Este Módulo Não Faz
 
 - Não executa comandos.
 - Não edita arquivos.
 - Não escolhe modelos.
+- Não escolhe, monta, ordena ou reduz contexto.
+- Não faz RAG, busca semântica, embeddings, chamadas a LLM, providers, MCPs, APIs ou rede.
 - Não substitui revisão humana quando política exigir.
 - Não resolve completamente a fronteira futura de Policy Engine.
 
@@ -42,16 +45,18 @@ Avaliar missões, tasks, comandos e ações sensíveis contra políticas de segu
 - `GuardianPolicy`: contrato de política.
 - `StaticGuardianPolicy`: política declarativa.
 - `GuardianEngine`: avaliador principal.
+- `GuardianEngine.evaluate_context_package()`: avaliação determinística inicial de `ContextPackage` sem efeitos externos.
 
 ## Entradas E Saídas
 
 Entradas:
 
 - Contexto de missão, workflow, task, comando, permissões ou metadados.
+- `ContextPackage` já montado por `context/`, quando o chamador quiser avaliar risco antes de entrega.
 
 Saídas:
 
-- `GuardianDecision` com ação, violações, riscos e justificativa.
+- `GuardianDecision` com ação, violações, riscos, limites aplicados, metadados de pacote e justificativa.
 
 ## Dependências Internas
 
@@ -71,6 +76,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Guardian Engine](../../../docs/guardian-engine.md)
+- [Context Router e Token Budget](../../../docs/context-router-token-budget.md)
 - [Perguntas em aberto](../../../docs/alignment/open-questions.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
@@ -83,13 +89,24 @@ guardian = GuardianEngine()
 decision = guardian.validate_mission_text("Atualizar documentação")
 ```
 
+Avaliação determinística de pacote de contexto:
+
+```python
+from vercosa_ai_framework.guardian import GuardianEngine
+
+decision = GuardianEngine().evaluate_context_package(context_package)
+```
+
+O Guardian avalia o pacote recebido. Ele não recupera documentos, não escolhe itens e não chama LLM.
+
 ## Status Atual
 
 Status: `MVP`.
 
-O módulo possui avaliação determinística inicial, mas a relação com um Policy Engine mais amplo ainda precisa de ADR ou Spec update.
+O módulo possui avaliação determinística inicial de missões, comandos, ações sensíveis e Context Packages. A avaliação de Context Package é local, testável e não altera o fluxo principal de execução.
 
 ## Próximos Passos
 
-- Resolver Guardian Engine versus Policy Engine.
+- Integrar decisões Guardian ao fluxo de Context Router quando houver chamada governada explícita.
 - Definir persistência de decisões Guardian.
+- Evoluir políticas declarativas quando o Policy Engine formal existir, sem mover seleção de contexto para o Guardian.

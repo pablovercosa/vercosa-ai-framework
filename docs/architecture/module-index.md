@@ -61,9 +61,9 @@ Providers / MCPs / APIs / Runtimes
 - `workflows/` define plano e execução sequencial MVP; `tasks/` concentra estado, elegibilidade e tentativas de tasks.
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
-- `guardian/` é transversal e avalia riscos, permissões e bloqueios antes de ações sensíveis.
+- `guardian/` é transversal e avalia riscos, permissões, bloqueios e Context Packages já montados antes de ações sensíveis ou entrega governada.
 - `model_selection/` é transversal e deve decidir modelos por política, não por hardcode.
-- `context/` monta pacotes de contexto e aplica orçamento de tokens sem buscar, indexar, persistir ou chamar providers diretamente.
+- `context/` monta pacotes de contexto e aplica orçamento de tokens sem buscar, indexar, persistir, chamar providers diretamente ou decidir enforcement operacional.
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
 - `runtime/` isola execução concreta em runtimes como OpenCode.

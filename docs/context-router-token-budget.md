@@ -4,13 +4,15 @@ Links principais: [README principal](../README.md) | [Índice de módulos](archi
 
 ## Objetivo
 
-Documentar o MVP determinístico do Context Router e do Token Budget Manager no Vercosa AI Framework.
+Documentar o MVP determinístico do Context Router, do Token Budget Manager e a avaliação Guardian inicial de Context Packages no Vercosa AI Framework.
 
 ## Escopo Atual
 
 O módulo `src/vercosa_ai_framework/context/` cria tipos, portas abstratas e implementações determinísticas mínimas para contexto, memória e orçamento de tokens.
 
 Este escopo implementa um MVP funcional sem LLM. Ele trabalha apenas com candidatos explícitos recebidos pelo chamador ou convertidos deterministicamente a partir de registros já disponíveis do Knowledge Hub. Ele não implementa RAG funcional, Semantic Index, embeddings, pgvector, PostgreSQL, chamadas a LLM, runtime ou providers.
+
+O Guardian Engine possui verificação determinística inicial para `ContextPackage` já montado. Essa verificação é chamada explicitamente pelo componente orquestrador ou por testes; ela não muda o fluxo principal do Context Router.
 
 ## Componentes
 
@@ -22,6 +24,8 @@ Este escopo implementa um MVP funcional sem LLM. Ele trabalha apenas com candida
 
 `knowledge.context_adapter` converte `KnowledgeDocument` e `KnowledgeSearchResult` em pares `ContextSource` e `ContextItem`. O adaptador apenas mapeia objetos recebidos; ele não consulta store, não lê filesystem, não acessa banco, não faz busca semântica e não chama provider.
 
+`GuardianEngine.evaluate_context_package()` avalia riscos básicos do pacote final sem escolher contexto, sem fazer RAG e sem chamar LLM. As verificações cobrem rastreabilidade, fontes desconhecidas ou pouco confiáveis, warnings, redactions pendentes ou suspeitas, orçamento inconsistente ou excedido, sensibilidade marcada e omission reasons críticos.
+
 ## Fluxo MVP
 
 ```text
@@ -32,6 +36,8 @@ DeterministicContextRouter
 SimpleTokenBudgetManager
 ↓
 ContextPackage
+↓
+GuardianEngine.evaluate_context_package() quando chamado explicitamente
 ```
 
 ## Entradas
@@ -48,6 +54,7 @@ ContextPackage
 - `TokenBudgetDecision` para itens omitidos por duplicação, citação obrigatória ausente ou limite de tokens.
 - `TokenBudgetResult` com estimativa, reserva de output, orçamento disponível, tokens usados, tokens restantes, itens aceitos e itens omitidos.
 - `model_requirements` mínimos derivados do pacote, sem selecionar modelo concreto.
+- `GuardianDecision` quando o pacote for enviado ao Guardian por chamada explícita.
 
 ## Garantias Do MVP
 
@@ -63,6 +70,7 @@ ContextPackage
 - Preservação de citações e redactions já presentes nos itens selecionados.
 - Conversão determinística de registros do Knowledge Hub em candidatos de contexto, preservando id, título, referência, tipo de fonte, hash e citações ou referência rastreável mínima.
 - Registro de omissões no `ContextPackage`.
+- Avaliação Guardian determinística, local e sem chamadas externas quando `evaluate_context_package()` receber um pacote.
 
 ## Limites Conhecidos
 
@@ -73,7 +81,8 @@ ContextPackage
 - A integração atual não implementa Semantic Index, embeddings, pgvector, PostgreSQL ou RAG semântico; esses pontos continuam como etapas futuras.
 - Itens de evidência sem citação são omitidos; outros itens sem citação podem ser aceitos com warning quando `citation_required=False`.
 - Redaction é apenas preservada quando já existe no item; o módulo não executa redaction.
-- Policy Engine e Guardian Engine ainda não são integrados ao fluxo do pacote.
+- Policy Engine ainda não é integrado ao fluxo do pacote.
+- Guardian Engine avalia `ContextPackage` por chamada explícita, mas o Context Router ainda não chama Guardian automaticamente.
 - Semantic Index e cache persistido continuam como trabalho futuro.
 
 ## Relação Com Outros Módulos
@@ -82,10 +91,10 @@ ContextPackage
 - `canonicalizer/` prepara documentos canônicos, mas não é chamado por este MVP.
 - `persistence/` poderá persistir pacotes e registros futuros, mas este MVP não persiste nada.
 - `model_selection/` poderá receber requisitos de janela de contexto; este MVP apenas prepara metadados.
-- `guardian/` poderá avaliar Context Packages sensíveis; este MVP apenas preserva refs recebidas.
+- `guardian/` avalia Context Packages por verificações determinísticas iniciais, retornando `allow`, `warn`, `require_approval` ou `block` conforme risco. Ele não escolhe contexto, não faz RAG e não chama LLM.
 
 ## Status
 
 Status: `MVP`.
 
-O código possui contratos, implementação mínima determinística e integração inicial com candidatos vindos do Knowledge Hub. Ele ainda não representa o fluxo completo de memória governada, Semantic Index ou RAG semântico.
+O código possui contratos, implementação mínima determinística, integração inicial com candidatos vindos do Knowledge Hub e avaliação Guardian inicial de Context Packages. Ele ainda não representa o fluxo completo de memória governada, Semantic Index, RAG semântico ou integração automática entre roteamento de contexto e enforcement Guardian.

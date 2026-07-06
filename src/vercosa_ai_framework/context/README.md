@@ -21,6 +21,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Gera warnings determinísticos para itens citáveis sem citação quando citação não for obrigatória.
 - Produz `ContextPackage` rastreável.
 - Recebe normalmente candidatos `ContextItem` originados do Knowledge Hub quando eles já foram convertidos por adaptador externo ao roteador.
+- Produz pacotes que podem ser avaliados pelo Guardian Engine por chamada explícita do componente orquestrador.
 
 ## O Que Este Módulo Não Faz
 
@@ -33,6 +34,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Não chama providers, LLMs, APIs, MCPs, OpenCode, Ollama, Gemini, OpenAI, Claude ou runtimes.
 - Não escolhe modelos concretos.
 - Não executa redaction; apenas preserva registros já recebidos.
+- Não avalia risco operacional do pacote final; essa responsabilidade pertence ao Guardian Engine.
 - Não substitui Policy Engine, Guardian Engine, Knowledge Hub, Canonicalizer, Persistence Layer ou Model Selection Engine.
 - Não promete memória infinita.
 
@@ -93,6 +95,7 @@ Saídas:
 - Acima: [agents](../agents/README.md), [capabilities](../capabilities/README.md), [skills](../skills/README.md).
 - Abaixo: [knowledge](../knowledge/README.md), [canonicalizer](../canonicalizer/README.md), [persistence](../persistence/README.md).
 - Transversal: [guardian](../guardian/README.md), [model_selection](../model_selection/README.md).
+- `guardian/` avalia riscos determinísticos básicos de `ContextPackage` quando chamado explicitamente. O Context Router não chama Guardian automaticamente nesta fase.
 
 ## Specs Correspondentes
 
@@ -137,7 +140,7 @@ O exemplo acima não executa busca, RAG, embeddings, banco, provider ou runtime.
 
 Status: `MVP`.
 
-O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub, mas não consulta Knowledge Hub diretamente e ainda não integra Policy Engine, Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
+O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub, mas não consulta Knowledge Hub diretamente e ainda não integra automaticamente Policy Engine, Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
 
 Limitações atuais:
 
@@ -149,11 +152,12 @@ Limitações atuais:
 - Knowledge Hub fornece candidatos explícitos; ele não representa memória infinita.
 - Não há memória infinita.
 - Não há chamadas externas.
+- A avaliação Guardian de Context Packages existe no módulo `guardian/`, mas depende de chamada explícita e não muda a montagem determinística do pacote.
 
 ## Próximos Passos
 
 - Definir contrato formal com Policy Engine quando existir.
-- Definir avaliação Guardian para Context Packages sensíveis.
+- Integrar avaliação Guardian para Context Packages sensíveis ao fluxo orquestrado quando houver contrato de execução aprovado.
 - Expandir o contrato de candidatos vindos de Knowledge Hub somente após novas Specs ou ADRs para ranking, chunking e governança adicional.
 - Definir persistência futura de Context Packages e Token Budget Records por `persistence/`.
 - Definir Semantic Index apenas após estabilizar contratos e governança.
