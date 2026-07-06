@@ -49,3 +49,17 @@ def test_run_next_safe_script_has_valid_bash_syntax():
     script_path = ROOT / "scripts" / "vaf-run-next-safe.sh"
 
     subprocess.run(["bash", "-n", str(script_path)], check=True)
+
+
+def test_safe_runner_usage_documentation_exists_and_covers_required_commands():
+    doc_path = ROOT / "docs" / "operations" / "safe-runner-usage.md"
+
+    assert doc_path.exists()
+
+    doc = doc_path.read_text(encoding="utf-8")
+
+    assert "./scripts/vaf-run-next-safe.sh" in doc
+    assert "VAF_AUTO_PUSH=1 ./scripts/vaf-run-next-safe.sh" in doc
+    assert 'VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-run-next-safe.sh' in doc
+    assert "push automático é opt-in" in doc
+    assert "não substitui revisão humana" in doc

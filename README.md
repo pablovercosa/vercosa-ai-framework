@@ -52,6 +52,8 @@ VAF_AUTO_COMMIT=1 VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-wo
 
 O script `scripts/vaf-run-next-safe.sh` executa a próxima missão da fila com validações locais antes e depois do worker. Ele aborta se o Git não estiver limpo antes de iniciar, verifica se não há worker em execução, roda apenas uma missão por padrão, executa `pytest`, executa `python3 -m compileall src` e só permite push automático quando solicitado explicitamente.
 
+Guia operacional: [Uso do runner seguro](docs/operations/safe-runner-usage.md).
+
 Uso básico:
 
 ```bash
@@ -183,6 +185,7 @@ Políticas detalhadas:
 - [Padrão de README](docs/documentation/readme-standard.md)
 - [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
 - [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)
+- [Uso do runner seguro](docs/operations/safe-runner-usage.md)
 - [Context Router e Token Budget](docs/context-router-token-budget.md)
 
 ## Regras De Trabalho
