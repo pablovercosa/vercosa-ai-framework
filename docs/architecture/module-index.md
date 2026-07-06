@@ -23,7 +23,7 @@ Agents / Subagents
 ↓
 Capabilities
 ↓
-Guardian / Policy
+Policy / Guardian
 ↓
 Skills
 ↓
@@ -44,6 +44,7 @@ Providers / MCPs / APIs / Runtimes
 | Tarefas | `tasks/` | [tasks](../../src/vercosa_ai_framework/tasks/README.md) | MVP | [0007](../../specs/framework/0007-task-queue.md) | [Task Queue](../task-queue.md) |
 | Agentes | `agents/` | [agents](../../src/vercosa_ai_framework/agents/README.md) | MVP | [0008](../../specs/framework/0008-agent-orchestrator.md) | [Agent Orchestrator](../agent-orchestrator.md) |
 | Capabilities | `capabilities/` | [capabilities](../../src/vercosa_ai_framework/capabilities/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
+| Governança | `policy/` | [policy](../../src/vercosa_ai_framework/policy/README.md) | MVP | [0005](../../specs/framework/0005-guardian-engine.md) | [ADR Policy/Guardian](../../knowledge/decisions/2026-07-04-policy-engine-vs-guardian-engine.md) |
 | Governança | `guardian/` | [guardian](../../src/vercosa_ai_framework/guardian/README.md) | MVP | [0005](../../specs/framework/0005-guardian-engine.md) | [Guardian Engine](../guardian-engine.md) |
 | Skills | `skills/` | [skills](../../src/vercosa_ai_framework/skills/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
 | Tools | `tools/` | [tools](../../src/vercosa_ai_framework/tools/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
@@ -61,7 +62,7 @@ Providers / MCPs / APIs / Runtimes
 - `workflows/` define plano e execução sequencial MVP; `tasks/` concentra estado, elegibilidade e tentativas de tasks.
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
-- `guardian/` é transversal e avalia riscos, permissões, bloqueios e Context Packages já montados antes de ações sensíveis ou entrega governada.
+- `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/` avalia riscos, permissões, bloqueios e Context Packages já montados antes de ações sensíveis ou entrega governada.
 - `model_selection/` é transversal e deve decidir modelos por política, não por hardcode.
 - `context/` monta pacotes de contexto e aplica orçamento de tokens sem buscar, indexar, persistir, chamar providers diretamente ou decidir enforcement operacional.
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
@@ -72,7 +73,7 @@ Providers / MCPs / APIs / Runtimes
 
 As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto](../alignment/open-questions.md), especialmente:
 
-- fronteira entre Guardian Engine e Policy Engine;
+- integração completa entre Policy Engine e Guardian Engine após os contratos iniciais;
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;

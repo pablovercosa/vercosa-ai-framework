@@ -66,7 +66,7 @@ Specs atuais:
 - `0002-model-selection-engine.md`: Model Selection Engine orientado por política e agnóstico de provider.
 - `0003-opencode-runtime-adapter.md`: OpenCode como Runtime Adapter, não core.
 - `0004-mission-runner.md`: ciclo de vida de missão, fila, ciclos, logs, validação e budgets.
-- `0005-guardian-engine.md`: decisões de política, risco, limites e controles.
+- `0005-guardian-engine.md`: decisões de política, risco, limites e controles; a ADR de Policy Engine versus Guardian Engine separa resolução declarativa de enforcement operacional.
 - `0006-workflow-engine.md`: workflows, decomposição de tasks, dependências, validação e replanejamento.
 - `0007-task-queue.md`: estado de tasks, dependências, tentativas, retries e scheduler.
 - `0008-agent-orchestrator.md`: seleção de agentes e subagentes sem acoplamento direto a providers/tools/MCPs.
@@ -86,6 +86,7 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `missions/`: tipos, fila em diretório e runner de missões.
 - `workflows/`: tipos e engine sequencial de workflow.
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
+- `policy/`: contratos e resolução determinística MVP de políticas declarativas, precedência simples e conflitos básicos.
 - `guardian/`: Guardian Engine determinístico com decisões estruturadas.
 - `model_selection/`: políticas, tipos e selector MVP.
 - `runtime/`: contrato de Runtime Adapter e OpenCode Runtime Adapter MVP.
@@ -151,7 +152,7 @@ A cadeia capabilities/skills/tools/provider existe como contratos MVP, mas ainda
 O projeto ainda precisa alinhar ou implementar:
 
 - Mission Orchestrator como camada distinta de Mission Runner.
-- Fronteira formal entre Policy Engine e Guardian Engine.
+- Integração profunda entre Policy Engine e Guardian Engine após os contratos iniciais do Policy Engine.
 - Fluxo ponta a ponta Mission -> Workflow -> Task Queue -> Agent Orchestrator -> Capability -> Skill -> Tool -> Provider.
 - Context Router como módulo de primeira classe.
 - Semantic Index com embeddings.
@@ -184,7 +185,7 @@ Antes de novas implementações, congelar vocabulário arquitetural e escolher o
 Foco imediato recomendado:
 
 - manter alterações de código bloqueadas sem Spec aprovada específica;
-- resolver a fronteira Policy Engine versus Guardian Engine;
+- integrar Policy Engine e Guardian Engine sem fundir resolução declarativa e enforcement operacional;
 - definir Context Router e Semantic Index antes de implementar memória avançada;
 - definir fronteiras de Mission Orchestrator antes de expandir Mission Runner;
 - integrar MVPs existentes por contratos antes de adicionar frameworks externos;

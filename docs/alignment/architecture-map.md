@@ -48,7 +48,7 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 | Agent Orchestrator | Selecionar perfil de agente e preparar execução | MVP em `agents/` | Chamar OpenCode, MCPs, APIs, bancos ou tools diretamente |
 | Agents/Subagents | Executar responsabilidades por fronteiras do framework | Conceitual/MVP no nível de perfil | Conhecer providers ou infraestrutura concreta |
 | Capabilities | Representar capacidades abstratas solicitadas | MVP em `capabilities/` | Codificar detalhes concretos de tool/provider |
-| Policy/Guardian | Aplicar Specs, riscos, permissões, limites e aprovações | Guardian MVP existe; fronteira de Policy Engine segue ambígua | Executar comandos ou mutar estado diretamente |
+| Policy/Guardian | Resolver políticas declarativas e aplicar enforcement operacional em ações concretas | Policy Engine MVP resolve políticas declarativas; Guardian MVP avalia ações e riscos | Executar comandos ou mutar estado diretamente |
 | Skills | Procedimentos reutilizáveis que implementam capabilities | MVP em `skills/` | Contornar tools ou Provider Gateway para efeitos |
 | Tools | Fronteira governada de ação concreta | MVP em `tools/` | Ocultar chamadas diretas a providers da governança |
 | Provider Gateway | Normalizar acesso a providers após aprovação por tool | MVP em `providers/` | Virar seletor de modelo, runtime adapter ou camada de agente |
@@ -61,6 +61,7 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 - `src/vercosa_ai_framework/missions/`: registros, fila e runner de missão.
 - `src/vercosa_ai_framework/workflows/`: workflow e execução sequencial de tasks.
 - `src/vercosa_ai_framework/tasks/`: fila, scheduler, estado, elegibilidade e tentativas de tasks.
+- `src/vercosa_ai_framework/policy/`: contratos e resolução determinística MVP de políticas declarativas.
 - `src/vercosa_ai_framework/guardian/`: Guardian Engine MVP para decisões de política e risco.
 - `src/vercosa_ai_framework/model_selection/`: contratos e seleção de modelos por política.
 - `src/vercosa_ai_framework/runtime/`: fronteira de Runtime Adapter, incluindo OpenCode como MVP inicial.
@@ -138,7 +139,7 @@ ProviderAdapter or callable
 
 ## Decisões De Fronteira Necessárias
 
-- Policy Engine versus Guardian Engine: definir se Guardian Engine é o policy engine concreto ou se Policy Engine será um resolvedor mais amplo que delega risco/segurança ao Guardian Engine.
+- Policy Engine versus Guardian Engine: ADR aceita define camadas separadas; ainda falta integração profunda entre resolução declarativa e enforcement operacional.
 - Mission Runner versus Mission Orchestrator: separar estado operacional de escolha de workflow e estratégia de orquestração.
 - Workflow Engine versus Task Queue: separar semântica de workflow do estado, elegibilidade e tentativas de tasks.
 - Runtime Adapter versus Provider Gateway: separar execução de sessões de runtime de acesso normalizado a providers atrás de tools.
