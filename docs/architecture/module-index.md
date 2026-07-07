@@ -50,7 +50,7 @@ Providers / MCPs / APIs / Runtimes
 | Tools | `tools/` | [tools](../../src/vercosa_ai_framework/tools/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
 | Providers | `providers/` | [providers](../../src/vercosa_ai_framework/providers/README.md) | MVP | [0010](../../specs/framework/0010-provider-gateway.md) | [Provider Gateway](../provider-gateway.md) |
 | Runtime | `runtime/` | [runtime](../../src/vercosa_ai_framework/runtime/README.md) | MVP | [0003](../../specs/framework/0003-opencode-runtime-adapter.md) | [OpenCode Runtime Adapter](../opencode-runtime-adapter.md) |
-| Modelos | `model_selection/` | [model_selection](../../src/vercosa_ai_framework/model_selection/README.md) | MVP | [0002](../../specs/framework/0002-model-selection-engine.md) | [Mapa de arquitetura](../alignment/architecture-map.md) |
+| Modelos | `model_selection/` | [model_selection](../../src/vercosa_ai_framework/model_selection/README.md) | MVP | [0002](../../specs/framework/0002-model-selection-engine.md) | [Context Router e Token Budget](../context-router-token-budget.md) |
 | Contexto | `context/` | [context](../../src/vercosa_ai_framework/context/README.md) | MVP | [0014](../../specs/framework/0014-context-router-token-budget-memory.md) | [Context Router e Token Budget](../context-router-token-budget.md) |
 | Conhecimento | `knowledge/` | [knowledge](../../src/vercosa_ai_framework/knowledge/README.md) | MVP | [0011](../../specs/framework/0011-knowledge-hub.md) | [Knowledge Hub](../knowledge-hub.md) |
 | Canonicalização | `canonicalizer/` | [canonicalizer](../../src/vercosa_ai_framework/canonicalizer/README.md) | MVP | [0012](../../specs/framework/0012-canonicalizer.md) | [Canonicalizer](../canonicalizer.md) |
@@ -63,8 +63,8 @@ Providers / MCPs / APIs / Runtimes
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
 - `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `context/`, `guardian/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
-- `model_selection/` é transversal e decide modelos por política e catálogo local, não por hardcode; pode considerar políticas resolvidas opcionais para warnings, aprovação e exclusões determinísticas sem chamar providers, billing real ou Guardian Engine.
-- `context/` monta pacotes de contexto, aplica orçamento de tokens e considera políticas resolvidas opcionais sem buscar, indexar, persistir, chamar providers diretamente, resolver políticas ou decidir enforcement operacional amplo.
+- `model_selection/` é transversal e decide modelos por política, catálogo local e requisitos opcionais de orçamento de tokens, não por hardcode; pode considerar políticas resolvidas opcionais para warnings, aprovação e exclusões determinísticas sem chamar providers, billing real, Context Router ou Guardian Engine.
+- `context/` monta pacotes de contexto, aplica orçamento de tokens, expõe `model_requirements` mínimos e considera políticas resolvidas opcionais sem buscar, indexar, persistir, chamar providers diretamente, resolver políticas, selecionar modelos ou decidir enforcement operacional amplo.
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
 - `runtime/` isola execução concreta em runtimes como OpenCode.
@@ -73,7 +73,7 @@ Providers / MCPs / APIs / Runtimes
 
 As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto](../alignment/open-questions.md), especialmente:
 
-- integração completa entre Policy Engine, Context Router, Guardian Engine e Model Selection após as pontes iniciais via `ResolvedPolicySet` opcional;
+- integração completa entre Policy Engine, Context Router, Guardian Engine e Model Selection após as pontes iniciais via `ResolvedPolicySet` opcional e requisitos opcionais de orçamento de tokens;
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;

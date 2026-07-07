@@ -20,6 +20,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Registra omissões por duplicação, orçamento insuficiente ou citação obrigatória ausente.
 - Gera warnings determinísticos para itens citáveis sem citação quando citação não for obrigatória.
 - Produz `ContextPackage` rastreável.
+- Produz `ContextPackage.model_requirements` com requisitos mínimos derivados do orçamento estimado, para que outros módulos possam consumir metadados sem o Context Router escolher modelo.
 - Pode receber um `ResolvedPolicySet` opcional já produzido pelo Policy Engine e considerar efeitos simples de forma determinística.
 - Registra refs de políticas resolvidas no `ContextPackage` quando elas forem fornecidas pelo chamador.
 - Reflete políticas `warn`, `require_approval` e conflitos em warnings e metadados rastreáveis.
@@ -37,6 +38,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Não consulta Knowledge Hub diretamente; o Knowledge Hub fornece candidatos por adaptador determinístico.
 - Não chama providers, LLMs, APIs, MCPs, OpenCode, Ollama, Gemini, OpenAI, Claude ou runtimes.
 - Não escolhe modelos concretos.
+- Não ranqueia modelos e não decide se um modelo concreto deve ser usado.
 - Não executa redaction; apenas preserva registros já recebidos.
 - Não avalia risco operacional do pacote final; essa responsabilidade pertence ao Guardian Engine.
 - Não resolve políticas; políticas precisam chegar como `ResolvedPolicySet` opcional já resolvido pelo Policy Engine ou como refs simples.
@@ -89,6 +91,7 @@ Entradas:
 Saídas:
 
 - `ContextPackage` com itens, fontes, citações, estimativas, redactions e omissões.
+- `ContextPackage.model_requirements` com `minimum_context_window`, `estimated_context_tokens` e `reserved_output_tokens` derivados do pacote montado.
 - `ContextPackage.policy_refs`, `warnings` e `metadata` com rastreabilidade de políticas resolvidas quando fornecidas.
 - `TokenBudgetDecision` para itens incluídos ou omitidos.
 - `TokenBudgetResult` produzido pelo `SimpleTokenBudgetManager` para avaliação agregada de orçamento.
@@ -112,6 +115,7 @@ Essa integração é inicial, local e determinística. Ela não implementa RAG s
 
 - Depende apenas dos tipos declarativos de `policy/` para aceitar `ResolvedPolicySet` opcional.
 - Não importa `guardian/` e não chama Guardian Engine automaticamente.
+- Não importa `model_selection/` e não chama Model Selection Engine.
 - A integração com `knowledge/` é feita no módulo `knowledge`, por adaptador que produz tipos de `context/` sem fazer o roteador buscar documentos.
 
 ## Módulos Relacionados
@@ -121,6 +125,7 @@ Essa integração é inicial, local e determinística. Ela não implementa RAG s
 - Transversal: [guardian](../guardian/README.md), [model_selection](../model_selection/README.md).
 - `policy/` resolve políticas declarativas antes do roteamento quando o chamador solicitar essa etapa.
 - `guardian/` avalia riscos determinísticos básicos de `ContextPackage` quando chamado explicitamente. O Context Router não chama Guardian automaticamente nesta fase.
+- `model_selection/` pode consumir requisitos de orçamento repassados pelo chamador, mas o Context Router não seleciona modelo e não chama esse módulo.
 
 ## Specs Correspondentes
 
@@ -161,11 +166,24 @@ package = DeterministicContextRouter().route(request, candidates=candidates)
 
 O exemplo acima não executa busca, RAG, embeddings, banco, provider ou runtime. Os candidatos já precisam ter sido preparados pelo chamador.
 
+## Integração Inicial Com Model Selection
+
+O Token Budget Manager estima tokens e o Context Router registra requisitos mínimos em `ContextPackage.model_requirements`. Esses metadados podem ser repassados pelo chamador ao Model Selection Engine como entrada opcional.
+
+Limites atuais:
+
+- o Context Router não importa `model_selection/`;
+- o Context Router não seleciona modelos;
+- o Token Budget Manager não ranqueia candidatos de modelo;
+- o Model Selection não monta `ContextPackage`;
+- não há consulta de limites reais de providers;
+- não há billing real, precificação real por token, chamada a LLM, rede, banco, RAG ou embeddings.
+
 ## Status Atual
 
 Status: `MVP`.
 
-O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub e pode consumir `ResolvedPolicySet` opcional já resolvido pelo Policy Engine, mas não consulta Knowledge Hub diretamente e não integra automaticamente Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
+O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub, pode consumir `ResolvedPolicySet` opcional já resolvido pelo Policy Engine e expõe requisitos mínimos de orçamento em `ContextPackage.model_requirements`. Ele não consulta Knowledge Hub diretamente e não integra automaticamente Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
 
 Limitações atuais:
 
@@ -179,6 +197,7 @@ Limitações atuais:
 - Não há chamadas externas.
 - A integração com Policy Engine é limitada a efeitos simples já resolvidos; não há DSL, parser ou resolução de políticas dentro do Context Router.
 - A avaliação Guardian de Context Packages existe no módulo `guardian/`, mas depende de chamada explícita e não muda a montagem determinística do pacote.
+- A integração com Model Selection é indireta: somente o chamador repassa metadados de orçamento, se desejar.
 
 ## Próximos Passos
 
@@ -187,3 +206,4 @@ Limitações atuais:
 - Expandir o contrato de candidatos vindos de Knowledge Hub somente após novas Specs ou ADRs para ranking, chunking e governança adicional.
 - Definir persistência futura de Context Packages e Token Budget Records por `persistence/`.
 - Definir Semantic Index apenas após estabilizar contratos e governança.
+- Evoluir o contrato de requisitos para Model Selection sem criar import circular entre `context/` e `model_selection/`.

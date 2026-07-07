@@ -14,6 +14,7 @@ from vercosa_ai_framework.model_selection.types import (
     ModelProfile,
     ModelSelectionError,
     SelectionDecision,
+    TokenBudgetRequirements,
 )
 from vercosa_ai_framework.policy import (
     PolicyEffect,
@@ -48,15 +49,19 @@ class ModelSelector:
         self,
         policy: ModelSelectionPolicy,
         resolved_policy_set: ResolvedPolicySet | None = None,
+        token_budget_requirements: TokenBudgetRequirements | dict[str, object] | None = None,
     ) -> SelectionDecision:
         """Return a safe model decision that satisfies the given policy."""
-        candidates = self._compatible_models(policy, resolved_policy_set)
+        normalized_budget = _normalize_token_budget_requirements(token_budget_requirements)
+        candidates = self._compatible_models(policy, resolved_policy_set, normalized_budget)
         selected = self._select_primary(candidates, policy)
         small_model = self._select_small(candidates, policy)
         fallback_chain = self._fallback_chain(candidates, selected, policy)
 
         reason = self._reason(selected, policy)
-        notes = self._security_notes(selected, policy) + self._policy_notes(resolved_policy_set)
+        budget_compatibility = self._token_budget_compatibility(normalized_budget)
+        budget_warnings = self._token_budget_warnings(selected, normalized_budget, budget_compatibility)
+        notes = self._security_notes(selected, policy) + self._policy_notes(resolved_policy_set) + budget_warnings
         requires_policy_approval = self._requires_policy_approval(resolved_policy_set)
         return SelectionDecision(
             selected_model=selected,
@@ -71,12 +76,16 @@ class ModelSelector:
             or requires_policy_approval,
             requires_user_approval=(selected.paid and not policy.allow_paid) or requires_policy_approval,
             security_notes=notes,
+            token_budget_requirements=normalized_budget,
+            token_budget_compatibility=budget_compatibility,
+            token_budget_warnings=budget_warnings,
         )
 
     def _compatible_models(
         self,
         policy: ModelSelectionPolicy,
         resolved_policy_set: ResolvedPolicySet | None = None,
+        token_budget_requirements: TokenBudgetRequirements | None = None,
     ) -> tuple[ModelProfile, ...]:
         models = self._registry.list_models()
         if not models:
@@ -85,7 +94,8 @@ class ModelSelector:
         compatible = [
             model
             for model in models
-            if self._is_compatible(model, policy) and not self._is_denied(model, resolved_policy_set)
+            if self._is_compatible(model, policy, token_budget_requirements)
+            and not self._is_denied(model, resolved_policy_set)
         ]
         if not compatible:
             raise ModelSelectionError(
@@ -93,12 +103,20 @@ class ModelSelector:
             )
         return tuple(compatible)
 
-    def _is_compatible(self, model: ModelProfile, policy: ModelSelectionPolicy) -> bool:
+    def _is_compatible(
+        self,
+        model: ModelProfile,
+        policy: ModelSelectionPolicy,
+        token_budget_requirements: TokenBudgetRequirements | None = None,
+    ) -> bool:
         if not model.available or model.deprecated:
             return False
         if model.paid and (policy.cost_profile == "strict_free" or not policy.allow_paid):
             return False
-        if policy.context_size and model.context_window < policy.context_size:
+        required_context_window = policy.context_size
+        if token_budget_requirements is not None:
+            required_context_window = max(required_context_window, token_budget_requirements.required_context_window)
+        if required_context_window and model.context_window < required_context_window:
             return False
         if QUALITY_TIERS.get(model.quality_tier, -1) < policy.quality_rank:
             return False
@@ -216,11 +234,48 @@ class ModelSelector:
             for conflict in resolved_policy_set.conflicts
         )
 
+    def _token_budget_compatibility(
+        self,
+        token_budget_requirements: TokenBudgetRequirements | None,
+    ) -> dict[str, bool]:
+        if token_budget_requirements is None:
+            return {}
+        required_window = token_budget_requirements.required_context_window
+        if required_window == 0:
+            return {model.id: True for model in self._registry.list_models()}
+        return {
+            model.id: model.context_window >= required_window
+            for model in self._registry.list_models()
+        }
+
+    def _token_budget_warnings(
+        self,
+        selected: ModelProfile,
+        token_budget_requirements: TokenBudgetRequirements | None,
+        budget_compatibility: dict[str, bool],
+    ) -> tuple[str, ...]:
+        if token_budget_requirements is None:
+            return ()
+
+        required_window = token_budget_requirements.required_context_window
+        if required_window == 0:
+            return ()
+
+        notes: list[str] = []
+        for model_id in sorted(model_id for model_id, compatible in budget_compatibility.items() if not compatible):
+            notes.append(f"token_budget_insufficient:{model_id}:requires_context_window>={required_window}")
+
+        tight_margin = max(1, required_window // 10)
+        if selected.context_window - required_window <= tight_margin:
+            notes.append(f"token_budget_tight:{selected.id}:context_window={selected.context_window}:required={required_window}")
+        return tuple(notes)
+
 
 def select_model(
     models: Iterable[ModelProfile],
     policy: ModelSelectionPolicy | dict[str, object] | None = None,
     resolved_policy_set: ResolvedPolicySet | None = None,
+    token_budget_requirements: TokenBudgetRequirements | dict[str, object] | None = None,
 ) -> SelectionDecision:
     """Convenience function for selecting from a plain in-memory catalog."""
     if policy is None:
@@ -229,4 +284,18 @@ def select_model(
         normalized_policy = policy
     else:
         normalized_policy = ModelSelectionPolicy.from_mapping(policy)
-    return ModelSelector(models).select(normalized_policy, resolved_policy_set=resolved_policy_set)
+    return ModelSelector(models).select(
+        normalized_policy,
+        resolved_policy_set=resolved_policy_set,
+        token_budget_requirements=token_budget_requirements,
+    )
+
+
+def _normalize_token_budget_requirements(
+    token_budget_requirements: TokenBudgetRequirements | dict[str, object] | None,
+) -> TokenBudgetRequirements | None:
+    if token_budget_requirements is None:
+        return None
+    if isinstance(token_budget_requirements, TokenBudgetRequirements):
+        return token_budget_requirements
+    return TokenBudgetRequirements.from_mapping(token_budget_requirements)

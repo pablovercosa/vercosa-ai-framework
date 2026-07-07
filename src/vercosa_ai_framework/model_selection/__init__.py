@@ -10,6 +10,7 @@ from vercosa_ai_framework.model_selection.types import (
     ModelProfile,
     ModelSelectionError,
     SelectionDecision,
+    TokenBudgetRequirements,
 )
 
 __all__ = [
@@ -19,5 +20,6 @@ __all__ = [
     "ModelSelectionPolicy",
     "ModelSelector",
     "SelectionDecision",
+    "TokenBudgetRequirements",
     "select_model",
 ]
