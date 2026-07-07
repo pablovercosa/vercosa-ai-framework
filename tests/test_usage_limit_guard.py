@@ -8,6 +8,7 @@ from vercosa_ai_framework.guardian import (
     UsageLimitType,
     detect_usage_limit,
 )
+from vercosa_ai_framework.guardian.usage_limit_cli import main as usage_limit_cli_main
 
 
 def test_detects_usage_limit_has_been_reached_as_unknown_usage_limit():
@@ -104,3 +105,42 @@ def test_detection_api_has_no_external_callable_or_network_dependency():
     assert detection.runtime == "opencode"
     assert detection.limit_type == UsageLimitType.RATE_LIMIT
     assert detection.metadata == {}
+
+
+def test_common_test_failure_is_not_classified_as_usage_limit():
+    detection = detect_usage_limit("FAILED tests/test_example.py::test_contract - AssertionError")
+
+    assert detection.limit_type == UsageLimitType.NOT_USAGE_LIMIT
+    assert detection.should_stop_worker is False
+
+
+def test_429_associated_with_rate_limit_keeps_external_classification():
+    detection = detect_usage_limit("HTTP 429: rate limit exceeded by provider")
+
+    assert detection.limit_type == UsageLimitType.RATE_LIMIT
+    assert detection.should_stop_worker is True
+    assert UsageLimitAction.STOP_WORKER in detection.recommended_actions
+
+
+def test_usage_limit_cli_reports_external_limit_from_local_log(tmp_path, capsys):
+    log_path = tmp_path / "mission.log"
+    log_path.write_text("Provider error: quota exceeded for project", encoding="utf-8")
+
+    status = usage_limit_cli_main([str(log_path)])
+
+    output = capsys.readouterr().out
+    assert status == 0
+    assert "limitação externa detectada" in output
+    assert "quota_exceeded" in output
+    assert "Mensagem original preservada" in output
+
+
+def test_usage_limit_cli_ignores_non_limit_local_log(tmp_path, capsys):
+    log_path = tmp_path / "mission.log"
+    log_path.write_text("SyntaxError: invalid syntax in generated code", encoding="utf-8")
+
+    status = usage_limit_cli_main([str(log_path)])
+
+    output = capsys.readouterr().out
+    assert status == 1
+    assert output == ""

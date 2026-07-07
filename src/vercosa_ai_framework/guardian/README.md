@@ -15,6 +15,7 @@ Avaliar missões, tasks, comandos, ações sensíveis e Context Packages contra 
 - Avalia riscos básicos de `ContextPackage` já produzido pelo Context Router, incluindo rastreabilidade, fonte, warnings, redactions, orçamento, sensibilidade e omissões críticas.
 - Recebe opcionalmente um `ResolvedPolicySet` produzido pelo Policy Engine e pode elevar a decisão operacional conforme efeitos resolvidos.
 - Fornece `Usage/API Limit Guard` inicial para classificar sinais textuais de rate limit, quota, limite de uso e limite de billing em mensagens já recebidas de providers ou runtimes.
+- Fornece um utilitário operacional local que pode inspecionar o log de uma missão falha e sinalizar limitação externa de uso/API para o worker.
 
 ## O Que Este Módulo Não Faz
 
@@ -36,6 +37,7 @@ Avaliar missões, tasks, comandos, ações sensíveis e Context Packages contra 
 | `policies.py` | Contratos e políticas estáticas. |
 | `engine.py` | `GuardianEngine` MVP. |
 | `usage_limits.py` | Contratos e detecção determinística inicial de limites de uso, quota, rate limit e billing. |
+| `usage_limit_cli.py` | Utilitário operacional local para classificar logs de missão já gravados. |
 | `__init__.py` | Exportações públicas do módulo. |
 
 ## Principais Tipos, Classes E Funções
@@ -57,6 +59,7 @@ Avaliar missões, tasks, comandos, ações sensíveis e Context Packages contra 
 - `UsageLimitAction`: ação recomendada, como `stop_worker`, `retry_later`, `inspect_provider_limits` ou `manual_review`.
 - `UsageLimitDetection`: resultado estruturado que preserva a mensagem original e indica se o worker deve parar.
 - `detect_usage_limit()`: função pura para classificar mensagens de erro/log de forma case-insensitive e sem chamadas externas.
+- `usage_limit_cli.main()`: entrada operacional usada por scripts para inspecionar um log local após falha de missão.
 
 ## Entradas E Saídas
 
@@ -71,6 +74,7 @@ Saídas:
 
 - `GuardianDecision` com ação, violações, riscos, limites aplicados, metadados de pacote e justificativa.
 - `UsageLimitDetection` com tipo de limite, severidade, origem, provider/runtime opcional, mensagem original, ação recomendada, indicação de parada segura do worker e possibilidade de nova tentativa futura.
+- Saída operacional em texto quando um log local contém sinal conhecido de limitação externa.
 
 Quando recebe `ResolvedPolicySet`, o Guardian continua avaliando ação concreta e risco operacional. A política resolvida apenas participa da decisão como fator de elevação: `allow` não bloqueia por si só, `warn` pode gerar `warn`, `require_approval` pode exigir aprovação, `deny` pode bloquear, e conflitos podem gerar aviso ou aprovação obrigatória conforme severidade.
 
@@ -147,16 +151,19 @@ detection = detect_usage_limit(
 
 O guard é determinístico e local. Ele não consulta billing real, não chama OpenAI, Gemini, Ollama, Claude, OpenCode, MCPs, APIs ou qualquer provider externo. Ele apenas classifica sinais textuais comuns para evitar que limitações externas temporárias sejam tratadas como bug do framework ou causem retries inúteis.
 
+No fluxo operacional atual, `scripts/vaf-run-one-mission.sh` chama `python3 -m vercosa_ai_framework.guardian.usage_limit_cli` somente depois de uma missão falhar. O utilitário lê o log já gravado, preserva a mensagem original no próprio log, classifica sinais conhecidos como limitação externa e imprime orientação de parada segura. Ele não transforma falhas comuns de teste, sintaxe, código ou documentação em limite de uso.
+
 ## Status Atual
 
 Status: `MVP`.
 
-O módulo possui avaliação determinística inicial de missões, comandos, ações sensíveis, Context Packages, políticas resolvidas recebidas como entrada opcional e sinais textuais de limites de uso/API. A avaliação é local, testável e não altera o fluxo principal de execução.
+O módulo possui avaliação determinística inicial de missões, comandos, ações sensíveis, Context Packages, políticas resolvidas recebidas como entrada opcional e sinais textuais de limites de uso/API. A avaliação é local, testável e integrada de forma mínima ao caminho de falha do worker por inspeção de log já existente.
 
 ## Próximos Passos
 
 - Integrar decisões Guardian ao fluxo de Context Router quando houver chamada governada explícita.
 - Definir persistência de decisões Guardian.
 - Evoluir a interpretação operacional de `ResolvedPolicySet` sem mover resolução declarativa para o Guardian.
-- Integrar `UsageLimitDetection` ao Mission Runner, Task Queue ou scripts de worker apenas com semântica explícita de parada segura e diagnóstico, sem mascarar erros não relacionados.
+- Evoluir `UsageLimitDetection` para classificação estruturada de falhas quando houver contrato de event log.
 - Definir persistência e auditoria dos eventos de limite externo quando a camada de logs estruturados estiver estabilizada.
+- Avaliar integração futura com Provider Gateway e backoff configurável, sem prometer retry inteligente no MVP atual.

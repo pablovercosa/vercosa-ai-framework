@@ -14,6 +14,16 @@ def test_run_one_mission_auto_commit_uses_pt_br_default_and_custom_message():
     assert 'git commit -m "mission:' not in script
 
 
+def test_run_one_mission_integrates_usage_limit_guard_only_after_failure():
+    script = (ROOT / "scripts" / "vaf-run-one-mission.sh").read_text(encoding="utf-8")
+
+    assert "vercosa_ai_framework.guardian.usage_limit_cli" in script
+    assert 'python3 -m vercosa_ai_framework.guardian.usage_limit_cli "$LOG"' in script
+    assert "limitação externa de uso/API" in script
+    assert script.index('if [ "$STATUS" -eq 0 ]; then') < script.index("usage_limit_cli")
+    assert script.index("usage_limit_cli") < script.index('mv "$RUNNING" "missions/failed/$BASE"')
+
+
 def test_background_worker_propagates_commit_message():
     script = (ROOT / "scripts" / "vaf-start-background.sh").read_text(encoding="utf-8")
 
@@ -72,6 +82,15 @@ def test_run_batch_safe_script_has_expected_safety_contract():
     assert "python3 -m compileall src" in script
     assert "require_no_failed_missions" in script
     assert "require_git_clean" in script
+
+
+def test_run_batch_safe_script_still_stops_on_first_failure():
+    script = (ROOT / "scripts" / "vaf-run-batch-safe.sh").read_text(encoding="utf-8")
+
+    assert "VAF_AUTO_PUSH=0 ./scripts/vaf-run-next-safe.sh" in script
+    assert "set -euo pipefail" in script
+    assert "VAF_AUTO_PUSH=0 ./scripts/vaf-run-next-safe.sh || true" not in script
+    assert "exit 1" in script
 
 
 def test_run_batch_safe_script_has_valid_bash_syntax():

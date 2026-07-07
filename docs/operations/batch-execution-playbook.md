@@ -134,6 +134,10 @@ O batch deve preservar estas regras operacionais:
 
 Se uma validação falhar, não adicione novas missões à fila antes de entender e corrigir a causa.
 
+Se a falha for sinalizada pelo `Usage/API Limit Guard` como limitação externa de uso/API, suspenda o batch. Isso inclui sinais de `usage limit has been reached`, `quota exceeded`, `insufficient quota`, `billing hard limit`, rate limit persistente ou erro `429` associado a limite. O guard é determinístico e apenas lê o log local já produzido; ele não consulta billing real, não chama providers externos e não acessa rede ou banco.
+
+Batch de 10 deve ser suspenso imediatamente quando houver erro de quota ou rate limit. A ação segura é parar, preservar logs e investigar os limites do provider antes de retomar a fila.
+
 ## Validações Pós-Batch
 
 Checklist detalhado: [Checklist de validação pós-batch](post-batch-validation-checklist.md).
@@ -216,11 +220,14 @@ git log --oneline --decorate -1
 
 Depois de diagnosticar, corrija a causa, valide localmente e só então considere novo batch.
 
+Quando o diagnóstico indicar limitação externa de uso/API, trate a falha como condição operacional externa, não como bug interno do framework, até prova em contrário. Não reexecute em loop e não amplie o batch antes de confirmar quota, rate limit, crédito ou billing do provider.
+
 ## Política De Batch De 3 Para Batch De 10
 
 - Batch de 3 é obrigatório como teste inicial.
 - Batch de 10 só é aceito se batch de 3 passar.
 - Batch de 10 deve ser suspenso se houver falha recente.
+- Batch de 10 deve ser suspenso se houver erro de quota, rate limit, billing hard limit ou crédito insuficiente.
 - Batch de 10 deve ser evitado em alterações arquiteturais sensíveis.
 - Batch de 10 é mais adequado para missões pequenas ou médias com dependências claras.
 

@@ -144,6 +144,10 @@ Esse comportamento preserva evidências locais para revisão, em vez de seguir c
 
 O runner em batch também usa `set -euo pipefail` e herda a parada por falha do runner de próxima missão. O batch não continua para a próxima missão quando qualquer validação falha.
 
+Quando uma missão falha, `scripts/vaf-run-one-mission.sh` inspeciona o log local com o `Usage/API Limit Guard`. Essa inspeção é determinística, case-insensitive e não consulta billing real, provider externo, rede, banco, OpenAI, Gemini, Ollama, Claude, OpenCode ou MCPs. Se o log contiver sinais como `usage limit has been reached`, `quota exceeded`, `insufficient quota`, `billing hard limit`, rate limit persistente ou erro `429` associado a limite, o runner sinaliza a falha como limitação externa de uso/API e recomenda parada segura para investigar quota, rate limit ou billing do provider.
+
+Essa classificação não altera missões bem-sucedidas e não mascara falhas comuns de teste, sintaxe, código ou documentação. O código de falha original da missão continua sendo usado, a missão vai para `missions/failed` e o worker para para revisão.
+
 ## Auto-Commit
 
 O runner define `VAF_AUTO_COMMIT=1` por padrão, salvo quando a variável já foi definida pelo usuário. O commit automático é responsabilidade do worker acionado pelo runner e deve respeitar `VAF_COMMIT_MESSAGE` quando informada.
@@ -159,6 +163,7 @@ Se `VAF_AUTO_COMMIT=1`, o runner exige Git limpo ao final. Se restarem alteraç�
 - O runner não torna seguro alterar produção, segredos, infraestrutura ou dependências sem política apropriada.
 - O runner não deve ser usado para contornar validações manuais exigidas por Guardian Specs.
 - O runner em batch não deve ser usado para ampliar execução sem revisão quando as missões forem sensíveis, ambíguas ou arquiteturalmente relevantes.
+- O runner não consulta limites reais de billing ou quota; ele apenas reconhece sinais textuais já presentes no log da missão.
 
 ## Validações Recomendadas
 
@@ -170,3 +175,5 @@ python3 -m compileall src
 bash -n scripts/vaf-run-next-safe.sh
 bash -n scripts/vaf-run-batch-safe.sh
 ```
+
+Próximos passos possíveis para esse diagnóstico são event log, classificação estruturada de falhas, integração futura com Provider Gateway e backoff configurável. O MVP atual não implementa retry inteligente nem consulta automática de billing.

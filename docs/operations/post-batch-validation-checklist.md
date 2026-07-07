@@ -22,6 +22,7 @@ Ele complementa o [playbook de execução em batch](batch-execution-playbook.md)
 - Testes passando.
 - `compileall` passando.
 - Logs sem falha relevante.
+- Logs sem sinal de quota, rate limit, billing hard limit, crédito insuficiente ou `Usage/API Limit Guard`.
 - Documentação criada ou atualizada conforme esperado.
 - Nenhuma promessa de funcionalidade inexistente.
 - Push ainda não feito, salvo se explicitamente solicitado.
@@ -137,6 +138,7 @@ Pare antes de novo batch, push ou liberação de batch de 10 quando houver:
 - `running > 0` com worker parado.
 - `queue` diferente do esperado.
 - Logs incompatíveis com as missões executadas.
+- Log sinalizado pelo `Usage/API Limit Guard` como limitação externa de uso/API.
 - Commit faltando.
 - Commit com escopo errado.
 - Arquivo criado em local errado.
@@ -160,6 +162,8 @@ git show --name-only --oneline HEAD
 
 Se não houver arquivo `.log`, confira também saídas `.out` recentes em `logs/` antes de concluir que não existe evidência.
 
+Se o log mencionar `Usage/API Limit Guard`, `usage limit has been reached`, `quota exceeded`, `insufficient quota`, `billing hard limit`, rate limit persistente ou erro `429` associado a limite, suspenda novo batch e investigue limites do provider. Essa verificação é local e determinística: ela não consulta billing real, não chama provider externo, não acessa rede e não implementa retry inteligente.
+
 ## Quando liberar batch de 10
 
 Batch de 10 só deve ser liberado quando:
@@ -181,6 +185,7 @@ Batch de 10 fica permitido quando esses critérios são atendidos, mas continua 
 Suspenda batch de 10 quando:
 
 - Houve falha no batch anterior.
+- Houve falha de quota, rate limit, billing hard limit ou crédito insuficiente no batch anterior.
 - Haverá mudança estrutural profunda.
 - Haverá alteração em scripts críticos.
 - Haverá alteração no Guardian Engine com impacto amplo.

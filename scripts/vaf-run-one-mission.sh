@@ -62,6 +62,9 @@ if [ "$STATUS" -eq 0 ]; then
   echo "Missão concluída: $BASE"
   exit 0
 else
+  if PYTHONPATH=src python3 -m vercosa_ai_framework.guardian.usage_limit_cli "$LOG"; then
+    echo "Falha classificada como limitação externa de uso/API. Worker deve parar para revisão de quota, rate limit ou billing."
+  fi
   mv "$RUNNING" "missions/failed/$BASE"
   echo "Missão falhou: $BASE"
   exit "$STATUS"
