@@ -49,6 +49,7 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 | Agents/Subagents | Executar responsabilidades por fronteiras do framework | Conceitual/MVP no nível de perfil | Conhecer providers ou infraestrutura concreta |
 | Capabilities | Representar capacidades abstratas solicitadas | MVP em `capabilities/` | Codificar detalhes concretos de tool/provider |
 | Policy/Guardian | Resolver políticas declarativas e aplicar enforcement operacional em ações concretas | Policy Engine MVP resolve políticas declarativas; Guardian MVP avalia ações e riscos | Executar comandos ou mutar estado diretamente |
+| Audit/Event Log | Representar eventos internos auditáveis e rastreáveis | Contratos iniciais e implementação em memória | Persistir, exportar observabilidade externa ou chamar módulos consumidores automaticamente |
 | Skills | Procedimentos reutilizáveis que implementam capabilities | MVP em `skills/` | Contornar tools ou Provider Gateway para efeitos |
 | Tools | Fronteira governada de ação concreta | MVP em `tools/` | Ocultar chamadas diretas a providers da governança |
 | Provider Gateway | Normalizar acesso a providers após aprovação por tool | MVP em `providers/` | Virar seletor de modelo, runtime adapter ou camada de agente |
@@ -63,6 +64,7 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 - `src/vercosa_ai_framework/tasks/`: fila, scheduler, estado, elegibilidade e tentativas de tasks.
 - `src/vercosa_ai_framework/policy/`: contratos e resolução determinística MVP de políticas declarativas.
 - `src/vercosa_ai_framework/guardian/`: Guardian Engine MVP para decisões de política, risco e classificação determinística de sinais textuais de limite de uso/API.
+- `src/vercosa_ai_framework/audit/`: contratos iniciais de Audit/Event Log e implementação em memória, sem persistência externa.
 - `src/vercosa_ai_framework/model_selection/`: contratos e seleção de modelos por política.
 - `src/vercosa_ai_framework/runtime/`: fronteira de Runtime Adapter, incluindo OpenCode como MVP inicial.
 - `src/vercosa_ai_framework/agents/`: perfis de agentes, registry e orchestrator MVP.

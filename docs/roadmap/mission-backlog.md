@@ -58,7 +58,7 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - Policy Engine já se integra ao Guardian Engine por `ResolvedPolicySet` opcional.
 - Policy Engine já se integra ao Context Router por `ResolvedPolicySet` opcional.
 - Usage/API Limit Guard inicial existe.
-- Integrações com Model Selection, Provider Gateway, auditoria/event log, CLI mais amigável, exemplos reais, documentação pública e release alfa ainda são lacunas.
+- Integrações com Provider Gateway, CLI mais amigável, exemplos reais, documentação pública e release alfa ainda são lacunas. Model Selection já possui integração inicial com políticas e orçamento; Audit/Event Log já possui contratos iniciais em memória, mas ainda não está integrado aos módulos consumidores.
 
 ## Fase 1 — Consolidação Operacional
 
@@ -325,7 +325,8 @@ Objetivo: definir registro auditável mínimo para eventos do framework.
 Escopo permitido: contrato de evento, serialização local e testes determinísticos.
 Escopo proibido: banco obrigatório, rede, provider externo ou observabilidade distribuída.
 Dependências: Persistence Layer MVP e decisões mínimas de retenção.
-Critérios de aceite resumidos: eventos possuem id, tipo, refs, timestamp controlável em testes e payload sem segredo.
+Status: entregue como contratos iniciais e implementação em memória; persistência, retenção e integrações permanecem futuras.
+Critérios de aceite resumidos: eventos possuem id, categoria, severidade, resultado, timestamp controlável em testes e metadados estruturados.
 
 9. Código sugerido: `M009-eventos-guardian-policy-context`
 Título: Registrar decisões de Guardian/Policy/Context em eventos auditáveis.

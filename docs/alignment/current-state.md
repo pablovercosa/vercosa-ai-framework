@@ -88,6 +88,7 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
 - `policy/`: contratos e resolução determinística MVP de políticas declarativas, precedência simples e conflitos básicos.
 - `guardian/`: Guardian Engine determinístico com decisões estruturadas e detecção inicial de sinais textuais de limite de uso/API sem chamadas externas.
+- `audit/`: contratos iniciais de Audit/Event Log, tipos de evento e implementação em memória sem persistência externa.
 - `model_selection/`: políticas, tipos e selector MVP.
 - `runtime/`: contrato de Runtime Adapter e OpenCode Runtime Adapter MVP.
 - `agents/`: perfis, registry e orchestrator MVP.
@@ -159,7 +160,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Adapter PostgreSQL/pgvector para Knowledge Hub e Code Intelligence.
 - Paridade de Runtime Adapter para Claude Code, Codex CLI, Cursor, VS Code, JetBrains, Web UI e API.
 - Persistência formal de Model Registry.
-- Persistência e retenção de audit logs.
+- Persistência e retenção de audit logs além da implementação em memória inicial.
 - Testes de contrato entre portas/adapters.
 - ADRs para fronteiras ainda ambíguas.
 
