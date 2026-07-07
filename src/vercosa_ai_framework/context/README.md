@@ -20,6 +20,10 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Registra omissões por duplicação, orçamento insuficiente ou citação obrigatória ausente.
 - Gera warnings determinísticos para itens citáveis sem citação quando citação não for obrigatória.
 - Produz `ContextPackage` rastreável.
+- Pode receber um `ResolvedPolicySet` opcional já produzido pelo Policy Engine e considerar efeitos simples de forma determinística.
+- Registra refs de políticas resolvidas no `ContextPackage` quando elas forem fornecidas pelo chamador.
+- Reflete políticas `warn`, `require_approval` e conflitos em warnings e metadados rastreáveis.
+- Omite itens por política `deny` somente quando a regra possui alvo claro e determinístico para o item ou fonte.
 - Recebe normalmente candidatos `ContextItem` originados do Knowledge Hub quando eles já foram convertidos por adaptador externo ao roteador.
 - Produz pacotes que podem ser avaliados pelo Guardian Engine por chamada explícita do componente orquestrador.
 
@@ -35,6 +39,8 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Não escolhe modelos concretos.
 - Não executa redaction; apenas preserva registros já recebidos.
 - Não avalia risco operacional do pacote final; essa responsabilidade pertence ao Guardian Engine.
+- Não resolve políticas; políticas precisam chegar como `ResolvedPolicySet` opcional já resolvido pelo Policy Engine ou como refs simples.
+- Não implementa DSL, parser de política ou carregamento de políticas.
 - Não substitui Policy Engine, Guardian Engine, Knowledge Hub, Canonicalizer, Persistence Layer ou Model Selection Engine.
 - Não promete memória infinita.
 
@@ -75,6 +81,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 Entradas:
 
 - `ContextRequest` com objetivo, escopo, orçamento e candidatos explícitos.
+- `ResolvedPolicySet` opcional em `ContextRequest.resolved_policy_set`, já produzido por `policy/` quando o chamador quiser aplicar a integração inicial.
 - Lista explícita de `ContextItem` passada para `DeterministicContextRouter.route()` quando o chamador não quiser armazenar candidatos no request.
 - `ContextSource` e `ContextItem` criados por chamadores autorizados.
 - `ContextSource` e `ContextItem` produzidos por `knowledge_document_to_context_candidate()` ou `knowledge_search_result_to_context_candidate()` quando a origem for o Knowledge Hub.
@@ -82,12 +89,29 @@ Entradas:
 Saídas:
 
 - `ContextPackage` com itens, fontes, citações, estimativas, redactions e omissões.
+- `ContextPackage.policy_refs`, `warnings` e `metadata` com rastreabilidade de políticas resolvidas quando fornecidas.
 - `TokenBudgetDecision` para itens incluídos ou omitidos.
 - `TokenBudgetResult` produzido pelo `SimpleTokenBudgetManager` para avaliação agregada de orçamento.
 
+## Integração Inicial Com Policy Engine
+
+O Policy Engine resolve políticas declarativas e produz `ResolvedPolicySet`. O Context Router não chama o Policy Engine e não resolve precedência, conflitos ou DSL. Quando o chamador passa `ContextRequest.resolved_policy_set`, o roteador apenas consome esse conjunto já resolvido.
+
+Comportamento atual:
+
+- `allow` não bloqueia nem seleciona contexto por si só.
+- `warn` gera warning rastreável no `ContextPackage`.
+- `require_approval` gera warning e metadados `requires_approval` e `approval_policy_refs`.
+- `deny` omite item com `policy_denied` somente quando `target_refs` ou valor simples apontam de forma determinística para `context_item_id`, `source_ref`, tipo de item ou sensibilidade.
+- `deny` sem alvo claro é registrado em `metadata["blocked_policy_refs"]`, sem omissão ambígua.
+- conflitos de política geram warning ou marcação de aprovação conforme severidade.
+
+Essa integração é inicial, local e determinística. Ela não implementa RAG semântico, embeddings, pgvector, PostgreSQL, provider externo, LLM, runtime, rede ou banco.
+
 ## Dependências Internas
 
-- Não depende de outros módulos do framework na implementação atual.
+- Depende apenas dos tipos declarativos de `policy/` para aceitar `ResolvedPolicySet` opcional.
+- Não importa `guardian/` e não chama Guardian Engine automaticamente.
 - A integração com `knowledge/` é feita no módulo `knowledge`, por adaptador que produz tipos de `context/` sem fazer o roteador buscar documentos.
 
 ## Módulos Relacionados
@@ -95,6 +119,7 @@ Saídas:
 - Acima: [agents](../agents/README.md), [capabilities](../capabilities/README.md), [skills](../skills/README.md).
 - Abaixo: [knowledge](../knowledge/README.md), [canonicalizer](../canonicalizer/README.md), [persistence](../persistence/README.md).
 - Transversal: [guardian](../guardian/README.md), [model_selection](../model_selection/README.md).
+- `policy/` resolve políticas declarativas antes do roteamento quando o chamador solicitar essa etapa.
 - `guardian/` avalia riscos determinísticos básicos de `ContextPackage` quando chamado explicitamente. O Context Router não chama Guardian automaticamente nesta fase.
 
 ## Specs Correspondentes
@@ -140,7 +165,7 @@ O exemplo acima não executa busca, RAG, embeddings, banco, provider ou runtime.
 
 Status: `MVP`.
 
-O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub, mas não consulta Knowledge Hub diretamente e ainda não integra automaticamente Policy Engine, Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
+O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub e pode consumir `ResolvedPolicySet` opcional já resolvido pelo Policy Engine, mas não consulta Knowledge Hub diretamente e não integra automaticamente Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
 
 Limitações atuais:
 
@@ -152,11 +177,12 @@ Limitações atuais:
 - Knowledge Hub fornece candidatos explícitos; ele não representa memória infinita.
 - Não há memória infinita.
 - Não há chamadas externas.
+- A integração com Policy Engine é limitada a efeitos simples já resolvidos; não há DSL, parser ou resolução de políticas dentro do Context Router.
 - A avaliação Guardian de Context Packages existe no módulo `guardian/`, mas depende de chamada explícita e não muda a montagem determinística do pacote.
 
 ## Próximos Passos
 
-- Definir contrato formal com Policy Engine quando existir.
+- Evoluir contrato formal com Policy Engine somente quando novas Specs ou ADRs aprovarem regras mais ricas de contexto.
 - Integrar avaliação Guardian para Context Packages sensíveis ao fluxo orquestrado quando houver contrato de execução aprovado.
 - Expandir o contrato de candidatos vindos de Knowledge Hub somente após novas Specs ou ADRs para ranking, chunking e governança adicional.
 - Definir persistência futura de Context Packages e Token Budget Records por `persistence/`.

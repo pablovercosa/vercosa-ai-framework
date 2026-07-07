@@ -204,3 +204,9 @@ Políticas detalhadas:
 O Policy Engine e o Guardian Engine permanecem separados. O Policy Engine resolve políticas declarativas em `ResolvedPolicySet`; o Guardian Engine avalia ações concretas e pode considerar esse conjunto opcional para elevar decisões operacionais como `warn`, `require_approval` ou `block`.
 
 Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa DSL, parser de políticas, carregamento remoto, RAG, embeddings, banco ou provider.
+
+## Integração Policy E Context Router
+
+O Context Router pode receber `ResolvedPolicySet` opcional já produzido pelo Policy Engine em `ContextRequest`. Ele apenas consome políticas resolvidas para registrar refs, gerar warnings, marcar aprovação requerida em metadados e omitir itens quando houver `deny` determinístico com alvo claro.
+
+Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa DSL, parser de políticas, RAG semântico, embeddings, pgvector, banco, provider externo ou chamada de LLM.

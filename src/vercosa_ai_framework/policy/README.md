@@ -16,6 +16,7 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Detecta conflitos básicos entre regras habilitadas com o mesmo escopo e chave quando efeitos ou valores divergem.
 - Produz `ResolvedPolicySet` e `PolicyResolutionResult` rastreáveis.
 - Fornece `ResolvedPolicySet` para consumidores como o Guardian Engine quando o chamador decidir passar políticas resolvidas adiante.
+- Fornece `ResolvedPolicySet` para o Context Router quando o chamador quiser que o pacote de contexto considere políticas já resolvidas.
 
 ## O Que Este Módulo Não Faz
 
@@ -27,6 +28,7 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Não implementa parser externo de arquivos de política.
 - Não carrega política dinâmica remota.
 - Não chama `guardian/` e não aplica enforcement operacional.
+- Não chama `context/` e não monta `ContextPackage`.
 - Não transforma `ResolvedPolicySet` em decisão Guardian por conta própria.
 
 ## Principais Arquivos
@@ -64,12 +66,13 @@ Saídas:
 
 - `PolicyResolutionResult` com `ResolvedPolicySet`, ordem determinística dos conjuntos, conflitos e warnings.
 
-O `ResolvedPolicySet` pode ser passado pelo chamador ao Guardian Engine. Essa integração é inicial e unidirecional: Policy Engine resolve políticas declarativas; Guardian Engine avalia ação concreta e pode elevar a decisão operacional com base nos efeitos resolvidos.
+O `ResolvedPolicySet` pode ser passado pelo chamador ao Guardian Engine ou ao Context Router. Essas integrações são iniciais e unidirecionais: Policy Engine resolve políticas declarativas; Guardian Engine avalia ação concreta; Context Router monta pacote de contexto a partir de candidatos explícitos e pode considerar efeitos simples já resolvidos.
 
 ## Dependências Internas
 
 - Nenhuma dependência interna obrigatória além do próprio pacote `policy/`.
 - O módulo `policy/` não importa `guardian/`.
+- O módulo `policy/` não importa `context/`.
 
 ## Módulos Relacionados
 
@@ -125,15 +128,30 @@ Limites atuais:
 - conflitos de política resolvida podem gerar `warn` ou `require_approval`, conforme severidade.
 - efeitos como `set_limit` e `prefer` continuam declarativos nesta etapa e não viram enforcement operacional automático.
 
+## Integração Inicial Com Context Router
+
+O contrato atual permite que um chamador resolva políticas com `DeterministicPolicyEngine` e entregue o `ResolvedPolicySet` em `ContextRequest.resolved_policy_set`.
+
+Limites atuais:
+
+- o Context Router consome políticas resolvidas, mas não chama o Policy Engine;
+- `allow` não altera seleção de contexto por si só;
+- `warn` é refletido em warnings e refs de política do `ContextPackage`;
+- `require_approval` é refletido em warnings e metadados rastreáveis;
+- `deny` só causa omissão quando há alvo determinístico para item, fonte, tipo ou sensibilidade;
+- conflitos são registrados como warning ou aprovação requerida conforme severidade;
+- não há DSL, parser, RAG semântico, embeddings, pgvector, banco, provider externo, chamada de LLM ou rede.
+
 ## Status Atual
 
 Status: `MVP`.
 
-O módulo possui contratos iniciais e resolução determinística simples. Existe integração inicial e unidirecional com Guardian Engine via `ResolvedPolicySet` opcional no contexto do Guardian. A integração com Context Router, Model Selection Engine, Token Budget Manager e Persistence Layer ainda não foi implementada.
+O módulo possui contratos iniciais e resolução determinística simples. Existem integrações iniciais e unidirecionais com Guardian Engine e Context Router via `ResolvedPolicySet` opcional. A integração com Model Selection Engine, Token Budget Manager e Persistence Layer ainda não foi implementada.
 
 ## Próximos Passos
 
 - Definir uma Spec própria ou atualização explícita de Spec para Policy Engine quando a superfície crescer além do MVP.
 - Definir formato persistível de `Policy Resolution Record` pela Persistence Layer.
 - Evoluir a integração com Guardian Engine sem fundir responsabilidades.
+- Evoluir a integração com Context Router sem permitir que Policy Engine monte contexto ou que Context Router resolva políticas.
 - Evoluir composição de políticas sem introduzir DSL complexa antes de estabilizar contratos.

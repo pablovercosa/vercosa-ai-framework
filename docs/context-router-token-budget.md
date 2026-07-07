@@ -12,11 +12,15 @@ O módulo `src/vercosa_ai_framework/context/` cria tipos, portas abstratas e imp
 
 Este escopo implementa um MVP funcional sem LLM. Ele trabalha apenas com candidatos explícitos recebidos pelo chamador ou convertidos deterministicamente a partir de registros já disponíveis do Knowledge Hub. Ele não implementa RAG funcional, Semantic Index, embeddings, pgvector, PostgreSQL, chamadas a LLM, runtime ou providers.
 
+O Context Router também pode consumir um `ResolvedPolicySet` opcional já produzido pelo Policy Engine. Essa integração é inicial: o Policy Engine resolve políticas declarativas; o Context Router apenas considera efeitos simples já resolvidos ao montar o pacote. O roteador não chama o Policy Engine, não resolve política e não implementa DSL.
+
 O Guardian Engine possui verificação determinística inicial para `ContextPackage` já montado. Essa verificação é chamada explicitamente pelo componente orquestrador ou por testes; ela não muda o fluxo principal do Context Router.
 
 ## Componentes
 
 `Context Router` recebe uma `ContextRequest`, considera candidatos explícitos de contexto, deduplica itens por id, hash ou conteúdo, aplica orçamento simples de tokens e produz um `ContextPackage` rastreável.
+
+Quando `ContextRequest.resolved_policy_set` é fornecido, o roteador registra refs de políticas resolvidas, reflete `warn`, `require_approval` e conflitos em warnings/metadados e pode omitir item por `deny` apenas quando a regra possui alvo determinístico. Políticas `allow` não alteram seleção de contexto por si só.
 
 `Token Budget Manager` estima tokens de forma determinística, reserva tokens de output, calcula orçamento disponível para contexto, decide se um item cabe e também produz resultado agregado para uma sequência de itens.
 
@@ -31,6 +35,8 @@ O Guardian Engine possui verificação determinística inicial para `ContextPack
 ```text
 ContextRequest
 ↓
+ResolvedPolicySet opcional já resolvido pelo Policy Engine
+↓
 DeterministicContextRouter
 ↓
 SimpleTokenBudgetManager
@@ -43,6 +49,7 @@ GuardianEngine.evaluate_context_package() quando chamado explicitamente
 ## Entradas
 
 - `ContextRequest` com objetivo, escopo, orçamento e, opcionalmente, candidatos explícitos.
+- `ResolvedPolicySet` opcional em `ContextRequest.resolved_policy_set`, já resolvido pelo Policy Engine.
 - Lista explícita de `ContextItem` passada para `DeterministicContextRouter.route()` quando o chamador preferir separar request e candidatos.
 - `ContextSource` para fontes já conhecidas pelo chamador.
 - `ContextItem` para trechos, referências, evidências, instruções ou metadados candidatos.
@@ -51,6 +58,7 @@ GuardianEngine.evaluate_context_package() quando chamado explicitamente
 ## Saídas
 
 - `ContextPackage` com itens selecionados, fontes, citações, estimativa total, reserva de output, redactions agregadas e omissões.
+- `ContextPackage` com `policy_refs`, `warnings` e metadados de aprovação ou bloqueio quando políticas resolvidas forem fornecidas.
 - `TokenBudgetDecision` para itens omitidos por duplicação, citação obrigatória ausente ou limite de tokens.
 - `TokenBudgetResult` com estimativa, reserva de output, orçamento disponível, tokens usados, tokens restantes, itens aceitos e itens omitidos.
 - `model_requirements` mínimos derivados do pacote, sem selecionar modelo concreto.
@@ -70,6 +78,7 @@ GuardianEngine.evaluate_context_package() quando chamado explicitamente
 - Preservação de citações e redactions já presentes nos itens selecionados.
 - Conversão determinística de registros do Knowledge Hub em candidatos de contexto, preservando id, título, referência, tipo de fonte, hash e citações ou referência rastreável mínima.
 - Registro de omissões no `ContextPackage`.
+- Integração opcional com `ResolvedPolicySet` sem chamada a Policy Engine, Guardian Engine, LLM, provider, rede ou banco.
 - Avaliação Guardian determinística, local e sem chamadas externas quando `evaluate_context_package()` receber um pacote.
 
 ## Limites Conhecidos
@@ -81,13 +90,15 @@ GuardianEngine.evaluate_context_package() quando chamado explicitamente
 - A integração atual não implementa Semantic Index, embeddings, pgvector, PostgreSQL ou RAG semântico; esses pontos continuam como etapas futuras.
 - Itens de evidência sem citação são omitidos; outros itens sem citação podem ser aceitos com warning quando `citation_required=False`.
 - Redaction é apenas preservada quando já existe no item; o módulo não executa redaction.
-- Policy Engine ainda não é integrado ao fluxo do pacote.
+- A integração com Policy Engine é inicial e limitada a `ResolvedPolicySet` opcional já resolvido.
+- O Context Router não resolve políticas, não interpreta DSL, não carrega arquivos de política e não aplica enforcement operacional amplo.
 - Guardian Engine avalia `ContextPackage` por chamada explícita, mas o Context Router ainda não chama Guardian automaticamente.
 - Semantic Index e cache persistido continuam como trabalho futuro.
 
 ## Relação Com Outros Módulos
 
 - `knowledge/` fornece um adaptador determinístico para transformar documentos e resultados textuais já disponíveis em candidatos citáveis. O Context Router continua sem chamar Knowledge Hub diretamente.
+- `policy/` resolve políticas declarativas e pode entregar `ResolvedPolicySet` ao chamador. O Context Router consome esse conjunto opcional sem chamar `policy/` em tempo de roteamento.
 - `canonicalizer/` prepara documentos canônicos, mas não é chamado por este MVP.
 - `persistence/` poderá persistir pacotes e registros futuros, mas este MVP não persiste nada.
 - `model_selection/` poderá receber requisitos de janela de contexto; este MVP apenas prepara metadados.
@@ -97,4 +108,4 @@ GuardianEngine.evaluate_context_package() quando chamado explicitamente
 
 Status: `MVP`.
 
-O código possui contratos, implementação mínima determinística, integração inicial com candidatos vindos do Knowledge Hub e avaliação Guardian inicial de Context Packages. Ele ainda não representa o fluxo completo de memória governada, Semantic Index, RAG semântico ou integração automática entre roteamento de contexto e enforcement Guardian.
+O código possui contratos, implementação mínima determinística, integração inicial com candidatos vindos do Knowledge Hub, consumo opcional de `ResolvedPolicySet` e avaliação Guardian inicial de Context Packages. Ele ainda não representa o fluxo completo de memória governada, Semantic Index, RAG semântico ou integração automática entre roteamento de contexto e enforcement Guardian.

@@ -21,6 +21,7 @@ from vercosa_ai_framework.context.types import (
     stable_content_hash,
     stable_id,
 )
+from vercosa_ai_framework.policy.types import PolicyConflict, PolicyEffect, PolicyRule, PolicySeverity, ResolvedPolicySet
 
 
 class ContextRouter(ABC):
@@ -45,10 +46,22 @@ class DeterministicContextRouter(ContextRouter):
         seen_contents: set[str] = set()
         warnings: list[str] = []
         used_tokens = 0
+        resolved_policy_set = request.resolved_policy_set
+        policy_refs = _policy_refs(request.policy_refs, resolved_policy_set)
+        denied_rules = _context_denied_rules(resolved_policy_set)
+        approval_policy_refs = _approval_policy_refs(resolved_policy_set)
+        blocked_policy_refs = _untargeted_denied_policy_refs(denied_rules)
+        if resolved_policy_set is not None:
+            warnings.extend(_policy_warnings(resolved_policy_set))
 
         explicit_candidates = request.candidate_items if candidates is None else candidates
 
         for item in sorted(explicit_candidates, key=_candidate_sort_key):
+            denied_rule = _matching_denied_rule(item, denied_rules)
+            if denied_rule is not None:
+                omitted.append(_omitted_policy_denied(item, request.token_budget, used_tokens, self.budget_manager.estimate_item(item), denied_rule))
+                continue
+
             if _is_duplicate(item, seen_item_ids, seen_hashes, seen_contents):
                 omitted.append(_omitted_duplicate(item, request.token_budget, used_tokens, self.budget_manager.estimate_item(item)))
                 continue
@@ -96,7 +109,7 @@ class DeterministicContextRouter(ContextRouter):
             output_token_reservation=request.token_budget.reserved_output_tokens,
             redactions=redactions,
             omission_reasons=tuple(omitted),
-            policy_refs=request.policy_refs,
+            policy_refs=policy_refs,
             guardian_decision_refs=request.guardian_decision_refs,
             model_requirements={
                 "minimum_context_window": used_tokens + request.token_budget.reserved_output_tokens,
@@ -104,7 +117,7 @@ class DeterministicContextRouter(ContextRouter):
                 "reserved_output_tokens": request.token_budget.reserved_output_tokens,
             },
             content_hash=content_hash,
-            cache_key=stable_id("context_cache", request.request_id, content_hash, tuple(request.policy_refs)),
+            cache_key=stable_id("context_cache", request.request_id, content_hash, policy_refs),
             warnings=tuple(warnings),
             metadata={
                 "router": "deterministic",
@@ -114,8 +127,100 @@ class DeterministicContextRouter(ContextRouter):
                 "remaining_context_tokens": max(0, request.token_budget.available_context_tokens - used_tokens),
                 "accepted_items": tuple(item.context_item_id for item in selected_items),
                 "budget_result": budget_result,
+                "policy_resolution_id": resolved_policy_set.resolution_id if resolved_policy_set is not None else None,
+                "requires_approval": bool(approval_policy_refs),
+                "approval_policy_refs": approval_policy_refs,
+                "blocked_policy_refs": blocked_policy_refs,
             },
         )
+
+
+def _policy_refs(existing_refs: tuple[str, ...], resolved_policy_set: ResolvedPolicySet | None) -> tuple[str, ...]:
+    refs = list(existing_refs)
+    if resolved_policy_set is not None:
+        refs.extend(rule.rule_id for rule in resolved_policy_set.resolved_rules)
+        refs.extend(conflict.conflict_id for conflict in resolved_policy_set.conflicts)
+    return tuple(dict.fromkeys(refs))
+
+
+def _policy_warnings(resolved_policy_set: ResolvedPolicySet) -> tuple[str, ...]:
+    warnings: list[str] = []
+    warnings.extend(f"policy_warning:{warning}" for warning in resolved_policy_set.warnings)
+    for rule in resolved_policy_set.resolved_rules:
+        if rule.effect is PolicyEffect.WARN:
+            warnings.append(f"policy_warn:{rule.rule_id}")
+        elif rule.effect is PolicyEffect.REQUIRE_APPROVAL:
+            warnings.append(f"policy_requires_approval:{rule.rule_id}")
+    for conflict in resolved_policy_set.conflicts:
+        warnings.append(_conflict_warning(conflict))
+    return tuple(dict.fromkeys(warnings))
+
+
+def _conflict_warning(conflict: PolicyConflict) -> str:
+    if conflict.severity in {PolicySeverity.HIGH, PolicySeverity.CRITICAL}:
+        return f"policy_conflict_requires_approval:{conflict.conflict_id}"
+    return f"policy_conflict_warn:{conflict.conflict_id}"
+
+
+def _approval_policy_refs(resolved_policy_set: ResolvedPolicySet | None) -> tuple[str, ...]:
+    if resolved_policy_set is None:
+        return ()
+    refs = [rule.rule_id for rule in resolved_policy_set.resolved_rules if rule.effect is PolicyEffect.REQUIRE_APPROVAL]
+    refs.extend(
+        conflict.conflict_id
+        for conflict in resolved_policy_set.conflicts
+        if conflict.severity in {PolicySeverity.HIGH, PolicySeverity.CRITICAL}
+    )
+    return tuple(dict.fromkeys(refs))
+
+
+def _context_denied_rules(resolved_policy_set: ResolvedPolicySet | None) -> tuple[PolicyRule, ...]:
+    if resolved_policy_set is None:
+        return ()
+    return tuple(rule for rule in resolved_policy_set.resolved_rules if rule.effect is PolicyEffect.DENY and rule.scope.value in {"global", "context"})
+
+
+def _untargeted_denied_policy_refs(denied_rules: tuple[PolicyRule, ...]) -> tuple[str, ...]:
+    return tuple(rule.rule_id for rule in denied_rules if not _has_deterministic_context_target(rule))
+
+
+def _matching_denied_rule(item: ContextItem, denied_rules: tuple[PolicyRule, ...]) -> PolicyRule | None:
+    for rule in denied_rules:
+        if _rule_targets_item(rule, item):
+            return rule
+    return None
+
+
+def _rule_targets_item(rule: PolicyRule, item: ContextItem) -> bool:
+    targets = set(rule.target_refs)
+    if item.context_item_id in targets or item.source_ref in targets:
+        return True
+    if isinstance(rule.value, str) and rule.value in {item.context_item_id, item.source_ref, item.item_type.value, item.sensitivity}:
+        return True
+    return False
+
+
+def _has_deterministic_context_target(rule: PolicyRule) -> bool:
+    return bool(rule.target_refs) or isinstance(rule.value, str)
+
+
+def _omitted_policy_denied(
+    item: ContextItem,
+    budget,
+    used_tokens: int,
+    estimate: TokenEstimate,
+    rule: PolicyRule,
+) -> TokenBudgetDecision:
+    return TokenBudgetDecision(
+        item_ref=item.context_item_id,
+        included=False,
+        token_estimate=estimate,
+        tokens_before=used_tokens,
+        tokens_after=used_tokens,
+        available_context_tokens=budget.available_context_tokens,
+        omission_reason=ContextOmissionReason.POLICY_DENIED,
+        reason=f"policy_denied:{rule.rule_id}",
+    )
 
 
 def _omitted_duplicate(

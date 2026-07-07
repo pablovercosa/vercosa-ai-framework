@@ -11,6 +11,8 @@ from enum import Enum
 from hashlib import sha256
 from typing import Any
 
+from vercosa_ai_framework.policy.types import ResolvedPolicySet
+
 
 class ContextSourceType(str, Enum):
     """Initial source categories from Spec 0014."""
@@ -232,6 +234,7 @@ class ContextRequest:
     token_budget: TokenBudget = field(default_factory=lambda: TokenBudget(max_input_tokens=4096, reserved_output_tokens=1024))
     citation_required: bool = False
     policy_refs: tuple[str, ...] = field(default_factory=tuple)
+    resolved_policy_set: ResolvedPolicySet | None = None
     guardian_decision_refs: tuple[str, ...] = field(default_factory=tuple)
     prior_context_package_refs: tuple[str, ...] = field(default_factory=tuple)
     candidate_sources: tuple[ContextSource, ...] = field(default_factory=tuple)
