@@ -8,6 +8,8 @@ Nenhum código fonte deve ser implementado apenas com base neste documento. Cada
 
 Backlog operacional detalhado de missões futuras: [Backlog estratégico de missões](../roadmap/mission-backlog.md).
 
+Execução em batch entrou no fluxo operacional como mecanismo controlado para rodar missões já revisadas em `missions/queue/`; o uso seguro está documentado no [playbook de execução em batch](../operations/batch-execution-playbook.md).
+
 ## Princípio Orientador
 
 Prefira integrar contratos MVP existentes antes de adicionar novos frameworks, providers, bancos ou comportamentos de agentes.

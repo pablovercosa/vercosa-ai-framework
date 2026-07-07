@@ -32,6 +32,10 @@ Quando solicitado, o push automático só prossegue depois das validações loca
 
 ## Runner Seguro Em Batch
 
+Playbook detalhado: [Playbook de execução em batch](batch-execution-playbook.md).
+
+`scripts/vaf-run-next-safe.sh` executa uma missão por vez. `scripts/vaf-run-batch-safe.sh` executa múltiplas missões em sequência controlada. O playbook de batch detalha como preparar a fila, executar, validar, investigar falhas e decidir quando publicar.
+
 Uso básico:
 
 ```bash

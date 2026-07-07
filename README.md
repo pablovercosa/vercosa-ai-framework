@@ -92,6 +92,8 @@ VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
 
 O batch para na primeira falha, valida `pytest` e `python3 -m compileall src` por missão por reaproveitamento do runner seguro, exige Git limpo após cada missão e preserva commits separados por missão. Push automático é opt-in com `VAF_AUTO_PUSH=1` e ocorre somente ao final do batch se todas as missões executadas passarem.
 
+Playbook operacional: [Execução em batch](docs/operations/batch-execution-playbook.md).
+
 ## Princípios
 
 - Specification First
@@ -206,6 +208,7 @@ Políticas detalhadas:
 - [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
 - [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)
 - [Uso do runner seguro](docs/operations/safe-runner-usage.md)
+- [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
 - [Context Router e Token Budget](docs/context-router-token-budget.md)
 
 ## Regras De Trabalho
