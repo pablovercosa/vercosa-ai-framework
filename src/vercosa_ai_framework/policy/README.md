@@ -18,6 +18,7 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Fornece `ResolvedPolicySet` para consumidores como o Guardian Engine quando o chamador decidir passar políticas resolvidas adiante.
 - Fornece `ResolvedPolicySet` para o Context Router quando o chamador quiser que o pacote de contexto considere políticas já resolvidas.
 - Fornece `ResolvedPolicySet` para o Model Selection Engine quando o chamador quiser que a seleção considere políticas já resolvidas.
+- Pode ter `PolicyResolutionResult` transformado em evento auditável por helper opcional do módulo `audit/`, sem dependência obrigatória do Policy Engine para um event log.
 
 ## O Que Este Módulo Não Faz
 
@@ -32,6 +33,7 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Não chama `context/` e não monta `ContextPackage`.
 - Não chama `model_selection/` e não seleciona, ranqueia ou descobre modelos.
 - Não transforma `ResolvedPolicySet` em decisão Guardian por conta própria.
+- Não registra eventos auditáveis automaticamente e não persiste resultados.
 
 ## Principais Arquivos
 
@@ -118,6 +120,14 @@ result = DeterministicPolicyEngine().resolve([policy_set])
 
 O resultado é declarativo. A avaliação operacional de uma ação concreta continua pertencendo ao Guardian Engine.
 
+## Integração Opcional Com Audit/Event Log
+
+O módulo `audit/` fornece `policy_resolution_event()` e `record_policy_resolution_event()` para transformar um `PolicyResolutionResult` já produzido em evento auditável estruturado. A chamada é responsabilidade do orquestrador ou do chamador.
+
+O evento pode registrar categoria `policy`, quantidade de policy sets considerados, quantidade de políticas resolvidas, conflitos, warnings, refs de `deny` e refs de `require_approval`. Os helpers priorizam refs, contadores e metadados seguros, sem registrar prompts completos, segredos ou conteúdo bruto por padrão.
+
+Essa integração é opcional, em memória quando usada com `InMemoryEventLog`, sem persistência externa, sem observabilidade externa e sem alterar a assinatura do `PolicyEngine.resolve()`.
+
 ## Integração Inicial Com Guardian Engine
 
 O contrato atual permite que um chamador resolva políticas com `DeterministicPolicyEngine` e entregue o `ResolvedPolicySet` ao contexto de avaliação do Guardian Engine.
@@ -164,7 +174,7 @@ Limites atuais:
 
 Status: `MVP`.
 
-O módulo possui contratos iniciais e resolução determinística simples. Existem integrações iniciais e unidirecionais com Guardian Engine, Context Router e Model Selection Engine via `ResolvedPolicySet` opcional. A integração com Token Budget Manager e Persistence Layer ainda não foi implementada.
+O módulo possui contratos iniciais e resolução determinística simples. Existem integrações iniciais e unidirecionais com Guardian Engine, Context Router e Model Selection Engine via `ResolvedPolicySet` opcional. Resultados de resolução também podem ser convertidos em eventos auditáveis por helper opcional de `audit/`. A integração com Token Budget Manager e Persistence Layer ainda não foi implementada.
 
 ## Próximos Passos
 
@@ -173,4 +183,5 @@ O módulo possui contratos iniciais e resolução determinística simples. Exist
 - Evoluir a integração com Guardian Engine sem fundir responsabilidades.
 - Evoluir a integração com Context Router sem permitir que Policy Engine monte contexto ou que Context Router resolva políticas.
 - Evoluir a integração com Model Selection sem permitir que Policy Engine selecione modelos ou que Model Selection resolva políticas.
+- Registrar resoluções de política em fluxos orquestrados quando Mission Runner ou Worker tiverem contrato explícito de auditoria.
 - Evoluir composição de políticas sem introduzir DSL complexa antes de estabilizar contratos.

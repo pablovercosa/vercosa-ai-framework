@@ -16,6 +16,7 @@ Avaliar missões, tasks, comandos, ações sensíveis e Context Packages contra 
 - Recebe opcionalmente um `ResolvedPolicySet` produzido pelo Policy Engine e pode elevar a decisão operacional conforme efeitos resolvidos.
 - Fornece `Usage/API Limit Guard` inicial para classificar sinais textuais de rate limit, quota, limite de uso e limite de billing em mensagens já recebidas de providers ou runtimes.
 - Fornece um utilitário operacional local que pode inspecionar o log de uma missão falha e sinalizar limitação externa de uso/API para o worker.
+- Pode ter `GuardianDecision` transformada em evento auditável por helper opcional do módulo `audit/`, sem dependência obrigatória do Guardian Engine para um event log.
 
 ## O Que Este Módulo Não Faz
 
@@ -28,6 +29,7 @@ Avaliar missões, tasks, comandos, ações sensíveis e Context Packages contra 
 - Não resolve políticas declarativas no lugar do Policy Engine.
 - Não chama o Policy Engine e não altera políticas declarativas.
 - Não consulta billing real, não chama provider externo e não verifica limites em tempo real.
+- Não registra eventos auditáveis automaticamente e não persiste decisões.
 
 ## Principais Arquivos
 
@@ -137,6 +139,14 @@ decision = GuardianEngine().evaluate(context)
 
 O `resolved_policy_set` deve ser produzido fora do Guardian. O Guardian não resolve, carrega ou busca políticas.
 
+## Integração Opcional Com Audit/Event Log
+
+O módulo `audit/` fornece `guardian_decision_event()` e `record_guardian_decision_event()` para transformar uma `GuardianDecision` já produzida em evento auditável estruturado. A chamada é explícita e deve ser feita pelo orquestrador ou pelo chamador que possui um `EventLog`.
+
+O evento pode registrar categoria `guardian`, decisão operacional, risco, modo Guardian, origem da avaliação, quantidade de warnings, quantidade de bloqueios, sinal de `require_approval`, refs de políticas e contadores de violações. Os helpers não registram prompts completos, comandos brutos, segredos, credenciais ou tokens de API por padrão.
+
+Essa integração é opcional, sem persistência externa, sem observabilidade externa e sem alterar o comportamento de `GuardianEngine.evaluate()` ou `GuardianEngine.evaluate_context_package()`.
+
 Detecção inicial de limite de uso:
 
 ```python
@@ -157,7 +167,7 @@ No fluxo operacional atual, `scripts/vaf-run-one-mission.sh` chama `python3 -m v
 
 Status: `MVP`.
 
-O módulo possui avaliação determinística inicial de missões, comandos, ações sensíveis, Context Packages, políticas resolvidas recebidas como entrada opcional e sinais textuais de limites de uso/API. A avaliação é local, testável e integrada de forma mínima ao caminho de falha do worker por inspeção de log já existente.
+O módulo possui avaliação determinística inicial de missões, comandos, ações sensíveis, Context Packages, políticas resolvidas recebidas como entrada opcional e sinais textuais de limites de uso/API. A avaliação é local, testável e integrada de forma mínima ao caminho de falha do worker por inspeção de log já existente. Decisões Guardian podem ser convertidas em eventos auditáveis por helper opcional de `audit/`.
 
 ## Próximos Passos
 
@@ -166,4 +176,5 @@ O módulo possui avaliação determinística inicial de missões, comandos, aç�
 - Evoluir a interpretação operacional de `ResolvedPolicySet` sem mover resolução declarativa para o Guardian.
 - Evoluir `UsageLimitDetection` para classificação estruturada de falhas quando houver contrato de event log.
 - Definir persistência e auditoria dos eventos de limite externo quando a camada de logs estruturados estiver estabilizada.
+- Registrar decisões Guardian em Mission Runner e Worker quando houver contrato explícito de auditoria no fluxo.
 - Avaliar integração futura com Provider Gateway e backoff configurável, sem prometer retry inteligente no MVP atual.

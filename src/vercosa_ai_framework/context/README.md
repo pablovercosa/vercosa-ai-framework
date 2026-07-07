@@ -27,6 +27,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Omite itens por política `deny` somente quando a regra possui alvo claro e determinístico para o item ou fonte.
 - Recebe normalmente candidatos `ContextItem` originados do Knowledge Hub quando eles já foram convertidos por adaptador externo ao roteador.
 - Produz pacotes que podem ser avaliados pelo Guardian Engine por chamada explícita do componente orquestrador.
+- Pode ter `ContextPackage` transformado em evento auditável por helper opcional do módulo `audit/`, sem dependência obrigatória do Context Router para um event log.
 
 ## O Que Este Módulo Não Faz
 
@@ -42,6 +43,7 @@ Definir contratos e MVP determinístico para Context Router, Token Budget Manage
 - Não executa redaction; apenas preserva registros já recebidos.
 - Não avalia risco operacional do pacote final; essa responsabilidade pertence ao Guardian Engine.
 - Não resolve políticas; políticas precisam chegar como `ResolvedPolicySet` opcional já resolvido pelo Policy Engine ou como refs simples.
+- Não registra eventos auditáveis automaticamente e não persiste pacotes de contexto.
 - Não implementa DSL, parser de política ou carregamento de políticas.
 - Não substitui Policy Engine, Guardian Engine, Knowledge Hub, Canonicalizer, Persistence Layer ou Model Selection Engine.
 - Não promete memória infinita.
@@ -110,6 +112,14 @@ Comportamento atual:
 - conflitos de política geram warning ou marcação de aprovação conforme severidade.
 
 Essa integração é inicial, local e determinística. Ela não implementa RAG semântico, embeddings, pgvector, PostgreSQL, provider externo, LLM, runtime, rede ou banco.
+
+## Integração Opcional Com Audit/Event Log
+
+O módulo `audit/` fornece `context_package_event()` e `record_context_package_event()` para transformar um `ContextPackage` já montado em evento auditável estruturado. A chamada é explícita e deve ser feita pelo orquestrador ou pelo chamador que possui um `EventLog`.
+
+O evento pode registrar categoria `context`, quantidade de candidatos quando informada, itens selecionados, itens omitidos, uso estimado de tokens, reserva de output, warnings, motivos agregados de omissão, refs de políticas, refs Guardian e sinal de `require_approval`. O evento não registra conteúdo integral dos itens, prompts completos, segredos ou credenciais por padrão.
+
+Essa integração é opcional, em memória quando usada com `InMemoryEventLog`, sem persistência externa, sem observabilidade externa e sem alterar o comportamento de `DeterministicContextRouter.route()`.
 
 ## Dependências Internas
 
@@ -183,7 +193,7 @@ Limites atuais:
 
 Status: `MVP`.
 
-O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub, pode consumir `ResolvedPolicySet` opcional já resolvido pelo Policy Engine e expõe requisitos mínimos de orçamento em `ContextPackage.model_requirements`. Ele não consulta Knowledge Hub diretamente e não integra automaticamente Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
+O módulo possui contratos, portas abstratas e implementação determinística mínima. Ele aceita candidatos convertidos do Knowledge Hub, pode consumir `ResolvedPolicySet` opcional já resolvido pelo Policy Engine e expõe requisitos mínimos de orçamento em `ContextPackage.model_requirements`. `ContextPackage` pode ser convertido em evento auditável por helper opcional de `audit/`. Ele não consulta Knowledge Hub diretamente e não integra automaticamente Guardian Engine, Persistence Layer, Model Selection Engine ou Semantic Index.
 
 Limitações atuais:
 
@@ -198,6 +208,7 @@ Limitações atuais:
 - A integração com Policy Engine é limitada a efeitos simples já resolvidos; não há DSL, parser ou resolução de políticas dentro do Context Router.
 - A avaliação Guardian de Context Packages existe no módulo `guardian/`, mas depende de chamada explícita e não muda a montagem determinística do pacote.
 - A integração com Model Selection é indireta: somente o chamador repassa metadados de orçamento, se desejar.
+- A integração com Audit/Event Log é indireta: somente o chamador cria ou registra eventos, se desejar.
 
 ## Próximos Passos
 
@@ -205,5 +216,6 @@ Limitações atuais:
 - Integrar avaliação Guardian para Context Packages sensíveis ao fluxo orquestrado quando houver contrato de execução aprovado.
 - Expandir o contrato de candidatos vindos de Knowledge Hub somente após novas Specs ou ADRs para ranking, chunking e governança adicional.
 - Definir persistência futura de Context Packages e Token Budget Records por `persistence/`.
+- Registrar eventos de contexto no Mission Runner, Worker ou Provider Gateway apenas quando houver contrato de auditoria aprovado para esses fluxos.
 - Definir Semantic Index apenas após estabilizar contratos e governança.
 - Evoluir o contrato de requisitos para Model Selection sem criar import circular entre `context/` e `model_selection/`.
