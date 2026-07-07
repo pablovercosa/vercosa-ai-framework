@@ -51,6 +51,35 @@ def test_run_next_safe_script_has_valid_bash_syntax():
     subprocess.run(["bash", "-n", str(script_path)], check=True)
 
 
+def test_run_batch_safe_script_exists_and_is_executable():
+    script_path = ROOT / "scripts" / "vaf-run-batch-safe.sh"
+
+    assert script_path.exists()
+    assert script_path.stat().st_mode & 0o111
+
+
+def test_run_batch_safe_script_has_expected_safety_contract():
+    script = (ROOT / "scripts" / "vaf-run-batch-safe.sh").read_text(encoding="utf-8")
+
+    assert "set -euo pipefail" in script
+    assert "VAF_BATCH_SIZE" in script
+    assert "MAX_BATCH_SIZE=10" in script
+    assert "VAF_AUTO_PUSH" in script
+    assert "./scripts/vaf-run-next-safe.sh" in script
+    assert "VAF_AUTO_PUSH=0 ./scripts/vaf-run-next-safe.sh" in script
+    assert "exit 1" in script
+    assert "pytest" in script
+    assert "python3 -m compileall src" in script
+    assert "require_no_failed_missions" in script
+    assert "require_git_clean" in script
+
+
+def test_run_batch_safe_script_has_valid_bash_syntax():
+    script_path = ROOT / "scripts" / "vaf-run-batch-safe.sh"
+
+    subprocess.run(["bash", "-n", str(script_path)], check=True)
+
+
 def test_safe_runner_usage_documentation_exists_and_covers_required_commands():
     doc_path = ROOT / "docs" / "operations" / "safe-runner-usage.md"
 
@@ -63,3 +92,8 @@ def test_safe_runner_usage_documentation_exists_and_covers_required_commands():
     assert 'VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-run-next-safe.sh' in doc
     assert "push automático é opt-in" in doc
     assert "não substitui revisão humana" in doc
+    assert "./scripts/vaf-run-batch-safe.sh" in doc
+    assert "VAF_BATCH_SIZE=3" in doc
+    assert "VAF_BATCH_SIZE=10" in doc
+    assert "batch para na primeira falha" in doc
+    assert "commits continuam separados por missão" in doc

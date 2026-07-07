@@ -74,6 +74,24 @@ VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-run-next-safe.sh
 
 Por padrão, o runner define `VAF_MAX_CYCLES=1`, `VAF_AUTO_APPROVE=1` e `VAF_AUTO_COMMIT=1`. O push automático nunca é padrão; quando `VAF_AUTO_PUSH=1`, o script exige branch `main`, Git limpo, testes aprovados, `compileall` aprovado, worker parado, nenhuma missão em `missions/failed` e remoto `origin` configurado.
 
+### Runner Seguro Em Batch
+
+O script `scripts/vaf-run-batch-safe.sh` executa múltiplas missões em sequência controlada usando o runner seguro de próxima missão. O padrão é `VAF_BATCH_SIZE=3`; o limite máximo seguro inicial é `VAF_BATCH_SIZE=10`.
+
+Uso básico:
+
+```bash
+./scripts/vaf-run-batch-safe.sh
+```
+
+Uso com tamanho explícito:
+
+```bash
+VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
+```
+
+O batch para na primeira falha, valida `pytest` e `python3 -m compileall src` por missão por reaproveitamento do runner seguro, exige Git limpo após cada missão e preserva commits separados por missão. Push automático é opt-in com `VAF_AUTO_PUSH=1` e ocorre somente ao final do batch se todas as missões executadas passarem.
+
 ## Princípios
 
 - Specification First
