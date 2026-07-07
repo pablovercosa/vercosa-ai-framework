@@ -38,6 +38,7 @@ Esta Spec cobre:
 - comandos que exigem confirmação;
 - detecção de segredos;
 - limite de custo e tokens;
+- classificação determinística de sinais textuais de limite de uso/API, quota, rate limit e billing em mensagens já recebidas de providers ou runtimes;
 - limite de ciclos;
 - classificação de risco por missão;
 - decisões `allow`, `warn`, `block` e `require_approval`;
@@ -57,6 +58,7 @@ Esta Spec não cobre:
 - schema final de banco de dados;
 - engine final de regras;
 - integração real com ferramentas externas de secret scanning;
+- integração com billing real de providers;
 - seleção concreta de modelos;
 - execução direta de comandos, tools, MCPs ou providers.
 
@@ -152,6 +154,34 @@ Níveis mínimos:
 - `medium`: alteração de código, execução local limitada, uso moderado de tokens ou custo, ou mudança com validação automatizada;
 - `high`: mudança em segurança, infraestrutura, dependências, dados, autenticação, permissões, custos pagos, providers externos ou comandos potencialmente destrutivos;
 - `critical`: ação irreversível, risco de perda de dados, exposição de segredos, alteração global, execução privilegiada, produção, compliance ou alto custo.
+
+### Usage/API Limit Guard
+
+Contrato determinístico do Guardian para classificar sinais textuais de limite externo em mensagens de erro ou logs já produzidos por providers e runtimes.
+
+Responsabilidades:
+
+- classificar sinais como `rate_limit`, `quota_exceeded`, `billing_limit`, `unknown_usage_limit` ou `not_usage_limit`;
+- preservar a mensagem original recebida;
+- registrar origem, provider ou runtime quando o chamador informar esses dados;
+- indicar severidade operacional;
+- recomendar ação operacional como `stop_worker`, `retry_later`, `inspect_provider_limits` ou `manual_review`;
+- indicar se o worker deve parar com segurança para evitar retries inúteis;
+- indicar se uma nova tentativa futura pode fazer sentido.
+
+Não responsabilidades:
+
+- consultar billing real;
+- chamar OpenAI, Gemini, Ollama, Claude, OpenCode, MCPs, APIs, rede ou qualquer provider externo;
+- renovar créditos, alterar limites, criar fallback pago ou decidir compra de quota;
+- mascarar erros não relacionados a limite de uso/API.
+
+Regras:
+
+1. A detecção deve ser determinística e testável.
+2. A detecção deve ser case-insensitive.
+3. Limitações externas de uso, quota, rate limit ou crédito não devem ser classificadas como bug do framework.
+4. Mensagens sem padrão conhecido devem retornar `not_usage_limit` e não devem acionar parada do worker por esse guard.
 
 ### Guardian Mode
 

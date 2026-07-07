@@ -14,6 +14,13 @@ from vercosa_ai_framework.guardian.types import (
     GuardianSeverity,
     GuardianViolation,
 )
+from vercosa_ai_framework.guardian.usage_limits import (
+    UsageLimitAction,
+    UsageLimitDetection,
+    UsageLimitSeverity,
+    UsageLimitType,
+    detect_usage_limit,
+)
 
 __all__ = [
     "GuardianAction",
@@ -26,4 +33,9 @@ __all__ = [
     "GuardianSeverity",
     "GuardianViolation",
     "StaticGuardianPolicy",
+    "UsageLimitAction",
+    "UsageLimitDetection",
+    "UsageLimitSeverity",
+    "UsageLimitType",
+    "detect_usage_limit",
 ]

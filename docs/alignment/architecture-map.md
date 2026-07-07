@@ -62,7 +62,7 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 - `src/vercosa_ai_framework/workflows/`: workflow e execução sequencial de tasks.
 - `src/vercosa_ai_framework/tasks/`: fila, scheduler, estado, elegibilidade e tentativas de tasks.
 - `src/vercosa_ai_framework/policy/`: contratos e resolução determinística MVP de políticas declarativas.
-- `src/vercosa_ai_framework/guardian/`: Guardian Engine MVP para decisões de política e risco.
+- `src/vercosa_ai_framework/guardian/`: Guardian Engine MVP para decisões de política, risco e classificação determinística de sinais textuais de limite de uso/API.
 - `src/vercosa_ai_framework/model_selection/`: contratos e seleção de modelos por política.
 - `src/vercosa_ai_framework/runtime/`: fronteira de Runtime Adapter, incluindo OpenCode como MVP inicial.
 - `src/vercosa_ai_framework/agents/`: perfis de agentes, registry e orchestrator MVP.

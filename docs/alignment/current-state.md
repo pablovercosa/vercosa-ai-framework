@@ -87,7 +87,7 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `workflows/`: tipos e engine sequencial de workflow.
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
 - `policy/`: contratos e resolução determinística MVP de políticas declarativas, precedência simples e conflitos básicos.
-- `guardian/`: Guardian Engine determinístico com decisões estruturadas.
+- `guardian/`: Guardian Engine determinístico com decisões estruturadas e detecção inicial de sinais textuais de limite de uso/API sem chamadas externas.
 - `model_selection/`: políticas, tipos e selector MVP.
 - `runtime/`: contrato de Runtime Adapter e OpenCode Runtime Adapter MVP.
 - `agents/`: perfis, registry e orchestrator MVP.
