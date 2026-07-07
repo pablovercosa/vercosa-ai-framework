@@ -34,7 +34,11 @@ Quando solicitado, o push automático só prossegue depois das validações loca
 
 Playbook detalhado: [Playbook de execução em batch](batch-execution-playbook.md).
 
+Checklist pós-batch: [Checklist de validação pós-batch](post-batch-validation-checklist.md).
+
 `scripts/vaf-run-next-safe.sh` executa uma missão por vez. `scripts/vaf-run-batch-safe.sh` executa múltiplas missões em sequência controlada. O playbook de batch detalha como preparar a fila, executar, validar, investigar falhas e decidir quando publicar.
+
+Depois de qualquer execução em batch, use o checklist pós-batch para validar fila, worker, Git, testes, `compileall`, logs, documentação e decisão de push sem duplicar o fluxo do runner seguro.
 
 Uso básico:
 

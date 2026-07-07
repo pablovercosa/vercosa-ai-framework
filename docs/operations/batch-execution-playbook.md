@@ -1,6 +1,6 @@
 # Playbook De Execução Em Batch
 
-Links principais: [README principal](../../README.md) | [Uso do runner seguro](safe-runner-usage.md) | [Backlog estratégico de missões](../roadmap/mission-backlog.md) | [Roadmap](../alignment/roadmap.md)
+Links principais: [README principal](../../README.md) | [Uso do runner seguro](safe-runner-usage.md) | [Checklist pós-batch](post-batch-validation-checklist.md) | [Backlog estratégico de missões](../roadmap/mission-backlog.md) | [Roadmap](../alignment/roadmap.md)
 
 ## Objetivo
 
@@ -135,6 +135,10 @@ O batch deve preservar estas regras operacionais:
 Se uma validação falhar, não adicione novas missões à fila antes de entender e corrigir a causa.
 
 ## Validações Pós-Batch
+
+Checklist detalhado: [Checklist de validação pós-batch](post-batch-validation-checklist.md).
+
+O playbook orienta a execução. O checklist orienta a decisão pós-batch antes de push, novo bloco de missões ou liberação de batch de 10.
 
 Após o batch, execute:
 

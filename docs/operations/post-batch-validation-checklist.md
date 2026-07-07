@@ -1,0 +1,219 @@
+# Checklist De Validação Pós-Batch
+
+Links principais: [README principal](../../README.md) | [Uso do runner seguro](safe-runner-usage.md) | [Playbook de execução em batch](batch-execution-playbook.md)
+
+## Objetivo
+
+Padronizar a validação operacional do Vercosa AI Framework depois de uma execução em batch, antes de fazer push, liberar batch de 10 ou iniciar novo bloco de missões.
+
+Este checklist deve ser usado depois de `./scripts/vaf-run-batch-safe.sh`, depois de qualquer batch com `VAF_BATCH_SIZE=3`, depois de qualquer batch com `VAF_BATCH_SIZE=10`, antes de `git push` e antes de iniciar novo bloco de missões.
+
+Ele complementa o [playbook de execução em batch](batch-execution-playbook.md). Ele não substitui o runner seguro, não aprova mudanças automaticamente e não elimina revisão humana.
+
+## Checklist rápido
+
+- Worker parado.
+- `queue` no estado esperado para o batch executado.
+- `running=0`.
+- `failed=0`.
+- Branch `main`.
+- Git limpo.
+- Últimos commits coerentes.
+- Testes passando.
+- `compileall` passando.
+- Logs sem falha relevante.
+- Documentação criada ou atualizada conforme esperado.
+- Nenhuma promessa de funcionalidade inexistente.
+- Push ainda não feito, salvo se explicitamente solicitado.
+
+## Comandos de validação pós-batch
+
+Execute os comandos abaixo a partir do repositório:
+
+```bash
+cd /home/projetos/vercosa-ai-framework
+
+./scripts/vaf-status.sh
+git status --short
+git log --oneline --decorate -12
+
+find missions -maxdepth 2 -type f | sort | tail -40
+ls -lt logs | head -12
+
+pytest
+python3 -m compileall src
+```
+
+## Validação das missões executadas
+
+Confira se o estado das missões corresponde ao batch executado:
+
+- As missões esperadas saíram de `missions/queue`.
+- As missões concluídas foram para `missions/done`.
+- Nenhuma missão foi para `missions/failed`.
+- Não há missão presa em `missions/running`.
+- Os logs recentes correspondem às missões executadas.
+- Cada missão gerou commit separado quando o fluxo estava com auto-commit habilitado.
+
+Se uma missão esperada não mudou de estado, se um log não corresponde à missão executada ou se um commit agrupa múltiplas missões sem intenção explícita, pare e investigue antes de novo batch ou push.
+
+## Validação do Git
+
+Antes de publicar ou iniciar outro batch:
+
+- Confirme que a branch atual é `main`.
+- Confirme que `git status --short` está vazio.
+- Confirme que os últimos commits representam as missões executadas.
+- Confirme se `origin/main` ainda está atrás ou já atualizado antes de decidir o push.
+- Não use force push.
+- Não reescreva histórico.
+
+Use `git log --oneline --decorate -12` para revisar mensagens, ordem e escopo dos commits recentes. Mensagens futuras devem estar em português do Brasil, salvo nomes técnicos consolidados.
+
+## Validação de testes
+
+Execute sempre:
+
+```bash
+pytest
+python3 -m compileall src
+```
+
+- Falha em `pytest` bloqueia push.
+- Falha em `python3 -m compileall src` bloqueia push.
+- Resultado parcial não é aceito.
+- Teste interrompido, pulado sem explicação ou dependente de estado ambíguo deve ser tratado como bloqueio até diagnóstico.
+
+## Validação de documentação
+
+Revise a documentação tocada pelo batch:
+
+- Texto explicativo em português do Brasil.
+- Links relativos funcionando, quando aplicável.
+- `README.md` atualizado somente quando necessário.
+- `docs/architecture/module-index.md` atualizado somente quando necessário.
+- Docs operacionais apontando entre si quando houver relação direta.
+- Nenhuma promessa de recurso futuro como se já estivesse implementado.
+
+Se documentação, Spec e código ficarem incoerentes, registre a dúvida ou corrija a documentação antes de publicar.
+
+## Quando fazer push
+
+Faça push somente quando todos os itens abaixo forem verdadeiros:
+
+- `failed=0`.
+- `running=0`.
+- Worker parado.
+- `git status --short` vazio.
+- Branch `main`.
+- `pytest` passa.
+- `python3 -m compileall src` passa.
+- Últimos commits estão coerentes.
+- Não há dúvida sobre a entrega.
+
+Prefira push manual após revisar o batch. `VAF_AUTO_PUSH=1` continua sendo opt-in e deve ser usado apenas quando o fluxo estiver estável e a fila for de baixo risco.
+
+## Quando NÃO fazer push
+
+Não faça push quando qualquer item abaixo ocorrer:
+
+- Qualquer missão foi para `missions/failed`.
+- Alguma missão ficou em `missions/running`.
+- Git está sujo.
+- Testes falharam.
+- `compileall` falhou.
+- Branch não é `main`.
+- Logs mostram erro não explicado.
+- Documentação ficou incoerente.
+- Houve commit com mensagem errada.
+- Houve alteração fora do escopo.
+- Houve dúvida sobre resultado do batch.
+
+## Quando parar e investigar
+
+Pare antes de novo batch, push ou liberação de batch de 10 quando houver:
+
+- `failed > 0`.
+- `running > 0` com worker parado.
+- `queue` diferente do esperado.
+- Logs incompatíveis com as missões executadas.
+- Commit faltando.
+- Commit com escopo errado.
+- Arquivo criado em local errado.
+- Teste quebrado.
+- `compileall` quebrado.
+- Documentação prometendo o que não foi implementado.
+
+## Comandos de investigação
+
+Use estes comandos para preservar diagnóstico local antes de tomar nova ação:
+
+```bash
+ls -lt logs | head -20
+tail -n 160 "$(ls -t logs/*.log | head -1)"
+find missions/failed -maxdepth 1 -type f -print | sort
+find missions/running -maxdepth 1 -type f -print | sort
+git log --oneline --decorate -15
+git show --stat --oneline HEAD
+git show --name-only --oneline HEAD
+```
+
+Se não houver arquivo `.log`, confira também saídas `.out` recentes em `logs/` antes de concluir que não existe evidência.
+
+## Quando liberar batch de 10
+
+Batch de 10 só deve ser liberado quando:
+
+- Batch de 3 passou.
+- `failed=0`.
+- Testes passaram.
+- `compileall` passou.
+- Git ficou limpo.
+- Commits ficaram separados.
+- Documentação ficou coerente.
+- Não houve falha recente.
+- Não há missão de alto risco no próximo bloco.
+
+Batch de 10 fica permitido quando esses critérios são atendidos, mas continua opcional. O operador pode continuar usando batch de 3 quando o risco, a revisão ou a dependência entre missões recomendar blocos menores.
+
+## Quando suspender batch de 10
+
+Suspenda batch de 10 quando:
+
+- Houve falha no batch anterior.
+- Haverá mudança estrutural profunda.
+- Haverá alteração em scripts críticos.
+- Haverá alteração no Guardian Engine com impacto amplo.
+- Haverá alteração no Policy Engine com impacto amplo.
+- Haverá alteração no Context Router com impacto amplo.
+- Haverá alteração em providers/runtimes.
+- Dependências entre missões estão incertas.
+- Critérios de aceite estão fracos.
+- Missões estão pequenas demais ou vagas demais.
+- Referências obrigatórias estão incompletas.
+
+Nesses casos, reduza o batch, revise as missões ou execute uma missão por vez.
+
+## Resultado esperado de um batch saudável
+
+Um batch saudável deve terminar com resultado equivalente a:
+
+```text
+queue:   0
+running: 0
+failed:  0
+worker:  stopped
+pytest:  passou
+compileall: passou
+git: limpo
+commits: separados por missão
+```
+
+O valor de `queue` pode ser maior que `0` quando o batch executou apenas parte de uma fila maior. Nesse caso, ele ainda precisa estar no estado esperado para o número de missões solicitado.
+
+## Regra final
+
+- Se houver dúvida, não fazer push.
+- Se houver falha, parar.
+- Se o batch de 3 falhar, não liberar batch de 10.
+- Se o batch de 3 passar, batch de 10 fica permitido, mas não obrigatório.
