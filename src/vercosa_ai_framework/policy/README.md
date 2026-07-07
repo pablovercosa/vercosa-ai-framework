@@ -17,6 +17,7 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Produz `ResolvedPolicySet` e `PolicyResolutionResult` rastreáveis.
 - Fornece `ResolvedPolicySet` para consumidores como o Guardian Engine quando o chamador decidir passar políticas resolvidas adiante.
 - Fornece `ResolvedPolicySet` para o Context Router quando o chamador quiser que o pacote de contexto considere políticas já resolvidas.
+- Fornece `ResolvedPolicySet` para o Model Selection Engine quando o chamador quiser que a seleção considere políticas já resolvidas.
 
 ## O Que Este Módulo Não Faz
 
@@ -29,6 +30,7 @@ Representar a camada declarativa de políticas do Vercosa AI Framework, separada
 - Não carrega política dinâmica remota.
 - Não chama `guardian/` e não aplica enforcement operacional.
 - Não chama `context/` e não monta `ContextPackage`.
+- Não chama `model_selection/` e não seleciona, ranqueia ou descobre modelos.
 - Não transforma `ResolvedPolicySet` em decisão Guardian por conta própria.
 
 ## Principais Arquivos
@@ -66,13 +68,14 @@ Saídas:
 
 - `PolicyResolutionResult` com `ResolvedPolicySet`, ordem determinística dos conjuntos, conflitos e warnings.
 
-O `ResolvedPolicySet` pode ser passado pelo chamador ao Guardian Engine ou ao Context Router. Essas integrações são iniciais e unidirecionais: Policy Engine resolve políticas declarativas; Guardian Engine avalia ação concreta; Context Router monta pacote de contexto a partir de candidatos explícitos e pode considerar efeitos simples já resolvidos.
+O `ResolvedPolicySet` pode ser passado pelo chamador ao Guardian Engine, ao Context Router ou ao Model Selection Engine. Essas integrações são iniciais e unidirecionais: Policy Engine resolve políticas declarativas; Guardian Engine avalia ação concreta; Context Router monta pacote de contexto a partir de candidatos explícitos; Model Selection seleciona modelos a partir de catálogo local e pode considerar efeitos simples já resolvidos.
 
 ## Dependências Internas
 
 - Nenhuma dependência interna obrigatória além do próprio pacote `policy/`.
 - O módulo `policy/` não importa `guardian/`.
 - O módulo `policy/` não importa `context/`.
+- O módulo `policy/` não importa `model_selection/`.
 
 ## Módulos Relacionados
 
@@ -142,11 +145,26 @@ Limites atuais:
 - conflitos são registrados como warning ou aprovação requerida conforme severidade;
 - não há DSL, parser, RAG semântico, embeddings, pgvector, banco, provider externo, chamada de LLM ou rede.
 
+## Integração Inicial Com Model Selection
+
+O contrato atual permite que um chamador resolva políticas com `DeterministicPolicyEngine` e entregue o `ResolvedPolicySet` ao `ModelSelector.select()` ou ao helper `select_model()`.
+
+Limites atuais:
+
+- o Model Selection consome políticas resolvidas, mas não chama o Policy Engine;
+- o Policy Engine não chama Model Selection, não descobre modelos e não ranqueia candidatos;
+- `allow` não força escolha de modelo por si só;
+- `warn` é refletido em notas e fontes de política da decisão de seleção;
+- `require_approval` pode marcar revisão ou aprovação requerida;
+- `deny` só exclui candidato quando há alvo determinístico, como modelo, provider, runtime, classe de preço ou flags declaradas do perfil;
+- conflitos são registrados de forma determinística e conflitos `high` ou `critical` exigem aprovação;
+- não há precificação real, consulta de billing real, chamada a provider externo, OpenCode, Ollama, OpenAI, Gemini, Claude, MCP, rede, banco, RAG, embeddings ou ranking semântico.
+
 ## Status Atual
 
 Status: `MVP`.
 
-O módulo possui contratos iniciais e resolução determinística simples. Existem integrações iniciais e unidirecionais com Guardian Engine e Context Router via `ResolvedPolicySet` opcional. A integração com Model Selection Engine, Token Budget Manager e Persistence Layer ainda não foi implementada.
+O módulo possui contratos iniciais e resolução determinística simples. Existem integrações iniciais e unidirecionais com Guardian Engine, Context Router e Model Selection Engine via `ResolvedPolicySet` opcional. A integração com Token Budget Manager e Persistence Layer ainda não foi implementada.
 
 ## Próximos Passos
 
@@ -154,4 +172,5 @@ O módulo possui contratos iniciais e resolução determinística simples. Exist
 - Definir formato persistível de `Policy Resolution Record` pela Persistence Layer.
 - Evoluir a integração com Guardian Engine sem fundir responsabilidades.
 - Evoluir a integração com Context Router sem permitir que Policy Engine monte contexto ou que Context Router resolva políticas.
+- Evoluir a integração com Model Selection sem permitir que Policy Engine selecione modelos ou que Model Selection resolva políticas.
 - Evoluir composição de políticas sem introduzir DSL complexa antes de estabilizar contratos.

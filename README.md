@@ -235,3 +235,9 @@ O Guardian também possui um `Usage/API Limit Guard` inicial para classificar si
 O Context Router pode receber `ResolvedPolicySet` opcional já produzido pelo Policy Engine em `ContextRequest`. Ele apenas consome políticas resolvidas para registrar refs, gerar warnings, marcar aprovação requerida em metadados e omitir itens quando houver `deny` determinístico com alvo claro.
 
 Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa DSL, parser de políticas, RAG semântico, embeddings, pgvector, banco, provider externo ou chamada de LLM.
+
+## Integração Policy E Model Selection
+
+O Model Selection Engine pode receber `ResolvedPolicySet` opcional já produzido pelo Policy Engine. Ele apenas consome políticas resolvidas para registrar fontes, gerar notas, marcar revisão ou aprovação requerida e excluir candidatos quando houver `deny` determinístico com alvo claro.
+
+Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa precificação real, consulta de billing real, consulta de limites reais de API, roteamento avançado, ranking semântico, RAG, embeddings, banco, provider externo ou chamada de LLM.

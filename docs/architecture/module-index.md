@@ -62,8 +62,8 @@ Providers / MCPs / APIs / Runtimes
 - `workflows/` define plano e execução sequencial MVP; `tasks/` concentra estado, elegibilidade e tentativas de tasks.
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
-- `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `context/` pode consumir `ResolvedPolicySet` opcional já resolvido ao montar pacotes de contexto; `guardian/` avalia riscos, permissões, bloqueios, Context Packages já montados e pode considerar `ResolvedPolicySet` opcional antes de ações sensíveis ou entrega governada.
-- `model_selection/` é transversal e deve decidir modelos por política, não por hardcode.
+- `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `context/`, `guardian/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
+- `model_selection/` é transversal e decide modelos por política e catálogo local, não por hardcode; pode considerar políticas resolvidas opcionais para warnings, aprovação e exclusões determinísticas sem chamar providers, billing real ou Guardian Engine.
 - `context/` monta pacotes de contexto, aplica orçamento de tokens e considera políticas resolvidas opcionais sem buscar, indexar, persistir, chamar providers diretamente, resolver políticas ou decidir enforcement operacional amplo.
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
@@ -73,7 +73,7 @@ Providers / MCPs / APIs / Runtimes
 
 As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto](../alignment/open-questions.md), especialmente:
 
-- integração completa entre Policy Engine, Context Router e Guardian Engine após as pontes iniciais via `ResolvedPolicySet` opcional;
+- integração completa entre Policy Engine, Context Router, Guardian Engine e Model Selection após as pontes iniciais via `ResolvedPolicySet` opcional;
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;

@@ -15,6 +15,13 @@ from vercosa_ai_framework.model_selection.types import (
     ModelSelectionError,
     SelectionDecision,
 )
+from vercosa_ai_framework.policy import (
+    PolicyEffect,
+    PolicyRule,
+    PolicyScope,
+    PolicySeverity,
+    ResolvedPolicySet,
+)
 
 
 class InMemoryModelRegistry:
@@ -37,15 +44,20 @@ class ModelSelector:
         else:
             self._registry = InMemoryModelRegistry(models)
 
-    def select(self, policy: ModelSelectionPolicy) -> SelectionDecision:
+    def select(
+        self,
+        policy: ModelSelectionPolicy,
+        resolved_policy_set: ResolvedPolicySet | None = None,
+    ) -> SelectionDecision:
         """Return a safe model decision that satisfies the given policy."""
-        candidates = self._compatible_models(policy)
+        candidates = self._compatible_models(policy, resolved_policy_set)
         selected = self._select_primary(candidates, policy)
         small_model = self._select_small(candidates, policy)
         fallback_chain = self._fallback_chain(candidates, selected, policy)
 
         reason = self._reason(selected, policy)
-        notes = self._security_notes(selected, policy)
+        notes = self._security_notes(selected, policy) + self._policy_notes(resolved_policy_set)
+        requires_policy_approval = self._requires_policy_approval(resolved_policy_set)
         return SelectionDecision(
             selected_model=selected,
             small_model=small_model,
@@ -53,17 +65,28 @@ class ModelSelector:
             reason=reason,
             estimated_cost=selected.estimated_unit_cost,
             quality_expectation=selected.quality_tier,
-            requires_review=policy.requires_review or self._is_quality_drop(selected, policy),
-            requires_user_approval=selected.paid and not policy.allow_paid,
+            policy_sources=self._policy_sources(resolved_policy_set),
+            requires_review=policy.requires_review
+            or self._is_quality_drop(selected, policy)
+            or requires_policy_approval,
+            requires_user_approval=(selected.paid and not policy.allow_paid) or requires_policy_approval,
             security_notes=notes,
         )
 
-    def _compatible_models(self, policy: ModelSelectionPolicy) -> tuple[ModelProfile, ...]:
+    def _compatible_models(
+        self,
+        policy: ModelSelectionPolicy,
+        resolved_policy_set: ResolvedPolicySet | None = None,
+    ) -> tuple[ModelProfile, ...]:
         models = self._registry.list_models()
         if not models:
             raise ModelSelectionError("no models are registered in the model catalog")
 
-        compatible = [model for model in models if self._is_compatible(model, policy)]
+        compatible = [
+            model
+            for model in models
+            if self._is_compatible(model, policy) and not self._is_denied(model, resolved_policy_set)
+        ]
         if not compatible:
             raise ModelSelectionError(
                 "no compatible model satisfies availability, cost, context, quality, reasoning, and memory constraints"
@@ -135,9 +158,69 @@ class ModelSelector:
     def _is_quality_drop(self, model: ModelProfile, policy: ModelSelectionPolicy) -> bool:
         return QUALITY_TIERS.get(model.quality_tier, -1) < policy.quality_rank
 
+    def _is_denied(self, model: ModelProfile, resolved_policy_set: ResolvedPolicySet | None) -> bool:
+        if resolved_policy_set is None:
+            return False
+        for rule in resolved_policy_set.resolved_rules:
+            if rule.effect == PolicyEffect.DENY and self._rule_targets_model(rule, model):
+                return True
+        return False
+
+    def _rule_targets_model(self, rule: PolicyRule, model: ModelProfile) -> bool:
+        if model.id in rule.target_refs or f"model:{model.id}" in rule.target_refs:
+            return True
+        if f"provider:{model.provider}" in rule.target_refs or f"runtime:{model.runtime}" in rule.target_refs:
+            return True
+        if rule.scope == PolicyScope.MODEL and rule.key in {"model", "model_id", "id"}:
+            return rule.value == model.id
+        if rule.scope == PolicyScope.PROVIDER and rule.key == "provider":
+            return rule.value == model.provider
+        if rule.scope == PolicyScope.RUNTIME and rule.key == "runtime":
+            return rule.value == model.runtime
+        if rule.key == "pricing_class":
+            return rule.value == model.pricing_class
+        if rule.key in {"local", "free", "paid"}:
+            return rule.value is getattr(model, rule.key)
+        return False
+
+    def _policy_sources(self, resolved_policy_set: ResolvedPolicySet | None) -> tuple[str, ...]:
+        if resolved_policy_set is None:
+            return ("framework_defaults",)
+        refs = ["framework_defaults", *resolved_policy_set.matched_policy_refs]
+        refs.extend(conflict.conflict_id for conflict in resolved_policy_set.conflicts)
+        return tuple(dict.fromkeys(refs))
+
+    def _policy_notes(self, resolved_policy_set: ResolvedPolicySet | None) -> tuple[str, ...]:
+        if resolved_policy_set is None:
+            return ()
+
+        notes: list[str] = []
+        for rule in resolved_policy_set.resolved_rules:
+            if rule.effect == PolicyEffect.WARN:
+                notes.append(f"policy warning from {rule.rule_id}")
+            elif rule.effect == PolicyEffect.REQUIRE_APPROVAL:
+                notes.append(f"policy requires approval from {rule.rule_id}")
+            elif rule.effect == PolicyEffect.DENY:
+                notes.append(f"policy deny considered from {rule.rule_id}")
+        for conflict in resolved_policy_set.conflicts:
+            notes.append(f"policy conflict considered from {conflict.conflict_id}: {conflict.reason}")
+        return tuple(notes)
+
+    def _requires_policy_approval(self, resolved_policy_set: ResolvedPolicySet | None) -> bool:
+        if resolved_policy_set is None:
+            return False
+        if any(rule.effect == PolicyEffect.REQUIRE_APPROVAL for rule in resolved_policy_set.resolved_rules):
+            return True
+        return any(
+            conflict.severity in {PolicySeverity.HIGH, PolicySeverity.CRITICAL}
+            for conflict in resolved_policy_set.conflicts
+        )
+
 
 def select_model(
-    models: Iterable[ModelProfile], policy: ModelSelectionPolicy | dict[str, object] | None = None
+    models: Iterable[ModelProfile],
+    policy: ModelSelectionPolicy | dict[str, object] | None = None,
+    resolved_policy_set: ResolvedPolicySet | None = None,
 ) -> SelectionDecision:
     """Convenience function for selecting from a plain in-memory catalog."""
     if policy is None:
@@ -146,4 +229,4 @@ def select_model(
         normalized_policy = policy
     else:
         normalized_policy = ModelSelectionPolicy.from_mapping(policy)
-    return ModelSelector(models).select(normalized_policy)
+    return ModelSelector(models).select(normalized_policy, resolved_policy_set=resolved_policy_set)
