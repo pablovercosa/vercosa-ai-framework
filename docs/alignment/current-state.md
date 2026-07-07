@@ -82,7 +82,7 @@ Specs atuais:
 O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos para:
 
 - `core/`: primitivas de domínio e política.
-- `cli.py`: CLI `vaf` para status, missões, workers, workflows e validações.
+- `cli/`: CLI operacional inicial para status local básico, versão e diagnóstico simples; ela não substitui scripts shell nem executa missões nesta fase.
 - `missions/`: tipos, fila em diretório e runner de missões.
 - `workflows/`: tipos e engine sequencial de workflow.
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
@@ -135,7 +135,7 @@ Providers / MCPs / APIs / Runtimes
 Cadeia MVP atual:
 
 ```text
-CLI or Python caller
+CLI, scripts shell or Python caller
 ↓
 Mission Runner or Workflow Engine
 ↓

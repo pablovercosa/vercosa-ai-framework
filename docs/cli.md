@@ -1,138 +1,82 @@
 # CLI
 
-The `vaf` CLI exposes the first Mission Runner commands with no heavy runtime dependency in the command layer.
+Links principais: [README principal](../README.md) | [Módulo cli](../src/vercosa_ai_framework/cli/README.md) | [Uso do runner seguro](operations/safe-runner-usage.md) | [Índice de módulos](architecture/module-index.md)
 
-## Commands
+## Objetivo
 
-```bash
-vaf version
-vaf status
-vaf check-mission <file> [--guardian-mode standard]
-vaf run-one [mission_id] [--dry-run] [--guardian-mode strict]
-vaf run-worker [--dry-run] [--max-missions N] [--guardian-mode strict]
-vaf workflow-status <workflow.json>
-vaf workflow-validate <workflow.json> [--guardian-mode standard]
-vaf workflow-run <workflow.json> [--dry-run] [--guardian-mode standard]
-```
+Documentar a CLI Python operacional inicial do Vercosa AI Framework.
 
-The legacy `vaf --version` and `vaf diagnose` commands remain supported.
+A CLI desta fase é uma camada de conveniência para leitura e diagnóstico básico local. Ela não substitui os scripts shell existentes, não executa missões, não move arquivos entre diretórios de missão e não acessa rede, banco, LLM, provider externo, OpenCode ou MCPs.
 
-## Queue Directory
+## Comandos Implementados
 
-Commands use `.vaf/missions` by default. Override it with `--queue-dir`:
+- `vaf --help`: mostra ajuda.
+- `vaf --version`: mostra a versão operacional mínima.
+- `vaf version`: mostra a versão operacional mínima.
+- `vaf diagnose`: mostra diagnóstico local básico de Python, sistema e arquitetura.
+- `vaf status`: conta missões locais em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
 
-```bash
-vaf --queue-dir /path/to/missions status
-```
+## Status Básico
 
-The queue is backed by `DirectoryMissionQueue`, with one JSON file per mission.
+`vaf status` calcula o estado localmente a partir dos diretórios de missão do projeto.
 
-## Status
+O comando conta apenas arquivos `.md` diretamente em cada diretório operacional:
 
-`vaf status` prints framework version, queue counts by mission state, and declared OpenCode runtime capabilities.
+- `missions/queue`
+- `missions/running`
+- `missions/done`
+- `missions/failed`
 
-It calls `OpenCodeRuntimeAdapter.detect_runtime()` only. It does not execute OpenCode and does not read global OpenCode configuration.
+Diretórios ausentes contam como zero. Esse comportamento permite testes com diretórios temporários e consultas em worktrees incompletos sem falha inesperada.
 
-## Check Mission
+## Caminho Raiz Do Projeto
 
-`vaf check-mission <file>` validates a mission file with the Guardian Engine and prints the policy decision:
+Use `--project-root` para informar explicitamente o caminho raiz consultado.
 
-```bash
-vaf check-mission mission.md
-vaf check-mission mission.json --guardian-mode strict
-```
+Exemplo de status no diretório atual: `vaf status`.
 
-JSON files are parsed as `Mission` records. Other files are treated as plain mission text. The command does not execute OpenCode, does not call external services, and exits with `1` when Guardian returns `block` or `require_approval`.
+Exemplo de status em outro diretório local: `vaf --project-root /caminho/do/projeto status`.
 
-## Run One
+Exemplo via módulo Python: `python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto status`.
 
-`vaf run-one` selects the next queued mission. Passing a mission id runs that specific mission.
+## Relação Com Scripts Shell
 
-Use dry-run to inspect the command without changing mission state or executing OpenCode:
+Os scripts shell continuam sendo a base operacional atual para execução segura de missões:
 
-```bash
-vaf run-one --dry-run
-vaf run-one mission-id --dry-run --model provider/model --guardian-mode strict
-```
+- `scripts/vaf-status.sh`
+- `scripts/vaf-run-next-safe.sh`
+- `scripts/vaf-run-batch-safe.sh`
+- `scripts/vaf-worker.sh`
+- `scripts/vaf-run-one-mission.sh`
 
-Dry-run evaluates Guardian first, then prepares the adapter command only if the decision allows execution. Without `--dry-run`, the command delegates execution to `MissionRunner` with `GuardianEngine` injected before `OpenCodeRuntimeAdapter` can run.
+A CLI Python inicial não chama esses scripts para calcular status. Ela também não substitui os fluxos de preflight, worker, testes, `compileall`, auto-commit ou push opt-in documentados nos guias operacionais.
 
-## Run Worker
+## Limites Atuais
 
-`vaf run-worker` processes queued missions sequentially. The MVP defaults to one mission per invocation:
+- Não há comando `run-next` na CLI Python desta fase.
+- Não há comando `run-batch` na CLI Python desta fase.
+- Não há comando de validação de missão na CLI Python desta fase.
+- Não há integração com Audit/Event Log persistente.
+- Não há descoberta de runtime, modelo, provider, banco ou rede.
+- `--queue-dir` está reservado para compatibilidade futura e não muda o fluxo operacional nesta fase.
 
-```bash
-vaf run-worker --max-missions 3
-vaf run-worker --dry-run --max-missions 3 --guardian-mode strict
-```
+## Próximos Passos Possíveis
 
-In dry-run mode, each selected mission is prepared without being started, completed, failed, or sent to real OpenCode.
+Comandos como `run-next`, `run-batch`, `validate`, `audit`, `policy`, `context` e `doctor` podem ser avaliados em missões futuras.
 
-## Workflow Status
+Esses comandos ainda não existem nesta CLI inicial e não devem ser documentados como implementados antes de Spec, testes e decisão operacional explícita.
 
-`vaf workflow-status <workflow.json>` reads a local workflow file and prints its current state and task counts:
+## Códigos De Saída
 
-```bash
-vaf workflow-status workflow.json
-```
+- `0`: sucesso.
+- `2`: erro controlado de argumentos.
 
-The command only reads the provided file. It does not execute a runtime and does not inspect global OpenCode configuration.
+## Segurança E Determinismo
 
-## Workflow Validate
-
-`vaf workflow-validate <workflow.json>` validates the initial Workflow Engine file format, sequential dependency references, and Guardian policy for each task:
-
-```bash
-vaf workflow-validate workflow.json
-vaf workflow-validate workflow.json --guardian-mode strict
-```
-
-It exits with `2` for malformed workflow files and `1` when Guardian blocks a task.
-
-## Workflow Run
-
-`vaf workflow-run <workflow.json>` executes tasks through the provider-neutral `WorkflowEngine` and the configured runtime adapter. Use `--dry-run` to prepare commands without executing OpenCode:
-
-```bash
-vaf workflow-run workflow.json --dry-run
-vaf workflow-run workflow.json --dry-run --workspace /path/to/project
-```
-
-Dry-run evaluates Guardian first, then asks the runtime adapter to prepare each task command with `dry_run=True`. It does not call real OpenCode.
-
-The structured MVP workflow file is JSON:
-
-```json
-{
-  "workflow_id": "wf-example",
-  "mission_id": "mission-example",
-  "title": "Example workflow",
-  "goal": "Prepare an auditable task",
-  "tasks": [
-    {
-      "task_id": "task-example",
-      "title": "Prepare",
-      "goal": "Prepare task output",
-      "acceptance_criteria": ["dry-run command is printed"],
-      "inputs": {
-        "planned_command": "opencode run Prepare task output"
-      }
-    }
-  ]
-}
-```
-
-Plain text files are also accepted as a simple one-task workflow. The file stem becomes the workflow id, mission id, title, and task title; the file content becomes the workflow and task goal.
-
-The CLI intentionally avoids YAML or other heavier parsing dependencies in this MVP.
-
-## Guardian Mode
-
-Supported modes are `permissive`, `standard`, and `strict`. `run-one` and `run-worker` can override the mission mode for the current CLI invocation with `--guardian-mode` without mutating queued mission files.
-
-## Security Notes
-
-- The CLI does not use `sudo`.
-- The CLI does not access global OpenCode configuration.
-- Tests use dry-run or Guardian-blocked paths and do not execute real OpenCode.
-- `--auto-approve` is explicit opt-in and is passed only to the runtime adapter.
+- A CLI usa biblioteca padrão do Python para os comandos iniciais.
+- A CLI não usa `sudo`.
+- A CLI não acessa rede.
+- A CLI não acessa banco.
+- A CLI não chama OpenCode.
+- A CLI não chama LLM ou provider externo.
+- A CLI não altera arquivos ao executar `status`, `version`, `diagnose` ou `--help`.

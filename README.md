@@ -36,6 +36,8 @@ OpenCode é o runtime e laboratório inicial. Ele deve permanecer atrás de adap
 
 Os scripts em `scripts/` permitem processar missões locais em fila usando OpenCode no ambiente atual.
 
+A CLI Python inicial em `src/vercosa_ai_framework/cli/` é uma camada de conveniência para leitura e diagnóstico básico. Ela não substitui `scripts/vaf-status.sh`, não executa missões nesta fase e não altera o fluxo `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+
 Variáveis relevantes:
 
 - `VAF_AUTO_COMMIT`: quando definido como `1`, o runner cria commit automático ao concluir uma missão com alterações staged.
@@ -139,6 +141,7 @@ O mapa navegável oficial está em [docs/architecture/module-index.md](docs/arch
 
 Módulos principais:
 
+- [cli](src/vercosa_ai_framework/cli/README.md)
 - [core](src/vercosa_ai_framework/core/README.md)
 - [missions](src/vercosa_ai_framework/missions/README.md)
 - [workflows](src/vercosa_ai_framework/workflows/README.md)
@@ -211,6 +214,7 @@ Políticas detalhadas:
 - [Uso do runner seguro](docs/operations/safe-runner-usage.md)
 - [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
 - [Checklist de validação pós-batch](docs/operations/post-batch-validation-checklist.md)
+- [CLI operacional inicial](docs/cli.md)
 - [Context Router e Token Budget](docs/context-router-token-budget.md)
 
 ## Regras De Trabalho

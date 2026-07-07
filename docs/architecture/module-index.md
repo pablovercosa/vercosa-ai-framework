@@ -38,6 +38,7 @@ Providers / MCPs / APIs / Runtimes
 
 | Camada | Módulo | README | Status | Spec | Docs |
 | --- | --- | --- | --- | --- | --- |
+| Interface | `cli/` | [cli](../../src/vercosa_ai_framework/cli/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [CLI](../cli.md) |
 | Fundacional | `core/` | [core](../../src/vercosa_ai_framework/core/README.md) | MVP | [0001](../../specs/framework/0001-framework-foundation.md) | [Mapa de arquitetura](../alignment/architecture-map.md) |
 | Missões | `missions/` | [missions](../../src/vercosa_ai_framework/missions/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [Mission Runner](../mission-runner.md) |
 | Workflows | `workflows/` | [workflows](../../src/vercosa_ai_framework/workflows/README.md) | MVP | [0006](../../specs/framework/0006-workflow-engine.md) | [Workflow Engine](../workflow-engine.md) |
@@ -70,6 +71,7 @@ Providers / MCPs / APIs / Runtimes
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
 - `runtime/` isola execução concreta em runtimes como OpenCode.
+- `cli/` oferece consulta local básica de estado operacional, sem substituir scripts shell nem executar missões nesta fase.
 
 ## Lacunas Registradas
 

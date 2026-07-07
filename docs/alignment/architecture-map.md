@@ -58,7 +58,7 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 ## Mapa De Módulos Fonte
 
 - `src/vercosa_ai_framework/core/`: modelos de domínio compartilhados e primitivas de política.
-- `src/vercosa_ai_framework/cli.py`: interface CLI; não é o núcleo de orquestração.
+- `src/vercosa_ai_framework/cli/`: interface CLI operacional inicial para leitura local; não é o núcleo de orquestração e não substitui os scripts shell.
 - `src/vercosa_ai_framework/missions/`: registros, fila e runner de missão.
 - `src/vercosa_ai_framework/workflows/`: workflow e execução sequencial de tasks.
 - `src/vercosa_ai_framework/tasks/`: fila, scheduler, estado, elegibilidade e tentativas de tasks.
