@@ -12,6 +12,7 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 - Mantém uma fila local baseada em diretório.
 - Executa uma missão por meio de `MissionRunner` com avaliação Guardian e RuntimeAdapter injetado.
 - Controla estados básicos como fila, execução, conclusão, falha e cancelamento.
+- Pode registrar eventos auditáveis estruturados de ciclo de vida quando um `EventLog` opcional é fornecido ao `MissionRunner`.
 
 ## O Que Este Módulo Não Faz
 
@@ -20,6 +21,9 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 - Não escolhe modelos diretamente.
 - Não chama providers, MCPs, tools ou bancos diretamente.
 - Não altera configuração global nem usa `sudo`.
+- Não substitui os logs textuais dos scripts operacionais.
+- Não implementa persistência externa de eventos auditáveis.
+- Não altera o fluxo operacional `queue`, `running`, `done` e `failed` usado pelos scripts shell.
 
 ## Principais Arquivos
 
@@ -39,6 +43,7 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 - `MissionRunner`: executa uma missão com Guardian e RuntimeAdapter.
 - `AutoCommitter`: protocolo para commit automático quando política permitir.
 - `GuardianEvaluator`: protocolo para avaliação de política.
+- `event_log` opcional em `MissionRunner`: permite registrar eventos `mission.queued`, `mission.started`, `mission.completed` e `mission.failed` em memória ou outra porta compatível fornecida pelo chamador.
 
 ## Entradas E Saídas
 
@@ -52,17 +57,36 @@ Saídas:
 
 - `MissionResult` com status, saída, erro e metadados.
 - Arquivos de fila atualizados quando `DirectoryMissionQueue` é usado.
+- Eventos auditáveis estruturados somente quando um `EventLog` opcional é injetado.
 
 ## Dependências Internas
 
 - `../guardian/`: avaliação de políticas antes da execução.
 - `../runtime/`: execução concreta por adapter.
+- `../audit/`: contrato opcional de eventos auditáveis estruturados.
 
 ## Módulos Relacionados
 
 - Acima: [core](../core/README.md).
 - Abaixo: [workflows](../workflows/README.md).
-- Transversal: [persistence](../persistence/README.md), [guardian](../guardian/README.md).
+- Transversal: [audit](../audit/README.md), [persistence](../persistence/README.md), [guardian](../guardian/README.md).
+
+## Eventos Auditáveis De Missão
+
+O `MissionRunner` pode receber um `EventLog` opcional. Quando fornecido, ele registra eventos estruturados básicos do ciclo de vida de missão sem mudar a decisão de execução, sem gravar arquivo, sem acessar banco e sem chamar provider externo.
+
+Eventos emitidos pelo `MissionRunner` nesta etapa:
+
+- `mission.queued`: missão registrada na fila Python.
+- `mission.started`: missão iniciada pelo runner Python.
+- `mission.completed`: missão concluída com sucesso.
+- `mission.failed`: missão concluída com falha.
+
+Eventos de batch e missão ignorada já possuem helpers em [audit](../audit/README.md), mas os scripts shell ainda não os emitem automaticamente.
+
+Os eventos carregam metadados seguros como `mission_id`, `mission_name` e `commit_hash` quando disponível. Eles não registram por padrão o conteúdo integral da missão, prompts completos, segredos, credenciais ou tokens de API.
+
+Logs textuais dos scripts continuam sendo saída operacional humana. Eventos auditáveis são registros estruturados criados por helpers Python. Persistência futura de eventos ainda depende de contrato aprovado e não faz parte deste módulo.
 
 ## Specs Correspondentes
 
@@ -87,9 +111,10 @@ mission = Mission(title="Documentar módulo", goal="Criar README técnico")
 
 Status: `MVP`.
 
-Existe execução local mínima, mas a separação final entre Mission Runner e Mission Orchestrator ainda está em aberto.
+Existe execução local mínima com eventos auditáveis opcionais em Python. A separação final entre Mission Runner e Mission Orchestrator ainda está em aberto.
 
 ## Próximos Passos
 
 - Resolver a fronteira Mission Runner versus Mission Orchestrator.
 - Integrar formalmente com Workflow Engine e Task Queue.
+- Integrar, em missão futura, os scripts operacionais aos eventos auditáveis sem substituir logs textuais nem alterar o fluxo `queue`, `running`, `done` e `failed`.

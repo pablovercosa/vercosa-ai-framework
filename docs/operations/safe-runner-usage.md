@@ -148,6 +148,14 @@ Quando uma missão falha, `scripts/vaf-run-one-mission.sh` inspeciona o log loca
 
 Essa classificação não altera missões bem-sucedidas e não mascara falhas comuns de teste, sintaxe, código ou documentação. O código de falha original da missão continua sendo usado, a missão vai para `missions/failed` e o worker para para revisão.
 
+## Eventos Auditáveis
+
+Os scripts seguros continuam usando logs textuais e movimentação de arquivos em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`. Eles não emitem eventos auditáveis estruturados automaticamente nesta etapa.
+
+O módulo Python [audit](../../src/vercosa_ai_framework/audit/README.md) já possui helpers opcionais para representar eventos `mission.*` e `mission.batch.*`, e o `MissionRunner` Python pode registrar eventos quando recebe um `EventLog` opcional. Essa base não substitui os logs dos scripts, não cria persistência externa e não muda o fluxo operacional atual.
+
+Integração completa dos scripts com Audit/Event Log pode ser feita em missão futura, com cuidado para não registrar conteúdo integral de missão, prompts completos, secrets, credenciais ou tokens.
+
 ## Auto-Commit
 
 O runner define `VAF_AUTO_COMMIT=1` por padrão, salvo quando a variável já foi definida pelo usuário. O commit automático é responsabilidade do worker acionado pelo runner e deve respeitar `VAF_COMMIT_MESSAGE` quando informada.

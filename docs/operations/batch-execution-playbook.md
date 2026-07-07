@@ -138,6 +138,12 @@ Se a falha for sinalizada pelo `Usage/API Limit Guard` como limitação externa 
 
 Batch de 10 deve ser suspenso imediatamente quando houver erro de quota ou rate limit. A ação segura é parar, preservar logs e investigar os limites do provider antes de retomar a fila.
 
+## Eventos Auditáveis De Batch
+
+O módulo Python [audit](../../src/vercosa_ai_framework/audit/README.md) já consegue representar `mission.batch.started`, `mission.batch.completed` e `mission.batch.interrupted` com metadados seguros como `batch_size`, `executed_count`, `queue_count`, `done_count`, `failed_count` e `commit_hash` quando disponível.
+
+O script `scripts/vaf-run-batch-safe.sh` ainda não emite esses eventos automaticamente. Nesta etapa, o batch continua dependendo de logs textuais, resumo no terminal, estado dos diretórios de missão e commits locais separados. Persistência de eventos, exportação e relação automática com commits continuam como próximos passos possíveis.
+
 ## Validações Pós-Batch
 
 Checklist detalhado: [Checklist de validação pós-batch](post-batch-validation-checklist.md).

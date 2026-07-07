@@ -8,8 +8,17 @@ runtime such as OpenCode or executing git directly.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Protocol
+from typing import Callable, Protocol
 
+from vercosa_ai_framework.audit import (
+    AuditEvent,
+    EventLog,
+    mission_completed_event,
+    mission_failed_event,
+    mission_queued_event,
+    mission_started_event,
+    record_mission_event,
+)
 from vercosa_ai_framework.guardian import (
     GuardianAction,
     GuardianDecision,
@@ -66,6 +75,7 @@ class MissionRunner:
         guardian_mode: GuardianMode | str = GuardianMode.STANDARD,
         interactive: bool = False,
         runner_id: str = "mission-runner",
+        event_log: EventLog | None = None,
     ) -> None:
         self.queue = queue
         self.runtime = runtime
@@ -74,6 +84,7 @@ class MissionRunner:
         self.guardian_mode = GuardianMode(guardian_mode)
         self.interactive = interactive
         self.runner_id = runner_id
+        self.event_log = event_log
         self.results: dict[str, MissionResult] = {}
         self.audit_log: list[str] = []
 
@@ -82,6 +93,7 @@ class MissionRunner:
 
         queued = self.queue.enqueue(mission)
         self._log(queued.mission_id, "mission queued")
+        self._record_event(mission_queued_event, queued)
         return queued
 
     def run_next(self) -> MissionResult | None:
@@ -97,6 +109,7 @@ class MissionRunner:
 
         running = self.queue.start(mission_id, locked_by=self.runner_id)
         self._log(mission_id, "mission started")
+        self._record_event(mission_started_event, running)
 
         try:
             guardian_decision = self._evaluate_guardian(running)
@@ -365,6 +378,13 @@ class MissionRunner:
     def _record_result(self, result: MissionResult) -> None:
         self.results[result.mission_id] = result
         self._log(result.mission_id, f"result status={result.status.value}")
+        if result.status == MissionStatus.DONE:
+            event_factory = mission_completed_event
+        elif result.status == MissionStatus.FAILED:
+            event_factory = mission_failed_event
+        else:
+            return
+        self._record_event(event_factory, self.queue.get(result.mission_id), result=result)
 
     def _copy_result(self, result: MissionResult, **changes: object) -> MissionResult:
         data = {
@@ -387,6 +407,28 @@ class MissionRunner:
 
     def _log(self, mission_id: str, message: str) -> None:
         self.audit_log.append(f"mission={mission_id} {message}")
+
+    def _record_event(
+        self,
+        event_factory: Callable[..., AuditEvent],
+        mission: Mission,
+        *,
+        result: MissionResult | None = None,
+    ) -> None:
+        if self.event_log is None:
+            return
+        metadata = {
+            "mission_id": mission.mission_id,
+            "mission_name": mission.title,
+            "commit_hash": self._commit_hash_from_result(result),
+        }
+        event = event_factory(metadata=metadata)
+        record_mission_event(event, event_log=self.event_log)
+
+    def _commit_hash_from_result(self, result: MissionResult | None) -> str | None:
+        if result is None or "commit=" not in result.summary:
+            return None
+        return result.summary.rsplit("commit=", maxsplit=1)[-1].split(maxsplit=1)[0]
 
 
 __all__ = [

@@ -11,7 +11,7 @@ O Vercosa AI Framework organiza engenharia de software em torno de Specs, missõ
 - Um framework Specification First para desenvolvimento assistido por IA.
 - Uma arquitetura AI Native com governança, rastreabilidade e validação explícitas.
 - Um núcleo provider agnostic para modelos, runtimes, bancos, vetores, IDEs, MCPs e APIs.
-- Um conjunto de contratos e MVPs iniciais em Python para missão, workflow, task queue, agentes, Policy Engine, Guardian, detecção determinística de limites de uso/API, Audit/Event Log em memória, runtime, knowledge, context routing, token budget, canonicalização, providers e persistência.
+- Um conjunto de contratos e MVPs iniciais em Python para missão, workflow, task queue, agentes, Policy Engine, Guardian, detecção determinística de limites de uso/API, Audit/Event Log em memória com eventos opcionais de missão, runtime, knowledge, context routing, token budget, canonicalização, providers e persistência.
 
 ## O Que O Framework Não É
 
