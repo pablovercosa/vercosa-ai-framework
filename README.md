@@ -201,6 +201,7 @@ Políticas detalhadas:
 - [Perguntas em aberto](docs/alignment/open-questions.md)
 - [SDD Lifecycle](docs/alignment/sdd-lifecycle.md)
 - [Roadmap](docs/alignment/roadmap.md)
+- [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
 - [Padrão de README](docs/documentation/readme-standard.md)
 - [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
 - [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)

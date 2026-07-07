@@ -6,6 +6,8 @@ Recomendar os próximos blocos arquiteturais após o checkpoint de alinhamento a
 
 Nenhum código fonte deve ser implementado apenas com base neste documento. Cada bloco de implementação ainda precisa de Spec aprovada ou atualização explícita de Spec existente.
 
+Backlog operacional detalhado de missões futuras: [Backlog estratégico de missões](../roadmap/mission-backlog.md).
+
 ## Princípio Orientador
 
 Prefira integrar contratos MVP existentes antes de adicionar novos frameworks, providers, bancos ou comportamentos de agentes.
