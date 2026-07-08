@@ -92,6 +92,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Guia inicial de instalação local para desenvolvimento.
 - Guia inicial de contribuição.
 - Base documental legal inicial, com política de uso responsável e notas de licença pendente.
+- Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -439,8 +440,12 @@ Missões futuras relacionadas:
 - Criar `CODE_OF_CONDUCT.md`, se desejado para a abertura pública.
 - Criar templates de issue.
 - Criar templates de pull request.
+- Criar changelog inicial quando houver decisão de release.
+- Definir versão inicial.
 - Definir política de release.
 - Revisar e criar `LICENSE` antes da release pública.
+- Publicar release alfa somente após validações e decisão explícita.
+- Internacionalizar READMEs no final, mantendo `README.md` canônico em português do Brasil.
 
 16. Código sugerido: `M016-release-tag-alfa`
 Título: Criar release/tag alfa.
@@ -552,6 +557,7 @@ Objetivo: organizar README, guias e exemplos para uma futura alfa sem transforma
 Escopo permitido: documentação pública, limites claros, links relativos, pré-requisitos e checklists.
 Escopo proibido: criar release/tag sem decisão, internacionalizar READMEs agora ou prometer providers, RAG, embeddings, pgvector ou Semantic Index como implementados.
 Dependências: guia de instalação, guia de contribuição, licença e revisão de arquitetura pós-integrações.
+Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); release alfa, tag, versão, changelog e internacionalização continuam futuros.
 Critérios de aceite resumidos: documentação pública diferencia implementado, MVP, integração inicial, futuro e fora do escopo.
 
 ## Como Transformar Backlog Em Fila Executável

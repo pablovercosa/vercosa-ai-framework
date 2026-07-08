@@ -168,6 +168,11 @@ Decisões já encaminhadas:
 3. Qual será a política de reporte e tratamento de vulnerabilidades?
 4. Quais limites devem ser documentados para uso com providers pagos?
 5. Qual modelo de release alfa será adotado sem prometer estabilidade de produção?
+6. Qual será a versão inicial da alfa pública?
+7. `CODE_OF_CONDUCT.md` será obrigatório antes da abertura pública ou ficará para etapa posterior?
+8. Quais templates de issue e pull request são mínimos antes da alfa pública?
+9. O changelog inicial será criado antes da tag alfa ou junto com a decisão de versão?
+10. Em qual momento `README.en.md` e `README.es.md` devem ser criados sem divergir do README canônico em português do Brasil?
 
 ## ADRs Recomendadas
 

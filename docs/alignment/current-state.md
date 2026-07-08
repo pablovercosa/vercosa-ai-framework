@@ -54,6 +54,7 @@ Ativos principais:
 - `CONTRIBUTING.md`: guia inicial de contribuição com fluxo por missões, validações, documentação, idioma, commits e limites operacionais.
 - `docs/legal/`: documentação legal inicial com política de uso responsável e notas sobre licença pendente.
 - `docs/getting-started/local-installation.md`: guia inicial de instalação local para desenvolvimento, validações básicas e uso inicial da CLI.
+- `docs/release/public-alpha-readiness.md`: checklist de prontidão documental para futura alfa pública, sem criar release, tag, pacote ou promessa de estabilidade.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
 - `specs/framework/`: Specs do framework.
 - `docs/`: documentação técnica e de alinhamento.
@@ -227,6 +228,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Observabilidade externa.
 - Licença final publicada em `LICENSE`.
 - Política formal de segurança pública.
+- Publicação de release alfa; o checklist de prontidão existe, mas não cria tag, pacote ou marco público por si só.
 - Testes de contrato entre portas/adapters.
 - ADRs para fronteiras ainda ambíguas.
 

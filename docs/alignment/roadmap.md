@@ -39,6 +39,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
 - Guia inicial de contribuição em `CONTRIBUTING.md`.
 - Documentação legal inicial em `docs/legal/`, com política de uso responsável e licença final ainda pendente.
+- Checklist de prontidão para futura alfa pública em `docs/release/public-alpha-readiness.md`, sem criação de release, tag, pacote ou changelog de release.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -200,7 +201,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Consolidar documentação pós-batch, backlog estratégico e estado atual.
+1. Consolidar documentação pública alfa, backlog estratégico e estado atual sem publicar release.
 2. Integrar a CLI com validações locais seguras de Git e resumo pós-batch, sem substituir scripts seguros.
 3. Criar comando CLI para listar missões e apoiar diagnóstico operacional.
 4. Definir persistência local controlada para Audit/Event Log.
@@ -240,3 +241,5 @@ Permanecem futuros e não devem ser tratados como implementados:
 - Licença final em `LICENSE`.
 - Política pública de segurança.
 - Release alfa.
+- Changelog inicial e versão inicial para alfa.
+- Templates de issue e pull request.
