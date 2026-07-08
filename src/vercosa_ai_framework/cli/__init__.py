@@ -1,5 +1,20 @@
 """CLI operacional inicial do Vercosa AI Framework."""
 
-from vercosa_ai_framework.cli.main import MissionDirectoryStatus, build_parser, main, run
+from importlib import import_module
 
-__all__ = ["MissionDirectoryStatus", "build_parser", "main", "run"]
+__all__ = [
+    "MissionDirectoryStatus",
+    "ValidationIssue",
+    "ValidationResult",
+    "build_parser",
+    "main",
+    "run",
+    "validate_project_structure",
+]
+
+
+def __getattr__(name: str):
+    if name in __all__:
+        module = import_module("vercosa_ai_framework.cli.main")
+        return getattr(module, name)
+    raise AttributeError(f"module 'vercosa_ai_framework.cli' has no attribute {name!r}")

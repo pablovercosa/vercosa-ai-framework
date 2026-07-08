@@ -36,7 +36,7 @@ OpenCode é o runtime e laboratório inicial. Ele deve permanecer atrás de adap
 
 Os scripts em `scripts/` permitem processar missões locais em fila usando OpenCode no ambiente atual.
 
-A CLI Python inicial em `src/vercosa_ai_framework/cli/` é uma camada de conveniência para leitura e diagnóstico básico. Ela não substitui `scripts/vaf-status.sh`, não executa missões nesta fase e não altera o fluxo `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+A CLI Python inicial em `src/vercosa_ai_framework/cli/` é uma camada de conveniência para leitura, diagnóstico básico e validação estrutural local com `validate`. Ela não substitui `scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`, não executa missões nesta fase e não altera o fluxo `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
 
 Variáveis relevantes:
 

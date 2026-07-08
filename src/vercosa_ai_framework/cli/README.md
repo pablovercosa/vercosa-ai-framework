@@ -10,10 +10,11 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 
 - Expõe uma função `main` invocável em Python.
 - Expõe o comando `status` para contar arquivos Markdown em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+- Expõe o comando `validate` para validar a estrutura local mínima do projeto sem executar missões.
 - Permite informar `--project-root` para testar ou consultar outro worktree local.
 - Mostra versão operacional mínima com `--version` ou `version`.
 - Mostra ajuda com `--help`.
-- Trata diretórios de missão ausentes como contagem zero.
+- Trata diretórios de missão ausentes como contagem zero no `status` e como problema estrutural no `validate`.
 
 ## O Que Este Módulo Não Faz
 
@@ -22,6 +23,9 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - Não executa missões nesta fase.
 - Não move arquivos entre `queue`, `running`, `done` e `failed`.
 - Não chama scripts shell para calcular o status básico.
+- Não executa `pytest`.
+- Não executa `python3 -m compileall src`.
+- Não executa `git`.
 - Não acessa rede, banco, LLM, provider externo, OpenCode ou MCPs para os comandos operacionais iniciais.
 - Não adiciona dependências fora da biblioteca padrão do Python.
 
@@ -30,15 +34,18 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `__init__.py` | Exportações públicas da CLI operacional inicial. |
-| `main.py` | Parser, função `main`, comando `status` e contagem local de missões. |
+| `main.py` | Parser, função `main`, comandos `status` e `validate`, contagem local de missões e validação estrutural. |
 | `README.md` | Documentação do módulo. |
 
 ## Principais Tipos, Classes E Funções
 
 - `MissionDirectoryStatus`: resumo imutável das contagens de missão por diretório operacional.
+- `ValidationIssue`: problema estrutural encontrado pela validação local.
+- `ValidationResult`: resultado testável da validação estrutural local.
 - `build_parser`: cria o parser da CLI.
 - `collect_mission_directory_status`: conta arquivos `.md` nos diretórios de missão.
 - `print_status`: imprime o status básico local.
+- `validate_project_structure`: valida a estrutura mínima do projeto sem efeitos colaterais.
 - `run`: executa a CLI e retorna código de saída.
 - `main`: ponto de entrada invocável por Python e console script.
 
@@ -49,11 +56,13 @@ Entradas:
 - Argumentos de linha de comando.
 - Caminho raiz do projeto informado por `--project-root` ou o diretório atual.
 - Diretórios locais `missions/queue`, `missions/running`, `missions/done` e `missions/failed`, quando existirem.
+- Arquivo `README.md` e diretório `src/vercosa_ai_framework` para o comando `validate`.
 
 Saídas:
 
-- Texto no terminal com versão, ajuda ou status básico.
+- Texto no terminal com versão, ajuda, status básico ou validação estrutural.
 - Código de saída `0` para sucesso.
+- Código de saída `1` para estrutura inválida no comando `validate`.
 - Código de saída `2` para erro controlado de argumentos.
 
 ## Dependências Internas
@@ -79,11 +88,27 @@ Saídas:
 
 ## Exemplo Mínimo
 
-Comando de ajuda: `python3 -m vercosa_ai_framework.cli.main --help`.
+Comando de ajuda no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --help`.
 
-Status do repositório atual: `python3 -m vercosa_ai_framework.cli.main status`.
+Status do repositório atual no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status`.
 
-Status de outro caminho local: `python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto status`.
+Status de outro caminho local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto status`.
+
+Validação estrutural do repositório atual no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate`.
+
+Validação estrutural de outro caminho local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto validate`.
+
+O comando `validate` verifica, nesta fase:
+
+- se a raiz informada existe e é diretório;
+- se `missions/` existe;
+- se `missions/queue`, `missions/running`, `missions/done` e `missions/failed` existem;
+- se `missions/running` está vazio;
+- se `missions/failed` está vazio;
+- se `src/vercosa_ai_framework` existe;
+- se `README.md` existe.
+
+`validate` é uma validação estrutural local. Ele não substitui `pytest`, não substitui `python3 -m compileall src`, não substitui `scripts/vaf-status.sh`, não executa missões e não altera arquivos.
 
 Uso por Python: `from vercosa_ai_framework.cli import main`.
 
@@ -91,10 +116,10 @@ Uso por Python: `from vercosa_ai_framework.cli import main`.
 
 Status: `MVP`.
 
-A CLI inicial é uma camada de conveniência para leitura e diagnóstico básico. Ela não altera o fluxo operacional atual baseado nos scripts shell.
+A CLI inicial é uma camada de conveniência para leitura, diagnóstico básico e validação estrutural local. Ela não altera o fluxo operacional atual baseado nos scripts shell.
 
 ## Próximos Passos
 
-- Avaliar comandos futuros como `run-next`, `run-batch`, `validate`, `audit`, `policy`, `context` e `doctor` em missões próprias.
+- Avaliar comandos futuros como `run-next`, `run-batch`, `audit`, `policy`, `context` e `doctor` em missões próprias.
 - Manter comandos futuros atrás das mesmas restrições de governança, sem substituir scripts seguros antes de decisão explícita.
-- Integrar diagnósticos mais ricos somente quando houver contratos e testes determinísticos aprovados.
+- Integrar validações futuras como Git limpo, branch `main`, `pytest`, `compileall`, logs recentes, audit log, políticas, contexto e providers somente quando houver contratos e testes determinísticos aprovados.

@@ -8,7 +8,7 @@ Documentar o uso operacional de `scripts/vaf-run-next-safe.sh` para executar uma
 
 O runner seguro de próxima missão executa a próxima missão da fila usando o worker local com limites conservadores. Ele existe para reduzir risco operacional em execuções simples ao combinar preflight, execução de uma missão, status do worker, testes, `compileall`, auto-commit e push opcional em um único fluxo abortável.
 
-A CLI Python inicial em `src/vercosa_ai_framework/cli/` pode consultar status básico local por conveniência, mas não substitui este runner, não substitui `scripts/vaf-status.sh` e não executa missões nesta fase.
+A CLI Python inicial em `src/vercosa_ai_framework/cli/` pode consultar status básico local e executar validação estrutural local por conveniência, mas não substitui este runner, não substitui `scripts/vaf-status.sh`, não substitui `pytest`, não substitui `python3 -m compileall src` e não executa missões nesta fase.
 
 O runner seguro em batch executa várias chamadas sequenciais ao runner de próxima missão. Ele não transforma o projeto em execução cega: o batch para na primeira falha, mantém validações após cada missão por reaproveitamento do runner seguro existente, exige Git limpo após cada missão e só permite push automático ao final quando `VAF_AUTO_PUSH=1`.
 

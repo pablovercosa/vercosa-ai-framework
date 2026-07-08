@@ -2,7 +2,18 @@ import importlib
 import socket
 import subprocess
 
-from vercosa_ai_framework.cli.main import collect_mission_directory_status, main, run
+from vercosa_ai_framework.cli.main import collect_mission_directory_status, main, run, validate_project_structure
+
+
+def criar_estrutura_minima(root):
+    for directory in ("queue", "running", "done", "failed"):
+        (root / "missions" / directory).mkdir(parents=True)
+    (root / "src" / "vercosa_ai_framework").mkdir(parents=True)
+    (root / "README.md").write_text("# Projeto\n", encoding="utf-8")
+
+
+def snapshot_arquivos(root):
+    return sorted(str(path.relative_to(root)) for path in root.rglob("*") if path.is_file())
 
 
 def test_modulo_cli_pode_ser_importado():
@@ -22,6 +33,19 @@ def test_comando_de_ajuda_retorna_sucesso(capsys):
 
     assert exit_code == 0
     assert "status" in captured.out
+    assert "validate" in captured.out
+
+
+def test_comando_validate_existe(capsys, tmp_path):
+    criar_estrutura_minima(tmp_path)
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "validacao: estrutural local" in captured.out
+    assert "resultado: saudavel" in captured.out
 
 
 def test_status_conta_arquivos_markdown_por_diretorio(capsys, tmp_path):
@@ -55,6 +79,99 @@ def test_diretorios_ausentes_sao_tratados_como_zero(tmp_path):
     assert status.failed == 0
 
 
+def test_validate_retorna_sucesso_para_estrutura_minima_valida(capsys, tmp_path):
+    criar_estrutura_minima(tmp_path)
+
+    result = validate_project_structure(tmp_path)
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+
+    captured = capsys.readouterr()
+
+    assert result.ok
+    assert exit_code == 0
+    assert "resultado: saudavel" in captured.out
+
+
+def test_validate_retorna_erro_controlado_quando_missions_nao_existe(capsys, tmp_path):
+    (tmp_path / "src" / "vercosa_ai_framework").mkdir(parents=True)
+    (tmp_path / "README.md").write_text("# Projeto\n", encoding="utf-8")
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "problema[missions_missing]" in captured.out
+
+
+def test_validate_retorna_erro_controlado_quando_subdiretorio_obrigatorio_nao_existe(capsys, tmp_path):
+    criar_estrutura_minima(tmp_path)
+    (tmp_path / "missions" / "running").rmdir()
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "problema[mission_subdir_missing]" in captured.out
+    assert "missions/running" in captured.out
+
+
+def test_validate_reporta_problema_quando_failed_contem_arquivos(capsys, tmp_path):
+    criar_estrutura_minima(tmp_path)
+    (tmp_path / "missions" / "failed" / "falha.md").write_text("falha", encoding="utf-8")
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "failed:  1" in captured.out
+    assert "problema[failed_not_empty]" in captured.out
+
+
+def test_validate_reporta_problema_quando_running_contem_arquivos(capsys, tmp_path):
+    criar_estrutura_minima(tmp_path)
+    (tmp_path / "missions" / "running" / "presa.md").write_text("presa", encoding="utf-8")
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "running: 1" in captured.out
+    assert "problema[running_not_empty]" in captured.out
+
+
+def test_validate_verifica_existencia_de_readme(capsys, tmp_path):
+    criar_estrutura_minima(tmp_path)
+    (tmp_path / "README.md").unlink()
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "problema[readme_missing]" in captured.out
+
+
+def test_validate_verifica_existencia_de_src_vercosa_ai_framework(capsys, tmp_path):
+    criar_estrutura_minima(tmp_path)
+    (tmp_path / "src" / "vercosa_ai_framework").rmdir()
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "problema[package_root_missing]" in captured.out
+
+
+def test_validate_nao_altera_arquivos(tmp_path):
+    criar_estrutura_minima(tmp_path)
+    before = snapshot_arquivos(tmp_path)
+
+    exit_code = run(["--project-root", str(tmp_path), "validate"])
+    after = snapshot_arquivos(tmp_path)
+
+    assert exit_code == 0
+    assert after == before
+
+
 def test_argumento_invalido_retorna_erro_controlado(capsys):
     exit_code = run(["--nao-existe"])
 
@@ -73,6 +190,18 @@ def test_status_nao_executa_scripts_shell(monkeypatch, tmp_path):
     assert run(["--project-root", str(tmp_path), "status"]) == 0
 
 
+def test_validate_nao_executa_scripts_shell(monkeypatch, tmp_path):
+    criar_estrutura_minima(tmp_path)
+
+    def falhar_se_chamar_subprocess(*args, **kwargs):
+        raise AssertionError("subprocess nao deveria ser chamado")
+
+    monkeypatch.setattr(subprocess, "run", falhar_se_chamar_subprocess)
+    monkeypatch.setattr(subprocess, "Popen", falhar_se_chamar_subprocess)
+
+    assert run(["--project-root", str(tmp_path), "validate"]) == 0
+
+
 def test_status_nao_acessa_rede(monkeypatch, tmp_path):
     def falhar_se_abrir_socket(*args, **kwargs):
         raise AssertionError("rede nao deveria ser acessada")
@@ -81,6 +210,18 @@ def test_status_nao_acessa_rede(monkeypatch, tmp_path):
     monkeypatch.setattr(socket, "socket", falhar_se_abrir_socket)
 
     assert run(["--project-root", str(tmp_path), "status"]) == 0
+
+
+def test_validate_nao_acessa_rede(monkeypatch, tmp_path):
+    criar_estrutura_minima(tmp_path)
+
+    def falhar_se_abrir_socket(*args, **kwargs):
+        raise AssertionError("rede nao deveria ser acessada")
+
+    monkeypatch.setattr(socket, "create_connection", falhar_se_abrir_socket)
+    monkeypatch.setattr(socket, "socket", falhar_se_abrir_socket)
+
+    assert run(["--project-root", str(tmp_path), "validate"]) == 0
 
 
 def test_cli_nao_exige_dependencia_externa():

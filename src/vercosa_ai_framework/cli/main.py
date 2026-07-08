@@ -24,6 +24,27 @@ class MissionDirectoryStatus:
     failed: int = 0
 
 
+@dataclass(frozen=True, slots=True)
+class ValidationIssue:
+    """Problema estrutural encontrado pela validacao local."""
+
+    code: str
+    message: str
+
+
+@dataclass(frozen=True, slots=True)
+class ValidationResult:
+    """Resultado deterministico da validacao estrutural local."""
+
+    project_root: Path
+    mission_status: MissionDirectoryStatus
+    issues: tuple[ValidationIssue, ...] = ()
+
+    @property
+    def ok(self) -> bool:
+        return not self.issues
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Cria o parser da CLI operacional sem acoplar a scripts shell."""
 
@@ -50,6 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("version", help="Mostra a versao minima operacional e encerra.")
     subparsers.add_parser("diagnose", help="Mostra diagnostico local basico do Python e sistema.")
     subparsers.add_parser("status", help="Conta missoes locais em queue, running, done e failed.")
+    subparsers.add_parser("validate", help="Valida a estrutura local basica sem executar missoes.")
     return parser
 
 
@@ -76,6 +98,9 @@ def run(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         return print_status(Path(args.project_root))
+
+    if args.command == "validate":
+        return print_validation(Path(args.project_root))
 
     parser.print_help()
     return 0
@@ -116,6 +141,80 @@ def print_status(project_root: str | Path) -> int:
     print(f"done:    {status.done}")
     print(f"failed:  {status.failed}")
     return 0
+
+
+def validate_project_structure(project_root: str | Path) -> ValidationResult:
+    """Valida estrutura local minima sem executar comandos externos."""
+
+    root = Path(project_root)
+    status = collect_mission_directory_status(root)
+    issues: list[ValidationIssue] = []
+
+    if not root.exists():
+        issues.append(ValidationIssue("project_root_missing", f"Diretorio raiz nao existe: {root}"))
+        return ValidationResult(project_root=root, mission_status=status, issues=tuple(issues))
+
+    if not root.is_dir():
+        issues.append(ValidationIssue("project_root_not_directory", f"Raiz informada nao e diretorio: {root}"))
+
+    missions_root = root / "missions"
+    if not missions_root.is_dir():
+        issues.append(ValidationIssue("missions_missing", f"Diretorio obrigatorio ausente: {missions_root}"))
+    else:
+        for name in MISSION_DIRECTORIES:
+            directory = missions_root / name
+            if not directory.is_dir():
+                issues.append(ValidationIssue("mission_subdir_missing", f"Diretorio obrigatorio ausente: {directory}"))
+
+    if status.running > 0:
+        issues.append(
+            ValidationIssue(
+                "running_not_empty",
+                f"missions/running contem {status.running} arquivo(s) .md; revise missao presa antes de continuar.",
+            )
+        )
+
+    if status.failed > 0:
+        issues.append(
+            ValidationIssue(
+                "failed_not_empty",
+                f"missions/failed contem {status.failed} arquivo(s) .md; revise falhas antes de continuar.",
+            )
+        )
+
+    package_root = root / "src" / "vercosa_ai_framework"
+    if not package_root.is_dir():
+        issues.append(ValidationIssue("package_root_missing", f"Diretorio obrigatorio ausente: {package_root}"))
+
+    readme = root / "README.md"
+    if not readme.is_file():
+        issues.append(ValidationIssue("readme_missing", f"Arquivo obrigatorio ausente: {readme}"))
+
+    return ValidationResult(project_root=root, mission_status=status, issues=tuple(issues))
+
+
+def print_validation(project_root: str | Path) -> int:
+    """Imprime validacao estrutural local e retorna codigo controlado."""
+
+    result = validate_project_structure(project_root)
+    status = result.mission_status
+
+    print(f"vercosa-ai-framework: {__version__}")
+    print(f"project_root: {result.project_root}")
+    print("validacao: estrutural local")
+    print(f"queue:   {status.queue}")
+    print(f"running: {status.running}")
+    print(f"done:    {status.done}")
+    print(f"failed:  {status.failed}")
+
+    if result.ok:
+        print("resultado: saudavel")
+        return 0
+
+    print("resultado: invalido")
+    for issue in result.issues:
+        print(f"problema[{issue.code}]: {issue.message}")
+    return 1
 
 
 def _count_markdown_files(directory: Path) -> int:

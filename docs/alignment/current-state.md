@@ -82,7 +82,7 @@ Specs atuais:
 O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos para:
 
 - `core/`: primitivas de domínio e política.
-- `cli/`: CLI operacional inicial para status local básico, versão e diagnóstico simples; ela não substitui scripts shell nem executa missões nesta fase.
+- `cli/`: CLI operacional inicial para status local básico, validação estrutural local, versão e diagnóstico simples; ela não substitui scripts shell nem executa missões nesta fase.
 - `missions/`: tipos, fila em diretório e runner de missões.
 - `workflows/`: tipos e engine sequencial de workflow.
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
