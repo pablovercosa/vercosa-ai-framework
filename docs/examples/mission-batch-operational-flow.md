@@ -4,7 +4,7 @@ Links principais: [Exemplos](README.md) | [Uso do runner seguro](../operations/s
 
 ## Objetivo
 
-Explicar o fluxo operacional atual de missões locais no Vercosa AI Framework, incluindo execução segura de uma missão, execução segura em batch, batch de 3 e batch de 10.
+Explicar o fluxo operacional atual de missões locais no Vercosa AI Framework, incluindo execução segura de uma missão, execução segura em batch como padrão quando seguro, batch de 3 e batch de 10.
 
 Status deste exemplo: exemplo operacional executável quando houver missões revisadas em `missions/queue/` e o ambiente local estiver pronto.
 
@@ -54,6 +54,8 @@ Significado atual:
 
 O runner seguro de uma missão executa a próxima missão da fila com limites conservadores.
 
+Ele continua sendo o fluxo correto para missões sensíveis, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.
+
 Comando básico:
 
 ```bash
@@ -83,13 +85,13 @@ Sem `VAF_AUTO_PUSH=1`, o runner não executa `git push`.
 
 O runner seguro em batch executa múltiplas missões em sequência controlada, chamando o runner seguro de uma missão para cada item.
 
-Comando padrão:
+Comando sem variável explícita, usando o default implementado pelo script:
 
 ```bash
 ./scripts/vaf-run-batch-safe.sh
 ```
 
-O padrão atual é `VAF_BATCH_SIZE=3`.
+O padrão implementado pelo script é `VAF_BATCH_SIZE=3` quando a variável não é informada. O padrão operacional recomendado para blocos normais já revisados e seguros é `VAF_BATCH_SIZE=10`.
 
 Com tamanho explícito:
 
@@ -110,7 +112,7 @@ Comportamento implementado:
 
 ## Batch De 3
 
-Batch de 3 é o padrão operacional inicial e deve ser usado para validar um bloco pequeno de missões antes de ampliar o volume.
+Batch de 3 é o fluxo de validação, retomada, bloco pequeno ou recuperação.
 
 Comando:
 
@@ -125,6 +127,7 @@ Use batch de 3 quando:
 - A fila foi revisada manualmente.
 - Você quer preservar revisão frequente.
 - Há alguma dúvida operacional leve, mas não bloqueante.
+- Houve falha corrigida, limite externo resolvido ou retomada após interrupção.
 
 ## Batch De 10
 
@@ -136,9 +139,9 @@ Comando:
 VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Use batch de 10 somente quando:
+Use batch de 10 como fluxo operacional padrão somente quando:
 
-- Um batch de 3 passou no mesmo padrão operacional esperado.
+- O fluxo já foi validado ou não há mudança recente no runner, na fila ou no ambiente operacional.
 - As missões são pequenas ou médias.
 - As dependências são claras.
 - Os testes estão estáveis.
@@ -155,6 +158,8 @@ Não use batch de 10 quando:
 - Houver dependências incertas entre missões.
 - A revisão humana precisar ocorrer entre missões.
 - O bloco alterar Guardian Engine, Policy Engine, Context Router, runtime ou providers com impacto amplo.
+- Houver limite de API, quota, rate limit ou erro `429` recém-ocorrido.
+- A recuperação após falha ainda estiver em andamento.
 
 ## Validação Pós-Batch
 

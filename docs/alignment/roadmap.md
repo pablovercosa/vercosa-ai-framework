@@ -8,7 +8,7 @@ Nenhum código fonte deve ser implementado apenas com base neste documento. Cada
 
 Backlog operacional detalhado de missões futuras: [Backlog estratégico de missões](../roadmap/mission-backlog.md).
 
-Execução em batch entrou no fluxo operacional como mecanismo controlado para rodar missões já revisadas em `missions/queue/`; o uso seguro está documentado no [playbook de execução em batch](../operations/batch-execution-playbook.md).
+Execução em batch é o fluxo operacional padrão para blocos de missões já revisadas e seguras em `missions/queue/`. O uso seguro está documentado no [playbook de execução em batch](../operations/batch-execution-playbook.md). Execução individual continua sendo o fluxo correto para missões sensíveis, arquiteturais, incertas, investigativas ou de recuperação.
 
 A identidade pública do projeto como framework de Harness Engineering para agentes de IA foi incorporada ao `README.md` principal. A internacionalização dos READMEs permanece tarefa futura e não faz parte deste bloco de alinhamento.
 

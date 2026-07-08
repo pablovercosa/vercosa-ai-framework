@@ -20,7 +20,7 @@ O objetivo é permitir que o projeto escolha blocos pequenos e revisáveis para 
 - Fila executável: conjunto pequeno de arquivos `.md` em `missions/queue`, revisados e prontos para execução pelo runner.
 - Missão em execução: missão movida para `missions/running` pelo worker ou runner, com escopo ativo e validações obrigatórias.
 - Missão concluída: missão movida para `missions/done` após entregar critérios de aceite, testes aplicáveis e commit separado quando o fluxo estiver configurado para auto-commit.
-- Batch operacional: execução sequencial controlada de um bloco pequeno da fila executável por `scripts/vaf-run-batch-safe.sh`, parando na primeira falha e mantendo validação por missão.
+- Batch operacional: execução sequencial controlada da fila executável por `scripts/vaf-run-batch-safe.sh`, parando na primeira falha e mantendo validação por missão. É o fluxo operacional padrão quando o bloco estiver bem especificado, revisado e seguro.
 
 ## Regras De Uso
 
@@ -32,18 +32,21 @@ O objetivo é permitir que o projeto escolha blocos pequenos e revisáveis para 
 
 ## Modelo Operacional De Batch
 
-O modelo operacional recomendado é incremental:
+O modelo operacional padrão é batch governado quando a fila executável estiver revisada e segura. O modelo continua incremental e não autoriza execução cega:
 
 1. Preparar um bloco pequeno de missões executáveis em `missions/queue`.
-2. Testar primeiro batch de 3 missões com `VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh`.
+2. Usar `VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh` para blocos normais já revisados e seguros.
 3. Parar sempre na primeira falha.
 4. Testar após cada missão por reaproveitamento do runner seguro de uma missão.
 5. Manter commit separado por missão.
 6. Revisar resultados, diffs, documentação e commits locais após o batch.
 7. Preferir push manual após revisão.
-8. Liberar batch de 10 somente se o teste de 3 missões passar no mesmo padrão operacional esperado.
+8. Usar `VAF_BATCH_SIZE=3` para testes, retomadas, blocos pequenos ou recuperação.
+9. Usar execução individual para missões sensíveis, arquiteturais, incertas, investigativas ou de alto risco.
 
 Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de aceite, referências a documentos ou validações locais.
+
+`VAF_AUTO_PUSH=1` continua opt-in e não deve ser tratado como padrão. Push manual após checklist pós-batch continua sendo a prática recomendada.
 
 ## Estado Arquitetural Considerado
 
@@ -62,9 +65,9 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 
 ## Fase 1 — Consolidação Operacional
 
-Objetivo da fase: estabilizar o uso seguro de execução sequencial e batch antes de ampliar volume de missões.
+Objetivo da fase: manter batch governado como fluxo operacional padrão para blocos seguros e preservar execução individual para risco alto.
 
-Por que a fase existe: o projeto já possui runner seguro de uma missão e runner seguro em batch, mas precisa consolidar playbooks, checklist pós-batch e validação prática com 3 missões antes de operar com batches maiores.
+Por que a fase existe: o projeto já possui runner seguro de uma missão, runner seguro em batch, validação de batch de 3 e primeiro bloco de 10 concluído; agora precisa manter governança para que batch de 10 seja padrão apenas quando seguro.
 
 Riscos se a fase for pulada: execução cega, commits difíceis de revisar, falhas repetidas, perda de rastreabilidade e entrada prematura de missões dependentes na fila.
 
@@ -73,7 +76,7 @@ Missões prováveis:
 - Documentar playbook de execução em batch.
 - Criar checklist de validação pós-batch.
 - Testar batch de 3 missões.
-- Liberar uso de batch de 10 após evidência de sucesso.
+- Registrar batch de 10 como fluxo operacional padrão para blocos revisados e seguros.
 
 Dependências:
 
@@ -85,6 +88,7 @@ Dependências:
 Critérios para avançar:
 
 - Batch de 3 missões executado com sucesso ou falhas documentadas e corrigidas.
+- Primeiro bloco de 10 missões reais validado.
 - Checklist pós-batch aplicado.
 - Critérios claros para quando usar ou não batch de 10.
 - Nenhuma falha recente sem diagnóstico.
@@ -281,19 +285,21 @@ Critérios de aceite resumidos: checklist cobre sucesso, falha, revisão de comm
 
 3. Código sugerido: `M003-teste-batch-3`
 Título: Testar batch de 3 missões.
-Objetivo: validar o fluxo operacional padrão com `VAF_BATCH_SIZE=3`.
+Objetivo: validar ou retomar o fluxo operacional com `VAF_BATCH_SIZE=3`.
 Escopo permitido: preparar até 3 missões pequenas, executar runner seguro em batch e registrar resultado.
 Escopo proibido: usar batch de 10, alterar scripts, pular revisão ou fazer push automático por padrão.
 Dependências: playbook e checklist pós-batch.
+Status: validado como fluxo de teste, retomada, bloco pequeno e recuperação.
 Critérios de aceite resumidos: 3 missões passam ou falhas são registradas com diagnóstico e correção antes de nova tentativa.
 
 4. Código sugerido: `M004-liberar-batch-10`
 Título: Liberar uso de batch de 10.
-Objetivo: autorizar operacionalmente batch de 10 para blocos adequados após sucesso do batch de 3.
+Objetivo: registrar batch de 10 como fluxo operacional padrão para blocos adequados, revisados e seguros.
 Escopo permitido: documentação de critérios, atualização discreta de guias e registro de riscos.
-Escopo proibido: tornar batch de 10 padrão obrigatório, remover limite máximo ou eliminar revisão.
-Dependências: teste bem-sucedido de batch de 3.
-Critérios de aceite resumidos: documentação deixa claro quando usar, quando não usar e como revisar batch de 10.
+Escopo proibido: tornar batch de 10 obrigatório para todos os casos, remover limite máximo ou eliminar revisão.
+Dependências: runner seguro em batch, checklist pós-batch, fluxo validado e ausência de falha recente sem diagnóstico.
+Status: consolidado como padrão operacional para blocos normais já revisados e seguros.
+Critérios de aceite resumidos: documentação deixa claro quando usar batch de 10, quando usar batch de 3, quando usar execução individual e como revisar antes de push.
 
 5. Código sugerido: `M005-policy-model-selection`
 Título: Integrar Policy Engine com Model Selection.
@@ -458,7 +464,7 @@ Critérios de aceite resumidos: READMEs multilíngues indicam versão fonte e pr
 4. Gere arquivos `.md` individuais em `missions/queue` apenas para as missões escolhidas.
 5. Inclua objetivo, escopo permitido, escopo proibido, dependências, critérios de aceite e validações em cada arquivo.
 6. Revise a fila antes da execução.
-7. Rode batch somente após revisão.
+7. Rode batch somente após revisão; use `VAF_BATCH_SIZE=10` para blocos normais seguros e `VAF_BATCH_SIZE=3` para validação, retomada, bloco pequeno ou recuperação.
 8. Se houver falha, não adicione mais missões à fila até diagnosticar e corrigir o problema.
 
 ## Quando NÃO Usar Batch De 10
@@ -467,7 +473,9 @@ Critérios de aceite resumidos: READMEs multilíngues indicam versão fonte e pr
 - Quando houver alteração em scripts críticos.
 - Quando houver mudança de arquitetura.
 - Quando houver falha recente.
+- Quando houver limite de API, quota, rate limit ou erro `429` recém-ocorrido.
 - Quando houver dúvidas sobre dependências.
+- Quando houver critérios de aceite fracos.
 - Quando houver risco de acoplamento indevido.
 - Quando houver criação ou remoção de dependências.
 - Quando houver alterações de segurança, credenciais, rede, provider, banco ou infraestrutura.
@@ -484,6 +492,20 @@ Critérios de aceite resumidos: READMEs multilíngues indicam versão fonte e pr
 - Documentação e critérios de aceite claros.
 - Baixo risco de conflito entre missões.
 - Commits separados por missão continuam aceitáveis para revisão.
+
+## Quando Usar Execução Individual
+
+- Mudanças arquiteturais profundas.
+- Alterações em scripts críticos.
+- Alterações no Guardian Engine com impacto amplo.
+- Alterações no Policy Engine com impacto amplo.
+- Alterações no Context Router com impacto amplo.
+- Alterações em providers ou runtimes.
+- Missões com dependências incertas.
+- Missões com critérios de aceite fracos.
+- Recuperação após falha.
+- Investigação de erro.
+- Limite de API ou quota recém-ocorrido.
 
 ## Riscos De Backlog Grande
 

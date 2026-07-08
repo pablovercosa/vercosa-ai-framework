@@ -113,6 +113,14 @@ Eixo operacional:
 - CLI operacional: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status|validate|doctor`.
 - Playbooks e checklists documentam execução, validação e revisão pós-batch.
 
+## Fluxo Operacional Padrão
+
+O fluxo operacional padrão do projeto é executar missões em batch quando o bloco em `missions/queue/` estiver bem especificado, revisado e seguro. O batch continua usando missões completas em Markdown, uma missão por arquivo, escopo claro, restrições explícitas, critérios de aceite verificáveis, commits separados, parada na primeira falha, validação pós-batch e push manual por padrão.
+
+Use `VAF_BATCH_SIZE=10` para blocos normais já revisados. Use `VAF_BATCH_SIZE=3` para testes, retomadas, blocos pequenos ou recuperação. Use `./scripts/vaf-run-next-safe.sh` para missões sensíveis, arquiteturais, incertas, de alto risco, investigação de erro ou recuperação após falha.
+
+`VAF_AUTO_PUSH=1` continua sendo opt-in. A prática recomendada é validar o batch com o checklist operacional e fazer push manual somente depois de revisar estado das missões, testes, `compileall`, Git e commits.
+
 ## Mapa De Módulos
 
 O mapa navegável oficial está em [docs/architecture/module-index.md](docs/architecture/module-index.md).
@@ -153,7 +161,7 @@ Módulos principais:
 Scripts operacionais:
 
 - `./scripts/vaf-run-next-safe.sh`: executa uma missão com validações antes e depois.
-- `./scripts/vaf-run-batch-safe.sh`: executa um batch pequeno e para na primeira falha.
+- `./scripts/vaf-run-batch-safe.sh`: executa um batch sequencial seguro e para na primeira falha.
 - `./scripts/vaf-status.sh`: mostra estado operacional dos diretórios de missão.
 
 CLI inicial:

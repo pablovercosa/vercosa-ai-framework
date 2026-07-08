@@ -4,7 +4,7 @@ Links principais: [README principal](../../README.md) | [Uso do runner seguro](s
 
 ## Objetivo
 
-Documentar o uso operacional seguro de `scripts/vaf-run-batch-safe.sh` para preparar, executar, validar e publicar batches de missões no Vercosa AI Framework.
+Documentar o uso operacional seguro de `scripts/vaf-run-batch-safe.sh` como fluxo normal para preparar, executar, validar e publicar batches de missões no Vercosa AI Framework quando o bloco estiver bem especificado, revisado e seguro.
 
 Este playbook descreve operação local. Ele não altera arquitetura, não aprova Specs, não remove governança e não substitui revisão humana.
 
@@ -12,6 +12,9 @@ Este playbook descreve operação local. Ele não altera arquitetura, não aprov
 
 - Execução de uma missão: execução de uma única missão da fila por `./scripts/vaf-run-next-safe.sh`, com validações antes e depois do worker.
 - Execução em batch: execução sequencial de múltiplas missões por `./scripts/vaf-run-batch-safe.sh`, reaproveitando o runner seguro de uma missão e parando na primeira falha.
+- Fluxo operacional padrão: execução em batch de missões completas, revisadas e seguras, com validação obrigatória antes de push.
+- Fluxo sensível: execução individual de missões críticas, arquiteturais, incertas, de alto risco, investigativas ou de recuperação.
+- Fluxo de retomada: batch reduzido, normalmente com `VAF_BATCH_SIZE=3`, após teste, limite externo, falha corrigida ou bloco pequeno.
 - Backlog estratégico: documento de planejamento, como `docs/roadmap/mission-backlog.md`, que organiza missões possíveis por fases, riscos e dependências. Ele não é executável diretamente.
 - Fila executável: conjunto de arquivos `.md` em `missions/queue/`, revisados e prontos para execução pelo runner.
 - Push manual: publicação feita explicitamente pelo operador depois de revisar status, commits, testes, documentação e logs.
@@ -19,39 +22,68 @@ Este playbook descreve operação local. Ele não altera arquitetura, não aprov
 
 ## Escopo Operacional
 
-O runner em batch é operacional, não arquitetural.
+O runner em batch é operacional, não arquitetural. Ele é o fluxo operacional padrão do projeto quando a fila contém um bloco seguro de missões completas, revisadas e com critérios de aceite objetivos.
 
 Ele acelera a execução sequencial de missões já presentes em `missions/queue/`. Ele não muda o modelo conceitual do framework, não cria fila estratégica, não seleciona Specs, não interpreta backlog grande e não decide se uma missão deveria existir.
 
 Cada missão no batch precisa continuar sendo um arquivo `.md` completo, revisável e com referências suficientes. O batch não deve ser usado para compensar missões mal escritas, ambíguas, sem critérios de aceite, sem escopo claro ou sem dependências registradas.
 
+Batch não significa execução cega. Ele não substitui missões completas em Markdown, revisão, testes, `python3 -m compileall src`, commits separados, validação pós-batch nem decisão consciente de push.
+
+## Decisão De Fluxo
+
+Use batch como padrão quando:
+
+- o bloco de missões estiver revisado;
+- cada missão tiver objetivo, escopo, restrições, referências e critérios de aceite claros;
+- as dependências entre missões forem conhecidas;
+- as mudanças forem pequenas ou médias;
+- não houver falha recente sem diagnóstico;
+- o operador aceitar revisar commits separados após a execução.
+
+Use execução individual quando houver:
+
+- mudança arquitetural profunda;
+- alteração em scripts críticos;
+- alteração no Guardian Engine com impacto amplo;
+- alteração no Policy Engine com impacto amplo;
+- alteração no Context Router com impacto amplo;
+- alteração em providers ou runtimes;
+- dependências incertas;
+- critérios de aceite fracos;
+- recuperação após falha;
+- investigação de erro;
+- limite de API ou quota recém-ocorrido.
+
 ## Comandos Principais
 
-Comando padrão:
+Comando sem variável explícita, usando o default implementado pelo script:
 
 ```bash
 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Batch de teste com 3 missões:
+Batch de validação, retomada ou bloco pequeno com 3 missões:
 
 ```bash
 VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Batch operacional com 10 missões:
+Batch operacional padrão com 10 missões:
 
 ```bash
 VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Batch de 10 só deve ser usado depois de um teste bem-sucedido com batch de 3 no mesmo fluxo operacional esperado.
+Batch de 10 é o tamanho recomendado para blocos normais já revisados e seguros. Batch de 3 é recomendado para testes, retomadas, blocos pequenos ou recuperação.
 
 ## Variáveis Operacionais
 
 `VAF_BATCH_SIZE` controla quantas missões o batch tenta executar.
 
-- O padrão é `3`.
+- O padrão implementado no script é `3` quando `VAF_BATCH_SIZE` não é informado.
+- O padrão operacional recomendado para blocos normais já revisados é `10`.
+- O padrão operacional recomendado para testes, retomadas, blocos pequenos ou recuperação é `3`.
 - Valores aceitos vão de `1` a `10`.
 - Valores menores que `1` devem ser recusados.
 - Valores maiores que `10` devem ser recusados.
@@ -88,7 +120,7 @@ pytest
 python3 -m compileall src
 ```
 
-Não inicie o batch se houver falha de testes, falha de `compileall`, Git sujo, missão em `running`, missão em `failed` ou dúvida sobre o escopo da fila.
+Não inicie o batch se houver falha de testes, falha de `compileall`, Git sujo, missão em `running`, missão em `failed`, dúvida sobre o escopo da fila, alteração fora do escopo ou limite externo de API recém-ocorrido.
 
 ## Como Preparar Um Batch
 
@@ -102,9 +134,9 @@ Não inicie o batch se houver falha de testes, falha de `compileall`, Git sujo, 
 
 O backlog estratégico pode orientar a escolha do bloco, mas a fila executável deve conter apenas missões pequenas, revisáveis e compatíveis com o estado atual do projeto.
 
-## Como Executar Batch De Teste Com 3 Missões
+## Como Executar Batch De Validação Ou Retomada Com 3 Missões
 
-Use o batch de 3 como teste inicial obrigatório:
+Use o batch de 3 para validar fluxo, retomar depois de interrupção, executar bloco pequeno ou recuperar após falha corrigida:
 
 ```bash
 VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
@@ -112,15 +144,15 @@ VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
 
 Durante esse teste, prefira não usar `VAF_AUTO_PUSH=1`. Revise localmente o resultado, os commits separados, os logs, os arquivos movidos em `missions/` e as validações finais.
 
-## Como Executar Batch Operacional Com 10 Missões
+## Como Executar Batch Operacional Padrão Com 10 Missões
 
-Use batch de 10 somente depois de um batch de 3 bem-sucedido:
+Use batch de 10 para blocos normais já revisados, seguros e com dependências claras:
 
 ```bash
 VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Batch de 10 é adequado apenas para blocos pequenos ou médios, com dependências claras, baixo risco e critérios de aceite objetivos. Ele deve ser suspenso se houver falha recente, mudança arquitetural sensível ou dúvida sobre a entrega.
+Batch de 10 é o fluxo operacional padrão quando essas condições forem atendidas. Ele deve ser suspenso se houver falha recente, mudança arquitetural sensível, limite externo de API, Git sujo, missão presa em `running`, missão em `failed`, alteração fora do escopo ou dúvida sobre a entrega.
 
 ## Validações Durante O Batch
 
@@ -133,12 +165,15 @@ O batch deve preservar estas regras operacionais:
 - Não continuar se Git ficar sujo.
 - Não continuar se testes falharem.
 - Não continuar se `python3 -m compileall src` falhar.
+- Não continuar se houver missão presa em `running`.
+- Não continuar se houver alteração fora do escopo.
+- Não continuar se houver dúvida sobre a entrega.
 
 Se uma validação falhar, não adicione novas missões à fila antes de entender e corrigir a causa.
 
 Se a falha for sinalizada pelo `Usage/API Limit Guard` como limitação externa de uso/API, suspenda o batch. Isso inclui sinais de `usage limit has been reached`, `quota exceeded`, `insufficient quota`, `billing hard limit`, rate limit persistente ou erro `429` associado a limite. O guard é determinístico e apenas lê o log local já produzido; ele não consulta billing real, não chama providers externos e não acessa rede ou banco.
 
-Batch de 10 deve ser suspenso imediatamente quando houver erro de quota ou rate limit. A ação segura é parar, preservar logs e investigar os limites do provider antes de retomar a fila.
+Limite externo de API não deve ser tratado automaticamente como bug interno do projeto. Não insista em retries. Pare, preserve logs, verifique `missions/queue`, `missions/running`, `missions/done` e `missions/failed`, devolva missão presa em `running` para `queue` somente quando for seguro e continue apenas depois que quota, rate limit, crédito ou billing estiverem disponíveis.
 
 ## Eventos Auditáveis De Batch
 
@@ -150,7 +185,7 @@ O script `scripts/vaf-run-batch-safe.sh` ainda não emite esses eventos automati
 
 Checklist detalhado: [Checklist de validação pós-batch](post-batch-validation-checklist.md).
 
-O playbook orienta a execução. O checklist orienta a decisão pós-batch antes de push, novo bloco de missões ou liberação de batch de 10.
+O playbook orienta a execução. O checklist é obrigatório antes de push, novo bloco de missões ou continuação após falha.
 
 Após o batch, execute:
 
@@ -181,7 +216,7 @@ Faça push somente depois de confirmar que:
 - A documentação não promete comportamento inexistente.
 - A branch é `main` quando o fluxo operacional exigir publicação direta.
 
-Prefira push manual após revisar o batch. Use `VAF_AUTO_PUSH=1` apenas quando o fluxo já estiver estável e a fila tiver baixo risco.
+Prefira push manual após revisar o batch. `VAF_AUTO_PUSH=1` continua opt-in, não é padrão operacional e deve ser usado apenas quando o fluxo já estiver estável e a fila tiver baixo risco.
 
 ## Quando NÃO Fazer Push
 
@@ -228,18 +263,19 @@ Verifique o último commit:
 git log --oneline --decorate -1
 ```
 
-Depois de diagnosticar, corrija a causa, valide localmente e só então considere novo batch.
+Depois de diagnosticar, corrija a causa, valide localmente e só então considere novo batch. Para recuperação, prefira execução individual ou `VAF_BATCH_SIZE=3` antes de voltar a `VAF_BATCH_SIZE=10`.
 
 Quando o diagnóstico indicar limitação externa de uso/API, trate a falha como condição operacional externa, não como bug interno do framework, até prova em contrário. Não reexecute em loop e não amplie o batch antes de confirmar quota, rate limit, crédito ou billing do provider.
 
-## Política De Batch De 3 Para Batch De 10
+## Política De Batch De 3 E Batch De 10
 
-- Batch de 3 é obrigatório como teste inicial.
-- Batch de 10 só é aceito se batch de 3 passar.
+- Batch de 10 é o fluxo operacional padrão para blocos normais já revisados e seguros.
+- Batch de 3 é o fluxo de validação, retomada, recuperação ou blocos pequenos.
 - Batch de 10 deve ser suspenso se houver falha recente.
 - Batch de 10 deve ser suspenso se houver erro de quota, rate limit, billing hard limit ou crédito insuficiente.
 - Batch de 10 deve ser evitado em alterações arquiteturais sensíveis.
 - Batch de 10 é mais adequado para missões pequenas ou médias com dependências claras.
+- Execução individual continua sendo o fluxo correto para missões sensíveis, críticas, investigativas ou incertas.
 
 ## Tipos De Missão Adequadas Para Batch
 
@@ -263,6 +299,10 @@ Quando o diagnóstico indicar limitação externa de uso/API, trate a falha como
 - Mudança em providers/runtimes.
 - Alteração que pode afetar segurança.
 - Qualquer missão com dependências incertas.
+- Qualquer missão com critérios de aceite fracos.
+- Recuperação após falha.
+- Investigação de erro.
+- Limite de API ou quota recém-ocorrido.
 
 ## Regra Operacional Principal
 

@@ -4,9 +4,11 @@ Links principais: [README principal](../../README.md) | [Uso do runner seguro](s
 
 ## Objetivo
 
-Padronizar a validação operacional do Vercosa AI Framework depois de uma execução em batch, antes de fazer push, liberar batch de 10 ou iniciar novo bloco de missões.
+Padronizar a validação operacional obrigatória do Vercosa AI Framework depois de uma execução em batch, antes de fazer push, iniciar novo bloco de missões ou retomar execução após interrupção.
 
 Este checklist deve ser usado depois de `./scripts/vaf-run-batch-safe.sh`, depois de qualquer batch com `VAF_BATCH_SIZE=3`, depois de qualquer batch com `VAF_BATCH_SIZE=10`, antes de `git push` e antes de iniciar novo bloco de missões.
+
+Batch é o fluxo operacional padrão quando o bloco estiver bem especificado, revisado e seguro. Este checklist é o bloqueio operacional antes de publicação: sem validação pós-batch, não faça push.
 
 Ele complementa o [playbook de execução em batch](batch-execution-playbook.md). Ele não substitui o runner seguro, não aprova mudanças automaticamente e não elimina revisão humana.
 
@@ -26,6 +28,7 @@ Ele complementa o [playbook de execução em batch](batch-execution-playbook.md)
 - Documentação criada ou atualizada conforme esperado.
 - Nenhuma promessa de funcionalidade inexistente.
 - Push ainda não feito, salvo se explicitamente solicitado.
+- `VAF_AUTO_PUSH` não foi usado sem decisão explícita.
 
 ## Comandos de validação pós-batch
 
@@ -72,6 +75,8 @@ Antes de publicar ou iniciar outro batch:
 - Confirme se `origin/main` ainda está atrás ou já atualizado antes de decidir o push.
 - Não use force push.
 - Não reescreva histórico.
+- Prefira push manual após a validação.
+- Confirme que `VAF_AUTO_PUSH=1` não foi usado por acidente.
 
 Use `git log --oneline --decorate -12` para revisar mensagens, ordem e escopo dos commits recentes. Mensagens futuras devem estar em português do Brasil, salvo nomes técnicos consolidados.
 
@@ -133,6 +138,7 @@ Não faça push quando qualquer item abaixo ocorrer:
 - Houve commit com mensagem errada.
 - Houve alteração fora do escopo.
 - Houve dúvida sobre resultado do batch.
+- Houve sinal de `usage limit`, `quota exceeded`, `insufficient quota`, `rate limit` ou erro `429`.
 
 ## Quando parar e investigar
 
@@ -168,11 +174,13 @@ Se não houver arquivo `.log`, confira também saídas `.out` recentes em `logs/
 
 Se o log mencionar `Usage/API Limit Guard`, `usage limit has been reached`, `quota exceeded`, `insufficient quota`, `billing hard limit`, rate limit persistente ou erro `429` associado a limite, suspenda novo batch e investigue limites do provider. Essa verificação é local e determinística: ela não consulta billing real, não chama provider externo, não acessa rede e não implementa retry inteligente.
 
-## Quando liberar batch de 10
+Limite externo de API não é, por si só, bug interno do projeto. Não insista em retries. Verifique `missions/queue`, `missions/running`, `missions/done` e `missions/failed`; se houver missão presa em `running`, devolva para `queue` somente quando for seguro e depois de entender o estado real da entrega. Retome com execução individual ou `VAF_BATCH_SIZE=3` apenas quando quota, rate limit, crédito ou billing estiverem disponíveis.
 
-Batch de 10 só deve ser liberado quando:
+## Quando usar batch de 10
 
-- Batch de 3 passou.
+Batch de 10 é o fluxo operacional padrão para blocos normais já revisados e seguros. Use somente quando:
+
+- O fluxo já foi validado ou não há mudança recente no runner, na fila ou no ambiente operacional.
 - `failed=0`.
 - Testes passaram.
 - `compileall` passou.
@@ -182,7 +190,7 @@ Batch de 10 só deve ser liberado quando:
 - Não houve falha recente.
 - Não há missão de alto risco no próximo bloco.
 
-Batch de 10 fica permitido quando esses critérios são atendidos, mas continua opcional. O operador pode continuar usando batch de 3 quando o risco, a revisão ou a dependência entre missões recomendar blocos menores.
+O operador deve usar batch de 3 quando o risco, a revisão, a retomada, a recuperação ou a dependência entre missões recomendar blocos menores. Use execução individual para missões sensíveis, arquiteturais, incertas, investigativas ou críticas.
 
 ## Quando suspender batch de 10
 
@@ -200,6 +208,7 @@ Suspenda batch de 10 quando:
 - Critérios de aceite estão fracos.
 - Missões estão pequenas demais ou vagas demais.
 - Referências obrigatórias estão incompletas.
+- Houve limite de API ou quota recém-ocorrido.
 
 Nesses casos, reduza o batch, revise as missões ou execute uma missão por vez.
 
@@ -224,5 +233,6 @@ O valor de `queue` pode ser maior que `0` quando o batch executou apenas parte d
 
 - Se houver dúvida, não fazer push.
 - Se houver falha, parar.
-- Se o batch de 3 falhar, não liberar batch de 10.
-- Se o batch de 3 passar, batch de 10 fica permitido, mas não obrigatório.
+- Se houver limite externo de API, parar e retomar somente quando a quota estiver disponível.
+- Se a missão for sensível, usar execução individual.
+- Se o bloco estiver revisado e seguro, batch de 10 é o fluxo operacional padrão.

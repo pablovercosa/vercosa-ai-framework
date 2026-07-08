@@ -99,7 +99,7 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `knowledge/`: ingestão Markdown, documentos, store em memória e busca textual.
 - `canonicalizer/`: canonicalização, hashes, warnings e conversão para Knowledge Hub.
 - `persistence/`: tipos, contrato de repository e filesystem repository local.
-- runners seguros: scripts operacionais para execução segura de uma missão e execução segura em batch, com validações locais.
+- runners seguros: scripts operacionais para execução segura de uma missão e execução segura em batch, com validações locais. Batch é o fluxo operacional padrão para blocos revisados e seguros; execução individual continua válida para risco alto, investigação e recuperação.
 
 ## Cadeia De Execução Atual
 
