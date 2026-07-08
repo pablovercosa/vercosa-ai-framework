@@ -79,7 +79,7 @@ Essa cadeia descreve o harness operacional ao redor de modelos e agentes: camada
 
 As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto](../alignment/open-questions.md), especialmente:
 
-- integração completa entre Policy Engine, Context Router, Guardian Engine e Model Selection após as pontes iniciais via `ResolvedPolicySet` opcional e requisitos opcionais de orçamento de tokens;
+- integração orquestrada entre Policy Engine, Context Router, Guardian Engine, Model Selection e Audit/Event Log nos fluxos completos, além das pontes iniciais via `ResolvedPolicySet` opcional, requisitos opcionais de orçamento de tokens e helpers de eventos;
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;

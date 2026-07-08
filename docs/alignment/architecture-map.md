@@ -48,8 +48,8 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 | Agent Orchestrator | Selecionar perfil de agente e preparar execução | MVP em `agents/` | Chamar OpenCode, MCPs, APIs, bancos ou tools diretamente |
 | Agents/Subagents | Executar responsabilidades por fronteiras do framework | Conceitual/MVP no nível de perfil | Conhecer providers ou infraestrutura concreta |
 | Capabilities | Representar capacidades abstratas solicitadas | MVP em `capabilities/` | Codificar detalhes concretos de tool/provider |
-| Policy/Guardian | Resolver políticas declarativas e aplicar enforcement operacional em ações concretas | Policy Engine MVP resolve políticas declarativas; Guardian MVP avalia ações e riscos | Executar comandos ou mutar estado diretamente |
-| Audit/Event Log | Representar eventos internos auditáveis e rastreáveis | Contratos iniciais e implementação em memória | Persistir, exportar observabilidade externa ou chamar módulos consumidores automaticamente |
+| Policy/Guardian | Resolver políticas declarativas e aplicar enforcement operacional em ações concretas | Policy Engine MVP resolve políticas declarativas; Guardian MVP avalia ações e riscos; pontes opcionais já alcançam Context Router, Model Selection e Audit/Event Log por resultados explícitos | Executar comandos ou mutar estado diretamente |
+| Audit/Event Log | Representar eventos internos auditáveis e rastreáveis | Contratos iniciais, implementação em memória, helpers opcionais para decisões centrais e eventos de missão/batch | Persistir, exportar observabilidade externa ou chamar módulos consumidores automaticamente |
 | Skills | Procedimentos reutilizáveis que implementam capabilities | MVP em `skills/` | Contornar tools ou Provider Gateway para efeitos |
 | Tools | Fronteira governada de ação concreta | MVP em `tools/` | Ocultar chamadas diretas a providers da governança |
 | Provider Gateway | Normalizar acesso a providers após aprovação por tool | MVP em `providers/` | Virar seletor de modelo, runtime adapter ou camada de agente |
@@ -128,6 +128,26 @@ ToolAdapter or ProviderGateway
 ProviderAdapter or callable
 ```
 
+Caminho de Policy, Context, Model Selection, Guardian e Audit:
+
+```text
+PolicySet explícito
+↓
+Policy Engine
+↓
+ResolvedPolicySet
+↓
+Context Router / Token Budget Manager / Model Selection
+↓
+ContextPackage e ModelSelectionDecision
+↓
+Guardian Engine quando chamado explicitamente
+↓
+Audit/Event Log opcional quando EventLog é fornecido
+```
+
+Esse caminho representa integrações iniciais por estruturas explícitas. Ele não significa chamada automática de provider, billing real, RAG semântico, persistência externa de eventos ou observabilidade externa.
+
 ## Pontes Ausentes
 
 - Mission Orchestrator para Workflow Engine.
@@ -136,8 +156,9 @@ ProviderAdapter or callable
 - Agent Orchestrator para Capability Resolver em capabilities solicitadas por agentes.
 - Caminho Capability/Skill/Tool para Provider Gateway como fluxo padrão de efeitos.
 - Recuperação do Knowledge Hub para Context Router.
-- Context Router para Mission Runner, Workflow Engine, Agent Orchestrator e Model Selection.
+- Context Router para Mission Runner, Workflow Engine e Agent Orchestrator como parte do fluxo padrão.
 - Persistence Layer para missões, workflows, tasks, decisões Guardian, decisões de modelo, documentos e audit logs.
+- Persistência local controlada para eventos auditáveis.
 
 ## Decisões De Fronteira Necessárias
 

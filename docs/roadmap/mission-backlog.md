@@ -53,6 +53,9 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - Mission Runner existe.
 - Runner seguro de uma missão existe.
 - Runner seguro em batch existe.
+- Batch de 3 foi validado para teste, retomada, blocos pequenos e recuperação.
+- Batch de 10 é funcional para blocos normais revisados e seguros, com ressalva de limites externos de API.
+- Batch é o padrão operacional quando seguro; execução individual permanece necessária para missões críticas, sensíveis, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.
 - Context Router possui MVP determinístico.
 - Token Budget Manager possui MVP determinístico.
 - Knowledge Hub já se integra ao Context Router por candidatos explícitos.
@@ -60,8 +63,34 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - Policy Engine possui contratos iniciais.
 - Policy Engine já se integra ao Guardian Engine por `ResolvedPolicySet` opcional.
 - Policy Engine já se integra ao Context Router por `ResolvedPolicySet` opcional.
+- Policy Engine já se integra ao Model Selection por políticas resolvidas opcionais.
+- Token Budget Manager já se integra ao Model Selection por requisitos mínimos de orçamento.
 - Usage/API Limit Guard inicial existe.
-- Integrações completas com Provider Gateway, exemplos públicos adicionais, documentação pública completa e release alfa ainda são lacunas. A CLI operacional inicial já possui `status`, `validate` e `doctor`; Model Selection já possui integração inicial com políticas e orçamento; Audit/Event Log já possui contratos iniciais em memória, helpers opcionais e integração opcional inicial com o `MissionRunner` Python, mas persistência externa e integração automática com scripts operacionais permanecem futuras.
+- Usage/API Limit Guard já participa do fluxo operacional por classificação determinística de logs locais já produzidos.
+- Audit/Event Log já possui contratos iniciais em memória, helpers opcionais para decisões centrais e eventos de missão/batch.
+- O `MissionRunner` Python já possui integração opcional com eventos auditáveis quando recebe um `EventLog`.
+- CLI operacional inicial já possui `status`, `validate` e `doctor`.
+- Exemplos operacionais iniciais existem em `docs/examples/`.
+- Integrações completas com Provider Gateway, persistência externa de eventos, providers reais, múltiplos runtimes reais, documentação pública completa e release alfa ainda são lacunas.
+
+## Itens Já Concluídos Ou Absorvidos
+
+Os itens abaixo não devem ser recriados como novas missões executáveis sem revisão de escopo. Eles já foram concluídos, absorvidos no estado atual ou documentados como integração inicial:
+
+- Integração Policy Engine com Model Selection.
+- Integração Token Budget Manager com Model Selection.
+- Integração Usage/API Limit Guard ao fluxo operacional.
+- Audit/Event Log inicial.
+- Eventos auditáveis de decisões centrais.
+- Eventos auditáveis do Mission Runner Python.
+- CLI operacional inicial.
+- Comando CLI `validate`.
+- Comando CLI `doctor`.
+- Exemplos operacionais iniciais.
+- README principal com identidade de Harness Engineering.
+- Batch como padrão operacional quando seguro.
+
+Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
 ## Fase 1 — Consolidação Operacional
 
@@ -73,10 +102,10 @@ Riscos se a fase for pulada: execução cega, commits difíceis de revisar, falh
 
 Missões prováveis:
 
-- Documentar playbook de execução em batch.
-- Criar checklist de validação pós-batch.
-- Testar batch de 3 missões.
-- Registrar batch de 10 como fluxo operacional padrão para blocos revisados e seguros.
+- Integrar CLI com validações de Git de forma segura e somente leitura.
+- Criar comando CLI para listar missões sem executar, mover ou alterar arquivos.
+- Criar comando CLI para resumo pós-batch com base em estado local, logs e commits já existentes.
+- Revisar periodicamente critérios de batch de 10 após interrupções por limite externo de API.
 
 Dependências:
 
@@ -103,10 +132,9 @@ Riscos se a fase for pulada: seleção de modelo sem política, orçamento de to
 
 Missões prováveis:
 
-- Integrar Policy Engine com Model Selection.
-- Integrar Token Budget Manager com Model Selection.
-- Integrar Usage/API Limit Guard ao fluxo operacional do worker.
-- Revisar integração entre Context Router, Guardian e Policy após novas pontes.
+- Revisar integração entre Context Router, Guardian, Policy, Model Selection e Audit/Event Log após as novas pontes.
+- Definir testes de contrato para fronteiras entre políticas, contexto, orçamento, seleção de modelo e decisões Guardian.
+- Documentar critérios para promover integrações opcionais a fluxo orquestrado obrigatório.
 
 Dependências:
 
@@ -131,10 +159,10 @@ Riscos se a fase for pulada: perda de evidências, decisões não reproduzíveis
 
 Missões prováveis:
 
-- Criar Audit/Event Log inicial.
-- Registrar decisões de Guardian/Policy/Context em eventos auditáveis.
+- Persistir eventos auditáveis em arquivo local controlado.
 - Definir formato mínimo de eventos de validação.
 - Relacionar eventos com missão, commit e artefatos alterados.
+- Registrar seleção de modelo, fallback e restrições de orçamento em eventos auditáveis.
 
 Dependências:
 
@@ -158,8 +186,10 @@ Riscos se a fase for pulada: adoção difícil, comandos pouco descobríveis, us
 
 Missões prováveis:
 
-- Criar CLI operacional mais amigável.
-- Melhorar mensagens de status e validação.
+- Integrar CLI com validações de Git de forma segura.
+- Criar comando CLI para listar missões.
+- Criar comando CLI para resumo pós-batch.
+- Melhorar mensagens de status, validação e diagnóstico.
 - Documentar fluxos comuns de missão, batch e diagnóstico.
 - Preparar comandos de leitura sem criar automações perigosas.
 
@@ -185,11 +215,11 @@ Riscos se a fase for pulada: documentação abstrata demais, expectativas errada
 
 Missões prováveis:
 
-- Criar exemplos reais de uso.
 - Criar documentação pública inicial.
 - Criar guia de instalação.
 - Criar guia de contribuição.
 - Revisar README principal para público externo.
+- Preparar documentação pública alfa sem marcar recursos futuros como implementados.
 
 Dependências:
 
@@ -307,6 +337,7 @@ Objetivo: permitir que políticas resolvidas influenciem seleção de modelo sem
 Escopo permitido: contratos mínimos, testes determinísticos e documentação de limites.
 Escopo proibido: chamar providers, descobrir modelos reais, implementar billing real ou hardcodar modelo.
 Dependências: contratos de `policy/` e `model_selection/`, Spec ou ADR se houver mudança de fronteira.
+Status: concluído como integração inicial por políticas resolvidas opcionais; refinamentos futuros devem ter escopo próprio.
 Critérios de aceite resumidos: seleção respeita efeitos declarativos aplicáveis e mantém justificativa auditável.
 
 6. Código sugerido: `M006-token-budget-model-selection`
@@ -315,6 +346,7 @@ Objetivo: usar orçamento estimado para restringir ou justificar seleção de mo
 Escopo permitido: integração determinística entre orçamento e política de seleção.
 Escopo proibido: RAG semântico, embeddings, chamada de LLM ou cálculo real de custo de provider.
 Dependências: `context/` MVP e `model_selection/` MVP.
+Status: concluído como integração inicial por requisitos mínimos de orçamento; billing real e custo de provider continuam futuros.
 Critérios de aceite resumidos: decisões de modelo indicam restrições de contexto e fallback quando orçamento for incompatível.
 
 7. Código sugerido: `M007-usage-limit-worker`
@@ -323,6 +355,7 @@ Objetivo: tratar sinais de limite externo como parada segura ou revisão manual 
 Escopo permitido: integração operacional mínima, testes com mensagens simuladas e documentação.
 Escopo proibido: consultar billing real, chamar provider externo, mascarar bugs ou fazer retry infinito.
 Dependências: `guardian/usage_limits.py` e fluxo atual do worker.
+Status: concluído como classificação determinística de logs locais no fluxo operacional; consulta real de billing e retry inteligente continuam fora do escopo atual.
 Critérios de aceite resumidos: limites detectados geram ação segura, diagnóstico claro e sem chamadas externas.
 
 8. Código sugerido: `M008-audit-event-log-inicial`
@@ -340,6 +373,7 @@ Objetivo: vincular decisões governadas a eventos rastreáveis.
 Escopo permitido: eventos para Policy Resolution, Guardian Decision e Context Package summary.
 Escopo proibido: gravar conteúdo sensível bruto, implementar analytics ou mudar decisão dos módulos.
 Dependências: Audit/Event Log inicial.
+Status: concluído como helpers opcionais para decisões centrais; persistência, exportação e integração automática continuam futuras.
 Critérios de aceite resumidos: decisões geram eventos com refs, motivos e limites sem vazar segredos.
 
 10. Código sugerido: `M010-cli-operacional-amigavel`
@@ -348,6 +382,7 @@ Objetivo: facilitar consulta de status, fila, validações e próximos passos se
 Escopo permitido: comandos locais, mensagens claras e documentação.
 Escopo proibido: contornar runner seguro, executar push por padrão ou esconder falhas.
 Dependências: fluxo operacional consolidado e, preferencialmente, eventos mínimos.
+Status: concluído como CLI operacional inicial com `status`, `validate` e `doctor`; comandos adicionais de leitura continuam futuros.
 Critérios de aceite resumidos: comandos ajudam diagnóstico e mantêm governança explícita.
 
 11. Código sugerido: `M011-exemplos-reais-uso`
@@ -455,6 +490,54 @@ Escopo permitido: manter `README.md` em pt-BR, criar `README.en.md` em inglês e
 Escopo proibido: internacionalizar antes da estabilização, divergir conteúdo técnico ou traduzir APIs públicas.
 Dependências: release alfa ou documentação pública estabilizada.
 Critérios de aceite resumidos: READMEs multilíngues indicam versão fonte e preservam links essenciais.
+
+24. Código sugerido: `M024-cli-validacoes-git-seguras`
+Título: Integrar CLI com validações de Git de forma segura.
+Objetivo: permitir diagnóstico local de branch, Git limpo e commits recentes sem executar push, commit, reset ou comandos destrutivos.
+Escopo permitido: leitura local, mensagens claras, testes determinísticos e documentação.
+Escopo proibido: alterar fluxo Git, executar push, staging automático, commit automático, reset, checkout destrutivo ou reescrita de histórico.
+Dependências: CLI operacional inicial e política de documentação atualizada.
+Critérios de aceite resumidos: CLI reporta estado Git básico de forma segura e não substitui revisão humana.
+
+25. Código sugerido: `M025-cli-listar-missoes`
+Título: Criar comando CLI para listar missões.
+Objetivo: listar missões em `queue`, `running`, `done` e `failed` com saída previsível e sem efeitos colaterais.
+Escopo permitido: leitura local, ordenação determinística, testes e docs.
+Escopo proibido: mover missões, executar missões, alterar arquivos ou interpretar backlog estratégico como fila executável.
+Dependências: CLI operacional inicial e contratos atuais de diretórios de missão.
+Critérios de aceite resumidos: comando mostra missões existentes e preserva a distinção entre backlog estratégico e fila executável.
+
+26. Código sugerido: `M026-cli-resumo-pos-batch`
+Título: Criar comando CLI para resumo pós-batch.
+Objetivo: produzir resumo local de estado pós-batch com contagens de missão, avisos e próximos passos seguros.
+Escopo permitido: leitura de diretórios locais, logs existentes quando seguro, commits recentes em modo somente leitura e documentação.
+Escopo proibido: executar batch, fazer push, criar commits, alterar missões, consultar provider, consultar rede ou substituir o checklist pós-batch.
+Dependências: checklist pós-batch, CLI inicial e decisão sobre quais dados locais são seguros para resumir.
+Critérios de aceite resumidos: resumo ajuda revisão pós-batch sem automatizar aprovação.
+
+27. Código sugerido: `M027-persistir-eventos-arquivo-local`
+Título: Persistir eventos auditáveis em arquivo local controlado.
+Objetivo: criar persistência local inicial para `AuditEvent` sem banco obrigatório e sem observabilidade externa.
+Escopo permitido: formato determinístico, testes, política de retenção inicial e documentação de limites.
+Escopo proibido: banco obrigatório, rede, OpenTelemetry, dashboards, gravação de prompts completos, secrets ou tokens.
+Dependências: Audit/Event Log inicial e decisão sobre formato de persistência.
+Critérios de aceite resumidos: eventos são gravados de forma rastreável, segura e controlada por contrato.
+
+28. Código sugerido: `M028-revisar-arquitetura-pos-integracoes-centrais`
+Título: Revisar arquitetura pós-integrações centrais.
+Objetivo: verificar coerência entre Specs, READMEs, mapas de arquitetura, backlog e código após Policy, Context, Guardian, Model Selection, Audit, CLI e batch.
+Escopo permitido: documentação, ADRs, perguntas em aberto e recomendações de próximos blocos.
+Escopo proibido: implementar nova funcionalidade sem Spec aprovada ou prometer integrações futuras como existentes.
+Dependências: integrações centrais atuais documentadas e testes estáveis.
+Critérios de aceite resumidos: lacunas reais ficam registradas e próximas missões não duplicam entregas já concluídas.
+
+29. Código sugerido: `M029-preparar-documentacao-publica-alfa`
+Título: Preparar documentação pública alfa.
+Objetivo: organizar README, guias e exemplos para uma futura alfa sem transformar o MVP em promessa de estabilidade.
+Escopo permitido: documentação pública, limites claros, links relativos, pré-requisitos e checklists.
+Escopo proibido: criar release/tag sem decisão, internacionalizar READMEs agora ou prometer providers, RAG, embeddings, pgvector ou Semantic Index como implementados.
+Dependências: guia de instalação, guia de contribuição, licença e revisão de arquitetura pós-integrações.
+Critérios de aceite resumidos: documentação pública diferencia implementado, MVP, integração inicial, futuro e fora do escopo.
 
 ## Como Transformar Backlog Em Fila Executável
 

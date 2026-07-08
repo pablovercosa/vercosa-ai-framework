@@ -8,14 +8,17 @@ As perguntas são agrupadas por área de decisão. Cada item não resolvido deve
 
 ## Fronteiras Centrais
 
-1. Guardian Engine é o Policy Engine concreto da fase atual ou Policy Engine deve ser um componente separado que delega ao Guardian Engine?
-2. Onde a precedência de políticas é resolvida: Guardian Engine, Policy Engine, Mission Runner ou um resolvedor dedicado?
-3. Mission Orchestrator deve ser implementado como módulo separado antes de expandir Mission Runner?
-4. Qual é a fronteira exata entre Mission Runner e Mission Orchestrator?
-5. Qual é a fronteira exata entre Workflow Engine e Task Queue?
-6. Workflow Engine deve sempre usar Task Queue ou pode manter um executor sequencial direto para workflows locais simples?
-7. Qual componente é responsável por replanejamento após falha de validação?
-8. Qual componente é responsável pelo encerramento final da missão e pela agregação de evidências de validação?
+1. Mission Orchestrator deve ser implementado como módulo separado antes de expandir Mission Runner?
+2. Qual é a fronteira exata entre Mission Runner e Mission Orchestrator?
+3. Qual é a fronteira exata entre Workflow Engine e Task Queue?
+4. Workflow Engine deve sempre usar Task Queue ou pode manter um executor sequencial direto para workflows locais simples?
+5. Qual componente é responsável por replanejamento após falha de validação?
+6. Qual componente é responsável pelo encerramento final da missão e pela agregação de evidências de validação?
+
+Decisões já encaminhadas:
+
+- Policy Engine e Guardian Engine são componentes separados: Policy Engine resolve políticas declarativas; Guardian Engine avalia enforcement operacional.
+- A precedência de políticas é responsabilidade do Policy Engine no estado atual, com resultados repassados como `ResolvedPolicySet` opcional para consumidores.
 
 ## Ciclo De Vida SDD
 
@@ -113,13 +116,15 @@ As perguntas são agrupadas por área de decisão. Cada item não resolvido deve
 1. Quais stores são obrigatórios para o primeiro MVP integrado?
 2. Quais dados devem ser persistidos para recuperação de missão após crash?
 3. Quais dados nunca devem ser persistidos em texto claro?
-4. Qual é o schema de audit log?
+4. Qual será o formato de persistência local controlada para eventos auditáveis: JSONL, diretório por missão, snapshots versionados ou outro formato?
 5. Qual é a política de retenção para audit logs?
 6. Persistência em filesystem deve permanecer padrão até adapters de banco amadurecerem?
 7. Qual é o primeiro adapter de banco: SQLite, PostgreSQL ou ambos?
 8. Como migrations são representadas e validadas?
 9. Como hashes de registros são calculados entre adapters?
 10. Como backups e restores são tratados sem vazar segredos?
+11. Quando eventos auditáveis dos scripts shell devem ser integrados ao `EventLog` sem substituir logs textuais?
+12. Como eventos de decisão de modelo devem ser relacionados a orçamento de tokens, política e missão?
 
 ## Segurança E Governança
 
@@ -133,6 +138,7 @@ As perguntas são agrupadas por área de decisão. Cada item não resolvido deve
 8. Qual política controla acesso de provider externo com contexto do projeto?
 9. Como exceções de política são aprovadas, escopadas e expiradas?
 10. Quais registros de governança são obrigatórios antes de alterar arquitetura?
+11. Como políticas declarativas devem ser versionadas, aprovadas e migradas entre missões?
 
 ## Model Selection
 
@@ -147,11 +153,19 @@ As perguntas são agrupadas por área de decisão. Cada item não resolvido deve
 9. Como Model Selection consome estimativas do Context Router?
 10. Como políticas de privacidade local-only são aplicadas em model selection e execução de runtime?
 
+## Roadmap Operacional E Documentação Pública
+
+1. Quando integrar providers reais ao fluxo operacional sem transformar provider específico em dependência obrigatória?
+2. Quando iniciar o Semantic Index depois da estabilização do Context Router e do Knowledge Hub?
+3. Quais critérios mínimos liberam documentação pública alfa sem prometer estabilidade indevida?
+4. Quando internacionalizar READMEs depois da estabilização do conteúdo canônico em português do Brasil?
+5. Qual comando CLI futuro deve vir primeiro: listar missões, resumo pós-batch ou validações Git seguras?
+
 ## ADRs Recomendadas
 
 Crie ADRs para estas decisões antes de novo código quando possível:
 
-- Fronteira entre Policy Engine e Guardian Engine.
+- Revisão da fronteira entre Policy Engine e Guardian Engine somente se novas integrações alterarem a decisão existente.
 - Fronteira entre Mission Runner e Mission Orchestrator.
 - Context Router e arquitetura de memória.
 - Fronteira entre Knowledge Hub e Semantic Index.
