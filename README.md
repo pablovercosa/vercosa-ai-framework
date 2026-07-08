@@ -214,6 +214,7 @@ Políticas detalhadas:
 - [Uso do runner seguro](docs/operations/safe-runner-usage.md)
 - [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
 - [Checklist de validação pós-batch](docs/operations/post-batch-validation-checklist.md)
+- [Exemplos operacionais](docs/examples/README.md)
 - [CLI operacional inicial](docs/cli.md)
 - [Context Router e Token Budget](docs/context-router-token-budget.md)
 

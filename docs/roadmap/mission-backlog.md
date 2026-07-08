@@ -350,6 +350,7 @@ Objetivo: demonstrar fluxos reprodutíveis do MVP sem recursos futuros.
 Escopo permitido: exemplos locais, pequenos e documentados.
 Escopo proibido: depender de provider externo, RAG semântico, pgvector obrigatório ou ambiente específico do mantenedor.
 Dependências: CLI e documentação operacional suficientes.
+Status: iniciado com exemplos operacionais em [docs/examples](../examples/README.md); exemplos públicos adicionais continuam possíveis em missões futuras.
 Critérios de aceite resumidos: exemplos indicam pré-requisitos, comandos, saídas esperadas e limites.
 
 12. Código sugerido: `M012-documentacao-publica-inicial`
