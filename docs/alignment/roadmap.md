@@ -38,6 +38,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
 - Guia inicial de contribuição em `CONTRIBUTING.md`.
+- Documentação legal inicial em `docs/legal/`, com política de uso responsável e licença final ainda pendente.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -236,4 +237,6 @@ Permanecem futuros e não devem ser tratados como implementados:
 - Semantic Index.
 - Internacionalização dos READMEs.
 - Guia público completo de release, distribuição, empacotamento e processo público maduro de contribuição para uso final.
+- Licença final em `LICENSE`.
+- Política pública de segurança.
 - Release alfa.

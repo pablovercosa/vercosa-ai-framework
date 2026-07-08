@@ -161,6 +161,14 @@ Decisões já encaminhadas:
 4. Quando internacionalizar READMEs depois da estabilização do conteúdo canônico em português do Brasil?
 5. Qual comando CLI futuro deve vir primeiro: listar missões, resumo pós-batch ou validações Git seguras?
 
+## Licença, Uso Público E Segurança
+
+1. Qual licença final deve ser adotada antes da release pública: MIT, Apache-2.0, BSD-3-Clause, GPL, licença proprietária ou outra opção?
+2. O projeto precisa de `SECURITY.md` antes da alfa pública?
+3. Qual será a política de reporte e tratamento de vulnerabilidades?
+4. Quais limites devem ser documentados para uso com providers pagos?
+5. Qual modelo de release alfa será adotado sem prometer estabilidade de produção?
+
 ## ADRs Recomendadas
 
 Crie ADRs para estas decisões antes de novo código quando possível:

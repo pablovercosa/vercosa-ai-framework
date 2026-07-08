@@ -91,6 +91,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Batch como padrão operacional quando seguro.
 - Guia inicial de instalação local para desenvolvimento.
 - Guia inicial de contribuição.
+- Base documental legal inicial, com política de uso responsável e notas de licença pendente.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -429,7 +430,17 @@ Objetivo: definir licença open source do projeto.
 Escopo permitido: adicionar arquivo de licença aprovado e referência discreta na documentação.
 Escopo proibido: escolher licença sem decisão do mantenedor ou misturar texto de licenças incompatíveis.
 Dependências: decisão explícita de licença.
+Status: base documental criada em `docs/legal/`; licença final permanece pendente por falta de decisão explícita.
 Critérios de aceite resumidos: licença existe, é referenciada e não conflita com objetivos do projeto.
+
+Missões futuras relacionadas:
+
+- Criar `SECURITY.md`.
+- Criar `CODE_OF_CONDUCT.md`, se desejado para a abertura pública.
+- Criar templates de issue.
+- Criar templates de pull request.
+- Definir política de release.
+- Revisar e criar `LICENSE` antes da release pública.
 
 16. Código sugerido: `M016-release-tag-alfa`
 Título: Criar release/tag alfa.

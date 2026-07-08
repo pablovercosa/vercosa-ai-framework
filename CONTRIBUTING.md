@@ -21,6 +21,7 @@ Recursos como RAG semântico, embeddings, pgvector como adapter real, providers 
 - Não use `git add .`; faça staging explícito dos arquivos pretendidos.
 - Não faça force push.
 - Não adicione dependências sem justificativa e sem atualizar os arquivos de configuração aplicáveis.
+- Siga a [política inicial de uso responsável](docs/legal/usage-policy.md).
 
 ## Fluxo Recomendado
 
@@ -193,13 +194,23 @@ Consulte [docs/documentation/documentation-update-policy.md](docs/documentation/
 
 - Não registre secrets.
 - Não exponha tokens.
+- Não inclua credenciais em código, documentação, logs, exemplos ou fixtures.
 - Não altere configurações globais.
 - Não use `sudo` sem decisão explícita.
 - Não acesse rede sem necessidade e sem escopo aprovado.
 - Não adicione provider externo sem missão específica.
+- Não adicione dependências sem justificativa explícita.
+- Não introduza automações destrutivas sem aprovação explícita.
+- Não prometa conformidade regulatória, adequação a produção ou segurança absoluta.
 - Não implemente RAG, embeddings ou pgvector sem missão específica.
 - Não chame providers, MCPs, bancos ou APIs fora do fluxo governado.
 - Não transforme ambiente local específico em requisito obrigatório do framework.
+
+## Licença E Uso Responsável
+
+O projeto ainda não possui `LICENSE` final. A decisão de licença está registrada como pendente em [docs/legal/license-notes.md](docs/legal/license-notes.md) e deve ser resolvida antes de uma release pública.
+
+Contribuições devem respeitar a [política inicial de uso responsável](docs/legal/usage-policy.md). Não inclua secrets, credenciais, providers externos, dependências novas ou automações com efeitos destrutivos sem missão específica, justificativa e revisão proporcional ao risco.
 
 ## Dependências
 
@@ -243,6 +254,8 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 ## Documentos Relevantes
 
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
+- [Política inicial de uso responsável](docs/legal/usage-policy.md)
+- [Notas de licença](docs/legal/license-notes.md)
 - [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
 - [Checklist de validação pós-batch](docs/operations/post-batch-validation-checklist.md)
 - [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
