@@ -1,6 +1,6 @@
 # Exemplos Operacionais
 
-Links principais: [README principal](../../README.md) | [Mapa de arquitetura](../alignment/architecture-map.md) | [Playbook de execução em batch](../operations/batch-execution-playbook.md) | [Checklist pós-batch](../operations/post-batch-validation-checklist.md)
+Links principais: [README principal](../../README.md) | [Mapa de arquitetura](../alignment/architecture-map.md) | [Arquitetura de Audit/Event Log](../architecture/audit-event-architecture.md) | [Playbook de execução em batch](../operations/batch-execution-playbook.md) | [Checklist pós-batch](../operations/post-batch-validation-checklist.md)
 
 ## Objetivo
 
@@ -37,6 +37,7 @@ Estes exemplos não substituem:
 - [README principal](../../README.md)
 - [Mapa de arquitetura](../alignment/architecture-map.md)
 - [Índice de módulos](../architecture/module-index.md)
+- [Arquitetura de Audit/Event Log](../architecture/audit-event-architecture.md)
 - Specs em [specs/framework](../../specs/framework/)
 - Testes em [tests](../../tests/)
 - [Uso do runner seguro](../operations/safe-runner-usage.md)

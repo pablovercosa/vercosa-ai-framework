@@ -49,7 +49,7 @@ Implementado em estado MVP ou contrato inicial:
 - Model Selection Engine com catálogo em memória, políticas resolvidas opcionais e requisitos opcionais de orçamento de tokens.
 - Runtime Adapter inicial para OpenCode.
 - Provider Gateway, Tools, Skills, Capabilities e Agent Orchestrator como cadeia MVP de contratos.
-- Audit/Event Log em memória com helpers opcionais para decisões e ciclo de vida de missão.
+- Audit/Event Log em memória com helpers opcionais para decisões e ciclo de vida de missão; a arquitetura dedicada está em [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md).
 - CLI operacional inicial com `status`, `validate` e `doctor`.
 
 Ainda são futuros ou lacunas:
@@ -177,6 +177,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 ## Documentação Relevante
 
 - [Índice de módulos](docs/architecture/module-index.md)
+- [Arquitetura de Audit/Event Log](docs/architecture/audit-event-architecture.md)
 - [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
 - [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
 - [Checklist de validação pós-batch](docs/operations/post-batch-validation-checklist.md)
