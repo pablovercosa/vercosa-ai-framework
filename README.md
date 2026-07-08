@@ -1,118 +1,79 @@
 # Vercosa AI Framework
 
-Open source framework para desenvolvimento de software orientado por especificações e assistido por IA.
+O Vercosa AI Framework é um framework open source de Harness Engineering para agentes de IA, desenvolvimento orientado por especificações e execução governada de software.
+
+O projeto não trata o modelo de IA como o sistema inteiro. O modelo é apenas uma peça substituível dentro de uma camada operacional que organiza missões, runners, contexto, orçamento de tokens, políticas, guardrails, auditoria, seleção de modelos, providers, runtimes, validações e CLI operacional.
 
 ## Objetivo
 
-O Vercosa AI Framework organiza engenharia de software em torno de Specs, missões, workflows, tarefas, agentes, capabilities, skills, tools, policies, Knowledge Hub, validação, auditoria e adapters substituíveis.
+Permitir que pessoas e agentes executem trabalho de engenharia de software de forma rastreável, segura e reproduzível, mantendo Specs, missões, workflows, tasks, agentes, capabilities, skills, tools, policies, Knowledge Hub, validações e adapters substituíveis sob uma arquitetura coerente.
+
+## Prompt Engineering, Agent Framework E Harness Engineering
+
+- Prompt Engineering foca em instruções, exemplos e formato de entrada para melhorar a resposta de um modelo.
+- Agent Framework foca em agentes, ferramentas, memória, planejamento e execução automatizada de tarefas.
+- Harness Engineering foca na camada operacional ao redor dos agentes e modelos: execução governada, limites, políticas, auditoria, validação, rastreabilidade, orquestração, adaptação de runtimes e integração segura com providers.
+
+O VAF se posiciona como Harness Engineering: ele organiza o ambiente em que agentes de IA trabalham, em vez de depender apenas de prompts ou de um agente monolítico.
 
 ## O Que O Framework É
 
 - Um framework Specification First para desenvolvimento assistido por IA.
-- Uma arquitetura AI Native com governança, rastreabilidade e validação explícitas.
-- Um núcleo provider agnostic para modelos, runtimes, bancos, vetores, IDEs, MCPs e APIs.
-- Um conjunto de contratos e MVPs iniciais em Python para missão, workflow, task queue, agentes, Policy Engine, Guardian, detecção determinística de limites de uso/API, Audit/Event Log em memória com eventos opcionais de missão, runtime, knowledge, context routing, token budget, canonicalização, providers e persistência.
+- Uma arquitetura AI Native para execução governada, rastreabilidade, segurança operacional, evolução por missões, separação de responsabilidades, testes e documentação progressiva.
+- Um harness model agnostic, provider agnostic, runtime agnostic e storage agnostic como direção arquitetural.
+- Um conjunto de contratos e MVPs em Python para Mission Runner, Workflow Engine, Task Queue, Agent Orchestrator, Policy Engine, Guardian Engine, Usage/API Limit Guard, Audit/Event Log, Context Router, Token Budget Manager, Knowledge Hub, Model Selection Engine, Runtime Adapter, Provider Gateway, CLI operacional e adapters iniciais.
 
 ## O Que O Framework Não É
 
 - Não é um IDE.
 - Não é um MCP server.
 - Não é um único agente.
-- Não é um wrapper de OpenCode, Claude Code, Codex CLI ou Cursor.
+- Não é apenas um wrapper de OpenCode, Claude Code, Codex CLI, Cursor ou outro runtime.
 - Não é dependente de PostgreSQL, pgvector, Ollama, ARM64, systemd ou SSH.
 - Não é uma coleção de prompts sem Specs, validação e governança.
 
 ## Estado Atual
 
-Status: fundação arquitetural com MVPs e contratos iniciais.
+Status: MVP operacional inicial com fundação arquitetural e contratos em evolução.
 
-As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `src/vercosa_ai_framework/` implementa partes mínimas e ainda não representa o fluxo completo de ponta a ponta.
+As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `src/vercosa_ai_framework/` implementa MVPs determinísticos e integrações iniciais, mas o fluxo completo Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta.
+
+Implementado em estado MVP ou contrato inicial:
+
+- Mission Runner local, fila em diretórios e integração opcional com eventos auditáveis em Python.
+- Runner seguro de uma missão e runner seguro em batch por scripts operacionais.
+- Policy Engine declarativo e Guardian Engine determinístico.
+- Usage/API Limit Guard para classificar sinais textuais de limite externo em logs já recebidos.
+- Context Router, Token Budget Manager e `ContextPackage` determinísticos.
+- Knowledge Hub com ingestão Markdown, store em memória, busca textual e adaptação para candidatos de contexto.
+- Model Selection Engine com catálogo em memória, políticas resolvidas opcionais e requisitos opcionais de orçamento de tokens.
+- Runtime Adapter inicial para OpenCode.
+- Provider Gateway, Tools, Skills, Capabilities e Agent Orchestrator como cadeia MVP de contratos.
+- Audit/Event Log em memória com helpers opcionais para decisões e ciclo de vida de missão.
+- CLI operacional inicial com `status`, `validate` e `doctor`.
+
+Ainda são futuros ou lacunas:
+
+- RAG semântico.
+- Embeddings.
+- pgvector como adapter real.
+- Semantic Index.
+- Múltiplos providers reais.
+- Persistência externa de eventos.
+- Internacionalização dos READMEs.
+
+Esses recursos não devem ser interpretados como implementados no estado atual.
 
 ## Runtime Inicial
 
-OpenCode é o runtime e laboratório inicial. Ele deve permanecer atrás de adapter em `runtime/` e não define o núcleo do framework.
-
-## Worker Local
-
-Os scripts em `scripts/` permitem processar missões locais em fila usando OpenCode no ambiente atual.
-
-A CLI Python inicial em `src/vercosa_ai_framework/cli/` é uma camada de conveniência para leitura, diagnóstico básico e validação estrutural local com `validate` e `doctor`. Ela não substitui `scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`, não executa missões nesta fase e não altera o fluxo `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
-
-Variáveis relevantes:
-
-- `VAF_AUTO_COMMIT`: quando definido como `1`, o runner cria commit automático ao concluir uma missão com alterações staged.
-- `VAF_COMMIT_MESSAGE`: quando definida e não vazia, substitui a mensagem automática do commit.
-- Com `VAF_AUTO_COMMIT=1` e sem `VAF_COMMIT_MESSAGE`, a mensagem padrão é `missão: nome-da-missao`.
-
-Exemplo:
-
-```bash
-VAF_AUTO_COMMIT=1 VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-worker.sh
-```
-
-### Runner Seguro De Próxima Missão
-
-O script `scripts/vaf-run-next-safe.sh` executa a próxima missão da fila com validações locais antes e depois do worker. Ele aborta se o Git não estiver limpo antes de iniciar, verifica se não há worker em execução, roda apenas uma missão por padrão, executa `pytest`, executa `python3 -m compileall src` e só permite push automático quando solicitado explicitamente.
-
-Guia operacional: [Uso do runner seguro](docs/operations/safe-runner-usage.md).
-
-Uso básico:
-
-```bash
-./scripts/vaf-run-next-safe.sh
-```
-
-Uso com push automático opcional:
-
-```bash
-VAF_AUTO_PUSH=1 ./scripts/vaf-run-next-safe.sh
-```
-
-Uso com mensagem de commit customizada:
-
-```bash
-VAF_COMMIT_MESSAGE="implementação: exemplo" ./scripts/vaf-run-next-safe.sh
-```
-
-Por padrão, o runner define `VAF_MAX_CYCLES=1`, `VAF_AUTO_APPROVE=1` e `VAF_AUTO_COMMIT=1`. O push automático nunca é padrão; quando `VAF_AUTO_PUSH=1`, o script exige branch `main`, Git limpo, testes aprovados, `compileall` aprovado, worker parado, nenhuma missão em `missions/failed` e remoto `origin` configurado.
-
-### Runner Seguro Em Batch
-
-O script `scripts/vaf-run-batch-safe.sh` executa múltiplas missões em sequência controlada usando o runner seguro de próxima missão. O padrão é `VAF_BATCH_SIZE=3`; o limite máximo seguro inicial é `VAF_BATCH_SIZE=10`.
-
-Uso básico:
-
-```bash
-./scripts/vaf-run-batch-safe.sh
-```
-
-Uso com tamanho explícito:
-
-```bash
-VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
-```
-
-O batch para na primeira falha, valida `pytest` e `python3 -m compileall src` por missão por reaproveitamento do runner seguro, exige Git limpo após cada missão e preserva commits separados por missão. Push automático é opt-in com `VAF_AUTO_PUSH=1` e ocorre somente ao final do batch se todas as missões executadas passarem.
-
-Playbook operacional: [Execução em batch](docs/operations/batch-execution-playbook.md). Checklist pós-batch: [Validação pós-batch](docs/operations/post-batch-validation-checklist.md).
-
-## Princípios
-
-- Specification First
-- AI Native
-- Provider Agnostic
-- Local First
-- Extensible by Design
-- Security by Design
-- Token Efficiency
-- Governance by Design
+OpenCode é o runtime e laboratório inicial. Ele permanece atrás de adapter em `runtime/` e não define o núcleo do framework. O VAF deve poder suportar outros runtimes e interfaces no futuro sem transformar nenhum deles no centro arquitetural.
 
 ## Arquitetura Resumida
 
+Fluxo conceitual principal:
+
 ```text
-Mission
-↓
-Mission Runner / Mission Orchestrator
+Mission Runner
 ↓
 Workflow Engine
 ↓
@@ -120,11 +81,7 @@ Task Queue
 ↓
 Agent Orchestrator
 ↓
-Agents / Subagents
-↓
 Capabilities
-↓
-Policy / Guardian
 ↓
 Skills
 ↓
@@ -132,8 +89,29 @@ Tools
 ↓
 Provider Gateway
 ↓
-Providers / MCPs / APIs / Runtimes
+Runtime Adapter / Providers / MCPs / APIs
 ```
+
+Eixo de governança:
+
+- Policy Engine resolve políticas declarativas.
+- Guardian Engine avalia ações concretas, riscos e pacotes de contexto.
+- Usage/API Limit Guard classifica sinais textuais de limite externo.
+- Audit/Event Log registra eventos estruturados quando um `EventLog` é fornecido.
+
+Eixo de contexto e memória:
+
+- Knowledge Hub organiza documentos textuais e busca textual MVP.
+- Context Router monta `ContextPackage` a partir de candidatos explícitos.
+- Token Budget Manager estima orçamento de tokens de forma determinística.
+- `ContextPackage` preserva itens selecionados, omissões, citações, warnings, refs de política e requisitos mínimos para seleção de modelo.
+
+Eixo operacional:
+
+- Runner seguro de uma missão: `scripts/vaf-run-next-safe.sh`.
+- Runner seguro em batch: `scripts/vaf-run-batch-safe.sh`.
+- CLI operacional: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status|validate|doctor`.
+- Playbooks e checklists documentam execução, validação e revisão pós-batch.
 
 ## Mapa De Módulos
 
@@ -151,35 +129,53 @@ Módulos principais:
 - [policy](src/vercosa_ai_framework/policy/README.md)
 - [guardian](src/vercosa_ai_framework/guardian/README.md)
 - [audit](src/vercosa_ai_framework/audit/README.md)
+- [context](src/vercosa_ai_framework/context/README.md)
+- [model_selection](src/vercosa_ai_framework/model_selection/README.md)
+- [knowledge](src/vercosa_ai_framework/knowledge/README.md)
+- [canonicalizer](src/vercosa_ai_framework/canonicalizer/README.md)
 - [skills](src/vercosa_ai_framework/skills/README.md)
 - [tools](src/vercosa_ai_framework/tools/README.md)
 - [providers](src/vercosa_ai_framework/providers/README.md)
 - [runtime](src/vercosa_ai_framework/runtime/README.md)
-- [model_selection](src/vercosa_ai_framework/model_selection/README.md)
-- [context](src/vercosa_ai_framework/context/README.md)
-- [knowledge](src/vercosa_ai_framework/knowledge/README.md)
-- [canonicalizer](src/vercosa_ai_framework/canonicalizer/README.md)
 - [persistence](src/vercosa_ai_framework/persistence/README.md)
 
 ## Estrutura Do Repositório
 
 - `AGENTS.md`: contexto central para agentes e regras de colaboração.
 - `specs/framework/`: Specs do framework.
-- `docs/`: documentação técnica, alinhamento, arquitetura e guias.
-- `docs/documentation/readme-standard.md`: padrão oficial de README.
-- `docs/templates/readme-template.md`: template para novos READMEs.
+- `docs/`: documentação técnica, alinhamento, arquitetura, operações e exemplos.
 - `src/vercosa_ai_framework/`: contratos e MVPs do framework.
-- `knowledge/`: visão, princípios e arquitetura de referência.
-- `.opencode/`: integração inicial com OpenCode.
+- `knowledge/`: visão, princípios, arquitetura de referência e ADRs.
+- `.opencode/`: integração inicial com OpenCode como laboratório/runtime.
 
-## Idioma E Commits
+## Operação Local
 
-O idioma oficial da documentação do projeto é português do Brasil. Termos técnicos e nomes arquiteturais consolidados podem permanecer em inglês quando fizerem parte da API, arquitetura ou vocabulário do framework.
+Scripts operacionais:
 
-Mensagens de commit futuras devem usar português do Brasil. O histórico Git já publicado não deve ser reescrito apenas para traduzir mensagens antigas.
+- `./scripts/vaf-run-next-safe.sh`: executa uma missão com validações antes e depois.
+- `./scripts/vaf-run-batch-safe.sh`: executa um batch pequeno e para na primeira falha.
+- `./scripts/vaf-status.sh`: mostra estado operacional dos diretórios de missão.
 
-Políticas detalhadas:
+CLI inicial:
 
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+```
+
+A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros ou revisão humana quando a política exigir.
+
+## Documentação Relevante
+
+- [Índice de módulos](docs/architecture/module-index.md)
+- [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
+- [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
+- [Checklist de validação pós-batch](docs/operations/post-batch-validation-checklist.md)
+- [Exemplos operacionais](docs/examples/README.md)
+- [Estado atual](docs/alignment/current-state.md)
+- [Roadmap](docs/alignment/roadmap.md)
+- [Padrão de README](docs/documentation/readme-standard.md)
 - [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
 - [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)
 
@@ -200,50 +196,28 @@ Políticas detalhadas:
 - [Spec 0013: Persistence Layer](specs/framework/0013-persistence-layer.md)
 - [Spec 0014: Context Router, Token Budget Manager e Memory Architecture](specs/framework/0014-context-router-token-budget-memory.md)
 
-## Documentação Técnica
+## Princípios
 
-- [Mapa de arquitetura](docs/alignment/architecture-map.md)
-- [Estado atual](docs/alignment/current-state.md)
-- [Perguntas em aberto](docs/alignment/open-questions.md)
-- [SDD Lifecycle](docs/alignment/sdd-lifecycle.md)
-- [Roadmap](docs/alignment/roadmap.md)
-- [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
-- [Padrão de README](docs/documentation/readme-standard.md)
-- [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)
-- [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)
-- [Uso do runner seguro](docs/operations/safe-runner-usage.md)
-- [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
-- [Checklist de validação pós-batch](docs/operations/post-batch-validation-checklist.md)
-- [Exemplos operacionais](docs/examples/README.md)
-- [CLI operacional inicial](docs/cli.md)
-- [Context Router e Token Budget](docs/context-router-token-budget.md)
+- Specification First
+- AI Native
+- Provider Agnostic
+- Local First
+- Extensible by Design
+- Security by Design
+- Token Efficiency
+- Governance by Design
+
+## Idioma E Commits
+
+O idioma oficial da documentação do projeto é português do Brasil. Termos técnicos e nomes arquiteturais consolidados podem permanecer em inglês quando fizerem parte da API, arquitetura ou vocabulário do framework.
+
+Mensagens de commit futuras devem usar português do Brasil. O histórico Git já publicado não deve ser reescrito apenas para traduzir mensagens antigas.
 
 ## Regras De Trabalho
 
 - Nenhum código deve ser implementado sem Spec aprovada.
 - Documentação deve refletir o estado real do código e das Specs.
-- Toda missão que criar, alterar ou expandir funcionalidade deve revisar e atualizar READMEs, docs, Specs e ADRs relacionados quando necessário.
-- Mensagens de commit futuras devem usar português do Brasil.
-- Mudanças arquiteturais materiais devem gerar ADR, Spec update ou pergunta registrada.
-- Agentes não devem chamar providers, MCPs, APIs, bancos ou filesystem diretamente.
+- Recursos futuros devem ser marcados como futuros, lacunas ou próximos passos.
+- Agentes não devem chamar providers, MCPs, APIs, bancos ou filesystem diretamente; agentes solicitam capabilities.
 - Links de documentação devem ser relativos.
-
-## Integração Policy E Guardian
-
-O Policy Engine e o Guardian Engine permanecem separados. O Policy Engine resolve políticas declarativas em `ResolvedPolicySet`; o Guardian Engine avalia ações concretas e pode considerar esse conjunto opcional para elevar decisões operacionais como `warn`, `require_approval` ou `block`.
-
-Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa DSL, parser de políticas, carregamento remoto, RAG, embeddings, banco ou provider.
-
-O Guardian também possui um `Usage/API Limit Guard` inicial para classificar sinais textuais de rate limit, quota, limite de uso e billing em erros/logs já recebidos de providers ou runtimes. Esse guard é determinístico, não consulta billing real, não chama providers externos e diferencia limitações externas temporárias de bugs do framework.
-
-## Integração Policy E Context Router
-
-O Context Router pode receber `ResolvedPolicySet` opcional já produzido pelo Policy Engine em `ContextRequest`. Ele apenas consome políticas resolvidas para registrar refs, gerar warnings, marcar aprovação requerida em metadados e omitir itens quando houver `deny` determinístico com alvo claro.
-
-Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa DSL, parser de políticas, RAG semântico, embeddings, pgvector, banco, provider externo ou chamada de LLM.
-
-## Integração Policy E Model Selection
-
-O Model Selection Engine pode receber `ResolvedPolicySet` opcional já produzido pelo Policy Engine. Ele apenas consome políticas resolvidas para registrar fontes, gerar notas, marcar revisão ou aprovação requerida e excluir candidatos quando houver `deny` determinístico com alvo claro.
-
-Essa integração é inicial, determinística e sem chamadas externas. Ela não implementa precificação real, consulta de billing real, consulta de limites reais de API, roteamento avançado, ranking semântico, RAG, embeddings, banco, provider externo ou chamada de LLM.
+- Mudanças arquiteturais materiais devem gerar ADR, Spec update ou pergunta registrada.

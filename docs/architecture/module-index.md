@@ -4,7 +4,7 @@ Links principais: [README principal](../../README.md) | [Mapa de arquitetura](..
 
 ## Objetivo
 
-Mapear os módulos do Vercosa AI Framework, suas responsabilidades, status, Specs e relações arquiteturais.
+Mapear os módulos do Vercosa AI Framework, suas responsabilidades, status, Specs e relações arquiteturais dentro da camada de Harness Engineering para agentes de IA.
 
 ## Cadeia Arquitetural
 
@@ -34,11 +34,13 @@ Provider Gateway
 Providers / MCPs / APIs / Runtimes
 ```
 
+Essa cadeia descreve o harness operacional ao redor de modelos e agentes: camadas superiores expressam intenção e governança; camadas inferiores fornecem execução substituível por adapters.
+
 ## Mapa Navegável
 
 | Camada | Módulo | README | Status | Spec | Docs |
 | --- | --- | --- | --- | --- | --- |
-| Interface | `cli/` | [cli](../../src/vercosa_ai_framework/cli/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [CLI](../cli.md) |
+| Interface operacional | `cli/` | [cli](../../src/vercosa_ai_framework/cli/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [CLI](../cli.md) |
 | Fundacional | `core/` | [core](../../src/vercosa_ai_framework/core/README.md) | MVP | [0001](../../specs/framework/0001-framework-foundation.md) | [Mapa de arquitetura](../alignment/architecture-map.md) |
 | Missões | `missions/` | [missions](../../src/vercosa_ai_framework/missions/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [Mission Runner](../mission-runner.md) |
 | Workflows | `workflows/` | [workflows](../../src/vercosa_ai_framework/workflows/README.md) | MVP | [0006](../../specs/framework/0006-workflow-engine.md) | [Workflow Engine](../workflow-engine.md) |
@@ -47,7 +49,7 @@ Providers / MCPs / APIs / Runtimes
 | Capabilities | `capabilities/` | [capabilities](../../src/vercosa_ai_framework/capabilities/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
 | Governança | `policy/` | [policy](../../src/vercosa_ai_framework/policy/README.md) | MVP | [0005](../../specs/framework/0005-guardian-engine.md) | [ADR Policy/Guardian](../../knowledge/decisions/2026-07-04-policy-engine-vs-guardian-engine.md) |
 | Governança | `guardian/` | [guardian](../../src/vercosa_ai_framework/guardian/README.md) | MVP | [0005](../../specs/framework/0005-guardian-engine.md) | [Guardian Engine](../guardian-engine.md) |
-| Governança | `audit/` | [audit](../../src/vercosa_ai_framework/audit/README.md) | contracts | [0001](../../specs/framework/0001-framework-foundation.md) | [Backlog estratégico](../roadmap/mission-backlog.md) |
+| Governança e rastreabilidade | `audit/` | [audit](../../src/vercosa_ai_framework/audit/README.md) | contracts | [0001](../../specs/framework/0001-framework-foundation.md) | [Backlog estratégico](../roadmap/mission-backlog.md) |
 | Skills | `skills/` | [skills](../../src/vercosa_ai_framework/skills/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
 | Tools | `tools/` | [tools](../../src/vercosa_ai_framework/tools/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
 | Providers | `providers/` | [providers](../../src/vercosa_ai_framework/providers/README.md) | MVP | [0010](../../specs/framework/0010-provider-gateway.md) | [Provider Gateway](../provider-gateway.md) |

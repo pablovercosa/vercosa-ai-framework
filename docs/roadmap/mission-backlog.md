@@ -58,7 +58,7 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - Policy Engine já se integra ao Guardian Engine por `ResolvedPolicySet` opcional.
 - Policy Engine já se integra ao Context Router por `ResolvedPolicySet` opcional.
 - Usage/API Limit Guard inicial existe.
-- Integrações com Provider Gateway, CLI mais amigável, exemplos reais, documentação pública e release alfa ainda são lacunas. Model Selection já possui integração inicial com políticas e orçamento; Audit/Event Log já possui contratos iniciais em memória, mas ainda não está integrado aos módulos consumidores.
+- Integrações completas com Provider Gateway, exemplos públicos adicionais, documentação pública completa e release alfa ainda são lacunas. A CLI operacional inicial já possui `status`, `validate` e `doctor`; Model Selection já possui integração inicial com políticas e orçamento; Audit/Event Log já possui contratos iniciais em memória, helpers opcionais e integração opcional inicial com o `MissionRunner` Python, mas persistência externa e integração automática com scripts operacionais permanecem futuras.
 
 ## Fase 1 — Consolidação Operacional
 
@@ -359,6 +359,7 @@ Objetivo: preparar documentação de entrada para usuários externos.
 Escopo permitido: guias, visão, arquitetura resumida e limites do MVP.
 Escopo proibido: prometer release estável, recursos semânticos implementados ou provider obrigatório.
 Dependências: exemplos reais e README revisado.
+Status: iniciado com a revisão do `README.md` principal para explicitar o VAF como framework de Harness Engineering; guias públicos adicionais continuam futuros.
 Critérios de aceite resumidos: documentação pública é clara, rastreável e honesta sobre estado atual.
 
 13. Código sugerido: `M013-guia-instalacao`

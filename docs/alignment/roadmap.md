@@ -10,6 +10,8 @@ Backlog operacional detalhado de missões futuras: [Backlog estratégico de miss
 
 Execução em batch entrou no fluxo operacional como mecanismo controlado para rodar missões já revisadas em `missions/queue/`; o uso seguro está documentado no [playbook de execução em batch](../operations/batch-execution-playbook.md).
 
+A identidade pública do projeto como framework de Harness Engineering para agentes de IA foi incorporada ao `README.md` principal. A internacionalização dos READMEs permanece tarefa futura e não faz parte deste bloco de alinhamento.
+
 ## Princípio Orientador
 
 Prefira integrar contratos MVP existentes antes de adicionar novos frameworks, providers, bancos ou comportamentos de agentes.
@@ -179,3 +181,4 @@ Ações recomendadas:
 - Implementar promessas de memória infinita sem retrieval, retenção e políticas precisas.
 - Auto-commit por padrão.
 - Adicionar código específico de provider fora de adapters.
+- Internacionalizar READMEs antes de estabilizar o conteúdo canônico em português do Brasil.

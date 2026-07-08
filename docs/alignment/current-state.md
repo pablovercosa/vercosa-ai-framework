@@ -8,9 +8,9 @@ Este checkpoint é apenas documental. Ele não aprova novo código, novo comport
 
 ## O Que O Framework É
 
-O Vercosa AI Framework é um framework open source para desenvolvimento de software orientado por especificações e assistido por IA.
+O Vercosa AI Framework é um framework open source de Harness Engineering para agentes de IA, desenvolvimento de software orientado por especificações e execução governada assistida por IA.
 
-Seu objetivo central é organizar engenharia de software em torno de missões, Specs, workflows, políticas, agentes, capabilities, conhecimento, validação, auditoria e adapters agnósticos de provider.
+Seu objetivo central é organizar a camada operacional ao redor de modelos e agentes em torno de missões, Specs, workflows, políticas, agentes, capabilities, contexto, orçamento de tokens, conhecimento, validação, auditoria e adapters agnósticos de provider, runtime e storage.
 
 O framework pretende ser:
 
@@ -50,11 +50,11 @@ O repositório está em fase de fundação/MVP.
 Ativos principais:
 
 - `AGENTS.md`: contexto operacional central e regras arquiteturais para agentes.
-- `README.md`: resumo público do projeto e status de fundação.
+- `README.md`: resumo público do projeto, identidade de Harness Engineering e limites do MVP atual.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
 - `specs/framework/`: Specs do framework.
 - `docs/`: documentação técnica e de alinhamento.
-- `src/vercosa_ai_framework/`: esqueleto Python agnóstico de provider e componentes MVP.
+- `src/vercosa_ai_framework/`: componentes Python agnósticos de provider, runtime e storage, com contratos e MVPs determinísticos.
 
 ## Estado Das Specs
 
@@ -88,7 +88,7 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
 - `policy/`: contratos e resolução determinística MVP de políticas declarativas, precedência simples e conflitos básicos.
 - `guardian/`: Guardian Engine determinístico com decisões estruturadas e detecção inicial de sinais textuais de limite de uso/API sem chamadas externas.
-- `audit/`: contratos iniciais de Audit/Event Log, tipos de evento e implementação em memória sem persistência externa.
+- `audit/`: contratos iniciais de Audit/Event Log, tipos de evento, implementação em memória, helpers opcionais para decisões centrais e eventos básicos de ciclo de vida de missão.
 - `model_selection/`: políticas, tipos e selector MVP.
 - `runtime/`: contrato de Runtime Adapter e OpenCode Runtime Adapter MVP.
 - `agents/`: perfis, registry e orchestrator MVP.
@@ -99,6 +99,7 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `knowledge/`: ingestão Markdown, documentos, store em memória e busca textual.
 - `canonicalizer/`: canonicalização, hashes, warnings e conversão para Knowledge Hub.
 - `persistence/`: tipos, contrato de repository e filesystem repository local.
+- runners seguros: scripts operacionais para execução segura de uma missão e execução segura em batch, com validações locais.
 
 ## Cadeia De Execução Atual
 
@@ -155,7 +156,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Mission Orchestrator como camada distinta de Mission Runner.
 - Integração profunda entre Policy Engine e Guardian Engine após os contratos iniciais do Policy Engine.
 - Fluxo ponta a ponta Mission -> Workflow -> Task Queue -> Agent Orchestrator -> Capability -> Skill -> Tool -> Provider.
-- Context Router como módulo de primeira classe.
+- Integração completa do Context Router ao fluxo de missão, agente, modelo e recuperação governada.
 - Semantic Index com embeddings.
 - Adapter PostgreSQL/pgvector para Knowledge Hub e Code Intelligence.
 - Paridade de Runtime Adapter para Claude Code, Codex CLI, Cursor, VS Code, JetBrains, Web UI e API.
