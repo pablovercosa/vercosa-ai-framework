@@ -51,6 +51,7 @@ Ativos principais:
 
 - `AGENTS.md`: contexto operacional central e regras arquiteturais para agentes.
 - `README.md`: resumo público do projeto, identidade de Harness Engineering e limites do MVP atual.
+- `docs/getting-started/local-installation.md`: guia inicial de instalação local para desenvolvimento, validações básicas e uso inicial da CLI.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
 - `specs/framework/`: Specs do framework.
 - `docs/`: documentação técnica e de alinhamento.

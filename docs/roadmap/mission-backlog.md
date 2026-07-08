@@ -89,6 +89,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Exemplos operacionais iniciais.
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.
+- Guia inicial de instalação local para desenvolvimento.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -409,6 +410,7 @@ Objetivo: documentar instalação e validação inicial sem assumir uma única i
 Escopo permitido: requisitos mínimos, alternativas por ambiente e validações locais.
 Escopo proibido: tornar ARM64, PostgreSQL, pgvector, Ollama ou systemd obrigatórios para todo usuário.
 Dependências: documentação pública inicial.
+Status: concluído como guia inicial de instalação local para desenvolvimento em [docs/getting-started/local-installation.md](../getting-started/local-installation.md); guia de instalação pública completa e preparação de release continuam futuros.
 Critérios de aceite resumidos: guia separa requisitos do MVP de integrações opcionais futuras.
 
 14. Código sugerido: `M014-guia-contribuicao`

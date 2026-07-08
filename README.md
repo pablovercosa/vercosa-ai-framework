@@ -158,6 +158,8 @@ Módulos principais:
 
 ## Operação Local
 
+Guia inicial para preparar um checkout de desenvolvimento: [Instalação local para desenvolvimento](docs/getting-started/local-installation.md).
+
 Scripts operacionais:
 
 - `./scripts/vaf-run-next-safe.sh`: executa uma missão com validações antes e depois.
@@ -176,6 +178,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 
 ## Documentação Relevante
 
+- [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
 - [Índice de módulos](docs/architecture/module-index.md)
 - [Arquitetura de Audit/Event Log](docs/architecture/audit-event-architecture.md)
 - [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)

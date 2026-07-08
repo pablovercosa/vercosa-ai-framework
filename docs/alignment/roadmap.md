@@ -36,6 +36,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Audit/Event Log inicial em memória, com helpers opcionais para decisões centrais e eventos de missão/batch.
 - CLI operacional inicial com `status`, `validate` e `doctor`.
 - Exemplos operacionais iniciais em `docs/examples/`.
+- Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -233,4 +234,5 @@ Permanecem futuros e não devem ser tratados como implementados:
 - pgvector como adapter real.
 - Semantic Index.
 - Internacionalização dos READMEs.
+- Guia público completo de release, distribuição e empacotamento para uso final.
 - Release alfa.
