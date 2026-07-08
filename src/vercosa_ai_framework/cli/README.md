@@ -129,6 +129,15 @@ O comando `validate` verifica, nesta fase:
 
 `doctor` ajuda a entender se o projeto parece pronto para iniciar uma missão, iniciar um batch, investigar falhas ou revisar estado pós-batch. Ele não executa missões e não altera o fluxo `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
 
+Use os comandos em conjunto conforme a necessidade operacional:
+
+- `status` para leitura rápida de contagens locais.
+- `validate` para validação estrutural mínima e código de saída formal sobre essa estrutura.
+- `doctor` para diagnóstico local mais amigável antes de preparar batch, antes de executar batch, depois de batch ou durante investigação.
+- `./scripts/vaf-status.sh` quando a necessidade for observar o estado operacional dos scripts e missões.
+- `pytest` quando a necessidade for validar testes.
+- `python3 -m compileall src` quando a necessidade for validar compilação dos módulos Python.
+
 Exemplos:
 
 ```bash
@@ -149,7 +158,22 @@ O comando `doctor` verifica, nesta fase:
 - se `docs/operations/post-batch-validation-checklist.md` existe, reportando warning quando ausente;
 - se `docs/roadmap/mission-backlog.md` existe, reportando warning quando ausente.
 
-`doctor` não substitui `pytest`, não substitui `python3 -m compileall src`, não substitui `scripts/vaf-status.sh`, não chama scripts shell, não executa `git`, não acessa rede, não acessa banco, não chama LLM, não chama provider externo e não chama OpenCode ou MCPs.
+Limites do `doctor` nesta fase:
+
+- Não substitui `pytest`.
+- Não substitui `python3 -m compileall src`.
+- Não substitui `scripts/vaf-status.sh`.
+- Não substitui revisão de logs, revisão de commits ou checklist pós-batch.
+- Não chama scripts shell.
+- Não executa missões.
+- Não executa `git`.
+- Não acessa rede.
+- Não acessa banco.
+- Não chama LLM, provider externo, OpenCode ou MCPs.
+- Não consulta quota, billing, rate limit real ou runtime externo.
+- Não altera arquivos.
+
+O uso operacional de `doctor` em batch está descrito no [playbook de execução em batch](../../../docs/operations/batch-execution-playbook.md) e no [checklist de validação pós-batch](../../../docs/operations/post-batch-validation-checklist.md).
 
 Uso por Python: `from vercosa_ai_framework.cli import main`.
 

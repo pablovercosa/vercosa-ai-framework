@@ -77,6 +77,47 @@ VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
 
 Batch de 10 é o tamanho recomendado para blocos normais já revisados e seguros. Batch de 3 é recomendado para testes, retomadas, blocos pequenos ou recuperação.
 
+## Diagnóstico Local Com `doctor`
+
+O comando `doctor` entra no fluxo de batch como diagnóstico local auxiliar. Use-o para obter uma leitura amigável da estrutura mínima do projeto, contagens de missões, presença de missão presa em `running`, presença de missão em `failed` e avisos sobre documentos operacionais auxiliares.
+
+No checkout local atual, a forma documentada de invocação é:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+```
+
+Use `doctor` nestes momentos:
+
+- Antes de preparar um batch, para identificar inconsistência estrutural antes de organizar a fila.
+- Antes de executar um batch, junto com `validate`, `vaf-status.sh`, Git, testes e `compileall`.
+- Depois de um batch, como diagnóstico complementar ao checklist pós-batch.
+- Durante investigação de estado inconsistente, especialmente quando houver missão em `running` ou `failed`.
+- Após interrupção por limite externo de API, para confirmar o estado local antes de decidir retomada.
+
+Diferença prática entre ferramentas:
+
+- `./scripts/vaf-status.sh` mostra estado operacional dos scripts e diretórios de missão.
+- `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` verifica a estrutura mínima local.
+- `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` fornece diagnóstico local mais amigável e não destrutivo sobre a mesma base estrutural, com avisos operacionais simples.
+- `pytest` valida o comportamento coberto por testes.
+- `python3 -m compileall src` valida compilação dos módulos Python.
+
+`doctor` não substitui `./scripts/vaf-status.sh`, `pytest`, `python3 -m compileall src`, revisão dos logs nem revisão dos commits. Ele também não executa missões, não chama scripts shell, não executa Git, não acessa rede, não consulta provider, não verifica quota real e não deve ser tratado como aprovação única para batch ou push.
+
+Exemplo operacional claro antes de executar um batch:
+
+```bash
+./scripts/vaf-status.sh
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+git status --short
+pytest
+python3 -m compileall src
+```
+
+Se `doctor` retornar `status_geral: error`, não inicie nem retome batch antes de investigar. Se retornar `status_geral: warning`, avalie o aviso antes de continuar; warning não é aprovação automática.
+
 ## Variáveis Operacionais
 
 `VAF_BATCH_SIZE` controla quantas missões o batch tenta executar.

@@ -15,6 +15,7 @@ Implementado:
 - Diretórios operacionais de missão em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
 - Runner seguro de uma missão em `scripts/vaf-run-next-safe.sh`.
 - Runner seguro em batch em `scripts/vaf-run-batch-safe.sh`.
+- Diagnóstico local auxiliar com `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor`.
 - Validação por missão com `pytest` e `python3 -m compileall src` por reaproveitamento do runner seguro.
 - Push automático opt-in com `VAF_AUTO_PUSH=1`.
 
@@ -176,6 +177,8 @@ python3 -m compileall src
 ```
 
 Use o checklist completo em [Checklist de validação pós-batch](../operations/post-batch-validation-checklist.md).
+
+`doctor` neste exemplo é apenas diagnóstico local complementar. Ele não substitui `./scripts/vaf-status.sh`, `pytest`, `python3 -m compileall src`, revisão dos logs ou revisão dos commits.
 
 ## Limites Do Exemplo
 

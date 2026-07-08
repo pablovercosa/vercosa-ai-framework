@@ -18,6 +18,7 @@ Ele complementa o [playbook de execução em batch](batch-execution-playbook.md)
 - `queue` no estado esperado para o batch executado.
 - `running=0`.
 - `failed=0`.
+- `doctor` executado como diagnóstico complementar.
 - Branch `main`.
 - Git limpo.
 - Últimos commits coerentes.
@@ -50,7 +51,11 @@ pytest
 python3 -m compileall src
 ```
 
-`PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` é uma validação estrutural local auxiliar. `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` combina essa validação com mensagens operacionais de diagnóstico local. Esses comandos verificam diretórios básicos de missão, `README.md` e `src/vercosa_ai_framework`, mas não substituem `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
+`PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` é uma validação estrutural local auxiliar. `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` combina essa validação com mensagens operacionais de diagnóstico local. Esses comandos verificam diretórios básicos de missão, `README.md`, `src/vercosa_ai_framework` e alguns documentos auxiliares, mas não substituem `./scripts/vaf-status.sh`, `pytest`, `python3 -m compileall src`, revisão dos logs ou revisão dos commits.
+
+`doctor` é etapa complementar de diagnóstico pós-batch. Ele pode ajudar a identificar inconsistências estruturais, como missão presa em `running`, missão em `failed`, diretório obrigatório ausente ou documento operacional auxiliar ausente, mas não é requisito único de aprovação.
+
+Se `doctor` apontar erro, não faça push até investigar e corrigir ou justificar o estado local. Se `doctor` apontar warning, avalie o aviso antes de continuar; warning não libera push por si só.
 
 ## Validação das missões executadas
 
@@ -114,6 +119,7 @@ Faça push somente quando todos os itens abaixo forem verdadeiros:
 - `failed=0`.
 - `running=0`.
 - Worker parado.
+- `doctor` não aponta erro e warnings foram avaliados.
 - `git status --short` vazio.
 - Branch `main`.
 - `pytest` passa.
@@ -129,6 +135,7 @@ Não faça push quando qualquer item abaixo ocorrer:
 
 - Qualquer missão foi para `missions/failed`.
 - Alguma missão ficou em `missions/running`.
+- `doctor` apontou erro ainda não investigado.
 - Git está sujo.
 - Testes falharam.
 - `compileall` falhou.
