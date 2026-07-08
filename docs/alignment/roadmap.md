@@ -37,6 +37,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - CLI operacional inicial com `status`, `validate` e `doctor`.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
+- Guia inicial de contribuição em `CONTRIBUTING.md`.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -234,5 +235,5 @@ Permanecem futuros e não devem ser tratados como implementados:
 - pgvector como adapter real.
 - Semantic Index.
 - Internacionalização dos READMEs.
-- Guia público completo de release, distribuição e empacotamento para uso final.
+- Guia público completo de release, distribuição, empacotamento e processo público maduro de contribuição para uso final.
 - Release alfa.

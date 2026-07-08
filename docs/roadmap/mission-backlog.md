@@ -90,6 +90,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.
 - Guia inicial de instalação local para desenvolvimento.
+- Guia inicial de contribuição.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -419,6 +420,7 @@ Objetivo: explicar fluxo de Specs, missões, documentação, testes, commits e r
 Escopo permitido: `CONTRIBUTING.md` ou docs equivalentes, padrões de commit e PR.
 Escopo proibido: alterar governança sem decisão ou reduzir exigência de Spec.
 Dependências: padrões de documentação e idioma já existentes.
+Status: concluído como guia inicial em [CONTRIBUTING.md](../../CONTRIBUTING.md), com índice complementar em [docs/contributing](../contributing/README.md); processo público completo de contribuição continua futuro.
 Critérios de aceite resumidos: contributor entende como propor mudança sem violar Specification First.
 
 15. Código sugerido: `M015-licenca-projeto`

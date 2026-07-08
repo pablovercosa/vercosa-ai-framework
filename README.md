@@ -160,6 +160,8 @@ Módulos principais:
 
 Guia inicial para preparar um checkout de desenvolvimento: [Instalação local para desenvolvimento](docs/getting-started/local-installation.md).
 
+Guia inicial para contribuir com segurança: [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Scripts operacionais:
 
 - `./scripts/vaf-run-next-safe.sh`: executa uma missão com validações antes e depois.
@@ -178,6 +180,8 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 
 ## Documentação Relevante
 
+- [Guia inicial de contribuição](CONTRIBUTING.md)
+- [Índice de contribuição](docs/contributing/README.md)
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
 - [Índice de módulos](docs/architecture/module-index.md)
 - [Arquitetura de Audit/Event Log](docs/architecture/audit-event-architecture.md)
@@ -228,6 +232,7 @@ Mensagens de commit futuras devem usar português do Brasil. O histórico Git j�
 ## Regras De Trabalho
 
 - Nenhum código deve ser implementado sem Spec aprovada.
+- Contribuições devem seguir o [guia inicial de contribuição](CONTRIBUTING.md).
 - Documentação deve refletir o estado real do código e das Specs.
 - Recursos futuros devem ser marcados como futuros, lacunas ou próximos passos.
 - Agentes não devem chamar providers, MCPs, APIs, bancos ou filesystem diretamente; agentes solicitam capabilities.
