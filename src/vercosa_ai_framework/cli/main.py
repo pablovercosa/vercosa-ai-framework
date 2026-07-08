@@ -45,6 +45,32 @@ class ValidationResult:
         return not self.issues
 
 
+@dataclass(frozen=True, slots=True)
+class DiagnosticIssue:
+    """Item de diagnostico local classificado por severidade."""
+
+    severity: str
+    code: str
+    message: str
+
+
+@dataclass(frozen=True, slots=True)
+class DiagnosticResult:
+    """Resultado deterministico do comando doctor."""
+
+    project_root: Path
+    validation: ValidationResult
+    issues: tuple[DiagnosticIssue, ...] = ()
+
+    @property
+    def status(self) -> str:
+        if any(issue.severity == "error" for issue in self.issues):
+            return "error"
+        if any(issue.severity == "warning" for issue in self.issues):
+            return "warning"
+        return "ok"
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Cria o parser da CLI operacional sem acoplar a scripts shell."""
 
@@ -72,6 +98,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("diagnose", help="Mostra diagnostico local basico do Python e sistema.")
     subparsers.add_parser("status", help="Conta missoes locais em queue, running, done e failed.")
     subparsers.add_parser("validate", help="Valida a estrutura local basica sem executar missoes.")
+    subparsers.add_parser("doctor", help="Executa diagnostico local amigavel e nao destrutivo.")
     return parser
 
 
@@ -101,6 +128,9 @@ def run(argv: list[str] | None = None) -> int:
 
     if args.command == "validate":
         return print_validation(Path(args.project_root))
+
+    if args.command == "doctor":
+        return print_doctor(Path(args.project_root))
 
     parser.print_help()
     return 0
@@ -215,6 +245,77 @@ def print_validation(project_root: str | Path) -> int:
     for issue in result.issues:
         print(f"problema[{issue.code}]: {issue.message}")
     return 1
+
+
+def diagnose_project(project_root: str | Path) -> DiagnosticResult:
+    """Executa diagnostico local sem efeitos colaterais ou comandos externos."""
+
+    validation = validate_project_structure(project_root)
+    issues = [
+        DiagnosticIssue("error", issue.code, issue.message)
+        for issue in validation.issues
+    ]
+    root = validation.project_root
+
+    optional_documents = (
+        root / "docs" / "operations" / "post-batch-validation-checklist.md",
+        root / "docs" / "roadmap" / "mission-backlog.md",
+    )
+    for document in optional_documents:
+        if not document.is_file():
+            issues.append(
+                DiagnosticIssue(
+                    "warning",
+                    "optional_document_missing",
+                    f"Documento operacional opcional ausente: {document}",
+                )
+            )
+
+    return DiagnosticResult(
+        project_root=root,
+        validation=validation,
+        issues=tuple(issues),
+    )
+
+
+def print_doctor(project_root: str | Path) -> int:
+    """Imprime diagnostico operacional amigavel e retorna codigo controlado."""
+
+    result = diagnose_project(project_root)
+    status = result.validation.mission_status
+
+    print(f"vercosa-ai-framework: {__version__}")
+    print(f"project_root: {result.project_root}")
+    print("diagnostico: local nao destrutivo")
+    print(f"status_geral: {result.status}")
+    print(f"queue:   {status.queue}")
+    print(f"running: {status.running}")
+    print(f"done:    {status.done}")
+    print(f"failed:  {status.failed}")
+    print(f"running_vazio: {'sim' if status.running == 0 else 'nao'}")
+    print(f"failed_vazio: {'sim' if status.failed == 0 else 'nao'}")
+
+    if result.status == "error":
+        print("pronto_para_missao: nao")
+        print("pronto_para_batch: nao")
+        print("acao_sugerida: corrigir erros estruturais antes de iniciar ou retomar execucao.")
+    elif result.status == "warning":
+        print("pronto_para_missao: sim, com aviso")
+        print("pronto_para_batch: sim, com revisao dos avisos")
+        print("acao_sugerida: revisar avisos antes de batch ou investigacao pos-batch.")
+    else:
+        print("pronto_para_missao: sim")
+        print("pronto_para_batch: sim")
+        print("acao_sugerida: usar scripts seguros para executar missoes quando apropriado.")
+
+    if result.issues:
+        for issue in result.issues:
+            print(f"{issue.severity}[{issue.code}]: {issue.message}")
+    else:
+        print("resultado: nenhum problema local detectado")
+
+    print("limites: nao executa missoes, scripts shell, git, pytest, compileall, rede, banco ou providers.")
+    return 1 if result.status == "error" else 0
 
 
 def _count_markdown_files(directory: Path) -> int:

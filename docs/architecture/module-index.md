@@ -71,7 +71,7 @@ Providers / MCPs / APIs / Runtimes
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
 - `runtime/` isola execução concreta em runtimes como OpenCode.
-- `cli/` oferece consulta local básica de estado operacional e validação estrutural local, sem substituir scripts shell, `pytest`, `compileall` nem executar missões nesta fase.
+- `cli/` oferece consulta local básica de estado operacional, validação estrutural local e diagnóstico local com `doctor`, sem substituir scripts shell, `pytest`, `compileall` nem executar missões nesta fase.
 
 ## Lacunas Registradas
 

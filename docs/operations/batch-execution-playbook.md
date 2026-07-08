@@ -81,6 +81,7 @@ Execute as validações abaixo antes de iniciar o batch:
 cd /home/projetos/vercosa-ai-framework
 ./scripts/vaf-status.sh
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 git status --short
 git log --oneline --decorate -8
 pytest
@@ -156,6 +157,7 @@ Após o batch, execute:
 ```bash
 ./scripts/vaf-status.sh
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 git status --short
 git log --oneline --decorate -12
 find missions -maxdepth 2 -type f | sort | tail -40
@@ -164,7 +166,7 @@ pytest
 python3 -m compileall src
 ```
 
-Revise se as missões esperadas saíram de `missions/queue/`, se nenhuma missão ficou em `missions/running/`, se `missions/failed/` está vazia e se os commits fazem sentido individualmente. O comando `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` é uma validação estrutural local auxiliar; ele não substitui `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
+Revise se as missões esperadas saíram de `missions/queue/`, se nenhuma missão ficou em `missions/running/`, se `missions/failed/` está vazia e se os commits fazem sentido individualmente. Os comandos `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` e `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` são auxiliares locais; eles não substituem `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
 
 ## Quando Fazer Push
 

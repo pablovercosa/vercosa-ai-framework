@@ -36,6 +36,7 @@ cd /home/projetos/vercosa-ai-framework
 
 ./scripts/vaf-status.sh
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 git status --short
 git log --oneline --decorate -12
 
@@ -46,7 +47,7 @@ pytest
 python3 -m compileall src
 ```
 
-`PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` é uma validação estrutural local auxiliar. Ela verifica diretórios básicos de missão, `README.md` e `src/vercosa_ai_framework`, mas não substitui `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
+`PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` é uma validação estrutural local auxiliar. `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` combina essa validação com mensagens operacionais de diagnóstico local. Esses comandos verificam diretórios básicos de missão, `README.md` e `src/vercosa_ai_framework`, mas não substituem `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
 
 ## Validação das missões executadas
 

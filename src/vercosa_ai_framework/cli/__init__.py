@@ -4,9 +4,12 @@ from importlib import import_module
 
 __all__ = [
     "MissionDirectoryStatus",
+    "DiagnosticIssue",
+    "DiagnosticResult",
     "ValidationIssue",
     "ValidationResult",
     "build_parser",
+    "diagnose_project",
     "main",
     "run",
     "validate_project_structure",
