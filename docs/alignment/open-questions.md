@@ -185,6 +185,10 @@ Decisões já encaminhadas:
 19. Haverá CI público antes da alfa ou a validação inicial continuará local/manual?
 20. Haverá release notes separadas ou o `CHANGELOG.md` será suficiente para a primeira alfa?
 21. Como alinhar o metadado atual de `pyproject.toml` com a política documental sem alterar versão em código fora de uma missão própria?
+22. Qual ambiente será usado para a primeira validação real de instalação limpa?
+23. Qual versão mínima de Python será formalizada como requisito público da alfa?
+24. Haverá CI para repetir a validação de instalação limpa no futuro?
+25. Haverá container apenas para validação futura, sem transformar Docker em requisito do framework?
 
 ## ADRs Recomendadas
 

@@ -1,6 +1,6 @@
 # Plano Da Versão Alfa Inicial
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [CHANGELOG.md](../../CHANGELOG.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
 
 ## Objetivo
 
@@ -37,7 +37,8 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - `CHANGELOG.md`;
 - playbooks operacionais;
 - documentação de arquitetura;
-- checklist de alfa pública.
+- checklist de alfa pública;
+- checklist documental de instalação limpa.
 
 Esses artefatos reduzem risco documental, mas não substituem validação final de release.
 
@@ -45,7 +46,8 @@ Esses artefatos reduzem risco documental, mas não substituem validação final 
 
 Antes de publicar a alfa, ainda é necessário:
 
-- executar checklist de instalação limpa;
+- executar o checklist de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md);
+- registrar o resultado real em [docs/release/clean-install-validation.md](clean-install-validation.md);
 - fazer revisão final do README;
 - validar links;
 - executar `pytest`;

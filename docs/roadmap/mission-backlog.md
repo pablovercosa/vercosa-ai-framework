@@ -98,6 +98,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - `CHANGELOG.md` inicial criado, agora com versão alfa planejada documentada, mas sem tag, release publicada ou promessa de estabilidade de produção.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
 - Definição documental da versão alfa inicial concluída como `0.1.0-alpha.1`, com política inicial em [docs/release/versioning-policy.md](../release/versioning-policy.md) e plano em [docs/release/alpha-version-plan.md](../release/alpha-version-plan.md), sem criação de tag, release ou pacote.
+- Checklist documental de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md), com modelo de registro futuro em [docs/release/clean-install-validation.md](../release/clean-install-validation.md), sem execução real da validação.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
@@ -452,12 +453,15 @@ Missões futuras relacionadas:
 - Revisar segurança antes de release alfa.
 - Criar CI público quando houver decisão de automação.
 - Manter o changelog inicial atualizado sem criar release versionada.
-- Criar checklist de instalação limpa em ambiente novo.
+- Executar instalação limpa real em ambiente novo.
+- Registrar resultado da instalação limpa real.
+- Fazer revisão final pré-release.
 - Criar comandos adicionais da CLI para listar missões e resumir pós-batch.
 - Definir persistência local controlada de eventos auditáveis.
 - Definir política de release.
 - Revisar e criar `LICENSE` antes da release pública.
 - Decidir explicitamente se haverá pacote publicado ou apenas código-fonte na alfa.
+- Criar tag alfa somente após validações e decisão explícita.
 - Publicar release alfa somente após validações e decisão explícita.
 - Internacionalizar READMEs no final, mantendo `README.md` canônico em português do Brasil.
 
@@ -583,6 +587,14 @@ Escopo proibido: criar release/tag sem decisão, internacionalizar READMEs agora
 Dependências: guia de instalação, guia de contribuição, licença e revisão de arquitetura pós-integrações.
 Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); changelog inicial criado em [CHANGELOG.md](../../CHANGELOG.md); versão alfa planejada documentada; release alfa, tag, release notes e internacionalização continuam futuros.
 Critérios de aceite resumidos: documentação pública diferencia implementado, MVP, integração inicial, futuro e fora do escopo.
+
+31. Código sugerido: `M031-checklist-instalacao-limpa`
+Título: Criar checklist de instalação limpa.
+Objetivo: documentar procedimento manual para validar instalação limpa em ambiente novo antes de alfa pública.
+Escopo permitido: documentação em `docs/getting-started/` e `docs/release/`, links em documentos de release e README.
+Escopo proibido: executar instalação limpa, alterar código, alterar scripts, adicionar dependências, criar CI, criar tag ou publicar release.
+Status: concluído como checklist documental em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) e modelo de registro em [docs/release/clean-install-validation.md](../release/clean-install-validation.md); execução real continua futura.
+Critérios de aceite resumidos: checklist diferencia guia local, validação limpa, registro futuro e release alfa sem prometer PyPI, Docker, CI ou produção.
 
 ## Como Transformar Backlog Em Fila Executável
 

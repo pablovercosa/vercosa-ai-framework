@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
 
 ## Objetivo
 
@@ -39,6 +39,8 @@ O estado atual deve ser lido assim:
 | [docs/legal/usage-policy.md](../legal/usage-policy.md) | existe | Precisa continuar explícita sobre ausência de segurança absoluta. |
 | [docs/legal/license-notes.md](../legal/license-notes.md) | existe | Registra licença pendente e não substitui revisão jurídica. |
 | [docs/getting-started/local-installation.md](../getting-started/local-installation.md) | existe | Não promete PyPI, Docker, banco, provider real ou ambiente único. |
+| [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) | existe | Checklist documental criado para validação manual futura de instalação limpa; execução real ainda pendente. |
+| [docs/release/clean-install-validation.md](clean-install-validation.md) | existe | Modelo preparatório para registrar resultado futuro; não contém validação executada. |
 | [docs/architecture/module-index.md](../architecture/module-index.md) | existe | Precisa continuar alinhado aos módulos realmente existentes. |
 | [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md) | existe | Consolida arquitetura pós-integrações sem publicar alfa. |
 | [docs/operations/batch-execution-playbook.md](../operations/batch-execution-playbook.md) | existe | Não recomenda execução cega; batch depende de revisão e validação. |
@@ -58,6 +60,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | O README diferencia implementado e futuro. | existe | Lista lacunas como RAG, embeddings, pgvector, providers reais e persistência externa de eventos. |
 | O README aponta para guias principais. | existe | Inclui instalação, contribuição, arquitetura, exemplos, roadmap e este checklist. |
 | O guia de instalação não promete PyPI inexistente. | existe | Documenta instalação local em modo desenvolvimento. |
+| O checklist de instalação limpa foi criado. | existe | Diferencia procedimento documental, execução real do checklist e release alfa. |
 | O guia de contribuição não promete processo público maduro. | existe | Declara processo inicial e conservador. |
 | A política de uso não promete segurança absoluta. | existe | Afirma explicitamente que não substitui revisão humana. |
 | A política inicial de segurança não promete SLA, bug bounty, conformidade regulatória ou segurança absoluta. | existe | Registra limites atuais e pendência de canal público de reporte. |
@@ -83,7 +86,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Ausência de provider real configurado. | pendente | O estado atual não deve ser apresentado como integração real com provider externo. |
 | Ausência de RAG semântico. | pendente | Busca semântica e recuperação avançada continuam futuras. |
 | Ausência de persistência externa de eventos. | pendente | Audit/Event Log atual é em memória. |
-| Ausência de testes de instalação limpa em ambiente novo. | pendente | O guia local ainda precisa ser validado fora do ambiente principal do mantenedor. |
+| Ausência de execução real de instalação limpa em ambiente novo. | pendente | O checklist documental existe, mas ainda precisa ser executado fora do ambiente principal do mantenedor e registrado. |
 
 ## Decisões Já Tomadas
 
@@ -108,7 +111,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Revisar templates de issue e pull request conforme o processo público amadurecer.
 - Manter `CHANGELOG.md` inicial atualizado sem criar release, tag ou versão enquanto não houver decisão explícita.
-- Testar instalação do zero em ambiente novo.
+- Executar o checklist de instalação limpa em ambiente novo e registrar o resultado em [clean-install-validation.md](clean-install-validation.md).
 - Criar CI público, se houver decisão de automação.
 - Revisar README final de alfa.
 - Decidir explicitamente se e quando criar a tag `v0.1.0-alpha.1`.
@@ -122,7 +125,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 Uma alfa pública só deve ser considerada pronta quando todos os critérios mínimos abaixo forem atendidos ou quando uma decisão explícita registrar exceção e risco aceito:
 
 - `README.md` revisado para alfa, sem prometer produção, provider real obrigatório, RAG, embeddings, pgvector, Docker, PyPI ou CI inexistentes.
-- Guia de instalação validado em ambiente limpo e documentado como instalação local de desenvolvimento.
+- Checklist de instalação limpa criado e executado em ambiente novo, com resultado registrado.
 - Guia de contribuição revisado para processo público inicial, sem prometer maturidade inexistente.
 - Código de conduta inicial criado e revisado sem prometer governança comunitária madura inexistente.
 - Licença final decidida e publicada em `LICENSE` ou pendência tratada antes de distribuição pública.

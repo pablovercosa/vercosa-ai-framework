@@ -39,6 +39,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - CLI operacional inicial com `status`, `validate` e `doctor`.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
+- Checklist documental de instalação limpa em `docs/getting-started/clean-install-checklist.md`, com execução real ainda pendente.
 - Guia inicial de contribuição em `CONTRIBUTING.md`.
 - Código de conduta inicial em `CODE_OF_CONDUCT.md` e diretrizes em `docs/conduct/`, ainda sem canal público definitivo para problemas de conduta.
 - Política inicial de segurança em `SECURITY.md` e documentação inicial em `docs/security/`, ainda sem canal público definitivo de vulnerabilidades.
@@ -210,7 +211,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, política de release, CI público quando decidido e instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, política de release, CI público quando decidido e execução real do checklist de instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git e resumo pós-batch, sem substituir scripts seguros.
 3. Criar comando CLI para listar missões e apoiar diagnóstico operacional.
 4. Definir persistência local controlada para Audit/Event Log.

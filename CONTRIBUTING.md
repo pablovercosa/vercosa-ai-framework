@@ -46,6 +46,8 @@ pytest
 python3 -m compileall src
 ```
 
+Para preparação de release alfa ou revisão conservadora de ambiente novo, use também o [checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). Ele complementa o guia local e não substitui `pytest`, `python3 -m compileall src` ou revisão humana.
+
 Comandos úteis antes de executar missões:
 
 ```bash
@@ -277,6 +279,7 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 ## Documentos Relevantes
 
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
+- [Checklist de instalação limpa](docs/getting-started/clean-install-checklist.md)
 - [Changelog inicial](CHANGELOG.md)
 - [Política inicial de versionamento](docs/release/versioning-policy.md)
 - [Plano da versão alfa inicial](docs/release/alpha-version-plan.md)

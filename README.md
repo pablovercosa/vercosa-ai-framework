@@ -165,6 +165,8 @@ Módulos principais:
 
 Guia inicial para preparar um checkout de desenvolvimento: [Instalação local para desenvolvimento](docs/getting-started/local-installation.md).
 
+Checklist manual para validar instalação limpa antes de uma futura alfa: [Checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). A execução real do checklist ainda deve ser feita e registrada antes de release.
+
 Guia inicial para contribuir com segurança: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Templates iniciais para issues e pull requests estão em [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/) e [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md).
@@ -206,6 +208,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 - [Notas de licença](docs/legal/license-notes.md)
 - [Índice de contribuição](docs/contributing/README.md)
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
+- [Checklist de instalação limpa](docs/getting-started/clean-install-checklist.md)
 - [Índice de módulos](docs/architecture/module-index.md)
 - [Revisão arquitetural pós-integrações](docs/architecture/post-integration-architecture-review.md)
 - [Arquitetura de Audit/Event Log](docs/architecture/audit-event-architecture.md)

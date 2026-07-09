@@ -1,12 +1,14 @@
 # Instalação Local Para Desenvolvimento
 
-Links principais: [README principal](../../README.md) | [Índice de módulos](../architecture/module-index.md) | [Playbook de execução em batch](../operations/batch-execution-playbook.md) | [Exemplos](../examples/README.md) | [Backlog estratégico](../roadmap/mission-backlog.md)
+Links principais: [README principal](../../README.md) | [Checklist de instalação limpa](clean-install-checklist.md) | [Índice de módulos](../architecture/module-index.md) | [Playbook de execução em batch](../operations/batch-execution-playbook.md) | [Exemplos](../examples/README.md) | [Backlog estratégico](../roadmap/mission-backlog.md)
 
 ## Objetivo
 
 Orientar a instalação local do Vercosa AI Framework para desenvolvimento, validação inicial e uso básico da CLI no estado atual do projeto.
 
 Este guia é para trabalhar em um checkout local do repositório. Ele não descreve uma release estável, não pressupõe pacote publicado no PyPI e não apresenta o framework como produto maduro.
+
+Para validar uma instalação limpa em ambiente novo antes de uma futura alfa, use o [checklist de instalação limpa](clean-install-checklist.md). Este guia orienta instalação local para desenvolvimento; o checklist de instalação limpa orienta uma validação manual, conservadora e registrável em ambiente novo.
 
 ## Estado Atual
 
@@ -247,6 +249,7 @@ Não inicie batch ou execução sensível com Git sujo sem entender as alteraç�
 ## Próximos Passos
 
 - Leia o [README principal](../../README.md) para entender estado, limites e arquitetura resumida.
+- Use o [checklist de instalação limpa](clean-install-checklist.md) quando a meta for validar um ambiente novo antes de release alfa.
 - Navegue pelo [índice de módulos](../architecture/module-index.md).
 - Revise o [playbook de execução em batch](../operations/batch-execution-playbook.md) antes de executar missões em lote.
 - Consulte os [exemplos operacionais](../examples/README.md).
