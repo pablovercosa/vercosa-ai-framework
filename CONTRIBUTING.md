@@ -6,7 +6,7 @@ O projeto evolui por missões em Markdown, com escopo claro, referências rastre
 
 ## Estado Do Projeto
 
-O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch, validações básicas, [política inicial de segurança](SECURITY.md) e [código de conduta inicial](CODE_OF_CONDUCT.md). Ainda não há release alfa pública, processo público completo de pull requests, templates de issue ou templates de pull request neste momento.
+O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch, validações básicas, [política inicial de segurança](SECURITY.md), [código de conduta inicial](CODE_OF_CONDUCT.md) e templates iniciais de issues e pull requests. Ainda não há release alfa pública nem processo público completo de pull requests neste momento.
 
 Recursos como RAG semântico, embeddings, pgvector como adapter real, providers reais obrigatórios, múltiplos runtimes reais e publicação de pacote continuam futuros ou fora do escopo atual, salvo missão específica aprovada.
 
@@ -67,6 +67,14 @@ Mudanças relevantes devem partir de uma missão em Markdown. A missão deve dec
 - critérios de aceite.
 
 O backlog estratégico em [docs/roadmap/mission-backlog.md](docs/roadmap/mission-backlog.md) orienta planejamento, mas não é fila executável automática. A fila executável deve conter arquivos `.md` pequenos e revisados em `missions/queue/`.
+
+## Issues E Pull Requests
+
+Use os templates iniciais em [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/) para bugs, melhorias, documentação e propostas de missão. Use [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) ao abrir pull requests.
+
+Vulnerabilidades não devem ser relatadas em issue pública com exploits, tokens, credenciais, dados sensíveis, logs não sanitizados ou detalhes exploráveis. Siga [SECURITY.md](SECURITY.md) e [docs/security/vulnerability-reporting.md](docs/security/vulnerability-reporting.md).
+
+Propostas de missão devem usar o template adequado, com escopo claro, restrições, critérios de aceite, testes esperados e documentação afetada. Os templates complementam este guia e não substituem [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), revisão humana ou decisões de manutenção.
 
 ## Execução Individual E Batch
 
@@ -245,7 +253,7 @@ Quando pull requests forem usados, a expectativa inicial será:
 - commits em português do Brasil;
 - ausência de secrets, dependências desnecessárias e automações novas sem aprovação.
 
-Templates, regras formais de revisão pública e políticas adicionais podem ser criados em missões futuras.
+Regras formais de revisão pública e políticas adicionais podem ser criadas em missões futuras.
 
 ## Como Reportar Problemas
 
@@ -276,3 +284,5 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 - [Política de atualização de documentação](docs/documentation/documentation-update-policy.md)
 - [Índice de módulos](docs/architecture/module-index.md)
 - [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
+- [Templates de issues](.github/ISSUE_TEMPLATE/)
+- [Template de pull request](.github/PULL_REQUEST_TEMPLATE.md)

@@ -43,6 +43,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Código de conduta inicial em `CODE_OF_CONDUCT.md` e diretrizes em `docs/conduct/`, ainda sem canal público definitivo para problemas de conduta.
 - Política inicial de segurança em `SECURITY.md` e documentação inicial em `docs/security/`, ainda sem canal público definitivo de vulnerabilidades.
 - Documentação legal inicial em `docs/legal/`, com política de uso responsável e licença final ainda pendente.
+- Templates iniciais de issue e pull request em `.github/`, sem processo público completo de triagem, merge ou suporte formal.
 - Checklist de prontidão para futura alfa pública em `docs/release/public-alpha-readiness.md`, sem criação de release, tag, pacote ou changelog de release.
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
 
@@ -207,7 +208,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, templates, changelog inicial, versão alfa e instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, changelog inicial, versão alfa, CI público quando decidido e instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git e resumo pós-batch, sem substituir scripts seguros.
 3. Criar comando CLI para listar missões e apoiar diagnóstico operacional.
 4. Definir persistência local controlada para Audit/Event Log.
@@ -248,4 +249,4 @@ Permanecem futuros e não devem ser tratados como implementados:
 - Processo público maduro de segurança e canal definitivo de vulnerabilidades.
 - Release alfa.
 - Changelog inicial e versão inicial para alfa.
-- Templates de issue e pull request.
+- CI público.

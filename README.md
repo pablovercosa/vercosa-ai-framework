@@ -159,12 +159,15 @@ Módulos principais:
 - `src/vercosa_ai_framework/`: contratos e MVPs do framework.
 - `knowledge/`: visão, princípios, arquitetura de referência e ADRs.
 - `.opencode/`: integração inicial com OpenCode como laboratório/runtime.
+- `.github/`: templates iniciais de issues e pull requests para colaboração futura.
 
 ## Operação Local
 
 Guia inicial para preparar um checkout de desenvolvimento: [Instalação local para desenvolvimento](docs/getting-started/local-installation.md).
 
 Guia inicial para contribuir com segurança: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Templates iniciais para issues e pull requests estão em [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/) e [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md).
 
 Conduta inicial para colaboração: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 

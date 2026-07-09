@@ -94,6 +94,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Base documental legal inicial, com política de uso responsável e notas de licença pendente.
 - `SECURITY.md` inicial e documentação inicial em `docs/security/`, sem canal público definitivo de vulnerabilidades ainda.
 - `CODE_OF_CONDUCT.md` inicial e documentação inicial em `docs/conduct/`, sem canal público definitivo para problemas de conduta ainda.
+- Templates iniciais de issue e pull request em `.github/`, sem processo público completo ou promessa de triagem madura.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 
@@ -443,8 +444,7 @@ Missões futuras relacionadas:
 - Amadurecer política pública de vulnerabilidades e definir canal de reporte.
 - Definir canal público para problemas de conduta.
 - Amadurecer política de governança comunitária antes de abertura pública ampla.
-- Criar templates de issue.
-- Criar templates de pull request.
+- Revisar templates de issue e pull request conforme o processo público amadurecer.
 - Revisar processo público antes de release alfa.
 - Revisar segurança antes de release alfa.
 - Criar CI público quando houver decisão de automação.
@@ -458,7 +458,15 @@ Missões futuras relacionadas:
 - Publicar release alfa somente após validações e decisão explícita.
 - Internacionalizar READMEs no final, mantendo `README.md` canônico em português do Brasil.
 
-16. Código sugerido: `M016-release-tag-alfa`
+16. Código sugerido: `M016-templates-issue-pr`
+Título: Criar templates de issue e pull request.
+Objetivo: preparar templates iniciais para bugs, melhorias, documentação, propostas de missão e pull requests.
+Escopo permitido: arquivos em `.github/` e documentação mínima relacionada.
+Escopo proibido: criar GitHub Actions, CI, changelog, versão, tag, release, código, scripts ou dependências.
+Status: concluído como templates iniciais em [.github/ISSUE_TEMPLATE/](../../.github/ISSUE_TEMPLATE/) e [.github/PULL_REQUEST_TEMPLATE.md](../../.github/PULL_REQUEST_TEMPLATE.md).
+Critérios de aceite resumidos: templates orientam escopo, segurança, rastreabilidade, testes, `compileall` e documentação sem prometer suporte formal, SLA, merge automático ou alfa publicada.
+
+17. Código sugerido: `M017-release-tag-alfa`
 Título: Criar release/tag alfa.
 Objetivo: publicar marco alfa com escopo e limitações claros.
 Escopo permitido: checklist, changelog ou notas de release e tag após validação.
@@ -466,7 +474,7 @@ Escopo proibido: publicar como stable, pular testes ou fazer push automático se
 Dependências: licença, guia de instalação, guia de contribuição, documentação pública e testes verdes.
 Critérios de aceite resumidos: tag alfa é rastreável, validada e descreve limites do MVP.
 
-17. Código sugerido: `M017-revisao-arquitetura-pos-integracoes`
+18. Código sugerido: `M018-revisao-arquitetura-pos-integracoes`
 Título: Revisar arquitetura pós-integrações.
 Objetivo: verificar coerência entre Specs, docs, código e decisões após integrações centrais.
 Escopo permitido: documentação, ADRs ou perguntas em aberto.
@@ -475,7 +483,7 @@ Dependências: Fases 2 e 3 concluídas.
 Status: concluído como revisão documental em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md); refinamentos futuros devem ter escopo próprio.
 Critérios de aceite resumidos: lacunas e decisões são registradas sem prometer comportamento inexistente.
 
-18. Código sugerido: `M018-avaliar-semantic-index`
+19. Código sugerido: `M019-avaliar-semantic-index`
 Título: Avaliar Semantic Index.
 Objetivo: estudar contrato e impacto de busca semântica futura.
 Escopo permitido: análise, ADR candidata, riscos e critérios para MVP futuro.
@@ -483,7 +491,7 @@ Escopo proibido: implementar embeddings, pgvector, RAG ou dependências novas.
 Dependências: Context Router, Knowledge Hub e auditoria estabilizados.
 Critérios de aceite resumidos: avaliação define opções e riscos sem virar implementação.
 
-19. Código sugerido: `M019-avaliar-embeddings`
+20. Código sugerido: `M020-avaliar-embeddings`
 Título: Avaliar embeddings.
 Objetivo: definir critérios para providers de embedding como adapters opcionais.
 Escopo permitido: análise de contratos, privacidade, custo, dimensões e fallback.
@@ -491,7 +499,7 @@ Escopo proibido: chamar Ollama, baixar modelos, indexar código ou adicionar dep
 Dependências: avaliação de Semantic Index ou decisão equivalente.
 Critérios de aceite resumidos: critérios de adoção e fallback ficam documentados.
 
-20. Código sugerido: `M020-avaliar-pgvector`
+21. Código sugerido: `M021-avaliar-pgvector`
 Título: Avaliar pgvector.
 Objetivo: avaliar pgvector como uma implementação possível de vector store.
 Escopo permitido: análise arquitetural, contratos e riscos operacionais.
@@ -499,7 +507,7 @@ Escopo proibido: tornar PostgreSQL obrigatório, criar migrations reais ou acess
 Dependências: avaliação de embeddings e vector store adapter conceitual.
 Critérios de aceite resumidos: pgvector é documentado como opção futura, não dependência atual.
 
-21. Código sugerido: `M021-avaliar-rag-semantico`
+22. Código sugerido: `M022-avaliar-rag-semantico`
 Título: Avaliar RAG semântico.
 Objetivo: avaliar como retrieval semântico poderia alimentar Context Router com citações e política.
 Escopo permitido: desenho conceitual, riscos de segurança e critérios de aceite futuros.
@@ -507,7 +515,7 @@ Escopo proibido: implementar RAG, embeddings, pgvector, chamada de LLM ou prompt
 Dependências: avaliações de Semantic Index, embeddings e pgvector.
 Critérios de aceite resumidos: avaliação preserva Context Router como decisor do pacote final.
 
-22. Código sugerido: `M022-avaliar-gemini-provider-auxiliar`
+23. Código sugerido: `M023-avaliar-gemini-provider-auxiliar`
 Título: Avaliar Gemini, Gemini CLI e Gemini MCP Bridge como provider auxiliar futuro.
 Objetivo: analisar se Gemini pode ser adapter auxiliar sem virar dependência atual.
 Escopo permitido: pesquisa documental local, matriz de riscos e proposta de adapter futuro.
@@ -515,7 +523,7 @@ Escopo proibido: instalar Gemini, chamar rede, configurar credenciais, implement
 Dependências: política de provider externo e Provider Gateway mais maduro.
 Critérios de aceite resumidos: resultado deixa claro que Gemini é avaliação futura e opcional.
 
-23. Código sugerido: `M023-internacionalizar-readmes-final`
+24. Código sugerido: `M024-internacionalizar-readmes-final`
 Título: Internacionalizar READMEs no final.
 Objetivo: criar variações linguísticas após estabilização da documentação em português.
 Escopo permitido: manter `README.md` em pt-BR, criar `README.en.md` em inglês e `README.es.md` em espanhol.
@@ -523,7 +531,7 @@ Escopo proibido: internacionalizar antes da estabilização, divergir conteúdo 
 Dependências: release alfa ou documentação pública estabilizada.
 Critérios de aceite resumidos: READMEs multilíngues indicam versão fonte e preservam links essenciais.
 
-24. Código sugerido: `M024-cli-validacoes-git-seguras`
+25. Código sugerido: `M025-cli-validacoes-git-seguras`
 Título: Integrar CLI com validações de Git de forma segura.
 Objetivo: permitir diagnóstico local de branch, Git limpo e commits recentes sem executar push, commit, reset ou comandos destrutivos.
 Escopo permitido: leitura local, mensagens claras, testes determinísticos e documentação.
@@ -531,7 +539,7 @@ Escopo proibido: alterar fluxo Git, executar push, staging automático, commit a
 Dependências: CLI operacional inicial e política de documentação atualizada.
 Critérios de aceite resumidos: CLI reporta estado Git básico de forma segura e não substitui revisão humana.
 
-25. Código sugerido: `M025-cli-listar-missoes`
+26. Código sugerido: `M026-cli-listar-missoes`
 Título: Criar comando CLI para listar missões.
 Objetivo: listar missões em `queue`, `running`, `done` e `failed` com saída previsível e sem efeitos colaterais.
 Escopo permitido: leitura local, ordenação determinística, testes e docs.
@@ -539,7 +547,7 @@ Escopo proibido: mover missões, executar missões, alterar arquivos ou interpre
 Dependências: CLI operacional inicial e contratos atuais de diretórios de missão.
 Critérios de aceite resumidos: comando mostra missões existentes e preserva a distinção entre backlog estratégico e fila executável.
 
-26. Código sugerido: `M026-cli-resumo-pos-batch`
+27. Código sugerido: `M027-cli-resumo-pos-batch`
 Título: Criar comando CLI para resumo pós-batch.
 Objetivo: produzir resumo local de estado pós-batch com contagens de missão, avisos e próximos passos seguros.
 Escopo permitido: leitura de diretórios locais, logs existentes quando seguro, commits recentes em modo somente leitura e documentação.
@@ -547,7 +555,7 @@ Escopo proibido: executar batch, fazer push, criar commits, alterar missões, co
 Dependências: checklist pós-batch, CLI inicial e decisão sobre quais dados locais são seguros para resumir.
 Critérios de aceite resumidos: resumo ajuda revisão pós-batch sem automatizar aprovação.
 
-27. Código sugerido: `M027-persistir-eventos-arquivo-local`
+28. Código sugerido: `M028-persistir-eventos-arquivo-local`
 Título: Persistir eventos auditáveis em arquivo local controlado.
 Objetivo: criar persistência local inicial para `AuditEvent` sem banco obrigatório e sem observabilidade externa.
 Escopo permitido: formato determinístico, testes, política de retenção inicial e documentação de limites.
@@ -555,7 +563,7 @@ Escopo proibido: banco obrigatório, rede, OpenTelemetry, dashboards, gravação
 Dependências: Audit/Event Log inicial e decisão sobre formato de persistência.
 Critérios de aceite resumidos: eventos são gravados de forma rastreável, segura e controlada por contrato.
 
-28. Código sugerido: `M028-revisar-arquitetura-pos-integracoes-centrais`
+29. Código sugerido: `M029-revisar-arquitetura-pos-integracoes-centrais`
 Título: Revisar arquitetura pós-integrações centrais.
 Objetivo: verificar coerência entre Specs, READMEs, mapas de arquitetura, backlog e código após Policy, Context, Guardian, Model Selection, Audit, CLI e batch.
 Escopo permitido: documentação, ADRs, perguntas em aberto e recomendações de próximos blocos.
@@ -564,7 +572,7 @@ Dependências: integrações centrais atuais documentadas e testes estáveis.
 Status: absorvido pela revisão pós-integrações em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md); não recriar como missão duplicada sem novo escopo.
 Critérios de aceite resumidos: lacunas reais ficam registradas e próximas missões não duplicam entregas já concluídas.
 
-29. Código sugerido: `M029-preparar-documentacao-publica-alfa`
+30. Código sugerido: `M030-preparar-documentacao-publica-alfa`
 Título: Preparar documentação pública alfa.
 Objetivo: organizar README, guias e exemplos para uma futura alfa sem transformar o MVP em promessa de estabilidade.
 Escopo permitido: documentação pública, limites claros, links relativos, pré-requisitos e checklists.

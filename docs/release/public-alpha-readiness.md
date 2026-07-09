@@ -40,6 +40,8 @@ O estado atual deve ser lido assim:
 | [docs/operations/post-batch-validation-checklist.md](../operations/post-batch-validation-checklist.md) | existe | Define bloqueios antes de push, novo batch ou retomada. |
 | [docs/examples/README.md](../examples/README.md) | existe | Precisa manter exemplos marcados como implementados, conceituais ou futuros. |
 | [docs/roadmap/mission-backlog.md](../roadmap/mission-backlog.md) | existe | Deve continuar separado da fila executável `missions/queue/`. |
+| [.github/ISSUE_TEMPLATE/](../../.github/ISSUE_TEMPLATE/) | existe | Templates iniciais para bug, melhoria, documentação e proposta de missão. |
+| [.github/PULL_REQUEST_TEMPLATE.md](../../.github/PULL_REQUEST_TEMPLATE.md) | existe | Template inicial de pull request com escopo, segurança, testes e documentação. |
 
 Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pendente` e `fora do escopo da alfa atual`.
 
@@ -66,8 +68,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Ausência de CI público. | pendente | Validação depende de execução local manual. |
 | Canal público definitivo para reporte de vulnerabilidades. | pendente | `SECURITY.md` existe, mas o canal e o processo público maduro ainda precisam ser definidos antes da alfa pública. |
 | Canal público definitivo para problemas de conduta. | pendente | `CODE_OF_CONDUCT.md` existe como política inicial, mas canal público e governança comunitária madura ainda precisam ser definidos antes de abertura pública ampla. |
-| Ausência de templates de issue. | pendente | Reportes públicos podem chegar sem estrutura mínima. |
-| Ausência de templates de pull request. | pendente | Revisões públicas podem chegar sem checklist mínimo. |
+| Templates de issue iniciais. | existe | Estruturam reportes públicos sem prometer triagem madura ou suporte formal. |
+| Template de pull request inicial. | existe | Registra checklist mínimo de escopo, segurança, testes e documentação sem prometer merge ou SLA. |
 | Ausência de release/tag. | pendente | Não há marco alfa publicado. |
 | Ausência de documentação internacionalizada. | pendente | `README.md` permanece canônico em português do Brasil; `README.en.md` e `README.es.md` são futuros. |
 | Ausência de provider real configurado. | pendente | O estado atual não deve ser apresentado como integração real com provider externo. |
@@ -94,11 +96,11 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Revisar licença final e criar `LICENSE`, se a decisão estiver aprovada.
 - Definir canal público de reporte de vulnerabilidades e política de disclosure antes da alfa pública.
 - Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
-- Criar templates de issue.
-- Criar template de pull request.
+- Revisar templates de issue e pull request conforme o processo público amadurecer.
 - Criar changelog inicial, quando houver decisão de release.
 - Definir versão inicial.
 - Testar instalação do zero em ambiente novo.
+- Criar CI público, se houver decisão de automação.
 - Revisar README final de alfa.
 - Decidir se `README.en.md` e `README.es.md` serão criados apenas no final.
 - Definir modelo de release alfa sem prometer estabilidade de produção.
@@ -114,7 +116,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Licença final decidida e publicada em `LICENSE` ou pendência tratada antes de distribuição pública.
 - Política de uso responsável revisada e alinhada ao estado real do projeto.
 - Política pública de segurança criada ou pendência aceita explicitamente antes da abertura.
-- Templates de issue e pull request criados ou decisão explícita de adiar registrada.
+- Templates de issue e pull request criados e revisados conforme o processo público amadurecer.
 - Changelog inicial e versão inicial definidos somente quando houver decisão de release.
 - Testes locais passam com `pytest`.
 - Compilação dos módulos passa com `python3 -m compileall src`.
@@ -128,7 +130,6 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Publicar pacote.
 - Criar changelog de release sem decisão.
 - Definir canal público de reporte de vulnerabilidades e processo público maduro de segurança.
-- Criar templates de issue ou pull request.
 - Internacionalizar READMEs.
 - Implementar funcionalidades.
 - Adicionar dependências.

@@ -19,6 +19,7 @@ Decisões já encaminhadas:
 
 - Policy Engine e Guardian Engine são componentes separados: Policy Engine resolve políticas declarativas; Guardian Engine avalia enforcement operacional.
 - A precedência de políticas é responsabilidade do Policy Engine no estado atual, com resultados repassados como `ResolvedPolicySet` opcional para consumidores.
+- Templates iniciais mínimos de issue e pull request foram criados em `.github/`, cobrindo bug, melhoria, documentação, proposta de missão e pull request. Refinamentos futuros dependem do amadurecimento do processo público.
 
 ## Ciclo De Vida SDD
 
@@ -170,7 +171,7 @@ Decisões já encaminhadas:
 5. Qual modelo de release alfa será adotado sem prometer estabilidade de produção?
 6. Qual será a versão inicial da alfa pública?
 7. Qual canal público será usado para problemas de conduta antes de abertura pública ampla?
-8. Quais templates de issue e pull request são mínimos antes da alfa pública?
+8. Quais refinamentos dos templates iniciais de issue e pull request serão necessários antes da alfa pública?
 9. O changelog inicial será criado antes da tag alfa ou junto com a decisão de versão?
 10. Em qual momento `README.en.md` e `README.es.md` devem ser criados sem divergir do README canônico em português do Brasil?
 11. Serão usados GitHub Security Advisories?

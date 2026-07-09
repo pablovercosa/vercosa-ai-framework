@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Vulnerabilidades e relatos sensíveis
+    url: https://github.com/pablovercosa/vercosa-ai-framework/blob/main/SECURITY.md
+    about: Não publique detalhes exploráveis, secrets, tokens, credenciais ou logs não sanitizados em issue pública. Leia SECURITY.md antes de relatar vulnerabilidades.
+  - name: Guia de reporte responsável
+    url: https://github.com/pablovercosa/vercosa-ai-framework/blob/main/docs/security/vulnerability-reporting.md
+    about: Orientações conservadoras para vulnerabilidades enquanto o canal público definitivo ainda não existe.
