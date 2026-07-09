@@ -6,7 +6,7 @@ O projeto evolui por missões em Markdown, com escopo claro, referências rastre
 
 ## Estado Do Projeto
 
-O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch, validações básicas e [política inicial de segurança](SECURITY.md). Ainda não há release alfa pública, processo público completo de pull requests, templates de issue, templates de pull request ou `CODE_OF_CONDUCT.md` neste momento.
+O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch, validações básicas, [política inicial de segurança](SECURITY.md) e [código de conduta inicial](CODE_OF_CONDUCT.md). Ainda não há release alfa pública, processo público completo de pull requests, templates de issue ou templates de pull request neste momento.
 
 Recursos como RAG semântico, embeddings, pgvector como adapter real, providers reais obrigatórios, múltiplos runtimes reais e publicação de pacote continuam futuros ou fora do escopo atual, salvo missão específica aprovada.
 
@@ -22,6 +22,7 @@ Recursos como RAG semântico, embeddings, pgvector como adapter real, providers 
 - Não faça force push.
 - Não adicione dependências sem justificativa e sem atualizar os arquivos de configuração aplicáveis.
 - Siga a [política inicial de uso responsável](docs/legal/usage-policy.md).
+- Siga o [código de conduta inicial](CODE_OF_CONDUCT.md).
 
 ## Fluxo Recomendado
 
@@ -165,6 +166,12 @@ Regras importantes:
 - não use mensagens em inglês para texto comum;
 - mantenha nomes técnicos em inglês apenas quando forem nomes consolidados.
 
+## Conduta Em Contribuições
+
+Contribuições devem respeitar escopo, revisão, segurança, documentação, testes e comunicação respeitosa. Discordâncias técnicas devem ser tratadas com argumentos verificáveis, contexto, documentação e foco no comportamento técnico.
+
+Não exponha dados sensíveis, não publique credenciais, não reduza validações sem justificativa e não use automações destrutivas sem autorização explícita. O [código de conduta inicial](CODE_OF_CONDUCT.md) complementa este guia e deve ser seguido em discussões, missões, revisões, bugs e pull requests futuros.
+
 ## Testes Obrigatórios
 
 Antes de entregar uma mudança, execute:
@@ -257,6 +264,8 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 ## Documentos Relevantes
 
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
+- [Código de conduta inicial](CODE_OF_CONDUCT.md)
+- [Diretrizes de convivência e colaboração](docs/conduct/community-guidelines.md)
 - [Política inicial de segurança](SECURITY.md)
 - [Reporte responsável de vulnerabilidades](docs/security/vulnerability-reporting.md)
 - [Política inicial de uso responsável](docs/legal/usage-policy.md)

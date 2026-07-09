@@ -169,7 +169,7 @@ Decisões já encaminhadas:
 4. Quais limites devem ser documentados para uso com providers pagos?
 5. Qual modelo de release alfa será adotado sem prometer estabilidade de produção?
 6. Qual será a versão inicial da alfa pública?
-7. `CODE_OF_CONDUCT.md` será obrigatório antes da abertura pública ou ficará para etapa posterior?
+7. Qual canal público será usado para problemas de conduta antes de abertura pública ampla?
 8. Quais templates de issue e pull request são mínimos antes da alfa pública?
 9. O changelog inicial será criado antes da tag alfa ou junto com a decisão de versão?
 10. Em qual momento `README.en.md` e `README.es.md` devem ser criados sem divergir do README canônico em português do Brasil?
@@ -177,6 +177,10 @@ Decisões já encaminhadas:
 12. Haverá política formal de disclosure?
 13. Haverá programa de bug bounty ou a alfa pública seguirá sem remuneração por bugs?
 14. Qual nível de suporte será dado à alfa pública sem prometer estabilidade de produção?
+15. Haverá e-mail dedicado para problemas de conduta?
+16. Haverá equipe de manutenção formal para triagem de problemas comunitários?
+17. Haverá política formal de moderação?
+18. Como reports sensíveis de conduta devem ser tratados antes da alfa pública sem expor dados privados em issues públicas?
 
 ## ADRs Recomendadas
 

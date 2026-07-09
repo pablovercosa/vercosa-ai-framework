@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md)
+Links principais: [README principal](../../README.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
 
 ## Objetivo
 
@@ -28,6 +28,7 @@ O estado atual deve ser lido assim:
 | --- | --- | --- |
 | [README.md](../../README.md) | existe | Precisa permanecer enxuto e distinguir MVP, lacunas e futuro. |
 | [CONTRIBUTING.md](../../CONTRIBUTING.md) | existe | Precisa continuar sem prometer processo público maduro de contribuição. |
+| [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md) | existe | Código de conduta inicial e conservador; canal público para problemas de conduta ainda precisa ser definido antes de abertura pública ampla. |
 | [SECURITY.md](../../SECURITY.md) | existe | Política inicial e conservadora; canal público de vulnerabilidades ainda precisa ser definido antes da alfa pública. |
 | `LICENSE` | pendente | Não existe no repositório; a pendência está documentada em [license-notes.md](../legal/license-notes.md). |
 | [docs/legal/usage-policy.md](../legal/usage-policy.md) | existe | Precisa continuar explícita sobre ausência de segurança absoluta. |
@@ -64,7 +65,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | --- | --- | --- |
 | Ausência de CI público. | pendente | Validação depende de execução local manual. |
 | Canal público definitivo para reporte de vulnerabilidades. | pendente | `SECURITY.md` existe, mas o canal e o processo público maduro ainda precisam ser definidos antes da alfa pública. |
-| Ausência de `CODE_OF_CONDUCT.md`. | pendente | Regras comunitárias públicas ainda não foram definidas. |
+| Canal público definitivo para problemas de conduta. | pendente | `CODE_OF_CONDUCT.md` existe como política inicial, mas canal público e governança comunitária madura ainda precisam ser definidos antes de abertura pública ampla. |
 | Ausência de templates de issue. | pendente | Reportes públicos podem chegar sem estrutura mínima. |
 | Ausência de templates de pull request. | pendente | Revisões públicas podem chegar sem checklist mínimo. |
 | Ausência de release/tag. | pendente | Não há marco alfa publicado. |
@@ -92,7 +93,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 
 - Revisar licença final e criar `LICENSE`, se a decisão estiver aprovada.
 - Definir canal público de reporte de vulnerabilidades e política de disclosure antes da alfa pública.
-- Criar `CODE_OF_CONDUCT.md`, se desejado para abertura pública.
+- Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Criar templates de issue.
 - Criar template de pull request.
 - Criar changelog inicial, quando houver decisão de release.
@@ -109,6 +110,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - `README.md` revisado para alfa, sem prometer produção, provider real obrigatório, RAG, embeddings, pgvector, Docker, PyPI ou CI inexistentes.
 - Guia de instalação validado em ambiente limpo e documentado como instalação local de desenvolvimento.
 - Guia de contribuição revisado para processo público inicial, sem prometer maturidade inexistente.
+- Código de conduta inicial criado e revisado sem prometer governança comunitária madura inexistente.
 - Licença final decidida e publicada em `LICENSE` ou pendência tratada antes de distribuição pública.
 - Política de uso responsável revisada e alinhada ao estado real do projeto.
 - Política pública de segurança criada ou pendência aceita explicitamente antes da abertura.
@@ -126,7 +128,6 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Publicar pacote.
 - Criar changelog de release sem decisão.
 - Definir canal público de reporte de vulnerabilidades e processo público maduro de segurança.
-- Criar `CODE_OF_CONDUCT.md`.
 - Criar templates de issue ou pull request.
 - Internacionalizar READMEs.
 - Implementar funcionalidades.

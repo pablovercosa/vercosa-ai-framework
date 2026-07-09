@@ -54,6 +54,7 @@ Ativos principais:
 - `AGENTS.md`: contexto operacional central e regras arquiteturais para agentes.
 - `README.md`: resumo público do projeto, identidade de Harness Engineering e limites do MVP atual.
 - `CONTRIBUTING.md`: guia inicial de contribuição com fluxo por missões, validações, documentação, idioma, commits e limites operacionais.
+- `CODE_OF_CONDUCT.md` e `docs/conduct/`: código de conduta inicial e diretrizes práticas de convivência, ainda sem canal público definitivo ou governança comunitária madura.
 - `SECURITY.md` e `docs/security/`: política inicial de segurança e orientação conservadora para reporte responsável, ainda sem canal público definitivo de vulnerabilidades.
 - `docs/legal/`: documentação legal inicial com política de uso responsável e notas sobre licença pendente.
 - `docs/getting-started/local-installation.md`: guia inicial de instalação local para desenvolvimento, validações básicas e uso inicial da CLI.
@@ -232,6 +233,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Observabilidade externa.
 - Licença final publicada em `LICENSE`.
 - Processo público maduro de segurança, incluindo canal definitivo de reporte de vulnerabilidades.
+- Canal público definitivo para problemas de conduta e política de governança comunitária madura.
 - Publicação de release alfa; o checklist de prontidão existe, mas não cria tag, pacote ou marco público por si só.
 - Versionamento alfa formal, changelog inicial e política pública madura de segurança.
 - Testes de contrato entre portas/adapters.

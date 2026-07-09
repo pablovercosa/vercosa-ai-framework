@@ -1,6 +1,6 @@
 # Backlog Estratégico De Missões
 
-Links principais: [README principal](../../README.md) | [Roadmap macro](../alignment/roadmap.md) | [Uso do runner seguro](../operations/safe-runner-usage.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md)
+Links principais: [README principal](../../README.md) | [Roadmap macro](../alignment/roadmap.md) | [Uso do runner seguro](../operations/safe-runner-usage.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
 
 ## Objetivo
 
@@ -93,6 +93,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Guia inicial de contribuição.
 - Base documental legal inicial, com política de uso responsável e notas de licença pendente.
 - `SECURITY.md` inicial e documentação inicial em `docs/security/`, sem canal público definitivo de vulnerabilidades ainda.
+- `CODE_OF_CONDUCT.md` inicial e documentação inicial em `docs/conduct/`, sem canal público definitivo para problemas de conduta ainda.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 
@@ -440,9 +441,11 @@ Critérios de aceite resumidos: licença existe, é referenciada e não conflita
 Missões futuras relacionadas:
 
 - Amadurecer política pública de vulnerabilidades e definir canal de reporte.
-- Criar `CODE_OF_CONDUCT.md`, se desejado para a abertura pública.
+- Definir canal público para problemas de conduta.
+- Amadurecer política de governança comunitária antes de abertura pública ampla.
 - Criar templates de issue.
 - Criar templates de pull request.
+- Revisar processo público antes de release alfa.
 - Revisar segurança antes de release alfa.
 - Criar CI público quando houver decisão de automação.
 - Criar changelog inicial quando houver decisão de release.

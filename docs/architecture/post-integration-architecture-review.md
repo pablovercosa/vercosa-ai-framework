@@ -191,7 +191,7 @@ Futuro:
 Fora do escopo atual:
 
 - Implementar código novo nesta revisão.
-- Criar `SECURITY.md`, `CODE_OF_CONDUCT.md`, templates de issue ou pull request.
+- Criar templates de issue ou pull request.
 - Criar tag, versão, changelog inicial ou release.
 - Internacionalizar READMEs.
 - Acessar rede, banco, providers, OpenCode, Ollama, Claude, Gemini, OpenAI ou MCPs.
@@ -211,6 +211,7 @@ O projeto ainda não possui:
 - Dashboard.
 - CI público.
 - Release alfa publicada.
+- Canal público definitivo para problemas de conduta.
 - Internacionalização dos READMEs.
 
 Esses limites são intencionais neste momento. Eles reduzem acoplamento prematuro e evitam prometer capacidades antes de contratos, políticas, auditoria e validação estarem maduros.
@@ -223,6 +224,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 - Ausência de persistência externa de auditoria, limitando retenção e investigação posterior.
 - Ausência de validação de instalação limpa em ambiente novo.
 - Ausência de política pública de segurança.
+- Ausência de governança comunitária madura e canal público definitivo para problemas de conduta.
 - Ausência de versionamento alfa formal.
 - Ausência de CI público para reproduzir validações fora do ambiente local.
 
@@ -242,7 +244,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 ## Próximos Refinamentos Arquiteturais Possíveis
 
 - Amadurecer política pública de segurança e definir canal público de vulnerabilidades.
-- Criar `CODE_OF_CONDUCT.md`.
+- Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Criar templates de issue e pull request.
 - Criar changelog inicial quando houver decisão de release.
 - Definir versão alfa inicial.
