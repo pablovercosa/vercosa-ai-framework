@@ -95,6 +95,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - `SECURITY.md` inicial e documentação inicial em `docs/security/`, sem canal público definitivo de vulnerabilidades ainda.
 - `CODE_OF_CONDUCT.md` inicial e documentação inicial em `docs/conduct/`, sem canal público definitivo para problemas de conduta ainda.
 - Templates iniciais de issue e pull request em `.github/`, sem processo público completo ou promessa de triagem madura.
+- `CHANGELOG.md` inicial criado, sem versão, tag, release publicada ou promessa de estabilidade de produção.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 
@@ -448,7 +449,7 @@ Missões futuras relacionadas:
 - Revisar processo público antes de release alfa.
 - Revisar segurança antes de release alfa.
 - Criar CI público quando houver decisão de automação.
-- Criar changelog inicial quando houver decisão de release.
+- Manter o changelog inicial atualizado sem criar release versionada.
 - Definir versão inicial.
 - Criar checklist de instalação limpa em ambiente novo.
 - Criar comandos adicionais da CLI para listar missões e resumir pós-batch.
@@ -578,7 +579,7 @@ Objetivo: organizar README, guias e exemplos para uma futura alfa sem transforma
 Escopo permitido: documentação pública, limites claros, links relativos, pré-requisitos e checklists.
 Escopo proibido: criar release/tag sem decisão, internacionalizar READMEs agora ou prometer providers, RAG, embeddings, pgvector ou Semantic Index como implementados.
 Dependências: guia de instalação, guia de contribuição, licença e revisão de arquitetura pós-integrações.
-Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); release alfa, tag, versão, changelog e internacionalização continuam futuros.
+Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); changelog inicial criado em [CHANGELOG.md](../../CHANGELOG.md); release alfa, tag, versão, release notes e internacionalização continuam futuros.
 Critérios de aceite resumidos: documentação pública diferencia implementado, MVP, integração inicial, futuro e fora do escopo.
 
 ## Como Transformar Backlog Em Fila Executável

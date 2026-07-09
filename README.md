@@ -38,7 +38,7 @@ Status: MVP operacional inicial com fundação arquitetural e contratos em evolu
 
 As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `src/vercosa_ai_framework/` implementa MVPs determinísticos e integrações iniciais, mas o fluxo completo Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta.
 
-A documentação pública inicial está sendo preparada para uma futura alfa pública, mas isso não significa release publicada, tag criada, pacote distribuído ou estabilidade de produção. O checklist documental está em [docs/release/public-alpha-readiness.md](docs/release/public-alpha-readiness.md).
+A documentação pública inicial está sendo preparada para uma futura alfa pública, mas isso não significa release publicada, tag criada, pacote distribuído ou estabilidade de produção. O checklist documental está em [docs/release/public-alpha-readiness.md](docs/release/public-alpha-readiness.md) e o histórico inicial está em [CHANGELOG.md](CHANGELOG.md).
 
 A revisão arquitetural pós-integrações está em [docs/architecture/post-integration-architecture-review.md](docs/architecture/post-integration-architecture-review.md) e consolida o estado após as integrações concluídas até a missão 0080.
 
@@ -197,6 +197,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 
 - [Guia inicial de contribuição](CONTRIBUTING.md)
 - [Código de conduta inicial](CODE_OF_CONDUCT.md)
+- [Changelog inicial](CHANGELOG.md)
 - [Política inicial de segurança](SECURITY.md)
 - [Política inicial de uso responsável](docs/legal/usage-policy.md)
 - [Diretrizes de convivência e colaboração](docs/conduct/community-guidelines.md)

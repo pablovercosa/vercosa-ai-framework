@@ -191,7 +191,7 @@ Futuro:
 Fora do escopo atual:
 
 - Implementar código novo nesta revisão.
-- Criar tag, versão, changelog inicial ou release.
+- Criar tag, versão, changelog de release versionado ou release.
 - Internacionalizar READMEs.
 - Acessar rede, banco, providers, OpenCode, Ollama, Claude, Gemini, OpenAI ou MCPs.
 
@@ -245,7 +245,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 - Amadurecer política pública de segurança e definir canal público de vulnerabilidades.
 - Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Revisar os templates iniciais de issue e pull request conforme o processo público amadurecer.
-- Criar changelog inicial quando houver decisão de release.
+- Manter o changelog inicial atualizado sem criar release versionada.
 - Definir versão alfa inicial.
 - Criar checklist de instalação limpa em ambiente novo.
 - Criar comandos CLI para listar missões.

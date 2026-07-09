@@ -172,7 +172,7 @@ Decisões já encaminhadas:
 6. Qual será a versão inicial da alfa pública?
 7. Qual canal público será usado para problemas de conduta antes de abertura pública ampla?
 8. Quais refinamentos dos templates iniciais de issue e pull request serão necessários antes da alfa pública?
-9. O changelog inicial será criado antes da tag alfa ou junto com a decisão de versão?
+9. O changelog inicial já foi criado; quando ele deve passar a registrar entradas versionadas associadas a tag alfa?
 10. Em qual momento `README.en.md` e `README.es.md` devem ser criados sem divergir do README canônico em português do Brasil?
 11. Serão usados GitHub Security Advisories?
 12. Haverá política formal de disclosure?

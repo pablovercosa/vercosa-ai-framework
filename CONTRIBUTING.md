@@ -17,6 +17,7 @@ Recursos como RAG semântico, embeddings, pgvector como adapter real, providers 
 - Inclua referências obrigatórias a Specs, docs, ADRs, scripts ou módulos relevantes.
 - Rode testes e `compileall` antes de considerar a entrega pronta.
 - Atualize documentação quando a mudança afetar comportamento, fluxo, arquitetura, comandos, módulos ou roadmap.
+- Atualize [CHANGELOG.md](CHANGELOG.md) quando a mudança afetar comportamento público, arquitetura, operação, segurança, documentação pública ou preparação de release futura.
 - Use commits em português do Brasil.
 - Não use `git add .`; faça staging explícito dos arquivos pretendidos.
 - Não faça force push.
@@ -195,6 +196,8 @@ Falha em qualquer um desses comandos bloqueia entrega, push ou continuação de 
 
 Revise e atualize documentação quando a mudança afetar comportamento, arquitetura, comando, módulo, fluxo operacional, estado do projeto ou planejamento.
 
+Mudanças relevantes também devem atualizar [CHANGELOG.md](CHANGELOG.md) quando afetarem comportamento público, arquitetura, operação, segurança, documentação pública ou release futura. Essa atualização não substitui processo de release, não cria versão, não cria tag e não deve transformar o guia de contribuição em manual de publicação.
+
 Verifique:
 
 - `README.md` principal quando a visão geral, comandos, links ou estado mudarem;
@@ -202,6 +205,7 @@ Verifique:
 - `docs/architecture/module-index.md` quando um módulo novo surgir ou o status de módulo mudar;
 - roadmap/backlog quando o escopo estratégico mudar;
 - docs operacionais quando o fluxo operacional mudar.
+- `CHANGELOG.md` quando houver mudança pública relevante ou preparação de release futura.
 
 Consulte [docs/documentation/documentation-update-policy.md](docs/documentation/documentation-update-policy.md) e [docs/documentation/readme-standard.md](docs/documentation/readme-standard.md).
 
@@ -272,6 +276,7 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 ## Documentos Relevantes
 
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
+- [Changelog inicial](CHANGELOG.md)
 - [Código de conduta inicial](CODE_OF_CONDUCT.md)
 - [Diretrizes de convivência e colaboração](docs/conduct/community-guidelines.md)
 - [Política inicial de segurança](SECURITY.md)

@@ -29,6 +29,7 @@ O estado atual deve ser lido assim:
 | [README.md](../../README.md) | existe | Precisa permanecer enxuto e distinguir MVP, lacunas e futuro. |
 | [CONTRIBUTING.md](../../CONTRIBUTING.md) | existe | Precisa continuar sem prometer processo público maduro de contribuição. |
 | [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md) | existe | Código de conduta inicial e conservador; canal público para problemas de conduta ainda precisa ser definido antes de abertura pública ampla. |
+| [CHANGELOG.md](../../CHANGELOG.md) | existe | Changelog inicial criado sem versão, tag, release publicada ou promessa de estabilidade. |
 | [SECURITY.md](../../SECURITY.md) | existe | Política inicial e conservadora; canal público de vulnerabilidades ainda precisa ser definido antes da alfa pública. |
 | `LICENSE` | pendente | Não existe no repositório; a pendência está documentada em [license-notes.md](../legal/license-notes.md). |
 | [docs/legal/usage-policy.md](../legal/usage-policy.md) | existe | Precisa continuar explícita sobre ausência de segurança absoluta. |
@@ -97,7 +98,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Definir canal público de reporte de vulnerabilidades e política de disclosure antes da alfa pública.
 - Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Revisar templates de issue e pull request conforme o processo público amadurecer.
-- Criar changelog inicial, quando houver decisão de release.
+- Manter `CHANGELOG.md` inicial atualizado sem criar release, tag ou versão enquanto não houver decisão explícita.
 - Definir versão inicial.
 - Testar instalação do zero em ambiente novo.
 - Criar CI público, se houver decisão de automação.
@@ -117,7 +118,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Política de uso responsável revisada e alinhada ao estado real do projeto.
 - Política pública de segurança criada ou pendência aceita explicitamente antes da abertura.
 - Templates de issue e pull request criados e revisados conforme o processo público amadurecer.
-- Changelog inicial e versão inicial definidos somente quando houver decisão de release.
+- Changelog inicial criado; versão inicial definida somente quando houver decisão de release.
 - Testes locais passam com `pytest`.
 - Compilação dos módulos passa com `python3 -m compileall src`.
 - Roadmap, backlog e estado atual diferenciam documentação preparada, alfa futura, release publicada e produção.
@@ -128,7 +129,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Criar release.
 - Criar tag.
 - Publicar pacote.
-- Criar changelog de release sem decisão.
+- Criar changelog de release versionado sem decisão.
 - Definir canal público de reporte de vulnerabilidades e processo público maduro de segurança.
 - Internacionalizar READMEs.
 - Implementar funcionalidades.

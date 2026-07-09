@@ -59,6 +59,7 @@ Ativos principais:
 - `docs/legal/`: documentação legal inicial com política de uso responsável e notas sobre licença pendente.
 - `docs/getting-started/local-installation.md`: guia inicial de instalação local para desenvolvimento, validações básicas e uso inicial da CLI.
 - `docs/release/public-alpha-readiness.md`: checklist de prontidão documental para futura alfa pública, sem criar release, tag, pacote ou promessa de estabilidade.
+- `CHANGELOG.md`: changelog inicial do estado não publicado, sem versão, tag, release publicada ou promessa de estabilidade de produção.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
 - `.github/ISSUE_TEMPLATE/` e `.github/PULL_REQUEST_TEMPLATE.md`: templates iniciais para colaboração pública futura, sem processo público maduro ou SLA.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
@@ -236,7 +237,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Processo público maduro de segurança, incluindo canal definitivo de reporte de vulnerabilidades.
 - Canal público definitivo para problemas de conduta e política de governança comunitária madura.
 - Publicação de release alfa; o checklist de prontidão existe, mas não cria tag, pacote ou marco público por si só.
-- Versionamento alfa formal, changelog inicial, CI público e política pública madura de segurança.
+- Versionamento alfa formal, CI público e política pública madura de segurança. O changelog inicial existe, mas ainda não há changelog de release versionado.
 - Testes de contrato entre portas/adapters.
 - ADRs para fronteiras ainda ambíguas.
 

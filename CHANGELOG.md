@@ -1,0 +1,87 @@
+# Changelog
+
+Todas as mudanças relevantes do Vercosa AI Framework devem ser registradas neste arquivo quando afetarem comportamento público, arquitetura, operação, segurança, documentação pública ou preparação de release futura.
+
+O projeto ainda está em desenvolvimento. Ainda não há release estável publicada, versão alfa publicada, tag de release ou pacote distribuído. Este changelog inicial registra a evolução já consolidada do projeto até o estado atual, sem criar release formal, sem definir versão definitiva e sem prometer estabilidade de produção.
+
+Links úteis: [README.md](README.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
+
+## Não publicado
+
+### Adicionado
+
+- Fundação modular inicial do framework como camada de Harness Engineering para agentes de IA, desenvolvimento orientado por especificações e execução governada.
+- Evolução por missões em Markdown, com backlog estratégico, fila operacional, critérios de aceite, validações locais e rastreabilidade documental.
+- Mission Runner local, fila em diretórios e runner seguro de uma missão.
+- Runner seguro em batch, com batch como fluxo operacional padrão quando o bloco de missões estiver bem especificado, revisado e seguro.
+- Policy Engine MVP para resolução determinística de políticas declarativas.
+- Guardian Engine MVP para avaliação determinística de riscos, ações, comandos, pacotes de contexto e sinais textuais de limite de uso/API.
+- Usage/API Limit Guard inicial para classificar logs já recebidos que indiquem quota, rate limit, billing hard limit, crédito insuficiente ou limite externo de API.
+- Context Router, Token Budget Manager e `ContextPackage` determinísticos.
+- Knowledge Hub MVP com ingestão Markdown, store em memória, busca textual e adaptação para candidatos de contexto.
+- Model Selection Engine MVP com catálogo em memória, políticas resolvidas opcionais e requisitos opcionais derivados de orçamento de tokens.
+- Provider Gateway MVP, cadeia inicial de Capabilities, Skills e Tools, e Runtime Adapter inicial para OpenCode.
+- Audit/Event Log inicial em memória, com helpers opcionais para decisões de Policy, Guardian, Context e ciclo de vida de missão/batch.
+- CLI operacional inicial com comandos `status`, `validate` e `doctor`.
+- Exemplos operacionais iniciais em `docs/examples/`.
+- Templates iniciais de issues e pull request em `.github/`.
+
+### Alterado
+
+- README principal consolidado com a identidade pública do VAF como framework de Harness Engineering, sem tratar modelo, runtime ou provider como núcleo do projeto.
+- Batch de 10 documentado como fluxo operacional padrão para blocos normais revisados e seguros; batch de 3 preservado para testes, retomadas, blocos pequenos e recuperação.
+- Execução individual preservada para missões sensíveis, críticas, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.
+- OpenCode documentado como runtime/laboratório inicial atrás de adapter, não como centro arquitetural do framework.
+
+### Documentado
+
+- Documentação pública inicial para futura alfa, incluindo README, guia de instalação local, guia de contribuição, documentação legal inicial, arquitetura, operações, exemplos e checklist de prontidão para alfa pública.
+- `SECURITY.md` inicial, com política conservadora de segurança, limites atuais e orientação para reporte responsável.
+- `CODE_OF_CONDUCT.md` inicial, com expectativas de conduta e limites de governança comunitária nesta fase.
+- Política inicial de uso responsável em `docs/legal/usage-policy.md`.
+- Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`.
+- Índice navegável de módulos em `docs/architecture/module-index.md`.
+- Playbook de execução em batch e checklist de validação pós-batch.
+
+### Segurança
+
+- Separação documentada entre Policy Engine e Guardian Engine.
+- Restrições documentadas para evitar acesso direto de agentes a providers, MCPs, APIs, bancos, tools ou runtimes.
+- Limites explícitos sobre uso com dados sensíveis, providers externos, automações destrutivas, credenciais e execução sem revisão humana.
+- Política inicial de segurança sem promessa de SLA, bug bounty, conformidade regulatória, hardening de produção ou segurança absoluta.
+
+### Operacional
+
+- Operação local orientada por `pytest`, `python3 -m compileall src`, scripts seguros, CLI operacional e revisão humana.
+- Push automático mantido como opt-in; push manual permanece a prática recomendada após validação.
+- Documentação operacional diferencia backlog estratégico, fila executável, execução individual, batch seguro, retomada e validação pós-batch.
+
+### Limites atuais
+
+- Sem release estável publicada.
+- Sem versão alfa publicada.
+- Sem pacote publicado.
+- Sem publicação em PyPI.
+- Sem CI público documentado como existente.
+- Sem RAG semântico.
+- Sem embeddings.
+- Sem pgvector como adapter real.
+- Sem Semantic Index.
+- Sem persistência externa de eventos.
+- Sem múltiplos providers reais em produção.
+- Sem internacionalização dos READMEs.
+- Sem promessa de compatibilidade futura, SLA ou prontidão para produção.
+
+### Futuro
+
+- Definição da primeira versão alfa.
+- Definição da política de release.
+- Decisão formal sobre adoção de SemVer antes da primeira release versionada, se essa convenção for adotada.
+- Criação de tag alfa somente após decisão explícita e validações aplicáveis.
+- Release notes futuras quando houver release de fato.
+- CI público, se houver decisão de automação.
+- Internacionalização dos READMEs após estabilização do conteúdo canônico em português do Brasil.
+
+## Convenção futura de versões
+
+A convenção de versionamento ainda não foi definida formalmente para releases públicas do Vercosa AI Framework. A adoção de SemVer, ou de outro modelo, deve ser decidida antes da primeira release versionada. Até essa decisão, este changelog não atribui versão, data de release, compatibilidade futura ou status de estabilidade.
