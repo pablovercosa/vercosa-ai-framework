@@ -59,7 +59,8 @@ Ativos principais:
 - `docs/legal/`: documentação legal inicial com política de uso responsável e notas sobre licença pendente.
 - `docs/getting-started/local-installation.md`: guia inicial de instalação local para desenvolvimento, validações básicas e uso inicial da CLI.
 - `docs/release/public-alpha-readiness.md`: checklist de prontidão documental para futura alfa pública, sem criar release, tag, pacote ou promessa de estabilidade.
-- `CHANGELOG.md`: changelog inicial do estado não publicado, sem versão, tag, release publicada ou promessa de estabilidade de produção.
+- `docs/release/versioning-policy.md` e `docs/release/alpha-version-plan.md`: política inicial de versionamento e plano da versão alfa `0.1.0-alpha.1`, sem release publicada.
+- `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
 - `.github/ISSUE_TEMPLATE/` e `.github/PULL_REQUEST_TEMPLATE.md`: templates iniciais para colaboração pública futura, sem processo público maduro ou SLA.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
@@ -236,8 +237,8 @@ O projeto ainda precisa alinhar ou implementar:
 - Licença final publicada em `LICENSE`.
 - Processo público maduro de segurança, incluindo canal definitivo de reporte de vulnerabilidades.
 - Canal público definitivo para problemas de conduta e política de governança comunitária madura.
-- Publicação de release alfa; o checklist de prontidão existe, mas não cria tag, pacote ou marco público por si só.
-- Versionamento alfa formal, CI público e política pública madura de segurança. O changelog inicial existe, mas ainda não há changelog de release versionado.
+- Publicação de release alfa; o checklist de prontidão e a versão planejada existem, mas não criam tag, pacote ou marco público por si só.
+- CI público e política pública madura de segurança. O changelog inicial existe, mas ainda não há changelog de release versionado.
 - Testes de contrato entre portas/adapters.
 - ADRs para fronteiras ainda ambíguas.
 
@@ -255,6 +256,21 @@ Continuar implementação sem alinhamento pode:
 - perder rastreabilidade de Spec para Plan, Tasks, implementação, validação e commit;
 - aumentar custo de tokens por carregamento amplo e repetido de contexto;
 - criar lacunas de segurança em segredos, tools, providers externos e permissões de runtime.
+
+## Estado De Versionamento E Release
+
+A versão alfa inicial planejada é `0.1.0-alpha.1`, com tag futura planejada `v0.1.0-alpha.1`.
+
+Esse estado é apenas documental:
+
+- não há release alfa publicada;
+- não há tag Git criada para alfa;
+- não há GitHub Release publicada;
+- não há pacote PyPI publicado;
+- não há garantia de estabilidade de produção;
+- não há promessa de compatibilidade de API.
+
+Antes de qualquer publicação, ainda são necessárias validação de instalação limpa, testes, `compileall`, revisão do changelog, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
 
 ## Recomendação De Alinhamento
 

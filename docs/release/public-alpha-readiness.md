@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
 
 ## Objetivo
 
@@ -9,6 +9,8 @@ Este documento é um checklist de preparação documental para uma futura alfa p
 Alfa pública não significa estabilidade de produção, suporte completo, release publicada, pacote distribuído ou adequação para uso crítico. O projeto ainda está em desenvolvimento e possui contratos, MVPs e documentação inicial em evolução.
 
 Este documento não é release notes, não cria versão, não cria tag, não publica pacote e não promete data de alfa.
+
+A versão alfa planejada está documentada como `0.1.0-alpha.1`, com tag futura planejada `v0.1.0-alpha.1`. Essa definição é apenas documental: a alfa ainda não foi publicada e a tag ainda não foi criada.
 
 ## Estado Da Documentação Pública
 
@@ -29,7 +31,9 @@ O estado atual deve ser lido assim:
 | [README.md](../../README.md) | existe | Precisa permanecer enxuto e distinguir MVP, lacunas e futuro. |
 | [CONTRIBUTING.md](../../CONTRIBUTING.md) | existe | Precisa continuar sem prometer processo público maduro de contribuição. |
 | [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md) | existe | Código de conduta inicial e conservador; canal público para problemas de conduta ainda precisa ser definido antes de abertura pública ampla. |
-| [CHANGELOG.md](../../CHANGELOG.md) | existe | Changelog inicial criado sem versão, tag, release publicada ou promessa de estabilidade. |
+| [CHANGELOG.md](../../CHANGELOG.md) | existe | Changelog inicial criado com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade. |
+| [versioning-policy.md](versioning-policy.md) | existe | Política inicial e conservadora de versionamento. |
+| [alpha-version-plan.md](alpha-version-plan.md) | existe | Plano documental para `0.1.0-alpha.1`, sem tag ou release publicada. |
 | [SECURITY.md](../../SECURITY.md) | existe | Política inicial e conservadora; canal público de vulnerabilidades ainda precisa ser definido antes da alfa pública. |
 | `LICENSE` | pendente | Não existe no repositório; a pendência está documentada em [license-notes.md](../legal/license-notes.md). |
 | [docs/legal/usage-policy.md](../legal/usage-policy.md) | existe | Precisa continuar explícita sobre ausência de segurança absoluta. |
@@ -61,6 +65,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | A documentação operacional não recomenda execução cega. | existe | Batch exige fila revisada, parada na primeira falha e validação. |
 | O roadmap não promete funcionalidades futuras como implementadas. | existe | Mantém próximos passos conservadores e lacunas explícitas. |
 | A revisão pós-integrações diferencia implementado, MVP, integração inicial, futuro e fora do escopo. | existe | Ajuda a evitar promessa pública acima do estado real. |
+| A estratégia inicial de versionamento está documentada. | existe | Define `0.1.0-alpha.1` como versão planejada, sem publicar release. |
+| A versão alfa planejada está documentada. | existe | Diferencia versão planejada, tag futura, release GitHub e pacote publicado. |
 
 ## Riscos Antes Da Alfa Pública
 
@@ -72,6 +78,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Templates de issue iniciais. | existe | Estruturam reportes públicos sem prometer triagem madura ou suporte formal. |
 | Template de pull request inicial. | existe | Registra checklist mínimo de escopo, segurança, testes e documentação sem prometer merge ou SLA. |
 | Ausência de release/tag. | pendente | Não há marco alfa publicado. |
+| Ausência de decisão explícita de release. | pendente | A versão planejada existe documentalmente, mas não autoriza publicação. |
 | Ausência de documentação internacionalizada. | pendente | `README.md` permanece canônico em português do Brasil; `README.en.md` e `README.es.md` são futuros. |
 | Ausência de provider real configurado. | pendente | O estado atual não deve ser apresentado como integração real com provider externo. |
 | Ausência de RAG semântico. | pendente | Busca semântica e recuperação avançada continuam futuras. |
@@ -91,6 +98,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Sem pgvector por enquanto.
 - Sem provider real obrigatório por enquanto.
 - Sem persistência externa de eventos por enquanto.
+- Versão alfa inicial planejada como `0.1.0-alpha.1`, sem release publicada.
+- Tag futura planejada como `v0.1.0-alpha.1`, sem tag criada nesta fase.
 
 ## Pendências Antes De Release Alfa
 
@@ -99,10 +108,12 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Revisar templates de issue e pull request conforme o processo público amadurecer.
 - Manter `CHANGELOG.md` inicial atualizado sem criar release, tag ou versão enquanto não houver decisão explícita.
-- Definir versão inicial.
 - Testar instalação do zero em ambiente novo.
 - Criar CI público, se houver decisão de automação.
 - Revisar README final de alfa.
+- Decidir explicitamente se e quando criar a tag `v0.1.0-alpha.1`.
+- Decidir explicitamente se e quando publicar a release alfa.
+- Definir se a alfa terá pacote publicado ou apenas código-fonte.
 - Decidir se `README.en.md` e `README.es.md` serão criados apenas no final.
 - Definir modelo de release alfa sem prometer estabilidade de produção.
 
@@ -118,9 +129,12 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Política de uso responsável revisada e alinhada ao estado real do projeto.
 - Política pública de segurança criada ou pendência aceita explicitamente antes da abertura.
 - Templates de issue e pull request criados e revisados conforme o processo público amadurecer.
-- Changelog inicial criado; versão inicial definida somente quando houver decisão de release.
+- Changelog inicial criado e política inicial de versionamento documentada.
+- Versão alfa planejada documentada sem declarar release publicada.
 - Testes locais passam com `pytest`.
 - Compilação dos módulos passa com `python3 -m compileall src`.
+- `git status` limpo no momento da release.
+- Decisão explícita de tag e release registrada antes de publicar.
 - Roadmap, backlog e estado atual diferenciam documentação preparada, alfa futura, release publicada e produção.
 - Recursos futuros permanecem marcados como futuros, lacunas, próximos passos ou fora do escopo atual.
 

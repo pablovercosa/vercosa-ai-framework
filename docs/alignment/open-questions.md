@@ -168,8 +168,8 @@ Decisões já encaminhadas:
 2. Qual canal público será usado para vulnerabilidades antes da alfa pública?
 3. Haverá e-mail dedicado para reporte de vulnerabilidades?
 4. Quais limites devem ser documentados para uso com providers pagos?
-5. Qual modelo de release alfa será adotado sem prometer estabilidade de produção?
-6. Qual será a versão inicial da alfa pública?
+5. Quando criar a tag futura planejada `v0.1.0-alpha.1`?
+6. A alfa será distribuída apenas como código-fonte ou haverá pacote PyPI?
 7. Qual canal público será usado para problemas de conduta antes de abertura pública ampla?
 8. Quais refinamentos dos templates iniciais de issue e pull request serão necessários antes da alfa pública?
 9. O changelog inicial já foi criado; quando ele deve passar a registrar entradas versionadas associadas a tag alfa?
@@ -182,6 +182,9 @@ Decisões já encaminhadas:
 16. Haverá equipe de manutenção formal para triagem de problemas comunitários?
 17. Haverá política formal de moderação?
 18. Como reports sensíveis de conduta devem ser tratados antes da alfa pública sem expor dados privados em issues públicas?
+19. Haverá CI público antes da alfa ou a validação inicial continuará local/manual?
+20. Haverá release notes separadas ou o `CHANGELOG.md` será suficiente para a primeira alfa?
+21. Como alinhar o metadado atual de `pyproject.toml` com a política documental sem alterar versão em código fora de uma missão própria?
 
 ## ADRs Recomendadas
 

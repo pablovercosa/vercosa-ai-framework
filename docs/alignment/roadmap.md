@@ -45,7 +45,8 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Documentação legal inicial em `docs/legal/`, com política de uso responsável e licença final ainda pendente.
 - Templates iniciais de issue e pull request em `.github/`, sem processo público completo de triagem, merge ou suporte formal.
 - Checklist de prontidão para futura alfa pública em `docs/release/public-alpha-readiness.md`, sem criação de release, tag, pacote ou changelog de release versionado.
-- Changelog inicial em `CHANGELOG.md`, sem versão, data de release, tag ou promessa de estabilidade.
+- Política inicial de versionamento em `docs/release/versioning-policy.md` e plano da versão alfa em `docs/release/alpha-version-plan.md`, com `0.1.0-alpha.1` apenas como versão planejada.
+- Changelog inicial em `CHANGELOG.md`, sem data de release, tag ou promessa de estabilidade.
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
@@ -209,7 +210,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, versão alfa, política de release, CI público quando decidido e instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, política de release, CI público quando decidido e instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git e resumo pós-batch, sem substituir scripts seguros.
 3. Criar comando CLI para listar missões e apoiar diagnóstico operacional.
 4. Definir persistência local controlada para Audit/Event Log.
@@ -249,5 +250,6 @@ Permanecem futuros e não devem ser tratados como implementados:
 - Licença final em `LICENSE`.
 - Processo público maduro de segurança e canal definitivo de vulnerabilidades.
 - Release alfa.
-- Versão inicial para alfa e changelog de release versionado.
+- Tag `v0.1.0-alpha.1`, release GitHub e changelog de release versionado.
+- Pacote publicado.
 - CI público.

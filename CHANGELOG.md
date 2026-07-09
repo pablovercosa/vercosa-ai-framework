@@ -4,7 +4,7 @@ Todas as mudanças relevantes do Vercosa AI Framework devem ser registradas nest
 
 O projeto ainda está em desenvolvimento. Ainda não há release estável publicada, versão alfa publicada, tag de release ou pacote distribuído. Este changelog inicial registra a evolução já consolidada do projeto até o estado atual, sem criar release formal, sem definir versão definitiva e sem prometer estabilidade de produção.
 
-Links úteis: [README.md](README.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
+Links úteis: [README.md](README.md) | [Política de versionamento](docs/release/versioning-policy.md) | [Plano da versão alfa](docs/release/alpha-version-plan.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
 
 ## Não publicado
 
@@ -35,6 +35,8 @@ Links úteis: [README.md](README.md) | [Checklist de alfa pública](docs/release
 
 ### Documentado
 
+- Política inicial de versionamento, sem promessa de estabilidade, compatibilidade de API, tag ou release publicada.
+- Versão alfa planejada `0.1.0-alpha.1` e tag futura planejada `v0.1.0-alpha.1`, registradas apenas como plano documental.
 - Documentação pública inicial para futura alfa, incluindo README, guia de instalação local, guia de contribuição, documentação legal inicial, arquitetura, operações, exemplos e checklist de prontidão para alfa pública.
 - `SECURITY.md` inicial, com política conservadora de segurança, limites atuais e orientação para reporte responsável.
 - `CODE_OF_CONDUCT.md` inicial, com expectativas de conduta e limites de governança comunitária nesta fase.
@@ -74,9 +76,8 @@ Links úteis: [README.md](README.md) | [Checklist de alfa pública](docs/release
 
 ### Futuro
 
-- Definição da primeira versão alfa.
 - Definição da política de release.
-- Decisão formal sobre adoção de SemVer antes da primeira release versionada, se essa convenção for adotada.
+- Amadurecimento da política formal de estabilidade após as primeiras alfas.
 - Criação de tag alfa somente após decisão explícita e validações aplicáveis.
 - Release notes futuras quando houver release de fato.
 - CI público, se houver decisão de automação.
@@ -84,4 +85,6 @@ Links úteis: [README.md](README.md) | [Checklist de alfa pública](docs/release
 
 ## Convenção futura de versões
 
-A convenção de versionamento ainda não foi definida formalmente para releases públicas do Vercosa AI Framework. A adoção de SemVer, ou de outro modelo, deve ser decidida antes da primeira release versionada. Até essa decisão, este changelog não atribui versão, data de release, compatibilidade futura ou status de estabilidade.
+A política inicial de versionamento está documentada em [docs/release/versioning-policy.md](docs/release/versioning-policy.md). A versão alfa inicial planejada é `0.1.0-alpha.1`, com tag futura planejada `v0.1.0-alpha.1`, mas nenhuma release foi publicada e nenhuma tag foi criada.
+
+Até uma decisão explícita de release, este changelog não atribui data de release, compatibilidade futura ou status de estabilidade.

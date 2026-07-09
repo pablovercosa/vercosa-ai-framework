@@ -18,6 +18,7 @@ Recursos como RAG semântico, embeddings, pgvector como adapter real, providers 
 - Rode testes e `compileall` antes de considerar a entrega pronta.
 - Atualize documentação quando a mudança afetar comportamento, fluxo, arquitetura, comandos, módulos ou roadmap.
 - Atualize [CHANGELOG.md](CHANGELOG.md) quando a mudança afetar comportamento público, arquitetura, operação, segurança, documentação pública ou preparação de release futura.
+- Siga a [política inicial de versionamento](docs/release/versioning-policy.md) quando a mudança afetar preparação de release, changelog ou documentação pública de versão.
 - Use commits em português do Brasil.
 - Não use `git add .`; faça staging explícito dos arquivos pretendidos.
 - Não faça force push.
@@ -277,6 +278,8 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
 - [Changelog inicial](CHANGELOG.md)
+- [Política inicial de versionamento](docs/release/versioning-policy.md)
+- [Plano da versão alfa inicial](docs/release/alpha-version-plan.md)
 - [Código de conduta inicial](CODE_OF_CONDUCT.md)
 - [Diretrizes de convivência e colaboração](docs/conduct/community-guidelines.md)
 - [Política inicial de segurança](SECURITY.md)

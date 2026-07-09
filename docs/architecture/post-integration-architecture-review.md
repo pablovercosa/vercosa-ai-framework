@@ -47,7 +47,7 @@ Neste momento, o harness organiza:
 | Auditoria | Audit/Event Log inicial em memória, helpers opcionais e eventos básicos de missão. | Sem persistência externa, dashboard, exportação ou integração automática com scripts shell. |
 | CLI operacional | Comandos `status`, `validate` e `doctor`. | Não executa missões, Git, testes, scripts, providers, banco ou rede. |
 | Documentação operacional | Playbooks, checklist pós-batch, guia de instalação, contribuição, exemplos e checklist de alfa pública. | Documentação ainda precisa evitar promessa pública acima do implementado. |
-| Preparação pública alfa | Checklist documental existe e guias iniciais foram criados. | Alfa pública ainda não foi publicada; não há tag, versão, changelog final, CI público ou release. |
+| Preparação pública alfa | Checklist documental, política inicial de versionamento e plano da versão alfa foram criados. | Alfa pública ainda não foi publicada; não há tag, changelog final, CI público ou release. |
 
 ## Módulos Centrais E Responsabilidades
 
@@ -186,7 +186,7 @@ Futuro:
 - Múltiplos runtime adapters reais.
 - Semantic Index, embeddings, pgvector e RAG semântico.
 - Dashboard ou observabilidade externa.
-- CI público, release alfa, changelog, versão e internacionalização.
+- CI público, release alfa, tag, changelog de release versionado e internacionalização.
 
 Fora do escopo atual:
 
@@ -224,7 +224,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 - Ausência de validação de instalação limpa em ambiente novo.
 - Ausência de política pública de segurança.
 - Ausência de governança comunitária madura e canal público definitivo para problemas de conduta.
-- Ausência de versionamento alfa formal.
+- Ausência de release alfa publicada, tag alfa e changelog de release versionado.
 - Ausência de CI público para reproduzir validações fora do ambiente local.
 
 ## Decisões Arquiteturais Consolidadas
@@ -246,7 +246,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 - Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Revisar os templates iniciais de issue e pull request conforme o processo público amadurecer.
 - Manter o changelog inicial atualizado sem criar release versionada.
-- Definir versão alfa inicial.
+- Revisar a versão alfa planejada antes de missão específica de release.
 - Criar checklist de instalação limpa em ambiente novo.
 - Criar comandos CLI para listar missões.
 - Criar comando CLI para resumo pós-batch.

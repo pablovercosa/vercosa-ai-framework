@@ -95,8 +95,9 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - `SECURITY.md` inicial e documentação inicial em `docs/security/`, sem canal público definitivo de vulnerabilidades ainda.
 - `CODE_OF_CONDUCT.md` inicial e documentação inicial em `docs/conduct/`, sem canal público definitivo para problemas de conduta ainda.
 - Templates iniciais de issue e pull request em `.github/`, sem processo público completo ou promessa de triagem madura.
-- `CHANGELOG.md` inicial criado, sem versão, tag, release publicada ou promessa de estabilidade de produção.
+- `CHANGELOG.md` inicial criado, agora com versão alfa planejada documentada, mas sem tag, release publicada ou promessa de estabilidade de produção.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
+- Definição documental da versão alfa inicial concluída como `0.1.0-alpha.1`, com política inicial em [docs/release/versioning-policy.md](../release/versioning-policy.md) e plano em [docs/release/alpha-version-plan.md](../release/alpha-version-plan.md), sem criação de tag, release ou pacote.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
@@ -255,6 +256,7 @@ Missões prováveis:
 - Criar licença se ainda não existir.
 - Definir política pública madura de vulnerabilidades e canal de reporte.
 - Revisar checklist de release alfa.
+- Revisar versão alfa planejada `0.1.0-alpha.1` antes de publicação.
 - Criar release/tag alfa.
 - Usar a revisão arquitetural pós-integrações como referência para não publicar alfa acima do estado real.
 - Registrar lacunas remanescentes para pós-alfa.
@@ -450,12 +452,12 @@ Missões futuras relacionadas:
 - Revisar segurança antes de release alfa.
 - Criar CI público quando houver decisão de automação.
 - Manter o changelog inicial atualizado sem criar release versionada.
-- Definir versão inicial.
 - Criar checklist de instalação limpa em ambiente novo.
 - Criar comandos adicionais da CLI para listar missões e resumir pós-batch.
 - Definir persistência local controlada de eventos auditáveis.
 - Definir política de release.
 - Revisar e criar `LICENSE` antes da release pública.
+- Decidir explicitamente se haverá pacote publicado ou apenas código-fonte na alfa.
 - Publicar release alfa somente após validações e decisão explícita.
 - Internacionalizar READMEs no final, mantendo `README.md` canônico em português do Brasil.
 
@@ -579,7 +581,7 @@ Objetivo: organizar README, guias e exemplos para uma futura alfa sem transforma
 Escopo permitido: documentação pública, limites claros, links relativos, pré-requisitos e checklists.
 Escopo proibido: criar release/tag sem decisão, internacionalizar READMEs agora ou prometer providers, RAG, embeddings, pgvector ou Semantic Index como implementados.
 Dependências: guia de instalação, guia de contribuição, licença e revisão de arquitetura pós-integrações.
-Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); changelog inicial criado em [CHANGELOG.md](../../CHANGELOG.md); release alfa, tag, versão, release notes e internacionalização continuam futuros.
+Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); changelog inicial criado em [CHANGELOG.md](../../CHANGELOG.md); versão alfa planejada documentada; release alfa, tag, release notes e internacionalização continuam futuros.
 Critérios de aceite resumidos: documentação pública diferencia implementado, MVP, integração inicial, futuro e fora do escopo.
 
 ## Como Transformar Backlog Em Fila Executável
