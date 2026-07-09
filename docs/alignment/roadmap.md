@@ -36,7 +36,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Token Budget Manager integrado ao Model Selection por requisitos mínimos de orçamento.
 - Usage/API Limit Guard integrado ao fluxo operacional por classificação determinística de logs já produzidos.
 - Audit/Event Log inicial em memória, com helpers opcionais para decisões centrais e eventos de missão/batch.
-- CLI operacional inicial com `status`, `missions`, `validate` e `doctor`.
+- CLI operacional inicial com `status`, `missions`, `batch-summary`, `validate` e `doctor`.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
 - Checklist documental de instalação limpa em `docs/getting-started/clean-install-checklist.md`, com execução real ainda pendente.
@@ -75,8 +75,8 @@ Saídas recomendadas:
 - Manter `VAF_BATCH_SIZE=10` como recomendação para blocos normais revisados e seguros.
 - Manter `VAF_BATCH_SIZE=3` para validação, retomada, blocos pequenos ou recuperação.
 - Manter execução individual para missões sensíveis, críticas, arquiteturais, incertas, investigativas ou de alto risco.
-- Integrar a CLI gradualmente com validações locais de Git, logs e resumo pós-batch, sem executar comandos destrutivos nem substituir revisão humana.
-- Manter o comando `missions` como leitura local segura e criar comando futuro para resumo pós-batch quando houver contrato seguro.
+- Integrar a CLI gradualmente com validações locais de Git e logs, sem executar comandos destrutivos nem substituir revisão humana.
+- Manter os comandos `missions` e `batch-summary` como leituras locais seguras, sem executar missões, scripts, testes ou Git.
 
 Critério de saída: operação local consegue diferenciar fila executável, backlog estratégico, batch seguro, retomada e execução individual sem ambiguidade.
 
@@ -212,8 +212,8 @@ Ações recomendadas:
 ## Ordem Recomendada De Curto Prazo
 
 1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, política de release, CI público quando decidido e execução real do checklist de instalação limpa.
-2. Integrar a CLI com validações locais seguras de Git e resumo pós-batch, sem substituir scripts seguros.
-3. Manter o comando CLI `missions` como apoio de diagnóstico operacional somente leitura.
+2. Integrar a CLI com validações locais seguras de Git, sem substituir scripts seguros.
+3. Manter os comandos CLI `missions` e `batch-summary` como apoio de diagnóstico operacional somente leitura.
 4. Definir persistência local controlada para Audit/Event Log.
 5. Atualizar Specs/ADRs quando a revisão pós-integrações identificar mudança material de fronteira.
 6. Contrato: Mission Runner -> Workflow Engine -> Task Queue.

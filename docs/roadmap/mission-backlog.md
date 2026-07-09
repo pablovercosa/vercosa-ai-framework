@@ -69,7 +69,7 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - Usage/API Limit Guard já participa do fluxo operacional por classificação determinística de logs locais já produzidos.
 - Audit/Event Log já possui contratos iniciais em memória, helpers opcionais para decisões centrais e eventos de missão/batch.
 - O `MissionRunner` Python já possui integração opcional com eventos auditáveis quando recebe um `EventLog`.
-- CLI operacional inicial já possui `status`, `missions`, `validate` e `doctor`.
+- CLI operacional inicial já possui `status`, `missions`, `batch-summary`, `validate` e `doctor`.
 - Exemplos operacionais iniciais existem em `docs/examples/`.
 - Integrações completas com Provider Gateway, persistência externa de eventos, providers reais, múltiplos runtimes reais, documentação pública completa e release alfa ainda são lacunas.
 
@@ -87,6 +87,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Comando CLI `validate`.
 - Comando CLI `doctor`.
 - Comando CLI `missions` para listar missões por estado sem executar, mover ou alterar arquivos.
+- Comando CLI `batch-summary` para resumo pós-batch auxiliar com contagens, último log e lembretes manuais, sem executar missões, scripts, testes, Git, rede, banco ou providers.
 - Exemplos operacionais iniciais.
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.
@@ -116,7 +117,7 @@ Missões prováveis:
 
 - Integrar CLI com validações de Git de forma segura e somente leitura.
 - Manter comando CLI `missions` alinhado ao fluxo operacional, sem executar, mover ou alterar arquivos.
-- Criar comando CLI para resumo pós-batch com base em estado local, logs e commits já existentes.
+- Manter comando CLI `batch-summary` alinhado ao fluxo operacional, sem executar batch, testes, Git ou scripts shell.
 - Revisar periodicamente critérios de batch de 10 após interrupções por limite externo de API.
 
 Dependências:
@@ -200,7 +201,7 @@ Missões prováveis:
 
 - Integrar CLI com validações de Git de forma segura.
 - Refinar comando CLI `missions` quando houver necessidade concreta de diagnóstico adicional.
-- Criar comando CLI para resumo pós-batch.
+- Manter comando CLI `batch-summary` como diagnóstico pós-batch auxiliar.
 - Melhorar mensagens de status, validação e diagnóstico.
 - Documentar fluxos comuns de missão, batch e diagnóstico.
 - Preparar comandos de leitura sem criar automações perigosas.
@@ -396,7 +397,7 @@ Objetivo: facilitar consulta de status, fila, validações e próximos passos se
 Escopo permitido: comandos locais, mensagens claras e documentação.
 Escopo proibido: contornar runner seguro, executar push por padrão ou esconder falhas.
 Dependências: fluxo operacional consolidado e, preferencialmente, eventos mínimos.
-Status: concluído como CLI operacional inicial com `status`, `missions`, `validate` e `doctor`; comandos adicionais de leitura continuam futuros.
+Status: concluído como CLI operacional inicial com `status`, `missions`, `batch-summary`, `validate` e `doctor`; comandos adicionais de leitura continuam possíveis quando houver contrato seguro.
 Critérios de aceite resumidos: comandos ajudam diagnóstico e mantêm governança explícita.
 
 11. Código sugerido: `M011-exemplos-reais-uso`
@@ -457,7 +458,7 @@ Missões futuras relacionadas:
 - Executar instalação limpa real em ambiente novo.
 - Registrar resultado da instalação limpa real.
 - Fazer revisão final pré-release.
-- Criar comando adicional da CLI para resumir pós-batch.
+- Refinar comando adicional da CLI para resumir pós-batch quando houver necessidade concreta.
 - Definir persistência local controlada de eventos auditáveis.
 - Definir política de release.
 - Revisar e criar `LICENSE` antes da release pública.
@@ -562,6 +563,7 @@ Objetivo: produzir resumo local de estado pós-batch com contagens de missão, a
 Escopo permitido: leitura de diretórios locais, logs existentes quando seguro, commits recentes em modo somente leitura e documentação.
 Escopo proibido: executar batch, fazer push, criar commits, alterar missões, consultar provider, consultar rede ou substituir o checklist pós-batch.
 Dependências: checklist pós-batch, CLI inicial e decisão sobre quais dados locais são seguros para resumir.
+Status: concluído como comando `batch-summary`, com leitura local de contagens, último log e lembretes manuais; Git permanece lembrete manual, não execução pela CLI.
 Critérios de aceite resumidos: resumo ajuda revisão pós-batch sem automatizar aprovação.
 
 28. Código sugerido: `M028-persistir-eventos-arquivo-local`

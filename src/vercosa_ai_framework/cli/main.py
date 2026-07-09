@@ -98,6 +98,30 @@ class DiagnosticResult:
         return "ok"
 
 
+@dataclass(frozen=True, slots=True)
+class BatchSummaryResult:
+    """Resumo local e somente leitura para revisao pos-batch."""
+
+    project_root: Path
+    mission_status: MissionDirectoryStatus
+    logs_directory: Path
+    logs_directory_exists: bool
+    last_log: Path | None = None
+
+    @property
+    def attention_items(self) -> tuple[str, ...]:
+        items: list[str] = []
+        if self.mission_status.running > 0:
+            items.append("missions/running contem arquivo(s); verificar worker e missao presa.")
+        if self.mission_status.failed > 0:
+            items.append("missions/failed contem arquivo(s); revisar falhas antes de continuar.")
+        if self.mission_status.queue > 0:
+            items.append("missions/queue ainda contem missao(oes) pendente(s).")
+        if self.mission_status.queue == 0 and self.mission_status.running == 0 and self.mission_status.failed == 0:
+            items.append("estado operacional aparentemente limpo, sem validacao completa pela CLI.")
+        return tuple(items)
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Cria o parser da CLI operacional sem acoplar a scripts shell."""
 
@@ -135,6 +159,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers.add_parser("validate", help="Valida a estrutura local basica sem executar missoes.")
     subparsers.add_parser("doctor", help="Executa diagnostico local amigavel e nao destrutivo.")
+    subparsers.add_parser("batch-summary", help="Mostra resumo pos-batch local, seguro e somente leitura.")
     return parser
 
 
@@ -170,6 +195,9 @@ def run(argv: list[str] | None = None) -> int:
 
     if args.command == "doctor":
         return print_doctor(Path(args.project_root))
+
+    if args.command == "batch-summary":
+        return print_batch_summary(Path(args.project_root))
 
     parser.print_help()
     return 0
@@ -404,6 +432,52 @@ def print_doctor(project_root: str | Path) -> int:
     return 1 if result.status == "error" else 0
 
 
+def summarize_batch(project_root: str | Path) -> BatchSummaryResult:
+    """Coleta resumo pos-batch sem comandos externos e sem alterar arquivos."""
+
+    root = Path(project_root)
+    logs_directory = root / "logs"
+    return BatchSummaryResult(
+        project_root=root,
+        mission_status=collect_mission_directory_status(root),
+        logs_directory=logs_directory,
+        logs_directory_exists=logs_directory.is_dir(),
+        last_log=_find_last_log(logs_directory),
+    )
+
+
+def print_batch_summary(project_root: str | Path) -> int:
+    """Imprime diagnostico auxiliar pos-batch sem executar validacoes."""
+
+    result = summarize_batch(project_root)
+    status = result.mission_status
+
+    print(f"vercosa-ai-framework: {__version__}")
+    print(f"project_root: {result.project_root}")
+    print("diagnostico: resumo pos-batch local somente leitura")
+    print(f"queue:   {status.queue}")
+    print(f"running: {status.running}")
+    print(f"done:    {status.done}")
+    print(f"failed:  {status.failed}")
+    print(f"logs_dir: {'presente' if result.logs_directory_exists else 'ausente'}")
+    if result.last_log is None:
+        print("ultimo_log: nenhum log encontrado")
+    else:
+        print(f"ultimo_log: {result.last_log}")
+    print("worker: nao verificado pela CLI; confirme com ./scripts/vaf-status.sh quando necessario.")
+    print("git: nao verificado pela CLI; rode git status --short manualmente.")
+    print("atencao:")
+    for item in result.attention_items:
+        print(f"- {item}")
+    print("lembretes:")
+    print("- rode pytest manualmente; este comando nao executa testes.")
+    print("- rode python3 -m compileall src manualmente; este comando nao compila modulos.")
+    print("- verifique git status --short manualmente antes de push.")
+    print("- faca push somente apos validar testes, compileall, Git, logs, commits e checklist pos-batch.")
+    print("limites: diagnostico auxiliar; nao substitui scripts seguros, checklist pos-batch, pytest, compileall, revisao de logs ou revisao de commits.")
+    return 0
+
+
 def _count_markdown_files(directory: Path) -> int:
     if not directory.is_dir():
         return 0
@@ -418,6 +492,20 @@ def _list_mission_state(directory: Path, state: str) -> MissionStateListing:
         sorted(path.name for path in directory.iterdir() if path.is_file() and path.suffix == ".md")
     )
     return MissionStateListing(state=state, directory=directory, exists=True, files=files)
+
+
+def _find_last_log(logs_directory: Path) -> Path | None:
+    if not logs_directory.is_dir():
+        return None
+
+    candidates = tuple(
+        path
+        for path in logs_directory.iterdir()
+        if path.is_file() and path.suffix in {".log", ".out"}
+    )
+    if not candidates:
+        return None
+    return max(candidates, key=lambda path: (path.stat().st_mtime_ns, path.name))
 
 
 if __name__ == "__main__":

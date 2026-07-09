@@ -54,7 +54,7 @@ Implementado em estado MVP ou contrato inicial:
 - Runtime Adapter inicial para OpenCode.
 - Provider Gateway, Tools, Skills, Capabilities e Agent Orchestrator como cadeia MVP de contratos.
 - Audit/Event Log em memória com helpers opcionais para decisões e ciclo de vida de missão; a arquitetura dedicada está em [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md).
-- CLI operacional inicial com `status`, `missions`, `validate` e `doctor`.
+- CLI operacional inicial com `status`, `missions`, `validate`, `doctor` e `batch-summary`.
 
 Ainda são futuros ou lacunas:
 
@@ -114,8 +114,9 @@ Eixo operacional:
 
 - Runner seguro de uma missão: `scripts/vaf-run-next-safe.sh`.
 - Runner seguro em batch: `scripts/vaf-run-batch-safe.sh`.
-- CLI operacional: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status|validate|doctor`.
+- CLI operacional: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status|missions|batch-summary|validate|doctor`.
 - Listagem local de missões por estado: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions [--state queue|running|done|failed]`.
+- Resumo pós-batch auxiliar: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary`.
 - Playbooks e checklists documentam execução, validação e revisão pós-batch.
 
 ## Fluxo Operacional Padrão
@@ -191,11 +192,12 @@ CLI inicial:
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 ```
 
-A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros ou revisão humana quando a política exigir. O comando `missions` apenas lista arquivos Markdown por estado e não executa, move ou edita missões.
+A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros ou revisão humana quando a política exigir. O comando `missions` apenas lista arquivos Markdown por estado e não executa, move ou edita missões. O comando `batch-summary` resume contagens pós-batch, último log local e lembretes de validação manual, sem executar testes, Git, scripts, missões, rede, banco ou providers.
 
 ## Documentação Relevante
 

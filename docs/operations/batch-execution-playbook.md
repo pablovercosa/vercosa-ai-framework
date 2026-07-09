@@ -77,7 +77,7 @@ VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
 
 Batch de 10 é o tamanho recomendado para blocos normais já revisados e seguros. Batch de 3 é recomendado para testes, retomadas, blocos pequenos ou recuperação.
 
-## Diagnóstico Local Com `doctor`
+## Diagnóstico Local Com `doctor` E `batch-summary`
 
 O comando `doctor` entra no fluxo de batch como diagnóstico local auxiliar. Use-o para obter uma leitura amigável da estrutura mínima do projeto, contagens de missões, presença de missão presa em `running`, presença de missão em `failed` e avisos sobre documentos operacionais auxiliares.
 
@@ -100,10 +100,19 @@ Diferença prática entre ferramentas:
 - `./scripts/vaf-status.sh` mostra estado operacional dos scripts e diretórios de missão.
 - `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` verifica a estrutura mínima local.
 - `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` fornece diagnóstico local mais amigável e não destrutivo sobre a mesma base estrutural, com avisos operacionais simples.
+- `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary` fornece resumo pós-batch auxiliar, último log local quando houver e lembretes manuais de validação.
 - `pytest` valida o comportamento coberto por testes.
 - `python3 -m compileall src` valida compilação dos módulos Python.
 
 `doctor` não substitui `./scripts/vaf-status.sh`, `pytest`, `python3 -m compileall src`, revisão dos logs nem revisão dos commits. Ele também não executa missões, não chama scripts shell, não executa Git, não acessa rede, não consulta provider, não verifica quota real e não deve ser tratado como aprovação única para batch ou push.
+
+Use `batch-summary` depois de um batch para obter um resumo local e somente leitura das contagens de `queue`, `running`, `done` e `failed`, do último log encontrado em `logs/` e dos lembretes manuais de validação:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
+```
+
+`batch-summary` é complementar ao resumo exibido por `./scripts/vaf-run-batch-safe.sh`. Ele não executa missões, não chama scripts shell, não verifica worker, não executa Git, não executa `pytest`, não executa `python3 -m compileall src`, não acessa rede, não acessa banco e não consulta providers. Se ele indicar `running > 0`, `failed > 0` ou `queue > 0`, trate como atenção operacional antes de novo batch ou push.
 
 ## Listagem Local Com `missions`
 
@@ -132,6 +141,7 @@ Exemplo operacional claro antes de executar um batch:
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 git status --short
 pytest
 python3 -m compileall src
@@ -177,6 +187,7 @@ cd /home/projetos/vercosa-ai-framework
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 git status --short
 git log --oneline --decorate -8
 pytest
@@ -254,6 +265,8 @@ Após o batch, execute:
 
 ```bash
 ./scripts/vaf-status.sh
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 git status --short
@@ -264,7 +277,7 @@ pytest
 python3 -m compileall src
 ```
 
-Revise se as missões esperadas saíram de `missions/queue/`, se nenhuma missão ficou em `missions/running/`, se `missions/failed/` está vazia e se os commits fazem sentido individualmente. Os comandos `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions`, `validate` e `doctor` são auxiliares locais; eles não substituem `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
+Revise se as missões esperadas saíram de `missions/queue/`, se nenhuma missão ficou em `missions/running/`, se `missions/failed/` está vazia e se os commits fazem sentido individualmente. Os comandos `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions`, `batch-summary`, `validate` e `doctor` são auxiliares locais; eles não substituem `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
 
 ## Quando Fazer Push
 

@@ -22,8 +22,9 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Model Selection Engine MVP com catálogo em memória, políticas resolvidas opcionais e requisitos opcionais derivados de orçamento de tokens.
 - Provider Gateway MVP, cadeia inicial de Capabilities, Skills e Tools, e Runtime Adapter inicial para OpenCode.
 - Audit/Event Log inicial em memória, com helpers opcionais para decisões de Policy, Guardian, Context e ciclo de vida de missão/batch.
-- CLI operacional inicial com comandos `status`, `missions`, `validate` e `doctor`.
+- CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate` e `doctor`.
 - Comando CLI `missions` para listar missões por estado, com contagens gerais, ordenação determinística, filtro opcional `--state` e sem executar, mover ou alterar arquivos.
+- Comando CLI `batch-summary` para resumo pós-batch local, com contagens de missões, último log encontrado, avisos de atenção e lembretes de validação manual, sem executar missões, scripts, testes, Git, rede, banco ou providers.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Templates iniciais de issues e pull request em `.github/`.
 

@@ -13,6 +13,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - Expõe o comando `missions` para listar arquivos Markdown por estado, com contagens gerais e filtro opcional por estado.
 - Expõe o comando `validate` para validar a estrutura local mínima do projeto sem executar missões.
 - Expõe o comando `doctor` para diagnóstico local amigável, determinístico e não destrutivo sobre prontidão operacional básica.
+- Expõe o comando `batch-summary` para resumo pós-batch local, seguro e somente leitura.
 - Permite informar `--project-root` para testar ou consultar outro worktree local.
 - Mostra versão operacional mínima com `--version` ou `version`.
 - Mostra ajuda com `--help`.
@@ -27,7 +28,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - Não chama scripts shell para calcular o status básico.
 - Não executa `pytest`.
 - Não executa `python3 -m compileall src`.
-- Não executa `git`.
+- Não executa `git`; `batch-summary` apenas lembra o operador de rodar `git status --short` manualmente.
 - Não acessa rede, banco, LLM, provider externo, OpenCode ou MCPs para os comandos operacionais iniciais.
 - Não adiciona dependências fora da biblioteca padrão do Python.
 
@@ -36,7 +37,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `__init__.py` | Exportações públicas da CLI operacional inicial. |
-| `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate` e `doctor`, contagem local de missões, listagem local, validação estrutural e diagnóstico operacional local. |
+| `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate`, `doctor` e `batch-summary`, contagem local de missões, listagem local, validação estrutural, diagnóstico operacional local e resumo pós-batch auxiliar. |
 | `README.md` | Documentação do módulo. |
 
 ## Principais Tipos, Classes E Funções
@@ -48,6 +49,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - `ValidationResult`: resultado testável da validação estrutural local.
 - `DiagnosticIssue`: item de diagnóstico classificado como `error` ou `warning`.
 - `DiagnosticResult`: resultado testável do diagnóstico local do `doctor`, com status geral `ok`, `warning` ou `error`.
+- `BatchSummaryResult`: resultado testável do resumo pós-batch local.
 - `build_parser`: cria o parser da CLI.
 - `collect_mission_directory_status`: conta arquivos `.md` nos diretórios de missão.
 - `list_missions`: lista arquivos `.md` em `queue`, `running`, `done` e `failed` com ordenação determinística.
@@ -55,6 +57,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - `print_missions`: imprime a listagem local de missões e contagens por estado.
 - `validate_project_structure`: valida a estrutura mínima do projeto sem efeitos colaterais.
 - `diagnose_project`: combina validação estrutural e avisos operacionais locais para o `doctor`.
+- `summarize_batch`: coleta contagens locais, último log e avisos pós-batch sem executar comandos externos.
 - `run`: executa a CLI e retorna código de saída.
 - `main`: ponto de entrada invocável por Python e console script.
 
@@ -65,6 +68,7 @@ Entradas:
 - Argumentos de linha de comando.
 - Caminho raiz do projeto informado por `--project-root` ou o diretório atual.
 - Diretórios locais `missions/queue`, `missions/running`, `missions/done` e `missions/failed`, quando existirem.
+- Diretório local `logs/`, quando existir, para identificar o último arquivo `.log` ou `.out` no comando `batch-summary`.
 - Arquivo `README.md` e diretório `src/vercosa_ai_framework` para o comando `validate`.
 - Documentos auxiliares `docs/operations/post-batch-validation-checklist.md` e `docs/roadmap/mission-backlog.md` para avisos do comando `doctor`.
 
@@ -72,6 +76,7 @@ Saídas:
 
 - Texto no terminal com versão, ajuda, status básico ou validação estrutural.
 - Texto no terminal com listagem de missões por estado quando `missions` é usado.
+- Texto no terminal com resumo pós-batch, último log encontrado, avisos e lembretes manuais quando `batch-summary` é usado.
 - Código de saída `0` para sucesso.
 - Código de saída `1` para estrutura inválida no comando `validate` ou erro estrutural relevante no comando `doctor`.
 - Código de saída `2` para erro controlado de argumentos.
@@ -120,6 +125,10 @@ Validação estrutural de outro caminho local: `PYTHONPATH=src python3 -m vercos
 Diagnóstico local do repositório atual: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor`.
 
 Diagnóstico local de outro caminho: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto doctor`.
+
+Resumo pós-batch local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary`.
+
+Resumo pós-batch de outro caminho: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto batch-summary`.
 
 O comando `validate` verifica, nesta fase:
 
@@ -230,13 +239,41 @@ Limites do `missions` nesta fase:
 
 O uso operacional de `doctor` em batch está descrito no [playbook de execução em batch](../../../docs/operations/batch-execution-playbook.md) e no [checklist de validação pós-batch](../../../docs/operations/post-batch-validation-checklist.md).
 
+## Comando `batch-summary`
+
+`batch-summary` é um diagnóstico auxiliar para revisão pós-batch. Ele lê diretórios locais do projeto e imprime:
+
+- contagens de `missions/queue`, `missions/running`, `missions/done` e `missions/failed`;
+- último arquivo `.log` ou `.out` encontrado em `logs/`, escolhido de forma determinística por modificação e nome;
+- aviso de que o worker não foi verificado pela CLI;
+- aviso de que Git não foi verificado pela CLI;
+- atenção quando há missão em `running`, missão em `failed` ou fila ainda pendente;
+- lembretes para rodar `pytest`, `python3 -m compileall src`, `git status --short` e revisar push manualmente.
+
+Forma real de execução no checkout local:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto batch-summary
+```
+
+`batch-summary` não executa missões, não move arquivos, não chama scripts shell, não executa `pytest`, não executa `python3 -m compileall src`, não executa Git, não acessa rede, não acessa banco, não chama providers e não lê o conteúdo completo dos logs.
+
+Diferença prática:
+
+- `batch-summary` resume contagens, último log e próximos passos manuais em saída Python testável.
+- `./scripts/vaf-status.sh` continua sendo o status operacional dos scripts, incluindo verificação shell de Git, branch, worker e últimos logs.
+- O checklist pós-batch continua sendo a validação operacional obrigatória antes de push, novo batch ou retomada após falha.
+
+`batch-summary` pode indicar estado operacional aparentemente limpo quando `queue=0`, `running=0` e `failed=0`, mas isso não significa validação completa. Testes, `compileall`, revisão de logs, revisão de commits, checklist pós-batch e decisão humana continuam obrigatórios quando aplicáveis.
+
 Uso por Python: `from vercosa_ai_framework.cli import main`.
 
 ## Status Atual
 
 Status: `MVP`.
 
-A CLI inicial é uma camada de conveniência para leitura, listagem, diagnóstico básico e validação estrutural local. Ela não altera o fluxo operacional atual baseado nos scripts shell.
+A CLI inicial é uma camada de conveniência para leitura, listagem, diagnóstico básico, resumo pós-batch e validação estrutural local. Ela não altera o fluxo operacional atual baseado nos scripts shell.
 
 ## Próximos Passos
 

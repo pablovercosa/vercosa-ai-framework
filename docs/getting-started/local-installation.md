@@ -130,6 +130,7 @@ Execute as validações operacionais básicas da CLI:
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 ```
@@ -139,6 +140,7 @@ Se o pacote foi instalado em modo desenvolvimento no ambiente virtual ativo, os 
 ```bash
 vaf status
 vaf missions
+vaf batch-summary
 vaf validate
 vaf doctor
 ```
@@ -153,6 +155,7 @@ Use este fluxo antes de executar missões ou preparar batches:
 cd vercosa-ai-framework
 ./scripts/vaf-status.sh
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 pytest
 python3 -m compileall src
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --help
@@ -187,6 +190,14 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state failed
 ```
 
 O comando `missions` mostra contagens gerais e nomes de arquivos `.md` em `queue`, `running`, `done` e `failed`. Ele é uma validação opcional de leitura antes ou depois de preparar a fila; não executa, move, cria ou edita missões e não substitui `./scripts/vaf-status.sh`.
+
+Resumo pós-batch opcional:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
+```
+
+O comando `batch-summary` resume contagens de missão, último log local quando existir, avisos de atenção e lembretes para rodar `pytest`, `python3 -m compileall src`, `git status --short` e revisar push manualmente. Ele é apenas diagnóstico auxiliar pós-batch: não executa testes, não compila módulos, não executa Git, não chama scripts, não executa missões e não substitui o checklist pós-batch.
 
 Validação estrutural local:
 

@@ -164,11 +164,14 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --help
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 ```
 
 `missions` é uma verificação opcional de leitura para confirmar quais arquivos `.md` estão em `queue`, `running`, `done` e `failed`. Ele não cria diretórios, não move arquivos, não executa missões e não substitui `./scripts/vaf-status.sh`.
+
+`batch-summary` é uma verificação opcional de leitura para conferir resumo pós-batch local, último log quando existir e lembretes de validação manual. Ele não executa `pytest`, não executa `python3 -m compileall src`, não executa Git, não chama scripts shell, não executa missões e não substitui o checklist pós-batch.
 
 Se o pacote foi instalado no ambiente virtual com `python -m pip install -e ".[dev]"`, os console scripts locais também podem ser verificados dentro do ambiente virtual:
 
