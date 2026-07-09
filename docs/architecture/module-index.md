@@ -75,7 +75,7 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
 - `runtime/` isola execução concreta em runtimes como OpenCode; OpenCode é adapter/laboratório atual, não núcleo do framework.
-- `cli/` oferece consulta local básica de estado operacional, validação estrutural local e diagnóstico local com `doctor`, sem substituir scripts shell, `pytest`, `compileall` nem executar missões nesta fase.
+- `cli/` oferece consulta local básica de estado operacional, listagem de missões por estado, validação estrutural local e diagnóstico local com `doctor`, sem substituir scripts shell, `pytest`, `compileall` nem executar missões nesta fase.
 
 ## Lacunas Registradas
 

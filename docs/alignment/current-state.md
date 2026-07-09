@@ -96,7 +96,7 @@ Specs atuais:
 O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos para:
 
 - `core/`: primitivas de domínio e política.
-- `cli/`: CLI operacional inicial para status local básico, validação estrutural local, versão e diagnóstico simples; ela não substitui scripts shell nem executa missões nesta fase.
+- `cli/`: CLI operacional inicial para status local básico, listagem de missões por estado, validação estrutural local, versão e diagnóstico simples; ela não substitui scripts shell nem executa missões nesta fase.
 - `missions/`: tipos, fila em diretório e runner de missões.
 - `workflows/`: tipos e engine sequencial de workflow.
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
@@ -149,7 +149,7 @@ Integrações já feitas em estado MVP ou integração inicial:
 - Usage/API Limit Guard disponível para classificar sinais textuais de limite externo de API em logs já recebidos.
 - Audit/Event Log inicial com helpers opcionais para eventos de Policy, Guardian, Context e ciclo de vida de missão/batch.
 - `MissionRunner` Python capaz de registrar eventos de missão quando recebe `EventLog` opcional.
-- CLI operacional inicial com comandos `status`, `validate` e `doctor`.
+- CLI operacional inicial com comandos `status`, `missions`, `validate` e `doctor`.
 - Runner seguro individual e runner seguro em batch documentados como fluxo operacional local.
 
 O projeto validou batch de 3 como fluxo de teste, retomada, bloco pequeno e recuperação. O projeto também executou batch de 10 como fluxo funcional para blocos normais revisados e seguros, com ressalva operacional: limites externos de API, quota, rate limit ou billing podem interromper o batch e exigem parada segura antes de retomada.

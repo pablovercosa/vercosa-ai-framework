@@ -25,6 +25,33 @@ class MissionDirectoryStatus:
 
 
 @dataclass(frozen=True, slots=True)
+class MissionStateListing:
+    """Lista deterministica de arquivos de missao por estado."""
+
+    state: str
+    directory: Path
+    exists: bool
+    files: tuple[str, ...] = ()
+
+    @property
+    def count(self) -> int:
+        return len(self.files)
+
+
+@dataclass(frozen=True, slots=True)
+class MissionListingResult:
+    """Resultado de leitura local dos diretorios de missao."""
+
+    project_root: Path
+    states: tuple[MissionStateListing, ...]
+
+    @property
+    def mission_status(self) -> MissionDirectoryStatus:
+        counts = {state.state: state.count for state in self.states}
+        return MissionDirectoryStatus(**counts)
+
+
+@dataclass(frozen=True, slots=True)
 class ValidationIssue:
     """Problema estrutural encontrado pela validacao local."""
 
@@ -97,6 +124,15 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("version", help="Mostra a versao minima operacional e encerra.")
     subparsers.add_parser("diagnose", help="Mostra diagnostico local basico do Python e sistema.")
     subparsers.add_parser("status", help="Conta missoes locais em queue, running, done e failed.")
+    missions_parser = subparsers.add_parser(
+        "missions",
+        help="Lista arquivos de missao por estado sem executar ou mover missoes.",
+    )
+    missions_parser.add_argument(
+        "--state",
+        choices=MISSION_DIRECTORIES,
+        help="Filtra a listagem para um estado: queue, running, done ou failed.",
+    )
     subparsers.add_parser("validate", help="Valida a estrutura local basica sem executar missoes.")
     subparsers.add_parser("doctor", help="Executa diagnostico local amigavel e nao destrutivo.")
     return parser
@@ -125,6 +161,9 @@ def run(argv: list[str] | None = None) -> int:
 
     if args.command == "status":
         return print_status(Path(args.project_root))
+
+    if args.command == "missions":
+        return print_missions(Path(args.project_root), state=args.state)
 
     if args.command == "validate":
         return print_validation(Path(args.project_root))
@@ -157,6 +196,17 @@ def collect_mission_directory_status(project_root: str | Path) -> MissionDirecto
     return MissionDirectoryStatus(**counts)
 
 
+def list_missions(project_root: str | Path) -> MissionListingResult:
+    """Lista arquivos Markdown de missao por estado, sem efeitos colaterais."""
+
+    root = Path(project_root)
+    states = tuple(
+        _list_mission_state(root / "missions" / state, state)
+        for state in MISSION_DIRECTORIES
+    )
+    return MissionListingResult(project_root=root, states=states)
+
+
 def print_status(project_root: str | Path) -> int:
     """Imprime status operacional basico sem executar scripts ou missoes."""
 
@@ -170,6 +220,42 @@ def print_status(project_root: str | Path) -> int:
     print(f"running: {status.running}")
     print(f"done:    {status.done}")
     print(f"failed:  {status.failed}")
+    return 0
+
+
+def print_missions(project_root: str | Path, *, state: str | None = None) -> int:
+    """Imprime lista local de missoes por estado sem executar nada."""
+
+    result = list_missions(project_root)
+    status = result.mission_status
+    selected_states = tuple(
+        state_listing
+        for state_listing in result.states
+        if state is None or state_listing.state == state
+    )
+
+    print(f"vercosa-ai-framework: {__version__}")
+    print(f"project_root: {result.project_root}")
+    print(f"missions_root: {result.project_root / 'missions'}")
+    print(f"filtro_estado: {state or 'todos'}")
+    print("contagens:")
+    print(f"queue:   {status.queue}")
+    print(f"running: {status.running}")
+    print(f"done:    {status.done}")
+    print(f"failed:  {status.failed}")
+    print("missoes:")
+
+    for state_listing in selected_states:
+        directory_status = "presente" if state_listing.exists else "ausente"
+        print(f"{state_listing.state} ({state_listing.count}, {directory_status}):")
+        if state_listing.files:
+            for filename in state_listing.files:
+                print(f"- {filename}")
+        elif state_listing.exists:
+            print("- (vazio)")
+        else:
+            print(f"- (diretorio ausente: {state_listing.directory})")
+
     return 0
 
 
@@ -322,6 +408,16 @@ def _count_markdown_files(directory: Path) -> int:
     if not directory.is_dir():
         return 0
     return sum(1 for path in directory.iterdir() if path.is_file() and path.suffix == ".md")
+
+
+def _list_mission_state(directory: Path, state: str) -> MissionStateListing:
+    if not directory.is_dir():
+        return MissionStateListing(state=state, directory=directory, exists=False)
+
+    files = tuple(
+        sorted(path.name for path in directory.iterdir() if path.is_file() and path.suffix == ".md")
+    )
+    return MissionStateListing(state=state, directory=directory, exists=True, files=files)
 
 
 if __name__ == "__main__":

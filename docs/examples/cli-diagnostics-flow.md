@@ -4,7 +4,7 @@ Links principais: [Exemplos](README.md) | [Módulo cli](../../src/vercosa_ai_fra
 
 ## Objetivo
 
-Explicar como usar a CLI operacional inicial para leitura de status, validação estrutural local e diagnóstico básico, sem confundir a CLI com os scripts shell seguros.
+Explicar como usar a CLI operacional inicial para leitura de status, listagem de missões, validação estrutural local e diagnóstico básico, sem confundir a CLI com os scripts shell seguros.
 
 Status deste exemplo: exemplo operacional executável para comandos locais de leitura e validação estrutural.
 
@@ -13,6 +13,7 @@ Status deste exemplo: exemplo operacional executável para comandos locais de le
 Implementado:
 
 - `status`: conta arquivos Markdown em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+- `missions`: lista nomes de arquivos Markdown por estado, com contagens gerais e filtro opcional.
 - `validate`: valida estrutura mínima local do projeto.
 - `doctor`: combina validação estrutural e diagnóstico operacional básico.
 - `--project-root`: permite consultar outro worktree local.
@@ -43,6 +44,18 @@ O comando lê diretamente:
 - `missions/failed`
 
 Diretórios ausentes contam como zero no `status`, mas isso não significa que a estrutura esteja válida para execução.
+
+## Comando `missions`
+
+Use `missions` para listar arquivos de missão por estado sem executar ou mover nada:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state failed
+```
+
+O comando mostra contagens gerais e nomes de arquivos `.md` em ordem determinística. Diretórios ausentes são reportados de forma clara e não são criados automaticamente.
 
 ## Comando `validate`
 
@@ -92,6 +105,7 @@ Para consultar outro checkout local:
 
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto status
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto doctor
 ```
@@ -103,6 +117,7 @@ O caminho deve ser local. Este exemplo não envolve rede, banco ou provider exte
 CLI operacional inicial:
 
 - Faz leitura e validação estrutural local.
+- Lista arquivos de missão por estado.
 - Não executa missões.
 - Não chama scripts shell.
 - Não executa testes ou `compileall`.
@@ -121,6 +136,7 @@ Depois de batch, a CLI pode complementar o checklist:
 
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 ```
 

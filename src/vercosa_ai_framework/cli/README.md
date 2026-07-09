@@ -10,6 +10,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 
 - Expõe uma função `main` invocável em Python.
 - Expõe o comando `status` para contar arquivos Markdown em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+- Expõe o comando `missions` para listar arquivos Markdown por estado, com contagens gerais e filtro opcional por estado.
 - Expõe o comando `validate` para validar a estrutura local mínima do projeto sem executar missões.
 - Expõe o comando `doctor` para diagnóstico local amigável, determinístico e não destrutivo sobre prontidão operacional básica.
 - Permite informar `--project-root` para testar ou consultar outro worktree local.
@@ -35,19 +36,23 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `__init__.py` | Exportações públicas da CLI operacional inicial. |
-| `main.py` | Parser, função `main`, comandos `status`, `validate` e `doctor`, contagem local de missões, validação estrutural e diagnóstico operacional local. |
+| `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate` e `doctor`, contagem local de missões, listagem local, validação estrutural e diagnóstico operacional local. |
 | `README.md` | Documentação do módulo. |
 
 ## Principais Tipos, Classes E Funções
 
 - `MissionDirectoryStatus`: resumo imutável das contagens de missão por diretório operacional.
+- `MissionStateListing`: lista imutável de arquivos de missão para um estado operacional.
+- `MissionListingResult`: resultado testável da listagem local de missões.
 - `ValidationIssue`: problema estrutural encontrado pela validação local.
 - `ValidationResult`: resultado testável da validação estrutural local.
 - `DiagnosticIssue`: item de diagnóstico classificado como `error` ou `warning`.
 - `DiagnosticResult`: resultado testável do diagnóstico local do `doctor`, com status geral `ok`, `warning` ou `error`.
 - `build_parser`: cria o parser da CLI.
 - `collect_mission_directory_status`: conta arquivos `.md` nos diretórios de missão.
+- `list_missions`: lista arquivos `.md` em `queue`, `running`, `done` e `failed` com ordenação determinística.
 - `print_status`: imprime o status básico local.
+- `print_missions`: imprime a listagem local de missões e contagens por estado.
 - `validate_project_structure`: valida a estrutura mínima do projeto sem efeitos colaterais.
 - `diagnose_project`: combina validação estrutural e avisos operacionais locais para o `doctor`.
 - `run`: executa a CLI e retorna código de saída.
@@ -66,6 +71,7 @@ Entradas:
 Saídas:
 
 - Texto no terminal com versão, ajuda, status básico ou validação estrutural.
+- Texto no terminal com listagem de missões por estado quando `missions` é usado.
 - Código de saída `0` para sucesso.
 - Código de saída `1` para estrutura inválida no comando `validate` ou erro estrutural relevante no comando `doctor`.
 - Código de saída `2` para erro controlado de argumentos.
@@ -99,6 +105,14 @@ Status do repositório atual no checkout local: `PYTHONPATH=src python3 -m verco
 
 Status de outro caminho local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto status`.
 
+Listagem de missões do repositório atual: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions`.
+
+Listagem apenas da fila: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue`.
+
+Listagem apenas de falhas: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state failed`.
+
+Listagem de outro caminho local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto missions`.
+
 Validação estrutural do repositório atual no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate`.
 
 Validação estrutural de outro caminho local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto validate`.
@@ -119,9 +133,37 @@ O comando `validate` verifica, nesta fase:
 
 `validate` é uma validação estrutural local. Ele não substitui `pytest`, não substitui `python3 -m compileall src`, não substitui `scripts/vaf-status.sh`, não executa missões e não altera arquivos.
 
-## Diferença Entre `status`, `validate` E `doctor`
+## Comando `missions`
+
+`missions` é uma leitura diagnóstica dos arquivos `.md` diretamente presentes em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+
+O comando imprime:
+
+- contagens gerais de `queue`, `running`, `done` e `failed`;
+- lista ordenada de nomes de arquivos por estado;
+- indicação de estado vazio com `- (vazio)`;
+- indicação clara quando um diretório de estado está ausente.
+
+Filtro opcional:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state running
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state done
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state failed
+```
+
+Mesmo com filtro, as contagens gerais continuam sendo exibidas para manter contexto operacional. A filtragem afeta apenas a seção de listagem.
+
+`missions` não lê o conteúdo dos arquivos Markdown, não interpreta o backlog estratégico, não move missões, não cria diretórios, não executa missões, não chama scripts shell, não executa Git, não acessa rede, não acessa banco e não consulta providers.
+
+Diferença em relação a `./scripts/vaf-status.sh`: o script continua sendo o resumo operacional dos scripts e diretórios de missão; `missions` é uma listagem Python local e testável dos nomes de arquivos por estado. Eles se complementam e nenhum substitui o runner seguro, o batch, `pytest`, `compileall` ou revisão humana.
+
+## Diferença Entre `status`, `missions`, `validate` E `doctor`
 
 `status` é uma leitura simples de contagens. Ele conta arquivos `.md` diretamente em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`. Diretórios ausentes contam como zero nesse comando.
+
+`missions` lista os nomes dos arquivos `.md` por estado, em ordem determinística, e também mostra as contagens gerais. Diretórios ausentes são reportados na saída, mas não geram traceback ou criação automática de diretório.
 
 `validate` é uma validação estrutural local. Ele verifica raiz, `README.md`, `src/vercosa_ai_framework`, `missions/`, subdiretórios obrigatórios e se `running` e `failed` estão vazios. Problemas estruturais retornam código `1`.
 
@@ -132,6 +174,7 @@ O comando `validate` verifica, nesta fase:
 Use os comandos em conjunto conforme a necessidade operacional:
 
 - `status` para leitura rápida de contagens locais.
+- `missions` para ver quais arquivos de missão estão em cada estado, sem executar ou mover nada.
 - `validate` para validação estrutural mínima e código de saída formal sobre essa estrutura.
 - `doctor` para diagnóstico local mais amigável antes de preparar batch, antes de executar batch, depois de batch ou durante investigação.
 - `./scripts/vaf-status.sh` quando a necessidade for observar o estado operacional dos scripts e missões.
@@ -143,6 +186,7 @@ Exemplos:
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto doctor
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
 ```
 
 O comando `doctor` verifica, nesta fase:
@@ -173,6 +217,17 @@ Limites do `doctor` nesta fase:
 - Não consulta quota, billing, rate limit real ou runtime externo.
 - Não altera arquivos.
 
+Limites do `missions` nesta fase:
+
+- Não substitui `scripts/vaf-status.sh`.
+- Não substitui `validate` ou `doctor`.
+- Não executa missões.
+- Não move arquivos.
+- Não cria diretórios ausentes.
+- Não lê o conteúdo das missões.
+- Não executa `git`, scripts shell, `pytest` ou `compileall`.
+- Não acessa rede, banco, LLM, provider externo, OpenCode ou MCPs.
+
 O uso operacional de `doctor` em batch está descrito no [playbook de execução em batch](../../../docs/operations/batch-execution-playbook.md) e no [checklist de validação pós-batch](../../../docs/operations/post-batch-validation-checklist.md).
 
 Uso por Python: `from vercosa_ai_framework.cli import main`.
@@ -181,7 +236,7 @@ Uso por Python: `from vercosa_ai_framework.cli import main`.
 
 Status: `MVP`.
 
-A CLI inicial é uma camada de conveniência para leitura, diagnóstico básico e validação estrutural local. Ela não altera o fluxo operacional atual baseado nos scripts shell.
+A CLI inicial é uma camada de conveniência para leitura, listagem, diagnóstico básico e validação estrutural local. Ela não altera o fluxo operacional atual baseado nos scripts shell.
 
 ## Próximos Passos
 

@@ -15,6 +15,7 @@ A CLI desta fase é uma camada de conveniência para leitura e diagnóstico bás
 - `vaf version`: mostra a versão operacional mínima.
 - `vaf diagnose`: mostra diagnóstico local básico de Python, sistema e arquitetura.
 - `vaf status`: conta missões locais em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+- `vaf missions`: lista arquivos de missão por estado, com contagens gerais e filtro opcional `--state`.
 - `vaf validate`: valida a estrutura local mínima do projeto sem executar missões.
 - `vaf doctor`: executa diagnóstico local amigável, determinístico e não destrutivo sobre prontidão operacional básica.
 
@@ -30,6 +31,22 @@ O comando conta apenas arquivos `.md` diretamente em cada diretório operacional
 - `missions/failed`
 
 Diretórios ausentes contam como zero. Esse comportamento permite testes com diretórios temporários e consultas em worktrees incompletos sem falha inesperada.
+
+## Listagem De Missões
+
+`vaf missions` lista nomes de arquivos `.md` diretamente presentes em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`, em ordem determinística.
+
+Exemplo no diretório atual: `vaf missions`.
+
+Exemplo filtrando a fila: `vaf missions --state queue`.
+
+Exemplo filtrando falhas: `vaf missions --state failed`.
+
+Exemplo via módulo Python no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue`.
+
+Mesmo com `--state`, o comando mantém as contagens gerais por estado e filtra apenas a seção de listagem. Diretórios ausentes são reportados de forma clara e não são criados automaticamente.
+
+`vaf missions` complementa `scripts/vaf-status.sh`: o script continua sendo o resumo operacional dos scripts; a CLI fornece listagem Python local e testável dos nomes de arquivos. O comando não lê o conteúdo das missões, não executa missões, não move arquivos, não chama scripts shell, não executa Git, não acessa rede e não acessa banco.
 
 ## Caminho Raiz Do Projeto
 
@@ -101,6 +118,7 @@ Nesta fase, `doctor` verifica:
 Diferença entre comandos:
 
 - `status`: leitura rápida das contagens de missão.
+- `missions`: leitura dos nomes de arquivos de missão por estado, com ordenação determinística.
 - `validate`: validação estrutural local com código de saída focado em erro ou sucesso.
 - `doctor`: diagnóstico operacional local mais explicativo, com `ok`, `warning` ou `error` e sugestão de ação segura.
 
@@ -121,6 +139,7 @@ A CLI Python inicial não chama esses scripts para calcular status ou validaçã
 - Não há comando `run-next` na CLI Python desta fase.
 - Não há comando `run-batch` na CLI Python desta fase.
 - Não há comando de validação de critérios de missão na CLI Python desta fase; `validate` valida apenas estrutura local básica.
+- Não há leitura detalhada do conteúdo das missões no comando `missions`; ele lista apenas nomes de arquivos `.md`.
 - Não há integração com Audit/Event Log persistente.
 - Não há descoberta de runtime, modelo, provider, banco ou rede.
 - `doctor` ainda não verifica Git limpo, branch `main`, `pytest`, `compileall`, logs recentes, audit log, provider health ou limites de API.
@@ -146,4 +165,4 @@ Validações futuras como Git limpo, branch `main`, `pytest`, `compileall`, logs
 - A CLI não acessa banco.
 - A CLI não chama OpenCode.
 - A CLI não chama LLM ou provider externo.
-- A CLI não altera arquivos ao executar `status`, `validate`, `doctor`, `version`, `diagnose` ou `--help`.
+- A CLI não altera arquivos ao executar `status`, `missions`, `validate`, `doctor`, `version`, `diagnose` ou `--help`.

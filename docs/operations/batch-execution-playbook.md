@@ -105,10 +105,31 @@ Diferença prática entre ferramentas:
 
 `doctor` não substitui `./scripts/vaf-status.sh`, `pytest`, `python3 -m compileall src`, revisão dos logs nem revisão dos commits. Ele também não executa missões, não chama scripts shell, não executa Git, não acessa rede, não consulta provider, não verifica quota real e não deve ser tratado como aprovação única para batch ou push.
 
+## Listagem Local Com `missions`
+
+O comando `missions` ajuda a inspecionar a fila executável e os demais estados antes e depois de batch, sem executar ou mover missões.
+
+Forma documentada de invocação no checkout local:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state failed
+```
+
+Use `missions` nestes momentos:
+
+- Antes de executar um batch, para conferir nomes de arquivos em `missions/queue/`.
+- Depois de um batch, para conferir se os arquivos esperados saíram de `queue` e se `running` e `failed` estão vazios.
+- Durante investigação, para listar rapidamente missões em `running` ou `failed` sem usar comandos shell adicionais.
+
+`missions` não substitui `./scripts/vaf-status.sh`. O script mostra o resumo operacional dos scripts e diretórios; a CLI lista os nomes dos arquivos `.md` por estado, com contagens gerais e ordenação determinística. O comando também não executa Git, não acessa logs, não roda testes, não roda `compileall`, não chama providers e não deve ser tratado como aprovação automática para push.
+
 Exemplo operacional claro antes de executar um batch:
 
 ```bash
 ./scripts/vaf-status.sh
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 git status --short
@@ -153,6 +174,7 @@ Execute as validações abaixo antes de iniciar o batch:
 ```bash
 cd /home/projetos/vercosa-ai-framework
 ./scripts/vaf-status.sh
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 git status --short
@@ -242,7 +264,7 @@ pytest
 python3 -m compileall src
 ```
 
-Revise se as missões esperadas saíram de `missions/queue/`, se nenhuma missão ficou em `missions/running/`, se `missions/failed/` está vazia e se os commits fazem sentido individualmente. Os comandos `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` e `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` são auxiliares locais; eles não substituem `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
+Revise se as missões esperadas saíram de `missions/queue/`, se nenhuma missão ficou em `missions/running/`, se `missions/failed/` está vazia e se os commits fazem sentido individualmente. Os comandos `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions`, `validate` e `doctor` são auxiliares locais; eles não substituem `./scripts/vaf-status.sh`, `pytest` ou `python3 -m compileall src`.
 
 ## Quando Fazer Push
 

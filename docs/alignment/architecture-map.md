@@ -120,7 +120,7 @@ O fluxo futuro acima não deve ser tratado como implementado. Ele orienta fronte
 ## Mapa De Módulos Fonte
 
 - `src/vercosa_ai_framework/core/`: modelos de domínio compartilhados e primitivas de política.
-- `src/vercosa_ai_framework/cli/`: interface CLI operacional inicial para leitura e validação estrutural local; não é o núcleo de orquestração e não substitui os scripts shell.
+- `src/vercosa_ai_framework/cli/`: interface CLI operacional inicial para leitura, listagem de missões e validação estrutural local; não é o núcleo de orquestração e não substitui os scripts shell.
 - `src/vercosa_ai_framework/missions/`: registros, fila e runner de missão.
 - `src/vercosa_ai_framework/workflows/`: workflow e execução sequencial de tasks.
 - `src/vercosa_ai_framework/tasks/`: fila, scheduler, estado, elegibilidade e tentativas de tasks.
@@ -222,6 +222,7 @@ Relações atuais do Audit/Event Log:
 Relações atuais da CLI operacional:
 
 - `status` lê contagens locais de `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+- `missions` lista nomes de arquivos `.md` por estado, com contagens gerais e filtro opcional.
 - `validate` faz validação estrutural local mínima.
 - `doctor` combina validação estrutural e diagnóstico local amigável.
 - A CLI não executa missões, scripts shell, Git, testes, providers, banco, rede, OpenCode ou MCPs nesta fase.
@@ -237,7 +238,7 @@ Relações atuais da CLI operacional:
 - Context Router para Mission Runner, Workflow Engine e Agent Orchestrator como parte do fluxo padrão.
 - Persistence Layer para missões, workflows, tasks, decisões Guardian, decisões de modelo, documentos e audit logs.
 - Persistência local controlada para eventos auditáveis.
-- CLI para listar missões e resumo pós-batch como comandos próprios de leitura segura.
+- CLI para resumo pós-batch como comando próprio de leitura segura.
 
 ## Decisões De Fronteira Necessárias
 

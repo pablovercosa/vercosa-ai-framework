@@ -18,6 +18,7 @@ Ele complementa o [playbook de execução em batch](batch-execution-playbook.md)
 - `queue` no estado esperado para o batch executado.
 - `running=0`.
 - `failed=0`.
+- `missions` executado como listagem complementar quando for útil conferir nomes de arquivos por estado.
 - `doctor` executado como diagnóstico complementar.
 - Branch `main`.
 - Git limpo.
@@ -39,6 +40,7 @@ Execute os comandos abaixo a partir do repositório:
 cd /home/projetos/vercosa-ai-framework
 
 ./scripts/vaf-status.sh
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 git status --short
@@ -51,7 +53,7 @@ pytest
 python3 -m compileall src
 ```
 
-`PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` é uma validação estrutural local auxiliar. `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` combina essa validação com mensagens operacionais de diagnóstico local. Esses comandos verificam diretórios básicos de missão, `README.md`, `src/vercosa_ai_framework` e alguns documentos auxiliares, mas não substituem `./scripts/vaf-status.sh`, `pytest`, `python3 -m compileall src`, revisão dos logs ou revisão dos commits.
+`PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions` lista nomes de arquivos `.md` por estado, com contagens gerais, sem executar ou mover missões. `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` é uma validação estrutural local auxiliar. `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor` combina essa validação com mensagens operacionais de diagnóstico local. Esses comandos verificam ou listam diretórios básicos de missão, `README.md`, `src/vercosa_ai_framework` e alguns documentos auxiliares, mas não substituem `./scripts/vaf-status.sh`, `pytest`, `python3 -m compileall src`, revisão dos logs ou revisão dos commits.
 
 `doctor` é etapa complementar de diagnóstico pós-batch. Ele pode ajudar a identificar inconsistências estruturais, como missão presa em `running`, missão em `failed`, diretório obrigatório ausente ou documento operacional auxiliar ausente, mas não é requisito único de aprovação.
 

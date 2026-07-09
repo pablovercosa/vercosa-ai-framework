@@ -69,7 +69,7 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - Usage/API Limit Guard já participa do fluxo operacional por classificação determinística de logs locais já produzidos.
 - Audit/Event Log já possui contratos iniciais em memória, helpers opcionais para decisões centrais e eventos de missão/batch.
 - O `MissionRunner` Python já possui integração opcional com eventos auditáveis quando recebe um `EventLog`.
-- CLI operacional inicial já possui `status`, `validate` e `doctor`.
+- CLI operacional inicial já possui `status`, `missions`, `validate` e `doctor`.
 - Exemplos operacionais iniciais existem em `docs/examples/`.
 - Integrações completas com Provider Gateway, persistência externa de eventos, providers reais, múltiplos runtimes reais, documentação pública completa e release alfa ainda são lacunas.
 
@@ -86,6 +86,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - CLI operacional inicial.
 - Comando CLI `validate`.
 - Comando CLI `doctor`.
+- Comando CLI `missions` para listar missões por estado sem executar, mover ou alterar arquivos.
 - Exemplos operacionais iniciais.
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.
@@ -114,7 +115,7 @@ Riscos se a fase for pulada: execução cega, commits difíceis de revisar, falh
 Missões prováveis:
 
 - Integrar CLI com validações de Git de forma segura e somente leitura.
-- Criar comando CLI para listar missões sem executar, mover ou alterar arquivos.
+- Manter comando CLI `missions` alinhado ao fluxo operacional, sem executar, mover ou alterar arquivos.
 - Criar comando CLI para resumo pós-batch com base em estado local, logs e commits já existentes.
 - Revisar periodicamente critérios de batch de 10 após interrupções por limite externo de API.
 
@@ -198,7 +199,7 @@ Riscos se a fase for pulada: adoção difícil, comandos pouco descobríveis, us
 Missões prováveis:
 
 - Integrar CLI com validações de Git de forma segura.
-- Criar comando CLI para listar missões.
+- Refinar comando CLI `missions` quando houver necessidade concreta de diagnóstico adicional.
 - Criar comando CLI para resumo pós-batch.
 - Melhorar mensagens de status, validação e diagnóstico.
 - Documentar fluxos comuns de missão, batch e diagnóstico.
@@ -395,7 +396,7 @@ Objetivo: facilitar consulta de status, fila, validações e próximos passos se
 Escopo permitido: comandos locais, mensagens claras e documentação.
 Escopo proibido: contornar runner seguro, executar push por padrão ou esconder falhas.
 Dependências: fluxo operacional consolidado e, preferencialmente, eventos mínimos.
-Status: concluído como CLI operacional inicial com `status`, `validate` e `doctor`; comandos adicionais de leitura continuam futuros.
+Status: concluído como CLI operacional inicial com `status`, `missions`, `validate` e `doctor`; comandos adicionais de leitura continuam futuros.
 Critérios de aceite resumidos: comandos ajudam diagnóstico e mantêm governança explícita.
 
 11. Código sugerido: `M011-exemplos-reais-uso`
@@ -456,7 +457,7 @@ Missões futuras relacionadas:
 - Executar instalação limpa real em ambiente novo.
 - Registrar resultado da instalação limpa real.
 - Fazer revisão final pré-release.
-- Criar comandos adicionais da CLI para listar missões e resumir pós-batch.
+- Criar comando adicional da CLI para resumir pós-batch.
 - Definir persistência local controlada de eventos auditáveis.
 - Definir política de release.
 - Revisar e criar `LICENSE` antes da release pública.
@@ -552,6 +553,7 @@ Objetivo: listar missões em `queue`, `running`, `done` e `failed` com saída pr
 Escopo permitido: leitura local, ordenação determinística, testes e docs.
 Escopo proibido: mover missões, executar missões, alterar arquivos ou interpretar backlog estratégico como fila executável.
 Dependências: CLI operacional inicial e contratos atuais de diretórios de missão.
+Status: concluído como comando `missions`, com filtro opcional `--state` e saída local determinística.
 Critérios de aceite resumidos: comando mostra missões existentes e preserva a distinção entre backlog estratégico e fila executável.
 
 27. Código sugerido: `M027-cli-resumo-pos-batch`

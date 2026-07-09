@@ -66,6 +66,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | A política inicial de segurança não promete SLA, bug bounty, conformidade regulatória ou segurança absoluta. | existe | Registra limites atuais e pendência de canal público de reporte. |
 | A documentação legal não faz aconselhamento jurídico. | existe | Mantém licença pendente e necessidade de revisão formal. |
 | A documentação operacional não recomenda execução cega. | existe | Batch exige fila revisada, parada na primeira falha e validação. |
+| A CLI operacional diferencia leitura e execução. | existe | `missions` lista arquivos por estado sem mover, executar ou substituir scripts seguros. |
 | O roadmap não promete funcionalidades futuras como implementadas. | existe | Mantém próximos passos conservadores e lacunas explícitas. |
 | A revisão pós-integrações diferencia implementado, MVP, integração inicial, futuro e fora do escopo. | existe | Ajuda a evitar promessa pública acima do estado real. |
 | A estratégia inicial de versionamento está documentada. | existe | Define `0.1.0-alpha.1` como versão planejada, sem publicar release. |

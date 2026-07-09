@@ -8,9 +8,9 @@ Documentar a relação operacional entre `scripts/vaf-run-next-safe.sh` e `scrip
 
 O runner seguro de próxima missão executa a próxima missão da fila usando o worker local com limites conservadores. Ele existe para reduzir risco operacional em execuções sensíveis ou simples ao combinar preflight, execução de uma missão, status do worker, testes, `compileall`, auto-commit e push opcional em um único fluxo abortável.
 
-A CLI Python inicial em `src/vercosa_ai_framework/cli/` pode consultar status básico local, executar validação estrutural local e rodar o diagnóstico auxiliar `doctor` por conveniência, mas não substitui este runner, não substitui `scripts/vaf-status.sh`, não substitui `pytest`, não substitui `python3 -m compileall src` e não executa missões nesta fase.
+A CLI Python inicial em `src/vercosa_ai_framework/cli/` pode consultar status básico local, listar missões por estado, executar validação estrutural local e rodar o diagnóstico auxiliar `doctor` por conveniência, mas não substitui este runner, não substitui `scripts/vaf-status.sh`, não substitui `pytest`, não substitui `python3 -m compileall src` e não executa missões nesta fase.
 
-O runner seguro continua sendo o responsável operacional por executar missão. `doctor` é apenas diagnóstico local não destrutivo; ele pode ser usado antes ou depois do runner para investigar estado estrutural, mas não chama scripts shell, não inicia worker e não move missões.
+O runner seguro continua sendo o responsável operacional por executar missão. `missions` e `doctor` são apenas diagnósticos locais não destrutivos; eles podem ser usados antes ou depois do runner para inspecionar a fila e investigar estado estrutural, mas não chamam scripts shell, não iniciam worker e não movem missões.
 
 O runner seguro em batch executa várias chamadas sequenciais ao runner de próxima missão. Ele é o fluxo operacional padrão para blocos de missões completas em Markdown, revisadas, seguras e com critérios de aceite claros. Ele não transforma o projeto em execução cega: o batch para na primeira falha, mantém validações após cada missão por reaproveitamento do runner seguro existente, exige Git limpo após cada missão e só permite push automático ao final quando `VAF_AUTO_PUSH=1`.
 
@@ -47,6 +47,16 @@ Checklist pós-batch: [Checklist de validação pós-batch](post-batch-validatio
 Depois de qualquer execução em batch, use o checklist pós-batch para validar fila, worker, Git, testes, `compileall`, logs, documentação e decisão de push sem duplicar o fluxo do runner seguro.
 
 Para diagnóstico auxiliar da CLI em fluxos de batch, consulte também o [playbook de execução em batch](batch-execution-playbook.md) e o [README da CLI](../../src/vercosa_ai_framework/cli/README.md).
+
+Para inspecionar a fila sem executar missões, use:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state failed
+```
+
+Esse comando complementa `./scripts/vaf-status.sh`: ele mostra nomes de arquivos de missão por estado, em ordem determinística, mas não altera `missions/`, não executa batch e não substitui validação humana.
 
 Uso sem variável explícita, usando o default implementado pelo script:
 

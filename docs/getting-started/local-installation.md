@@ -129,6 +129,7 @@ Execute as validações operacionais básicas da CLI:
 
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 ```
@@ -137,6 +138,7 @@ Se o pacote foi instalado em modo desenvolvimento no ambiente virtual ativo, os 
 
 ```bash
 vaf status
+vaf missions
 vaf validate
 vaf doctor
 ```
@@ -150,6 +152,7 @@ Use este fluxo antes de executar missões ou preparar batches:
 ```bash
 cd vercosa-ai-framework
 ./scripts/vaf-status.sh
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 pytest
 python3 -m compileall src
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --help
@@ -174,6 +177,16 @@ Status local de missões:
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status
 ```
+
+Listagem local de missões por estado:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state failed
+```
+
+O comando `missions` mostra contagens gerais e nomes de arquivos `.md` em `queue`, `running`, `done` e `failed`. Ele é uma validação opcional de leitura antes ou depois de preparar a fila; não executa, move, cria ou edita missões e não substitui `./scripts/vaf-status.sh`.
 
 Validação estrutural local:
 

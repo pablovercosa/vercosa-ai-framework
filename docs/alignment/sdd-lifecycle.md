@@ -296,7 +296,7 @@ Suporte atual do repositório:
 - Task Queue MVP suporta estados, dependências, tentativas, retries e agendamento determinístico.
 - Guardian Engine MVP suporta decisões `allow`, `warn`, `block` e `require_approval`.
 - OpenCode Runtime Adapter MVP suporta execução governada e dry-run.
-- CLI operacional inicial suporta versão, diagnóstico simples e status local básico sem executar missões.
+- CLI operacional inicial suporta versão, diagnóstico simples, status local básico e listagem de missões por estado sem executar missões.
 
 Lacunas ou itens parciais:
 

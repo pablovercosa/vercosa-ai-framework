@@ -160,7 +160,7 @@ Decisões já encaminhadas:
 2. Quando iniciar o Semantic Index depois da estabilização do Context Router e do Knowledge Hub?
 3. Quais critérios mínimos liberam documentação pública alfa sem prometer estabilidade indevida?
 4. Quando internacionalizar READMEs depois da estabilização do conteúdo canônico em português do Brasil?
-5. Qual comando CLI futuro deve vir primeiro: listar missões, resumo pós-batch ou validações Git seguras?
+5. Quais critérios devem orientar os próximos comandos CLI de leitura segura após `missions`, como resumo pós-batch ou validações Git seguras?
 
 ## Licença, Uso Público E Segurança
 
