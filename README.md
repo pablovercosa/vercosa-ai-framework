@@ -40,6 +40,8 @@ As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `s
 
 A documentação pública inicial está sendo preparada para uma futura alfa pública, mas isso não significa release publicada, tag criada, pacote distribuído ou estabilidade de produção. O checklist documental está em [docs/release/public-alpha-readiness.md](docs/release/public-alpha-readiness.md).
 
+A revisão arquitetural pós-integrações está em [docs/architecture/post-integration-architecture-review.md](docs/architecture/post-integration-architecture-review.md) e consolida o estado após as integrações concluídas até a missão 0080.
+
 Implementado em estado MVP ou contrato inicial:
 
 - Mission Runner local, fila em diretórios e integração opcional com eventos auditáveis em Python.
@@ -194,6 +196,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 - [Índice de contribuição](docs/contributing/README.md)
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
 - [Índice de módulos](docs/architecture/module-index.md)
+- [Revisão arquitetural pós-integrações](docs/architecture/post-integration-architecture-review.md)
 - [Arquitetura de Audit/Event Log](docs/architecture/audit-event-architecture.md)
 - [Checklist de prontidão para alfa pública](docs/release/public-alpha-readiness.md)
 - [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)

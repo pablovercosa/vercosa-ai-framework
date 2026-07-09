@@ -2,9 +2,11 @@
 
 ## Objetivo
 
-Registrar o estado arquitetural do Vercosa AI Framework antes da próxima onda de implementação.
+Registrar o estado arquitetural do Vercosa AI Framework após as integrações concluídas até a missão 0080 e antes da próxima onda de implementação.
 
 Este checkpoint é apenas documental. Ele não aprova novo código, novo comportamento de runtime, alterações de configuração global, operações privilegiadas ou expansão de funcionalidades.
+
+A revisão arquitetural pós-integrações está registrada em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md).
 
 ## O Que O Framework É
 
@@ -45,7 +47,7 @@ OpenCode é atualmente runtime e laboratório inicial. Ele não é o centro arqu
 
 ## Estado Do Repositório
 
-O repositório está em transição de fundação/MVP para um MVP interno mais coerente. A base operacional já permite executar missões locais de forma controlada, validar batches seguros, diagnosticar estado básico pela CLI e registrar eventos auditáveis iniciais em Python quando o chamador injeta um `EventLog`.
+O repositório está em transição de fundação/MVP para um MVP interno mais coerente. A base operacional já permite executar missões locais de forma controlada, validar batches seguros, diagnosticar estado básico pela CLI, registrar eventos auditáveis iniciais em Python quando o chamador injeta um `EventLog` e consultar uma revisão arquitetural pós-integrações para orientar próximos blocos.
 
 Ativos principais:
 
@@ -55,6 +57,7 @@ Ativos principais:
 - `docs/legal/`: documentação legal inicial com política de uso responsável e notas sobre licença pendente.
 - `docs/getting-started/local-installation.md`: guia inicial de instalação local para desenvolvimento, validações básicas e uso inicial da CLI.
 - `docs/release/public-alpha-readiness.md`: checklist de prontidão documental para futura alfa pública, sem criar release, tag, pacote ou promessa de estabilidade.
+- `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
 - `specs/framework/`: Specs do framework.
 - `docs/`: documentação técnica e de alinhamento.
@@ -229,6 +232,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Licença final publicada em `LICENSE`.
 - Política formal de segurança pública.
 - Publicação de release alfa; o checklist de prontidão existe, mas não cria tag, pacote ou marco público por si só.
+- Versionamento alfa formal, changelog inicial e política pública de segurança.
 - Testes de contrato entre portas/adapters.
 - ADRs para fronteiras ainda ambíguas.
 

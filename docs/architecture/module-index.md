@@ -1,6 +1,6 @@
 # Índice De Módulos
 
-Links principais: [README principal](../../README.md) | [Mapa de arquitetura](../alignment/architecture-map.md) | [Padrão de README](../documentation/readme-standard.md) | [Política de documentação](../documentation/documentation-update-policy.md)
+Links principais: [README principal](../../README.md) | [Mapa de arquitetura](../alignment/architecture-map.md) | [Revisão pós-integrações](post-integration-architecture-review.md) | [Padrão de README](../documentation/readme-standard.md) | [Política de documentação](../documentation/documentation-update-policy.md)
 
 ## Objetivo
 
@@ -36,6 +36,8 @@ Providers / MCPs / APIs / Runtimes
 
 Essa cadeia descreve o harness operacional ao redor de modelos e agentes: camadas superiores expressam intenção e governança; camadas inferiores fornecem execução substituível por adapters.
 
+A revisão arquitetural consolidada após as integrações até a missão 0080 está em [Revisão arquitetural pós-integrações](post-integration-architecture-review.md). Este índice permanece como mapa navegável e não duplica a revisão completa.
+
 ## Mapa Navegável
 
 | Camada | Módulo | README | Status | Spec | Docs |
@@ -66,13 +68,13 @@ Essa cadeia descreve o harness operacional ao redor de modelos e agentes: camada
 - `workflows/` define plano e execução sequencial MVP; `tasks/` concentra estado, elegibilidade e tentativas de tasks.
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
-- `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `context/`, `guardian/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
+- `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/`, `context/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
 - `audit/` define contratos iniciais, implementação em memória e helpers opcionais para eventos de decisões Policy, Guardian e Context, além de eventos básicos de ciclo de vida de missão e batch; a integração com `MissionRunner` Python é opcional e não altera scripts shell, persistência externa ou fluxo operacional de diretórios. A arquitetura dedicada está em [Arquitetura de Audit/Event Log](audit-event-architecture.md).
 - `model_selection/` é transversal e decide modelos por política, catálogo local e requisitos opcionais de orçamento de tokens, não por hardcode; pode considerar políticas resolvidas opcionais para warnings, aprovação e exclusões determinísticas sem chamar providers, billing real, Context Router ou Guardian Engine.
 - `context/` monta pacotes de contexto, aplica orçamento de tokens, expõe `model_requirements` mínimos e considera políticas resolvidas opcionais sem buscar, indexar, persistir, chamar providers diretamente, resolver políticas, selecionar modelos ou decidir enforcement operacional amplo.
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
 - `persistence/` oferece portas e adapters para durabilidade sem fixar storage específico.
-- `runtime/` isola execução concreta em runtimes como OpenCode.
+- `runtime/` isola execução concreta em runtimes como OpenCode; OpenCode é adapter/laboratório atual, não núcleo do framework.
 - `cli/` oferece consulta local básica de estado operacional, validação estrutural local e diagnóstico local com `doctor`, sem substituir scripts shell, `pytest`, `compileall` nem executar missões nesta fase.
 
 ## Lacunas Registradas
@@ -83,4 +85,5 @@ As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto]
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;
-- Semantic Index e persistência final.
+- persistência local controlada de eventos auditáveis;
+- Semantic Index, embeddings, pgvector e RAG semântico.

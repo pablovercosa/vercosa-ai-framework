@@ -1,5 +1,7 @@
 # Mapa De Arquitetura
 
+Links principais: [README principal](../../README.md) | [Índice de módulos](../architecture/module-index.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Estado atual](current-state.md) | [Roadmap](roadmap.md)
+
 ## Espinha Arquitetural
 
 A arquitetura do framework é orientada por missões e governada por especificações.
@@ -34,7 +36,7 @@ Provider Gateway
 Providers / MCPs / APIs / Runtimes
 ```
 
-Regra principal: camadas superiores expressam intenção; camadas inferiores fornecem mecanismos de execução substituíveis.
+Regra principal: camadas superiores expressam intenção; camadas inferiores fornecem mecanismos de execução substituíveis. A revisão consolidada após as integrações até a missão 0080 está em [Revisão arquitetural pós-integrações](../architecture/post-integration-architecture-review.md).
 
 ## Mapa De Camadas
 
@@ -54,6 +56,66 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 | Tools | Fronteira governada de ação concreta | MVP em `tools/` | Ocultar chamadas diretas a providers da governança |
 | Provider Gateway | Normalizar acesso a providers após aprovação por tool | MVP em `providers/` | Virar seletor de modelo, runtime adapter ou camada de agente |
 | Providers/MCPs/APIs/Runtimes | Mecanismos externos concretos | OpenCode runtime MVP; providers são contratos injetáveis | Vazar para o core ou abstrações de agentes |
+
+## Fluxo Implementado Versus Futuro
+
+Fluxo operacional implementado atualmente:
+
+```text
+CLI, scripts shell ou chamador Python
+↓
+Mission Runner, Workflow Engine ou runner operacional
+↓
+Guardian Engine quando configurado
+↓
+Runtime Adapter injetado
+↓
+OpenCode adapter inicial ou fake adapter em testes
+↓
+validações locais, status de missão e documentação de evidências
+```
+
+Fluxo transversal implementado como integração inicial por chamada explícita:
+
+```text
+Policy Engine
+↓
+ResolvedPolicySet
+↓
+Guardian Engine / Context Router / Model Selection Engine
+↓
+GuardianDecision / ContextPackage / SelectionDecision
+↓
+Audit/Event Log opcional quando EventLog é fornecido
+```
+
+Fluxo futuro ainda não integrado de ponta a ponta:
+
+```text
+Mission Runner
+↓
+Mission Orchestrator
+↓
+Workflow Engine
+↓
+Task Queue
+↓
+Agent Orchestrator
+↓
+Capability Resolver
+↓
+SkillExecutor
+↓
+ToolExecutor
+↓
+Provider Gateway
+↓
+ProviderAdapter / RuntimeAdapter / MCP adapter governado
+↓
+Audit/Event Log persistível e documentação de evidências
+```
+
+O fluxo futuro acima não deve ser tratado como implementado. Ele orienta fronteiras e próximas decisões.
 
 ## Mapa De Módulos Fonte
 
@@ -157,6 +219,13 @@ Relações atuais do Audit/Event Log:
 - Model Selection possui categoria reservada no contrato, mas emissão estruturada específica ainda é futura.
 - Usage/API Limit Guard possui categoria reservada no contrato; no estado atual, a integração operacional usa classificação de logs textuais já existentes.
 
+Relações atuais da CLI operacional:
+
+- `status` lê contagens locais de `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
+- `validate` faz validação estrutural local mínima.
+- `doctor` combina validação estrutural e diagnóstico local amigável.
+- A CLI não executa missões, scripts shell, Git, testes, providers, banco, rede, OpenCode ou MCPs nesta fase.
+
 ## Pontes Ausentes
 
 - Mission Orchestrator para Workflow Engine.
@@ -168,6 +237,7 @@ Relações atuais do Audit/Event Log:
 - Context Router para Mission Runner, Workflow Engine e Agent Orchestrator como parte do fluxo padrão.
 - Persistence Layer para missões, workflows, tasks, decisões Guardian, decisões de modelo, documentos e audit logs.
 - Persistência local controlada para eventos auditáveis.
+- CLI para listar missões e resumo pós-batch como comandos próprios de leitura segura.
 
 ## Decisões De Fronteira Necessárias
 

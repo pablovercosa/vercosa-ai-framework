@@ -1,6 +1,6 @@
 # Backlog Estratégico De Missões
 
-Links principais: [README principal](../../README.md) | [Roadmap macro](../alignment/roadmap.md) | [Uso do runner seguro](../operations/safe-runner-usage.md) | [Estado atual](../alignment/current-state.md)
+Links principais: [README principal](../../README.md) | [Roadmap macro](../alignment/roadmap.md) | [Uso do runner seguro](../operations/safe-runner-usage.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md)
 
 ## Objetivo
 
@@ -93,6 +93,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Guia inicial de contribuição.
 - Base documental legal inicial, com política de uso responsável e notas de licença pendente.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
+- Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -250,7 +251,7 @@ Missões prováveis:
 - Criar licença se ainda não existir.
 - Revisar checklist de release alfa.
 - Criar release/tag alfa.
-- Revisar arquitetura pós-integrações.
+- Usar a revisão arquitetural pós-integrações como referência para não publicar alfa acima do estado real.
 - Registrar lacunas remanescentes para pós-alfa.
 
 Dependências:
@@ -442,6 +443,9 @@ Missões futuras relacionadas:
 - Criar templates de pull request.
 - Criar changelog inicial quando houver decisão de release.
 - Definir versão inicial.
+- Criar checklist de instalação limpa em ambiente novo.
+- Criar comandos adicionais da CLI para listar missões e resumir pós-batch.
+- Definir persistência local controlada de eventos auditáveis.
 - Definir política de release.
 - Revisar e criar `LICENSE` antes da release pública.
 - Publicar release alfa somente após validações e decisão explícita.
@@ -461,6 +465,7 @@ Objetivo: verificar coerência entre Specs, docs, código e decisões após inte
 Escopo permitido: documentação, ADRs ou perguntas em aberto.
 Escopo proibido: implementar mudanças estruturais sem Spec aprovada.
 Dependências: Fases 2 e 3 concluídas.
+Status: concluído como revisão documental em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md); refinamentos futuros devem ter escopo próprio.
 Critérios de aceite resumidos: lacunas e decisões são registradas sem prometer comportamento inexistente.
 
 18. Código sugerido: `M018-avaliar-semantic-index`
@@ -549,6 +554,7 @@ Objetivo: verificar coerência entre Specs, READMEs, mapas de arquitetura, backl
 Escopo permitido: documentação, ADRs, perguntas em aberto e recomendações de próximos blocos.
 Escopo proibido: implementar nova funcionalidade sem Spec aprovada ou prometer integrações futuras como existentes.
 Dependências: integrações centrais atuais documentadas e testes estáveis.
+Status: absorvido pela revisão pós-integrações em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md); não recriar como missão duplicada sem novo escopo.
 Critérios de aceite resumidos: lacunas reais ficam registradas e próximas missões não duplicam entregas já concluídas.
 
 29. Código sugerido: `M029-preparar-documentacao-publica-alfa`

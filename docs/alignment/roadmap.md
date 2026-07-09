@@ -8,6 +8,8 @@ Nenhum código fonte deve ser implementado apenas com base neste documento. Cada
 
 Backlog operacional detalhado de missões futuras: [Backlog estratégico de missões](../roadmap/mission-backlog.md).
 
+Revisão arquitetural pós-integrações: [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md).
+
 Execução em batch é o fluxo operacional padrão para blocos de missões já revisadas e seguras em `missions/queue/`. O uso seguro está documentado no [playbook de execução em batch](../operations/batch-execution-playbook.md). Execução individual continua sendo o fluxo correto para missões sensíveis, arquiteturais, incertas, investigativas ou de recuperação.
 
 A identidade pública do projeto como framework de Harness Engineering para agentes de IA foi incorporada ao `README.md` principal. A internacionalização dos READMEs permanece tarefa futura e não faz parte deste bloco de alinhamento.
@@ -40,6 +42,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Guia inicial de contribuição em `CONTRIBUTING.md`.
 - Documentação legal inicial em `docs/legal/`, com política de uso responsável e licença final ainda pendente.
 - Checklist de prontidão para futura alfa pública em `docs/release/public-alpha-readiness.md`, sem criação de release, tag, pacote ou changelog de release.
+- Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -49,7 +52,8 @@ Objetivo: tornar explícita a arquitetura atual antes de nova implementação.
 
 Ações recomendadas:
 
-- Revisar documentos em `docs/alignment/`.
+- Manter a revisão arquitetural pós-integrações como referência de estado atual.
+- Revisar documentos em `docs/alignment/` quando novas missões alterarem arquitetura ou limites.
 - Confirmar vocabulário de Mission Runner, Mission Orchestrator, Workflow Engine, Task Queue, Agent Orchestrator, Policy Engine, Guardian Engine, Knowledge Hub, Context Router e Semantic Index.
 - Identificar conflitos entre código atual, docs MVP e Specs.
 - Converter decisões arquiteturais não resolvidas em ADRs.
@@ -201,11 +205,11 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Consolidar documentação pública alfa, backlog estratégico e estado atual sem publicar release.
+1. Resolver pendências mínimas para futura alfa: licença, `SECURITY.md`, `CODE_OF_CONDUCT.md` se aplicável, templates, changelog inicial, versão alfa e instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git e resumo pós-batch, sem substituir scripts seguros.
 3. Criar comando CLI para listar missões e apoiar diagnóstico operacional.
 4. Definir persistência local controlada para Audit/Event Log.
-5. Revisar arquitetura pós-integrações centrais e atualizar Specs/ADRs quando necessário.
+5. Atualizar Specs/ADRs quando a revisão pós-integrações identificar mudança material de fronteira.
 6. Contrato: Mission Runner -> Workflow Engine -> Task Queue.
 7. Contrato: Task Queue -> Agent Orchestrator -> Capability Resolver.
 8. Testes de contrato para fronteiras MVP existentes.

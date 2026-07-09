@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md)
+Links principais: [README principal](../../README.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md)
 
 ## Objetivo
 
@@ -33,6 +33,7 @@ O estado atual deve ser lido assim:
 | [docs/legal/license-notes.md](../legal/license-notes.md) | existe | Registra licença pendente e não substitui revisão jurídica. |
 | [docs/getting-started/local-installation.md](../getting-started/local-installation.md) | existe | Não promete PyPI, Docker, banco, provider real ou ambiente único. |
 | [docs/architecture/module-index.md](../architecture/module-index.md) | existe | Precisa continuar alinhado aos módulos realmente existentes. |
+| [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md) | existe | Consolida arquitetura pós-integrações sem publicar alfa. |
 | [docs/operations/batch-execution-playbook.md](../operations/batch-execution-playbook.md) | existe | Não recomenda execução cega; batch depende de revisão e validação. |
 | [docs/operations/post-batch-validation-checklist.md](../operations/post-batch-validation-checklist.md) | existe | Define bloqueios antes de push, novo batch ou retomada. |
 | [docs/examples/README.md](../examples/README.md) | existe | Precisa manter exemplos marcados como implementados, conceituais ou futuros. |
@@ -53,6 +54,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | A documentação legal não faz aconselhamento jurídico. | existe | Mantém licença pendente e necessidade de revisão formal. |
 | A documentação operacional não recomenda execução cega. | existe | Batch exige fila revisada, parada na primeira falha e validação. |
 | O roadmap não promete funcionalidades futuras como implementadas. | existe | Mantém próximos passos conservadores e lacunas explícitas. |
+| A revisão pós-integrações diferencia implementado, MVP, integração inicial, futuro e fora do escopo. | existe | Ajuda a evitar promessa pública acima do estado real. |
 
 ## Riscos Antes Da Alfa Pública
 
