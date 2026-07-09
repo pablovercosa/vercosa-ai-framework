@@ -241,7 +241,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 
 ## Próximos Refinamentos Arquiteturais Possíveis
 
-- Criar `SECURITY.md`.
+- Amadurecer política pública de segurança e definir canal público de vulnerabilidades.
 - Criar `CODE_OF_CONDUCT.md`.
 - Criar templates de issue e pull request.
 - Criar changelog inicial quando houver decisão de release.
@@ -256,7 +256,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 
 ## Recomendações Para Próximas Missões
 
-1. Priorizar artefatos públicos mínimos antes da alfa: `SECURITY.md`, decisão de licença, templates, changelog, versão inicial e validação de instalação limpa.
+1. Priorizar artefatos públicos mínimos antes da alfa: decisão de licença, canal público de vulnerabilidades, templates, changelog, versão inicial e validação de instalação limpa.
 2. Manter a próxima implementação de CLI restrita a leitura local segura, como listar missões ou resumir pós-batch, sem executar Git destrutivo, providers, rede ou scripts automaticamente.
 3. Definir persistência local controlada para Audit/Event Log antes de observabilidade externa, dashboards ou bancos.
 4. Formalizar contratos Mission Runner -> Workflow Engine -> Task Queue antes de expandir loops de agentes.

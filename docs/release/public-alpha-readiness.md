@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md)
+Links principais: [README principal](../../README.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md)
 
 ## Objetivo
 
@@ -28,6 +28,7 @@ O estado atual deve ser lido assim:
 | --- | --- | --- |
 | [README.md](../../README.md) | existe | Precisa permanecer enxuto e distinguir MVP, lacunas e futuro. |
 | [CONTRIBUTING.md](../../CONTRIBUTING.md) | existe | Precisa continuar sem prometer processo público maduro de contribuição. |
+| [SECURITY.md](../../SECURITY.md) | existe | Política inicial e conservadora; canal público de vulnerabilidades ainda precisa ser definido antes da alfa pública. |
 | `LICENSE` | pendente | Não existe no repositório; a pendência está documentada em [license-notes.md](../legal/license-notes.md). |
 | [docs/legal/usage-policy.md](../legal/usage-policy.md) | existe | Precisa continuar explícita sobre ausência de segurança absoluta. |
 | [docs/legal/license-notes.md](../legal/license-notes.md) | existe | Registra licença pendente e não substitui revisão jurídica. |
@@ -51,6 +52,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | O guia de instalação não promete PyPI inexistente. | existe | Documenta instalação local em modo desenvolvimento. |
 | O guia de contribuição não promete processo público maduro. | existe | Declara processo inicial e conservador. |
 | A política de uso não promete segurança absoluta. | existe | Afirma explicitamente que não substitui revisão humana. |
+| A política inicial de segurança não promete SLA, bug bounty, conformidade regulatória ou segurança absoluta. | existe | Registra limites atuais e pendência de canal público de reporte. |
 | A documentação legal não faz aconselhamento jurídico. | existe | Mantém licença pendente e necessidade de revisão formal. |
 | A documentação operacional não recomenda execução cega. | existe | Batch exige fila revisada, parada na primeira falha e validação. |
 | O roadmap não promete funcionalidades futuras como implementadas. | existe | Mantém próximos passos conservadores e lacunas explícitas. |
@@ -61,7 +63,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Risco ou ausência | Status | Impacto |
 | --- | --- | --- |
 | Ausência de CI público. | pendente | Validação depende de execução local manual. |
-| Ausência de `SECURITY.md`. | pendente | Política pública de reporte de vulnerabilidades ainda não está publicada. |
+| Canal público definitivo para reporte de vulnerabilidades. | pendente | `SECURITY.md` existe, mas o canal e o processo público maduro ainda precisam ser definidos antes da alfa pública. |
 | Ausência de `CODE_OF_CONDUCT.md`. | pendente | Regras comunitárias públicas ainda não foram definidas. |
 | Ausência de templates de issue. | pendente | Reportes públicos podem chegar sem estrutura mínima. |
 | Ausência de templates de pull request. | pendente | Revisões públicas podem chegar sem checklist mínimo. |
@@ -89,7 +91,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 ## Pendências Antes De Release Alfa
 
 - Revisar licença final e criar `LICENSE`, se a decisão estiver aprovada.
-- Criar `SECURITY.md`.
+- Definir canal público de reporte de vulnerabilidades e política de disclosure antes da alfa pública.
 - Criar `CODE_OF_CONDUCT.md`, se desejado para abertura pública.
 - Criar templates de issue.
 - Criar template de pull request.
@@ -123,7 +125,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Criar tag.
 - Publicar pacote.
 - Criar changelog de release sem decisão.
-- Criar `SECURITY.md`.
+- Definir canal público de reporte de vulnerabilidades e processo público maduro de segurança.
 - Criar `CODE_OF_CONDUCT.md`.
 - Criar templates de issue ou pull request.
 - Internacionalizar READMEs.

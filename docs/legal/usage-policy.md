@@ -1,6 +1,6 @@
 # Política Inicial De Uso Responsável
 
-Links principais: [README legal](README.md) | [Notas de licença](license-notes.md) | [README principal](../../README.md) | [Guia de contribuição](../../CONTRIBUTING.md)
+Links principais: [README legal](README.md) | [Notas de licença](license-notes.md) | [Política de segurança](../../SECURITY.md) | [README principal](../../README.md) | [Guia de contribuição](../../CONTRIBUTING.md)
 
 ## Objetivo
 
@@ -68,7 +68,7 @@ O VAF ainda possui limites importantes:
 - sem garantia de estabilidade;
 - sem garantia de adequação a produção;
 - sem conformidade regulatória declarada;
-- sem política formal de segurança pública ainda;
+- com política inicial de segurança, mas sem processo público maduro de reporte de vulnerabilidades ainda;
 - sem release estável.
 
 Integrações futuras com providers, tools, runtimes, RAG, embeddings ou banco devem ser avaliadas caso a caso, considerando dados enviados, permissões, custos, efeitos colaterais, logs, auditoria e política aplicável.

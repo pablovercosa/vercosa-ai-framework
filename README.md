@@ -166,11 +166,11 @@ Guia inicial para preparar um checkout de desenvolvimento: [Instalação local p
 
 Guia inicial para contribuir com segurança: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Licença E Uso Responsável
+## Segurança, Licença E Uso Responsável
 
 A licença final do projeto ainda está pendente e deve ser definida antes de uma release pública. O estado atual da decisão está documentado em [Notas de licença](docs/legal/license-notes.md).
 
-Use o projeto de forma conservadora conforme a [política inicial de uso responsável](docs/legal/usage-policy.md). Esta documentação não substitui revisão jurídica formal, política pública de segurança ou validação humana antes de executar missões, comandos, tools, providers ou runtimes.
+Use o projeto de forma conservadora conforme a [política inicial de uso responsável](docs/legal/usage-policy.md) e a [política inicial de segurança](SECURITY.md). Esta documentação não substitui revisão jurídica formal, processo público maduro de segurança ou validação humana antes de executar missões, comandos, tools, providers ou runtimes.
 
 Scripts operacionais:
 
@@ -191,6 +191,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 ## Documentação Relevante
 
 - [Guia inicial de contribuição](CONTRIBUTING.md)
+- [Política inicial de segurança](SECURITY.md)
 - [Política inicial de uso responsável](docs/legal/usage-policy.md)
 - [Notas de licença](docs/legal/license-notes.md)
 - [Índice de contribuição](docs/contributing/README.md)

@@ -40,6 +40,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
 - Guia inicial de contribuição em `CONTRIBUTING.md`.
+- Política inicial de segurança em `SECURITY.md` e documentação inicial em `docs/security/`, ainda sem canal público definitivo de vulnerabilidades.
 - Documentação legal inicial em `docs/legal/`, com política de uso responsável e licença final ainda pendente.
 - Checklist de prontidão para futura alfa pública em `docs/release/public-alpha-readiness.md`, sem criação de release, tag, pacote ou changelog de release.
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
@@ -205,7 +206,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, `SECURITY.md`, `CODE_OF_CONDUCT.md` se aplicável, templates, changelog inicial, versão alfa e instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, `CODE_OF_CONDUCT.md` se aplicável, templates, changelog inicial, versão alfa e instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git e resumo pós-batch, sem substituir scripts seguros.
 3. Criar comando CLI para listar missões e apoiar diagnóstico operacional.
 4. Definir persistência local controlada para Audit/Event Log.
@@ -243,7 +244,7 @@ Permanecem futuros e não devem ser tratados como implementados:
 - Internacionalização dos READMEs.
 - Guia público completo de release, distribuição, empacotamento e processo público maduro de contribuição para uso final.
 - Licença final em `LICENSE`.
-- Política pública de segurança.
+- Processo público maduro de segurança e canal definitivo de vulnerabilidades.
 - Release alfa.
 - Changelog inicial e versão inicial para alfa.
 - Templates de issue e pull request.

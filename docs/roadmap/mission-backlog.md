@@ -92,6 +92,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Guia inicial de instalação local para desenvolvimento.
 - Guia inicial de contribuição.
 - Base documental legal inicial, com política de uso responsável e notas de licença pendente.
+- `SECURITY.md` inicial e documentação inicial em `docs/security/`, sem canal público definitivo de vulnerabilidades ainda.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 
@@ -249,6 +250,7 @@ Riscos se a fase for pulada: distribuição sem licença, tag prematura, changel
 Missões prováveis:
 
 - Criar licença se ainda não existir.
+- Definir política pública madura de vulnerabilidades e canal de reporte.
 - Revisar checklist de release alfa.
 - Criar release/tag alfa.
 - Usar a revisão arquitetural pós-integrações como referência para não publicar alfa acima do estado real.
@@ -437,10 +439,12 @@ Critérios de aceite resumidos: licença existe, é referenciada e não conflita
 
 Missões futuras relacionadas:
 
-- Criar `SECURITY.md`.
+- Amadurecer política pública de vulnerabilidades e definir canal de reporte.
 - Criar `CODE_OF_CONDUCT.md`, se desejado para a abertura pública.
 - Criar templates de issue.
 - Criar templates de pull request.
+- Revisar segurança antes de release alfa.
+- Criar CI público quando houver decisão de automação.
 - Criar changelog inicial quando houver decisão de release.
 - Definir versão inicial.
 - Criar checklist de instalação limpa em ambiente novo.

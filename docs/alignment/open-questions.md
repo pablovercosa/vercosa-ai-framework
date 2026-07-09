@@ -164,8 +164,8 @@ Decisões já encaminhadas:
 ## Licença, Uso Público E Segurança
 
 1. Qual licença final deve ser adotada antes da release pública: MIT, Apache-2.0, BSD-3-Clause, GPL, licença proprietária ou outra opção?
-2. O projeto precisa de `SECURITY.md` antes da alfa pública?
-3. Qual será a política de reporte e tratamento de vulnerabilidades?
+2. Qual canal público será usado para vulnerabilidades antes da alfa pública?
+3. Haverá e-mail dedicado para reporte de vulnerabilidades?
 4. Quais limites devem ser documentados para uso com providers pagos?
 5. Qual modelo de release alfa será adotado sem prometer estabilidade de produção?
 6. Qual será a versão inicial da alfa pública?
@@ -173,6 +173,10 @@ Decisões já encaminhadas:
 8. Quais templates de issue e pull request são mínimos antes da alfa pública?
 9. O changelog inicial será criado antes da tag alfa ou junto com a decisão de versão?
 10. Em qual momento `README.en.md` e `README.es.md` devem ser criados sem divergir do README canônico em português do Brasil?
+11. Serão usados GitHub Security Advisories?
+12. Haverá política formal de disclosure?
+13. Haverá programa de bug bounty ou a alfa pública seguirá sem remuneração por bugs?
+14. Qual nível de suporte será dado à alfa pública sem prometer estabilidade de produção?
 
 ## ADRs Recomendadas
 

@@ -6,7 +6,7 @@ O projeto evolui por missões em Markdown, com escopo claro, referências rastre
 
 ## Estado Do Projeto
 
-O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch e validações básicas. Ainda não há release alfa pública, processo público completo de pull requests, templates de issue, templates de pull request, `CODE_OF_CONDUCT.md` ou `SECURITY.md` neste momento.
+O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch, validações básicas e [política inicial de segurança](SECURITY.md). Ainda não há release alfa pública, processo público completo de pull requests, templates de issue, templates de pull request ou `CODE_OF_CONDUCT.md` neste momento.
 
 Recursos como RAG semântico, embeddings, pgvector como adapter real, providers reais obrigatórios, múltiplos runtimes reais e publicação de pacote continuam futuros ou fora do escopo atual, salvo missão específica aprovada.
 
@@ -195,6 +195,7 @@ Consulte [docs/documentation/documentation-update-policy.md](docs/documentation/
 - Não registre secrets.
 - Não exponha tokens.
 - Não inclua credenciais em código, documentação, logs, exemplos ou fixtures.
+- Sanitize logs antes de publicar, anexar ou compartilhar.
 - Não altere configurações globais.
 - Não use `sudo` sem decisão explícita.
 - Não acesse rede sem necessidade e sem escopo aprovado.
@@ -205,6 +206,8 @@ Consulte [docs/documentation/documentation-update-policy.md](docs/documentation/
 - Não implemente RAG, embeddings ou pgvector sem missão específica.
 - Não chame providers, MCPs, bancos ou APIs fora do fluxo governado.
 - Não transforme ambiente local específico em requisito obrigatório do framework.
+
+Consulte também a [política inicial de segurança](SECURITY.md) e o guia de [reporte responsável de vulnerabilidades](docs/security/vulnerability-reporting.md). Vulnerabilidades devem ser tratadas com cautela: não abra issue pública com exploits, tokens, credenciais, dados sensíveis ou detalhes exploráveis antes de análise.
 
 ## Licença E Uso Responsável
 
@@ -254,6 +257,8 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 ## Documentos Relevantes
 
 - [Instalação local para desenvolvimento](docs/getting-started/local-installation.md)
+- [Política inicial de segurança](SECURITY.md)
+- [Reporte responsável de vulnerabilidades](docs/security/vulnerability-reporting.md)
 - [Política inicial de uso responsável](docs/legal/usage-policy.md)
 - [Notas de licença](docs/legal/license-notes.md)
 - [Playbook de execução em batch](docs/operations/batch-execution-playbook.md)
