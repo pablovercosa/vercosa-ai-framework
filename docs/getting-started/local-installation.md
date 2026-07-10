@@ -25,6 +25,7 @@ Requisitos mínimos para seguir este guia:
 - Python compatível com o projeto. O `pyproject.toml` declara `requires-python = ">=3.11"`.
 - Ambiente virtual local recomendado.
 - `pytest`, instalado pelo extra de desenvolvimento ou por outro método controlado no ambiente local.
+- `pip` com suporte a instalação editável PEP 660 e build backend local compatível com `setuptools`.
 - Shell compatível com os scripts existentes quando for usar runners e scripts em `scripts/`.
 
 Verifique a versão do Python antes de instalar:
@@ -76,7 +77,7 @@ python -m pip --version
 
 ## Instalar Em Modo Desenvolvimento
 
-O projeto possui `pyproject.toml` com configuração de pacote local e extra de desenvolvimento. Para instalar o checkout em modo editável com `pytest`:
+O projeto possui `pyproject.toml` com configuração mínima de pacote local, backend `setuptools`, descoberta em `src` e extra de desenvolvimento. Para instalar o checkout em modo editável com `pytest`:
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -84,13 +85,12 @@ python -m pip install -e ".[dev]"
 
 Essa instalação é local ao ambiente virtual ativo. Ela não significa que exista pacote publicado no PyPI e não deve ser confundida com instalação global para uso final.
 
-Em ambiente sem acesso a índice remoto, essa instalação só funciona se o build backend e as dependências de desenvolvimento declaradas já estiverem disponíveis localmente. A validação limpa registrada em [docs/release/clean-install-validation.md](../release/clean-install-validation.md) falhou sem rede porque `hatchling>=1.25` não estava disponível no ambiente temporário.
+Em ambiente sem acesso a índice remoto, essa instalação só funciona se o build backend `setuptools` e as dependências de desenvolvimento declaradas já estiverem disponíveis localmente. O projeto não publica pacote e não documenta `pip install vercosa-ai-framework` via PyPI nesta fase.
 
-Após essa instalação, os console scripts declarados no projeto, como `vaf` e `vercosa`, podem existir dentro do ambiente virtual. Use-os apenas quando o ambiente virtual estiver ativado e confirme com `--help` antes de depender deles:
+Após essa instalação, o console script local `vaf` pode existir dentro do ambiente virtual. Use-o apenas quando o ambiente virtual estiver ativado e confirme com `--help` antes de depender dele:
 
 ```bash
 vaf --help
-vercosa --help
 ```
 
 Forma conservadora, sem depender do console script:
@@ -227,6 +227,16 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --version
 python -m pip install -e ".[dev]"
 pytest
 ```
+
+`vaf` não encontrado após instalação editável:
+
+```bash
+source .venv/bin/activate
+python -m pip install -e ".[dev]"
+vaf --help
+```
+
+Se o atalho continuar indisponível, use a forma explícita com `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main` para diagnóstico e registre a falha antes de preparar release.
 
 Ambiente virtual não ativado:
 

@@ -9,6 +9,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 ## O Que Este Módulo Faz
 
 - Expõe uma função `main` invocável em Python.
+- Pode ser exposta como console script local `vaf` após instalação editável do pacote em ambiente virtual.
 - Expõe o comando `status` para contar arquivos Markdown em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
 - Expõe o comando `missions` para listar arquivos Markdown por estado, com contagens gerais e filtro opcional por estado.
 - Expõe o comando `validate` para validar a estrutura local mínima do projeto sem executar missões.
@@ -39,6 +40,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 | `__init__.py` | Exportações públicas da CLI operacional inicial. |
 | `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate`, `doctor` e `batch-summary`, contagem local de missões, listagem local, validação estrutural, diagnóstico operacional local e resumo pós-batch auxiliar. |
 | `README.md` | Documentação do módulo. |
+| `../../../pyproject.toml` | Declara o console script local `vaf` para instalação editável em ambiente virtual. |
 
 ## Principais Tipos, Classes E Funções
 
@@ -105,6 +107,8 @@ Saídas:
 ## Exemplo Mínimo
 
 Comando de ajuda no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --help`.
+
+Comando de ajuda após instalação editável local em ambiente virtual: `vaf --help`.
 
 Status do repositório atual no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status`.
 
@@ -268,6 +272,8 @@ Diferença prática:
 `batch-summary` pode indicar estado operacional aparentemente limpo quando `queue=0`, `running=0` e `failed=0`, mas isso não significa validação completa. Testes, `compileall`, revisão de logs, revisão de commits, checklist pós-batch e decisão humana continuam obrigatórios quando aplicáveis.
 
 Uso por Python: `from vercosa_ai_framework.cli import main`.
+
+Uso por console script local após `python -m pip install -e ".[dev]"` em ambiente virtual: `vaf status`.
 
 ## Status Atual
 

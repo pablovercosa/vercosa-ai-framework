@@ -42,6 +42,8 @@ A documentação pública inicial está sendo preparada para uma futura alfa pú
 
 A revisão arquitetural pós-integrações está em [docs/architecture/post-integration-architecture-review.md](docs/architecture/post-integration-architecture-review.md) e consolida o estado após as integrações concluídas até a missão 0080.
 
+O repositório possui empacotamento Python local mínimo em `pyproject.toml`, com versão PEP 440 `0.1.0a1` equivalente à alfa planejada `0.1.0-alpha.1`. Isso permite instalação editável em ambiente virtual para desenvolvimento, mas não significa pacote publicado, release alfa publicada, tag criada ou distribuição via PyPI.
+
 Implementado em estado MVP ou contrato inicial:
 
 - Mission Runner local, fila em diretórios e integração opcional com eventos auditáveis em Python.
@@ -167,6 +169,14 @@ Módulos principais:
 ## Operação Local
 
 Guia inicial para preparar um checkout de desenvolvimento: [Instalação local para desenvolvimento](docs/getting-started/local-installation.md).
+
+Instalação local editável em ambiente virtual:
+
+```bash
+python3 -m pip install -e ".[dev]"
+```
+
+Após essa instalação local, o atalho `vaf` pode ser usado dentro do ambiente virtual. A forma explícita `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main` continua suportada para diagnóstico de checkout.
 
 Checklist manual para validar instalação limpa antes de uma futura alfa: [Checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). Uma execução real foi registrada em [Registro de validação limpa](docs/release/clean-install-validation.md) com resultado `REPROVADO`; nova execução aprovada ainda é necessária antes de release.
 

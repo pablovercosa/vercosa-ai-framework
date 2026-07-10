@@ -57,6 +57,14 @@ A convenção recomendada para a primeira alfa planejada é:
 0.1.0-alpha.1
 ```
 
+Em metadados Python, a forma PEP 440 equivalente deve ser usada:
+
+```text
+0.1.0a1
+```
+
+O `pyproject.toml` pode declarar `0.1.0a1` para preparar instalação local e empacotamento futuro. Essa declaração não significa release publicada, tag criada ou pacote distribuído.
+
 A tag futura correspondente deve seguir o padrão previsível:
 
 ```text

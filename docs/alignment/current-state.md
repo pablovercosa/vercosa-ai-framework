@@ -63,6 +63,7 @@ Ativos principais:
 - `docs/release/clean-install-validation.md`: registro factual da validação de instalação limpa de 2026-07-10, classificada como `REPROVADO`.
 - `docs/release/versioning-policy.md` e `docs/release/alpha-version-plan.md`: política inicial de versionamento e plano da versão alfa `0.1.0-alpha.1`, sem release publicada.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
+- `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
 - `.github/ISSUE_TEMPLATE/` e `.github/PULL_REQUEST_TEMPLATE.md`: templates iniciais para colaboração pública futura, sem processo público maduro ou SLA.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
@@ -269,6 +270,7 @@ Esse estado é apenas documental:
 - não há tag Git criada para alfa;
 - não há GitHub Release publicada;
 - não há pacote PyPI publicado;
+- há apenas empacotamento local mínimo para instalação editável em ambiente de desenvolvimento;
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 
@@ -282,12 +284,12 @@ Classificação real: `REPROVADO`.
 
 Limitações relevantes encontradas:
 
-- instalação editável offline falhou por ausência local de `hatchling>=1.25`;
+- instalação editável offline falhou por ausência local de `hatchling>=1.25` no commit validado; depois disso, o empacotamento local foi ajustado para `setuptools`, mas a validação limpa ainda precisa ser reexecutada;
 - CLI `validate` e `doctor` falharam porque `missions/running` e `missions/failed` não existem no clone limpo;
 - `scripts/vaf-status.sh` usa caminho absoluto para o checkout principal e não valida corretamente uma cópia temporária;
 - `pytest` passou como evidência complementar, mas não comprova instalação de desenvolvimento isolada porque a instalação editável falhou;
 - `compileall` passou;
-- `LICENSE` continua pendente e há inconsistência com o metadado de licença em `pyproject.toml`.
+- `LICENSE` continua pendente; o metadado de licença não deve inventar licença final antes de decisão explícita.
 
 Esse resultado reduz a prontidão da alfa: o projeto ainda não deve criar tag, release ou pacote até nova validação aprovada ou decisão explícita de exceção com risco aceito.
 

@@ -29,6 +29,7 @@ Este checklist deve ser executado antes de uma release alfa. Uma execução real
 - Acesso ao repositório.
 - Permissão local para criar e ativar ambiente virtual.
 - `pytest` disponível após instalar as dependências necessárias.
+- `pip` com suporte a instalação editável PEP 660 e build backend local compatível com `setuptools`.
 - Permissões locais para executar scripts do repositório.
 
 ## Verificação Inicial Do Ambiente
@@ -80,7 +81,7 @@ Confirme que `python` e `pip` apontam para o ambiente virtual recém-criado ante
 
 ## Instalar Dependências Suportadas Pelo Projeto
 
-O estado atual possui `pyproject.toml` com empacotamento local e extra de desenvolvimento. Para instalar o checkout limpo em modo editável com dependências de desenvolvimento:
+O estado atual possui `pyproject.toml` com empacotamento local mínimo via `setuptools`, descoberta em `src` e extra de desenvolvimento. Para instalar o checkout limpo em modo editável com dependências de desenvolvimento:
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -88,7 +89,7 @@ python -m pip install -e ".[dev]"
 
 Essa instalação é local ao ambiente virtual ativo. Ela não significa que exista pacote publicado no PyPI.
 
-Em validações sem rede, esse comando depende de o build backend e as dependências de desenvolvimento já estarem disponíveis localmente. Na execução de 2026-07-10, `python -m pip install --no-index -e ".[dev]"` falhou por ausência local de `hatchling>=1.25`.
+Em validações sem rede, esse comando depende de `setuptools` e das dependências de desenvolvimento já estarem disponíveis localmente. A execução histórica de 2026-07-10 falhou com o backend anterior `hatchling`; o empacotamento foi ajustado depois disso e exige nova validação limpa antes de qualquer alfa.
 
 Não use `pip install vercosa-ai-framework` como validação deste checklist enquanto não houver pacote publicado e documentado.
 
@@ -179,7 +180,6 @@ Se o pacote foi instalado no ambiente virtual com `python -m pip install -e ".[d
 
 ```bash
 vaf --help
-vercosa --help
 ```
 
 Esses atalhos não devem ser tratados como entrypoints globais do sistema. Para diagnóstico reproduzível de checkout, prefira a forma explícita com `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main`.

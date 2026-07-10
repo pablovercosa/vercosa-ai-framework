@@ -104,6 +104,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Checklist documental de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md), com execução real registrada em [docs/release/clean-install-validation.md](../release/clean-install-validation.md) em 2026-07-10 e resultado `REPROVADO`.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 - Persistência local controlada de eventos auditáveis concluída como `JsonlAuditEventLog`, sem banco, sem rede, sem retenção, sem rotação e sem ativação global obrigatória.
+- Empacotamento Python local mínimo concluído em `pyproject.toml` com `setuptools`, pacote em `src/vercosa_ai_framework`, versão PEP 440 `0.1.0a1`, extra opcional `dev` e entrypoint local `vaf`, sem publicação de pacote.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -613,10 +614,10 @@ Critérios de aceite resumidos: execução real registrada com commit, ambiente,
 
 Pendências sustentadas por essa execução:
 
-- Corrigir empacotamento ou estratégia de instalação offline para o backend `hatchling`.
+- Reexecutar validação limpa após o ajuste do empacotamento local mínimo para `setuptools`.
 - Garantir diretórios operacionais obrigatórios em clones limpos.
 - Remover acoplamento de `scripts/vaf-status.sh` ao caminho absoluto do checkout principal.
-- Resolver inconsistência entre licença pendente na documentação e metadado `MIT` em `pyproject.toml`.
+- Resolver licença pendente e decidir quando declarar metadado de licença definitivo no pacote local.
 - Reexecutar a validação limpa antes da tag alfa.
 
 ## Como Transformar Backlog Em Fila Executável

@@ -1,24 +1,21 @@
 [build-system]
-requires = ["hatchling>=1.25"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "vercosa-ai-framework"
-version = "0.1.0"
-description = "Specification-first, provider-agnostic AI software engineering framework."
-readme = "docs/development.md"
+version = "0.1.0a1"
+description = "Framework de Harness Engineering para agentes de IA e desenvolvimento orientado por especificacoes."
+readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
 authors = [
   { name = "Vercosa AI Framework Contributors" },
 ]
-keywords = ["ai", "framework", "specification-first", "software-engineering"]
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
   "Topic :: Software Development",
 ]
 dependencies = []
@@ -29,13 +26,13 @@ dev = [
 ]
 
 [project.scripts]
-vercosa = "vercosa_ai_framework.cli:main"
-vaf = "vercosa_ai_framework.cli:main"
+vaf = "vercosa_ai_framework.cli.main:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-q"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/vercosa_ai_framework"]
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["vercosa_ai_framework*"]

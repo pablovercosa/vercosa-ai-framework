@@ -230,11 +230,13 @@ Não houve alteração inesperada relevante no clone temporário após testes e 
 
 - A CLI funciona parcialmente via `PYTHONPATH=src`, mas a experiência de instalação limpa não está aprovada.
 - `pytest` passou como evidência complementar, não como prova de ambiente de desenvolvimento isolado instalado a partir do projeto.
-- O pacote declara `license = { text = "MIT" }` em `pyproject.toml`, enquanto a documentação pública afirma que `LICENSE` final permanece pendente. Essa inconsistência já existe no estado atual e deve ser resolvida antes da alfa.
+- No commit validado, o pacote declarava `license = { text = "MIT" }` em `pyproject.toml`, enquanto a documentação pública afirmava que `LICENSE` final permanecia pendente. Essa inconsistência foi tratada posteriormente no empacotamento local mínimo, mas a licença final continua pendente antes da alfa.
 
 ## Conclusão
 
 Conclusão: a validação limpa foi executada de forma real em cópia temporária local, sem rede e sem publicar artefatos, mas o commit testado não atende aos critérios mínimos para aprovação de instalação limpa.
+
+Nota posterior: missão de empacotamento local mínimo ajustou `pyproject.toml` para `setuptools`, versão PEP 440 `0.1.0a1`, pacote em `src/vercosa_ai_framework` e entrypoint local `vaf`. Este registro histórico permanece `REPROVADO` porque descreve o commit validado; uma nova execução do checklist ainda é necessária antes de qualquer tag, release ou pacote.
 
 Resultado final: `REPROVADO`.
 

@@ -39,6 +39,7 @@ O estado atual deve ser lido assim:
 | [docs/legal/usage-policy.md](../legal/usage-policy.md) | existe | Precisa continuar explícita sobre ausência de segurança absoluta. |
 | [docs/legal/license-notes.md](../legal/license-notes.md) | existe | Registra licença pendente e não substitui revisão jurídica. |
 | [docs/getting-started/local-installation.md](../getting-started/local-installation.md) | existe | Não promete PyPI, Docker, banco, provider real ou ambiente único. |
+| `pyproject.toml` | existe | Empacotamento Python local mínimo para instalação editável, sem pacote publicado e sem promessa de PyPI. |
 | [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) | existe | Checklist documental criado e executado uma vez em cópia temporária local; resultado atual reprovado. |
 | [docs/release/clean-install-validation.md](clean-install-validation.md) | existe | Registro factual da validação limpa de 2026-07-10, classificada como `REPROVADO`. |
 | [docs/architecture/module-index.md](../architecture/module-index.md) | existe | Precisa continuar alinhado aos módulos realmente existentes. |
@@ -60,6 +61,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | O README diferencia implementado e futuro. | existe | Lista lacunas como RAG, embeddings, pgvector, providers reais e persistência externa de eventos. |
 | O README aponta para guias principais. | existe | Inclui instalação, contribuição, arquitetura, exemplos, roadmap e este checklist. |
 | O guia de instalação não promete PyPI inexistente. | existe | Documenta instalação local em modo desenvolvimento. |
+| O empacotamento local mínimo existe. | existe | `pyproject.toml` usa `setuptools`, pacote em `src/vercosa_ai_framework`, versão PEP 440 `0.1.0a1`, sem dependências runtime e entrypoint local `vaf`. |
 | O checklist de instalação limpa foi criado. | existe | Diferencia procedimento documental, execução real do checklist e release alfa. |
 | O checklist de instalação limpa foi executado. | precisa de revisão | Execução real em 2026-07-10 foi classificada como `REPROVADO`; a alfa não está pronta. |
 | O guia de contribuição não promete processo público maduro. | existe | Declara processo inicial e conservador. |
@@ -88,7 +90,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Ausência de provider real configurado. | pendente | O estado atual não deve ser apresentado como integração real com provider externo. |
 | Ausência de RAG semântico. | pendente | Busca semântica e recuperação avançada continuam futuras. |
 | Ausência de persistência externa de eventos. | pendente | Audit/Event Log atual possui memória e JSONL local opt-in, mas não possui banco, exportador remoto, retenção, rotação ou observabilidade externa. |
-| Validação de instalação limpa reprovada. | pendente | A execução real de 2026-07-10 falhou por instalação editável offline sem `hatchling`, diretórios operacionais vazios ausentes no clone e script de status acoplado ao checkout principal. |
+| Validação de instalação limpa reprovada. | pendente | A execução real de 2026-07-10 falhou no commit validado. O empacotamento local foi ajustado depois, mas diretórios operacionais vazios ausentes no clone, script de status acoplado ao checkout principal, licença pendente e reexecução aprovada ainda permanecem. |
 
 ## Decisões Já Tomadas
 
@@ -105,6 +107,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Sem persistência externa de eventos por enquanto.
 - Persistência local JSONL de eventos auditáveis é opt-in e não substitui retenção, rotação ou observabilidade externa.
 - Versão alfa inicial planejada como `0.1.0-alpha.1`, sem release publicada.
+- Forma PEP 440 local da alfa planejada como `0.1.0a1` em `pyproject.toml`, sem release publicada e sem pacote publicado.
 - Tag futura planejada como `v0.1.0-alpha.1`, sem tag criada nesta fase.
 
 ## Pendências Antes De Release Alfa

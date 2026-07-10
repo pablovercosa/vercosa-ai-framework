@@ -184,12 +184,12 @@ Decisões já encaminhadas:
 18. Como reports sensíveis de conduta devem ser tratados antes da alfa pública sem expor dados privados em issues públicas?
 19. Haverá CI público antes da alfa ou a validação inicial continuará local/manual?
 20. Haverá release notes separadas ou o `CHANGELOG.md` será suficiente para a primeira alfa?
-21. Como alinhar o metadado atual de `pyproject.toml` com a política documental sem alterar versão em código fora de uma missão própria?
+21. Como a versão local `0.1.0a1` em `pyproject.toml` será promovida, mantida ou revisada quando houver missão explícita de release?
 22. Qual ambiente será usado para a primeira validação real de instalação limpa?
 23. Qual versão mínima de Python será formalizada como requisito público da alfa?
 24. Haverá CI para repetir a validação de instalação limpa no futuro?
 25. Haverá container apenas para validação futura, sem transformar Docker em requisito do framework?
-26. A instalação de desenvolvimento offline deve ser suportada oficialmente ou o guia deve exigir acesso controlado a índice remoto para `hatchling` e dependências `dev`?
+26. A instalação de desenvolvimento offline deve ser suportada oficialmente ou o guia deve exigir que `setuptools` e dependências `dev` estejam previamente disponíveis localmente?
 27. Como garantir que diretórios operacionais vazios, como `missions/running` e `missions/failed`, existam em clones limpos sem depender de estado local?
 28. Os scripts operacionais devem aceitar raiz do projeto ou operar sempre pelo diretório atual para permitir validação de cópias temporárias?
 

@@ -13,6 +13,7 @@ Este plano organiza uma futura release alfa, mas não publica release, não cria
 | Campo | Valor |
 | --- | --- |
 | Versão planejada | `0.1.0-alpha.1` |
+| Versão PEP 440 para pacote local | `0.1.0a1` |
 | Tag futura planejada | `v0.1.0-alpha.1` |
 | Status atual | planejada e não publicada |
 | Release GitHub | não publicada |
@@ -21,6 +22,8 @@ Este plano organiza uma futura release alfa, mas não publica release, não cria
 | Garantia de estabilidade | inexistente nesta fase |
 
 `0.1.0-alpha.1` é uma versão planejada para organizar uma entrega pública inicial. Ela não deve ser tratada como release feita, marco estável, pacote distribuído ou promessa de compatibilidade de API.
+
+O metadado local em `pyproject.toml` usa `0.1.0a1`, forma PEP 440 equivalente para ferramentas Python. Esse metadado prepara instalação editável local e não publica a alfa.
 
 ## O Que Já Apoia A Alfa
 
@@ -39,6 +42,7 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - documentação de arquitetura;
 - checklist de alfa pública;
 - checklist documental de instalação limpa;
+- empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, descoberta em `src`, versão `0.1.0a1` e entrypoint local `vaf`;
 - registro factual de uma execução de instalação limpa em cópia temporária local, atualmente classificada como `REPROVADO`.
 
 Esses artefatos reduzem risco documental, mas não substituem validação final de release.
@@ -82,10 +86,10 @@ A validação real executada em 2026-07-10 no commit `365ea328399495434d3727fcf2
 
 Bloqueios registrados:
 
-- instalação editável offline falhou por ausência local de `hatchling>=1.25`;
+- instalação editável offline falhou por ausência local de `hatchling>=1.25` no commit validado; o backend foi ajustado posteriormente para `setuptools`, mas ainda exige nova validação limpa;
 - `validate` e `doctor` falharam porque `missions/running` e `missions/failed` não existem no clone limpo;
 - `scripts/vaf-status.sh` usa caminho absoluto para o checkout principal e não representa corretamente uma cópia temporária;
-- `LICENSE` permanece ausente e há inconsistência com o metadado `license = { text = "MIT" }` em `pyproject.toml`.
+- `LICENSE` permanece ausente; o metadado local não deve inventar licença antes da decisão final.
 
 Esse resultado não altera a versão planejada `0.1.0-alpha.1`, não cria tag, não publica release e bloqueia a aprovação da alfa até nova validação ou decisão explícita de exceção.
 

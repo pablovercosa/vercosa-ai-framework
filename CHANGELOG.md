@@ -24,6 +24,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Audit/Event Log inicial em memória, com helpers opcionais para decisões de Policy, Guardian, Context e ciclo de vida de missão/batch.
 - Persistência local JSONL opt-in para eventos auditáveis, sem banco, sem rede, sem dependências externas e sem ativação global obrigatória.
 - CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate` e `doctor`.
+- Empacotamento Python local mínimo em `pyproject.toml` com `setuptools`, descoberta em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e entrypoint local `vaf` para instalação editável em ambiente virtual.
 - Comando CLI `missions` para listar missões por estado, com contagens gerais, ordenação determinística, filtro opcional `--state` e sem executar, mover ou alterar arquivos.
 - Comando CLI `batch-summary` para resumo pós-batch local, com contagens de missões, último log encontrado, avisos de atenção e lembretes de validação manual, sem executar missões, scripts, testes, Git, rede, banco ou providers.
 - Exemplos operacionais iniciais em `docs/examples/`.
@@ -68,6 +69,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Sem versão alfa publicada.
 - Sem pacote publicado.
 - Sem publicação em PyPI.
+- Sem licença final em `LICENSE`; por isso o metadado de licença do pacote local não declara uma licença inventada nesta fase.
 - Sem CI público documentado como existente.
 - Sem RAG semântico.
 - Sem embeddings.
@@ -76,7 +78,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Sem persistência externa de eventos.
 - Sem múltiplos providers reais em produção.
 - Sem internacionalização dos READMEs.
-- Instalação limpa atual reprovada até correção ou decisão explícita sobre empacotamento offline, diretórios operacionais vazios, script de status acoplado a caminho absoluto e licença pendente.
+- Instalação limpa atual reprovada até nova execução aprovada ou decisão explícita sobre as ressalvas remanescentes; o empacotamento local mínimo foi ajustado após a validação reprovada, mas diretórios operacionais vazios, script de status acoplado a caminho absoluto e licença pendente ainda exigem tratamento.
 - Sem promessa de compatibilidade futura, SLA ou prontidão para produção.
 
 ### Futuro
