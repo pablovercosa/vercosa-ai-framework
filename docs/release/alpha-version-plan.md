@@ -43,6 +43,7 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - checklist de alfa pública;
 - checklist documental de instalação limpa;
 - empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, descoberta em `src`, versão `0.1.0a1` e entrypoint local `vaf`;
+- CI mínimo em GitHub Actions com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, usar secrets, executar missões ou chamar providers;
 - registro factual de uma execução de instalação limpa em cópia temporária local, atualmente classificada como `REPROVADO`.
 
 Esses artefatos reduzem risco documental, mas não substituem validação final de release.
@@ -55,6 +56,7 @@ Antes de publicar a alfa, ainda é necessário:
 - reexecutar o checklist de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) com resultado aprovado ou exceção aceita;
 - fazer revisão final do README;
 - validar links;
+- manter o CI mínimo passando no commit candidato;
 - executar `pytest`;
 - executar `python3 -m compileall src`;
 - revisar o `CHANGELOG.md`;
@@ -72,6 +74,7 @@ A alfa só deve ser considerada publicável quando todos os critérios mínimos 
 - `running=0`;
 - `failed=0`;
 - `git status` limpo;
+- CI mínimo passando;
 - `pytest` passando;
 - `python3 -m compileall src` passando;
 - documentação mínima presente;

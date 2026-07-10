@@ -29,6 +29,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Comando CLI `batch-summary` para resumo pós-batch local, com contagens de missões, último log encontrado, avisos de atenção e lembretes de validação manual, sem executar missões, scripts, testes, Git, rede, banco ou providers.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Templates iniciais de issues e pull request em `.github/`.
+- CI mínimo em `.github/workflows/ci.yml` com GitHub Actions para pull requests e pushes em `main`, instalação editável com extra `dev`, `pytest` e `python -m compileall src`, sem secrets, providers, missões, release ou publicação de pacote.
 
 ### Alterado
 
@@ -70,7 +71,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Sem pacote publicado.
 - Sem publicação em PyPI.
 - Sem licença final em `LICENSE`; por isso o metadado de licença do pacote local não declara uma licença inventada nesta fase.
-- Sem CI público documentado como existente.
+- Sem matriz ampla de CI, lint automatizado, validação de instalação limpa automatizada ou workflow de release.
 - Sem RAG semântico.
 - Sem embeddings.
 - Sem pgvector como adapter real.
@@ -87,7 +88,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Amadurecimento da política formal de estabilidade após as primeiras alfas.
 - Criação de tag alfa somente após decisão explícita e validações aplicáveis.
 - Release notes futuras quando houver release de fato.
-- CI público, se houver decisão de automação.
+- Evolução futura do CI para matriz de múltiplas versões, lint ou validação limpa automatizada, se houver decisão específica.
 - Internacionalização dos READMEs após estabilização do conteúdo canônico em português do Brasil.
 
 ## Convenção futura de versões

@@ -64,6 +64,7 @@ Ativos principais:
 - `docs/release/versioning-policy.md` e `docs/release/alpha-version-plan.md`: política inicial de versionamento e plano da versão alfa `0.1.0-alpha.1`, sem release publicada.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
+- `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
 - `.github/ISSUE_TEMPLATE/` e `.github/PULL_REQUEST_TEMPLATE.md`: templates iniciais para colaboração pública futura, sem processo público maduro ou SLA.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
@@ -241,7 +242,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Processo público maduro de segurança, incluindo canal definitivo de reporte de vulnerabilidades.
 - Canal público definitivo para problemas de conduta e política de governança comunitária madura.
 - Publicação de release alfa; o checklist de prontidão, o checklist de instalação limpa, a validação limpa reprovada e a versão planejada existem, mas não criam tag, pacote ou marco público por si só.
-- CI público e política pública madura de segurança. O changelog inicial existe, mas ainda não há changelog de release versionado.
+- Política pública madura de segurança. O CI público mínimo existe, mas ainda não há matriz de múltiplas versões, lint, validação limpa automatizada ou changelog de release versionado.
 - Testes de contrato entre portas/adapters.
 - ADRs para fronteiras ainda ambíguas.
 
@@ -271,6 +272,7 @@ Esse estado é apenas documental:
 - não há GitHub Release publicada;
 - não há pacote PyPI publicado;
 - há apenas empacotamento local mínimo para instalação editável em ambiente de desenvolvimento;
+- há CI mínimo com GitHub Actions para `pytest` e `python -m compileall src`, sem publicação de pacote ou release;
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 

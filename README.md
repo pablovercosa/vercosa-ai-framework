@@ -44,6 +44,8 @@ A revisão arquitetural pós-integrações está em [docs/architecture/post-inte
 
 O repositório possui empacotamento Python local mínimo em `pyproject.toml`, com versão PEP 440 `0.1.0a1` equivalente à alfa planejada `0.1.0-alpha.1`. Isso permite instalação editável em ambiente virtual para desenvolvimento, mas não significa pacote publicado, release alfa publicada, tag criada ou distribuição via PyPI.
 
+O repositório também possui CI mínimo em GitHub Actions em `.github/workflows/ci.yml`. O workflow roda em pull requests e pushes para `main`, instala o projeto em modo desenvolvimento com o extra `dev`, executa `pytest` e valida `python -m compileall src`. Esse CI não publica pacote, não cria release, não usa secrets, não executa missões, não chama providers e não substitui a validação local.
+
 Implementado em estado MVP ou contrato inicial:
 
 - Mission Runner local, fila em diretórios e integração opcional com eventos auditáveis em Python.
@@ -165,6 +167,7 @@ Módulos principais:
 - `knowledge/`: visão, princípios, arquitetura de referência e ADRs.
 - `.opencode/`: integração inicial com OpenCode como laboratório/runtime.
 - `.github/`: templates iniciais de issues e pull requests para colaboração futura.
+- `.github/workflows/ci.yml`: CI mínimo com GitHub Actions para testes e `compileall`, sem release ou publicação de pacote.
 
 ## Operação Local
 

@@ -55,7 +55,7 @@ Alguns limites são esperados no estágio atual do projeto e podem não ser trat
 - ausência de hardening de produção;
 - ausência de SLA;
 - ausência de suporte a múltiplas versões;
-- ausência de CI público;
+- CI público mínimo sem hardening avançado, matriz ampla ou validação limpa automatizada;
 - ausência de dashboard;
 - ausência de autenticação externa;
 - limitações documentadas de projeto em desenvolvimento.
@@ -94,7 +94,7 @@ O projeto ainda não possui:
 
 - auditoria persistente externa;
 - política pública madura de vulnerabilidades;
-- CI público;
+- matriz ampla de CI, lint automatizado e validação limpa automatizada;
 - release estável;
 - hardening para produção;
 - sandbox externo garantido;

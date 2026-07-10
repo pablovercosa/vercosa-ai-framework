@@ -50,6 +50,7 @@ O estado atual deve ser lido assim:
 | [docs/roadmap/mission-backlog.md](../roadmap/mission-backlog.md) | existe | Deve continuar separado da fila executável `missions/queue/`. |
 | [.github/ISSUE_TEMPLATE/](../../.github/ISSUE_TEMPLATE/) | existe | Templates iniciais para bug, melhoria, documentação e proposta de missão. |
 | [.github/PULL_REQUEST_TEMPLATE.md](../../.github/PULL_REQUEST_TEMPLATE.md) | existe | Template inicial de pull request com escopo, segurança, testes e documentação. |
+| [.github/workflows/ci.yml](../../.github/workflows/ci.yml) | existe | CI público mínimo com instalação editável, `pytest` e `python -m compileall src`, sem secrets, providers, release ou publicação de pacote. |
 
 Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pendente` e `fora do escopo da alfa atual`.
 
@@ -74,12 +75,13 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | A revisão pós-integrações diferencia implementado, MVP, integração inicial, futuro e fora do escopo. | existe | Ajuda a evitar promessa pública acima do estado real. |
 | A estratégia inicial de versionamento está documentada. | existe | Define `0.1.0-alpha.1` como versão planejada, sem publicar release. |
 | A versão alfa planejada está documentada. | existe | Diferencia versão planejada, tag futura, release GitHub e pacote publicado. |
+| CI público mínimo existe. | existe | Valida `pytest` e `python -m compileall src` em pull requests e pushes para `main`, sem executar missões ou providers. |
 
 ## Riscos Antes Da Alfa Pública
 
 | Risco ou ausência | Status | Impacto |
 | --- | --- | --- |
-| Ausência de CI público. | pendente | Validação depende de execução local manual. |
+| CI público mínimo ainda sem matriz ampla. | precisa de revisão | Existe workflow mínimo com Python 3.11, `pytest` e `compileall`; matriz de múltiplas versões, lint e validação limpa automatizada continuam futuros. |
 | Canal público definitivo para reporte de vulnerabilidades. | pendente | `SECURITY.md` existe, mas o canal e o processo público maduro ainda precisam ser definidos antes da alfa pública. |
 | Canal público definitivo para problemas de conduta. | pendente | `CODE_OF_CONDUCT.md` existe como política inicial, mas canal público e governança comunitária madura ainda precisam ser definidos antes de abertura pública ampla. |
 | Templates de issue iniciais. | existe | Estruturam reportes públicos sem prometer triagem madura ou suporte formal. |
@@ -109,6 +111,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Versão alfa inicial planejada como `0.1.0-alpha.1`, sem release publicada.
 - Forma PEP 440 local da alfa planejada como `0.1.0a1` em `pyproject.toml`, sem release publicada e sem pacote publicado.
 - Tag futura planejada como `v0.1.0-alpha.1`, sem tag criada nesta fase.
+- CI público mínimo com GitHub Actions, sem release, sem publicação de pacote, sem secrets, sem providers externos e sem execução de missões.
 
 ## Pendências Antes De Release Alfa
 
@@ -118,7 +121,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Revisar templates de issue e pull request conforme o processo público amadurecer.
 - Manter `CHANGELOG.md` inicial atualizado sem criar release, tag ou versão enquanto não houver decisão explícita.
 - Corrigir os bloqueios encontrados na validação de instalação limpa e reexecutar o checklist antes da alfa.
-- Criar CI público, se houver decisão de automação.
+- Manter CI público mínimo passando antes da tag alfa.
+- Decidir futuramente se haverá matriz de múltiplas versões de Python, lint e validação limpa automatizada no CI.
 - Revisar README final de alfa.
 - Decidir explicitamente se e quando criar a tag `v0.1.0-alpha.1`.
 - Decidir explicitamente se e quando publicar a release alfa.
@@ -130,7 +134,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 
 Uma alfa pública só deve ser considerada pronta quando todos os critérios mínimos abaixo forem atendidos ou quando uma decisão explícita registrar exceção e risco aceito:
 
-- `README.md` revisado para alfa, sem prometer produção, provider real obrigatório, RAG, embeddings, pgvector, Docker, PyPI ou CI inexistentes.
+- `README.md` revisado para alfa, sem prometer produção, provider real obrigatório, RAG, embeddings, pgvector, Docker, PyPI, matriz ampla de CI ou release inexistente.
 - Checklist de instalação limpa criado e executado em ambiente novo, com resultado aprovado ou exceção explicitamente aceita; o resultado atual é `REPROVADO`.
 - Guia de contribuição revisado para processo público inicial, sem prometer maturidade inexistente.
 - Código de conduta inicial criado e revisado sem prometer governança comunitária madura inexistente.
@@ -140,6 +144,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Templates de issue e pull request criados e revisados conforme o processo público amadurecer.
 - Changelog inicial criado e política inicial de versionamento documentada.
 - Versão alfa planejada documentada sem declarar release publicada.
+- CI mínimo passando em pull requests ou no commit candidato da branch `main`.
 - Testes locais passam com `pytest`.
 - Compilação dos módulos passa com `python3 -m compileall src`.
 - `git status` limpo no momento da release.

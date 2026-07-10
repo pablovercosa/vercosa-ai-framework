@@ -8,6 +8,8 @@ O projeto evolui por missões em Markdown, com escopo claro, referências rastre
 
 O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch, validações básicas, [política inicial de segurança](SECURITY.md), [código de conduta inicial](CODE_OF_CONDUCT.md) e templates iniciais de issues e pull requests. Ainda não há release alfa pública nem processo público completo de pull requests neste momento.
 
+O repositório possui CI mínimo em GitHub Actions para pull requests e pushes em `main`. Esse CI valida instalação local em modo desenvolvimento, `pytest` e `python -m compileall src`; ele não publica pacote, não cria release, não executa missões, não chama providers externos e não usa secrets.
+
 Recursos como RAG semântico, embeddings, pgvector como adapter real, providers reais obrigatórios, múltiplos runtimes reais e publicação de pacote continuam futuros ou fora do escopo atual, salvo missão específica aprovada.
 
 ## Princípios Para Contribuir
@@ -16,6 +18,7 @@ Recursos como RAG semântico, embeddings, pgvector como adapter real, providers 
 - Use missão em Markdown para mudanças planejadas.
 - Inclua referências obrigatórias a Specs, docs, ADRs, scripts ou módulos relevantes.
 - Rode testes e `compileall` antes de considerar a entrega pronta.
+- Garanta que pull requests passem no CI mínimo quando o fluxo público de PRs for usado.
 - Atualize documentação quando a mudança afetar comportamento, fluxo, arquitetura, comandos, módulos ou roadmap.
 - Atualize [CHANGELOG.md](CHANGELOG.md) quando a mudança afetar comportamento público, arquitetura, operação, segurança, documentação pública ou preparação de release futura.
 - Siga a [política inicial de versionamento](docs/release/versioning-policy.md) quando a mudança afetar preparação de release, changelog ou documentação pública de versão.
@@ -47,6 +50,10 @@ python3 -m compileall src
 ```
 
 Para preparação de release alfa ou revisão conservadora de ambiente novo, use também o [checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). Ele complementa o guia local e não substitui `pytest`, `python3 -m compileall src` ou revisão humana.
+
+O CI mínimo não substitui validação local. Antes de abrir ou revisar um pull request, continue executando `pytest`, `python3 -m compileall src` e comandos de CLI seguros quando aplicável, como `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` e `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor`.
+
+O CI do projeto não deve depender de secrets, tokens, providers externos, OpenCode, Ollama, banco, Docker ou execução de missões. Dependências desse tipo só podem ser avaliadas em missão específica, com escopo, riscos e documentação próprios.
 
 Comandos úteis antes de executar missões:
 
@@ -256,6 +263,7 @@ Quando pull requests forem usados, a expectativa inicial será:
 - escopo pequeno e rastreável;
 - referência à missão ou decisão relacionada;
 - testes e `compileall` executados;
+- CI mínimo passando;
 - documentação atualizada;
 - commits em português do Brasil;
 - ausência de secrets, dependências desnecessárias e automações novas sem aprovação.

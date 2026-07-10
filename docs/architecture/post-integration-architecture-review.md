@@ -47,7 +47,7 @@ Neste momento, o harness organiza:
 | Auditoria | Audit/Event Log inicial em memória, persistência local JSONL opt-in, helpers opcionais e eventos básicos de missão. | Sem persistência externa, banco, dashboard, exportação remota, retenção, rotação ou integração automática com scripts shell. |
 | CLI operacional | Comandos `status`, `missions`, `batch-summary`, `validate` e `doctor`. | Não executa missões, Git, testes, scripts, providers, banco ou rede. |
 | Documentação operacional | Playbooks, checklist pós-batch, guia de instalação, contribuição, exemplos e checklist de alfa pública. | Documentação ainda precisa evitar promessa pública acima do implementado. |
-| Preparação pública alfa | Checklist documental, política inicial de versionamento e plano da versão alfa foram criados. | Alfa pública ainda não foi publicada; não há tag, changelog final, CI público ou release. |
+| Preparação pública alfa | Checklist documental, política inicial de versionamento, plano da versão alfa e CI mínimo foram criados. | Alfa pública ainda não foi publicada; não há tag, changelog final, matriz ampla de CI ou release. |
 
 ## Módulos Centrais E Responsabilidades
 
@@ -186,7 +186,7 @@ Futuro:
 - Múltiplos runtime adapters reais.
 - Semantic Index, embeddings, pgvector e RAG semântico.
 - Dashboard ou observabilidade externa.
-- CI público, release alfa, tag, changelog de release versionado e internacionalização.
+- Matriz ampla de CI, lint, validação limpa automatizada, release alfa, tag, changelog de release versionado e internacionalização.
 
 Fora do escopo atual:
 
@@ -208,7 +208,7 @@ O projeto ainda não possui:
 - Múltiplos providers reais em produção.
 - Múltiplos runtimes reais em produção.
 - Dashboard.
-- CI público.
+- Matriz ampla de CI, lint e validação limpa automatizada.
 - Release alfa publicada.
 - Canal público definitivo para problemas de conduta.
 - Internacionalização dos READMEs.
@@ -225,7 +225,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 - Ausência de política pública de segurança.
 - Ausência de governança comunitária madura e canal público definitivo para problemas de conduta.
 - Ausência de release alfa publicada, tag alfa e changelog de release versionado.
-- Ausência de CI público para reproduzir validações fora do ambiente local.
+- CI mínimo ainda não cobre matriz ampla, lint ou validação de instalação limpa automatizada.
 
 ## Decisões Arquiteturais Consolidadas
 

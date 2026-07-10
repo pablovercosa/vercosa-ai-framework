@@ -105,6 +105,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 - Persistência local controlada de eventos auditáveis concluída como `JsonlAuditEventLog`, sem banco, sem rede, sem retenção, sem rotação e sem ativação global obrigatória.
 - Empacotamento Python local mínimo concluído em `pyproject.toml` com `setuptools`, pacote em `src/vercosa_ai_framework`, versão PEP 440 `0.1.0a1`, extra opcional `dev` e entrypoint local `vaf`, sem publicação de pacote.
+- CI público mínimo concluído em `.github/workflows/ci.yml`, com GitHub Actions em pull requests e push para `main`, instalação editável com extra `dev`, `pytest` e `python -m compileall src`, sem secrets, providers, banco, batch, missões, release ou publicação de pacote.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -456,7 +457,10 @@ Missões futuras relacionadas:
 - Revisar templates de issue e pull request conforme o processo público amadurecer.
 - Revisar processo público antes de release alfa.
 - Revisar segurança antes de release alfa.
-- Criar CI público quando houver decisão de automação.
+- Manter CI público mínimo passando antes da alfa.
+- Avaliar matriz de múltiplas versões de Python em missão futura, se desejado.
+- Avaliar CI com lint em missão futura, se desejado.
+- Avaliar CI com validação de instalação limpa automatizada em missão futura.
 - Manter o changelog inicial atualizado sem criar release versionada.
 - Corrigir bloqueios encontrados na instalação limpa real reprovada.
 - Reexecutar e registrar instalação limpa antes da alfa.

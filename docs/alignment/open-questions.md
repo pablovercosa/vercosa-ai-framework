@@ -182,7 +182,7 @@ Decisões já encaminhadas:
 16. Haverá equipe de manutenção formal para triagem de problemas comunitários?
 17. Haverá política formal de moderação?
 18. Como reports sensíveis de conduta devem ser tratados antes da alfa pública sem expor dados privados em issues públicas?
-19. Haverá CI público antes da alfa ou a validação inicial continuará local/manual?
+19. Quando o CI mínimo deve evoluir para matriz de múltiplas versões de Python?
 20. Haverá release notes separadas ou o `CHANGELOG.md` será suficiente para a primeira alfa?
 21. Como a versão local `0.1.0a1` em `pyproject.toml` será promovida, mantida ou revisada quando houver missão explícita de release?
 22. Qual ambiente será usado para a primeira validação real de instalação limpa?
@@ -192,6 +192,8 @@ Decisões já encaminhadas:
 26. A instalação de desenvolvimento offline deve ser suportada oficialmente ou o guia deve exigir que `setuptools` e dependências `dev` estejam previamente disponíveis localmente?
 27. Como garantir que diretórios operacionais vazios, como `missions/running` e `missions/failed`, existam em clones limpos sem depender de estado local?
 28. Os scripts operacionais devem aceitar raiz do projeto ou operar sempre pelo diretório atual para permitir validação de cópias temporárias?
+29. Quando adicionar lint ao CI sem introduzir dependências ou regras prematuras?
+30. Quando automatizar release, se houver decisão explícita, sem misturar validação de CI com publicação de pacote?
 
 ## ADRs Recomendadas
 
