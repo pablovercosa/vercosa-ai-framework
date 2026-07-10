@@ -29,6 +29,7 @@ Leia obrigatoriamente:
 - missions/done/
 
 Leia também, se existirem:
+- logs/pre-audit-targeted-module-verification.md
 - logs/pre-audit-dynamic-module-usage.md
 - logs/pre-audit-entrypoint-reachability.md
 - logs/pre-audit-traceability-integration.md
