@@ -29,6 +29,7 @@ Leia obrigatoriamente:
 - missions/done/
 
 Leia também, se existirem:
+- logs/pre-audit-model-selection-core-followup.md
 - logs/pre-audit-targeted-module-verification.md
 - logs/pre-audit-dynamic-module-usage.md
 - logs/pre-audit-entrypoint-reachability.md
@@ -64,6 +65,7 @@ Princípio central:
 Não basta o projeto compilar, passar nos testes e estar bem documentado. É necessário demonstrar que o que foi construído serve ao objetivo real do Vercosa AI Framework.
 
 Contexto:
+- Em caso de divergência sobre Core, Guardian ou Model Selection, priorize logs/pre-audit-targeted-module-verification.md e logs/pre-audit-model-selection-core-followup.md sobre o levantamento dinâmico geral, pois as verificações direcionadas corrigiram falsos negativos da instrumentação anterior.
 - O projeto completou a faixa de missões até 0100.
 - Houve crescimento relevante de arquitetura, documentação, governança, CLI, testes e preparação para alfa.
 - Existe risco de o processo de missões ter produzido componentes tecnicamente corretos, mas fora de prioridade ou escopo.
