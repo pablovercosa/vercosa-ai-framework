@@ -29,6 +29,7 @@ Leia obrigatoriamente:
 - missions/done/
 
 Leia também, se existirem:
+- logs/pre-audit-traceability-integration.md
 - logs/pre-audit-agents-skills-specs.md
 - docs/vision/
 - docs/specifications/
