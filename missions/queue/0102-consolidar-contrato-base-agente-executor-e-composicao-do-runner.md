@@ -22,6 +22,7 @@ Leia obrigatoriamente:
 - tests/
 
 Leia também, se existirem:
+- logs/pre-audit-agents-skills-specs.md
 - .opencode/
 - .opencode/agents/
 - agents/
