@@ -63,6 +63,7 @@ Ativos principais:
 - `docs/release/clean-install-validation.md`: registro factual da validação de instalação limpa de 2026-07-10, classificada como `REPROVADO`.
 - `docs/release/versioning-policy.md` e `docs/release/alpha-version-plan.md`: política inicial de versionamento e plano da versão alfa `0.1.0-alpha.1`, sem release publicada.
 - `docs/release/release-policy.md` e `docs/release/pre-release-checklist.md`: política inicial de release e checklist pré-tag, ambos manuais e sem criar tag, release ou pacote.
+- `docs/release/release-notes-alpha.md`: release notes alfa preliminares para a futura `0.1.0-alpha.1`, sem declarar release publicada, tag criada ou pacote publicado.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
 - `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
@@ -275,6 +276,7 @@ Esse estado é apenas documental:
 - há apenas empacotamento local mínimo para instalação editável em ambiente de desenvolvimento;
 - há CI mínimo com GitHub Actions para `pytest` e `python -m compileall src`, sem publicação de pacote ou release;
 - há política inicial de release e checklist pré-tag documentados;
+- há release notes alfa preliminares, ainda pendentes de revisão final antes de publicação real;
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 

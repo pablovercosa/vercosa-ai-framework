@@ -183,7 +183,7 @@ Decisões já encaminhadas:
 17. Haverá política formal de moderação?
 18. Como reports sensíveis de conduta devem ser tratados antes da alfa pública sem expor dados privados em issues públicas?
 19. Quando o CI mínimo deve evoluir para matriz de múltiplas versões de Python?
-20. Haverá release notes separadas ou o `CHANGELOG.md` será suficiente para a primeira alfa?
+20. As release notes alfa preliminares já existem; quando elas devem ser revisadas como release notes finais para a primeira alfa?
 21. Como a versão local `0.1.0a1` em `pyproject.toml` será promovida, mantida ou revisada quando houver missão explícita de release?
 22. Qual ambiente será usado para a primeira validação real de instalação limpa?
 23. Qual versão mínima de Python será formalizada como requisito público da alfa?
@@ -195,7 +195,7 @@ Decisões já encaminhadas:
 29. Quando adicionar lint ao CI sem introduzir dependências ou regras prematuras?
 30. Quando automatizar release, se houver decisão explícita, sem misturar validação de CI com publicação de pacote?
 31. Quando executar formalmente o checklist pré-tag antes da alfa planejada?
-32. Quando criar ou revisar release notes finais para a primeira alfa?
+32. Qual missão específica deve autorizar a revisão final das release notes antes da primeira alfa?
 
 ## ADRs Recomendadas
 

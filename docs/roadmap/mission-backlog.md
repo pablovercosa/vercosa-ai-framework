@@ -108,6 +108,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - CI público mínimo concluído em `.github/workflows/ci.yml`, com GitHub Actions em pull requests e push para `main`, instalação editável com extra `dev`, `pytest` e `python -m compileall src`, sem secrets, providers, banco, batch, missões, release ou publicação de pacote.
 - Política inicial de release concluída em [docs/release/release-policy.md](../release/release-policy.md), sem criação de tag, release, pacote ou automação de deploy.
 - Checklist pré-tag concluído em [docs/release/pre-release-checklist.md](../release/pre-release-checklist.md), como pré-condição manual e sem autorização automática.
+- Release notes alfa preliminares concluídas em [docs/release/release-notes-alpha.md](../release/release-notes-alpha.md), sem declarar release publicada, tag criada ou pacote publicado.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -472,7 +473,7 @@ Missões futuras relacionadas:
 - Refinar comando adicional da CLI para resumir pós-batch quando houver necessidade concreta.
 - Definir retenção, rotação e relatórios futuros para eventos auditáveis.
 - Executar checklist pré-tag antes da tag alfa.
-- Revisar release notes alfa antes da publicação.
+- Revisar release notes alfa finais antes da publicação.
 - Revisar e criar `LICENSE` antes da release pública.
 - Decidir explicitamente se haverá pacote publicado ou apenas código-fonte na alfa.
 - Criar tag alfa somente após validações e decisão explícita.
@@ -602,7 +603,7 @@ Objetivo: organizar README, guias e exemplos para uma futura alfa sem transforma
 Escopo permitido: documentação pública, limites claros, links relativos, pré-requisitos e checklists.
 Escopo proibido: criar release/tag sem decisão, internacionalizar READMEs agora ou prometer providers, RAG, embeddings, pgvector ou Semantic Index como implementados.
 Dependências: guia de instalação, guia de contribuição, licença e revisão de arquitetura pós-integrações.
-Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); changelog inicial criado em [CHANGELOG.md](../../CHANGELOG.md); versão alfa planejada documentada; release alfa, tag, release notes e internacionalização continuam futuros.
+Status: concluído como preparação documental inicial com checklist de prontidão em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md); changelog inicial criado em [CHANGELOG.md](../../CHANGELOG.md); versão alfa planejada documentada; release notes preliminares criadas; release alfa, tag, release notes finais e internacionalização continuam futuros.
 Critérios de aceite resumidos: documentação pública diferencia implementado, MVP, integração inicial, futuro e fora do escopo.
 
 31. Código sugerido: `M031-checklist-instalacao-limpa`

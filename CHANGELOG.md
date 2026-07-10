@@ -4,7 +4,7 @@ Todas as mudanças relevantes do Vercosa AI Framework devem ser registradas nest
 
 O projeto ainda está em desenvolvimento. Ainda não há release estável publicada, versão alfa publicada, tag de release ou pacote distribuído. Este changelog inicial registra a evolução já consolidada do projeto até o estado atual, sem criar release formal, sem definir versão definitiva e sem prometer estabilidade de produção.
 
-Links úteis: [README.md](README.md) | [Política de versionamento](docs/release/versioning-policy.md) | [Política de release](docs/release/release-policy.md) | [Checklist pré-tag](docs/release/pre-release-checklist.md) | [Plano da versão alfa](docs/release/alpha-version-plan.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
+Links úteis: [README.md](README.md) | [Política de versionamento](docs/release/versioning-policy.md) | [Política de release](docs/release/release-policy.md) | [Checklist pré-tag](docs/release/pre-release-checklist.md) | [Plano da versão alfa](docs/release/alpha-version-plan.md) | [Notas preliminares da futura alfa](docs/release/release-notes-alpha.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
 
 ## Não publicado
 
@@ -32,6 +32,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - CI mínimo em `.github/workflows/ci.yml` com GitHub Actions para pull requests e pushes em `main`, instalação editável com extra `dev`, `pytest` e `python -m compileall src`, sem secrets, providers, missões, release ou publicação de pacote.
 - Política inicial de release em `docs/release/release-policy.md`, diferenciando versão planejada, tag Git, GitHub Release, pacote publicado, changelog, release notes, branch `main` e produção.
 - Checklist pré-tag em `docs/release/pre-release-checklist.md`, com validações manuais de Git, missões, testes, documentação, segurança, empacotamento, instalação limpa e autorização explícita.
+- Release notes alfa preliminares em `docs/release/release-notes-alpha.md`, como artefato preparatório para a futura alfa planejada, sem criar versão publicada, data de release, tag, release ou pacote.
 
 ### Alterado
 
@@ -89,7 +90,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Execução do checklist pré-tag antes de qualquer tag alfa.
 - Amadurecimento da política formal de estabilidade após as primeiras alfas.
 - Criação de tag alfa somente após decisão explícita e validações aplicáveis.
-- Release notes futuras quando houver release de fato.
+- Revisão final das release notes antes de qualquer release de fato.
 - Evolução futura do CI para matriz de múltiplas versões, lint ou validação limpa automatizada, se houver decisão específica.
 - Internacionalização dos READMEs após estabilização do conteúdo canônico em português do Brasil.
 

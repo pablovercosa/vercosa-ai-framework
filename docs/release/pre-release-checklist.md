@@ -1,6 +1,6 @@
 # Checklist Pré-Tag
 
-Links principais: [Política de release](release-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
+Links principais: [Política de release](release-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Objetivo
 
@@ -37,6 +37,7 @@ Executar este checklist não cria release, não cria tag, não publica pacote e 
 - [ ] `README.md` revisado.
 - [ ] `CONTRIBUTING.md` revisado.
 - [ ] `CHANGELOG.md` atualizado em `Não publicado` ou preparado para missão de release específica.
+- [ ] `docs/release/release-notes-alpha.md` revisado como notas preliminares e, se aprovado, preparado para release notes finais em missão específica.
 - [ ] `SECURITY.md` presente e atualizado.
 - [ ] `CODE_OF_CONDUCT.md` presente.
 - [ ] `LICENSE` definido ou pendência explicitamente aceita e documentada.

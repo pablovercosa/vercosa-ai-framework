@@ -1,12 +1,14 @@
 # Plano Da Versão Alfa Inicial
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
 
 ## Objetivo
 
 Registrar a proposta documental da primeira versão alfa planejada do Vercosa AI Framework.
 
 Este plano organiza uma futura release alfa, mas não publica release, não cria tag, não publica pacote, não cria release notes finais e não promete data ou estabilidade.
+
+As notas preliminares da futura alfa estão em [release-notes-alpha.md](release-notes-alpha.md). Elas são artefato preparatório e ainda precisam de revisão final antes de qualquer publicação real.
 
 A política inicial de release está em [release-policy.md](release-policy.md). O checklist operacional pré-tag está em [pre-release-checklist.md](pre-release-checklist.md). Ambos são preparação manual, não publicação.
 
@@ -45,6 +47,7 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - checklist de alfa pública;
 - política inicial de release;
 - checklist pré-tag;
+- release notes alfa preliminares, ainda não finais;
 - checklist documental de instalação limpa;
 - empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, descoberta em `src`, versão `0.1.0a1` e entrypoint local `vaf`;
 - CI mínimo em GitHub Actions com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, usar secrets, executar missões ou chamar providers;
@@ -64,6 +67,7 @@ Antes de publicar a alfa, ainda é necessário:
 - executar `pytest`;
 - executar `python3 -m compileall src`;
 - revisar o `CHANGELOG.md`;
+- revisar as release notes alfa preliminares;
 - executar o checklist pré-tag;
 - decidir explicitamente criar a tag;
 - decidir explicitamente publicar a release;
