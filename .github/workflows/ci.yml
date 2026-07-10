@@ -35,5 +35,9 @@ jobs:
       - name: Validar links Markdown locais
         run: python -m vercosa_ai_framework.cli.main docs-links
 
+      - name: Diagnosticar prontidão alfa local
+        run: python -m vercosa_ai_framework.cli.main alpha-readiness
+        continue-on-error: true
+
       - name: Validar compilação Python
         run: python -m compileall src

@@ -17,6 +17,35 @@ MISSION_DIRECTORIES = ("queue", "running", "done", "failed")
 MARKDOWN_LINK_PATTERN = re.compile(r"!?\[[^\]\n]*\]\(([^)\n]*)\)")
 EXTERNAL_LINK_SCHEMES = {"http", "https", "mailto", "tel"}
 IGNORED_DOCS_DIRECTORIES = {".git", ".venv", "__pycache__", "logs", "dist", "build", ".pytest_cache"}
+ALPHA_READINESS_EXIT_CODE_WITH_WARNINGS = 0
+ALPHA_REQUIRED_FILES = (
+    "README.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "LICENSE",
+    "pyproject.toml",
+    "docs/release/public-alpha-readiness.md",
+    "docs/release/versioning-policy.md",
+    "docs/release/alpha-version-plan.md",
+    "docs/release/release-policy.md",
+    "docs/release/pre-release-checklist.md",
+    "docs/release/release-notes-alpha.md",
+    "docs/getting-started/local-installation.md",
+    "docs/getting-started/clean-install-checklist.md",
+    "docs/legal/usage-policy.md",
+    "docs/architecture/module-index.md",
+)
+ALPHA_REQUIRED_DIRECTORIES = (
+    "src",
+    "tests",
+    "docs",
+    "missions/queue",
+    "missions/running",
+    "missions/done",
+    "missions/failed",
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -150,6 +179,26 @@ class MarkdownLinkValidationResult:
         return not self.issues
 
 
+@dataclass(frozen=True, slots=True)
+class AlphaReadinessResult:
+    """Resultado local e somente leitura da prontidao alfa."""
+
+    project_root: Path
+    mission_status: MissionDirectoryStatus
+    classification: str
+    blockers: tuple[str, ...] = ()
+    warnings: tuple[str, ...] = ()
+    passed: tuple[str, ...] = ()
+
+    @property
+    def exit_code(self) -> int:
+        if self.classification == "NÃO PRONTO":
+            return 1
+        if self.classification == "PRONTO COM RESSALVAS":
+            return ALPHA_READINESS_EXIT_CODE_WITH_WARNINGS
+        return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Cria o parser da CLI operacional sem acoplar a scripts shell."""
 
@@ -188,6 +237,10 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("validate", help="Valida a estrutura local basica sem executar missoes.")
     subparsers.add_parser("doctor", help="Executa diagnostico local amigavel e nao destrutivo.")
     subparsers.add_parser("batch-summary", help="Mostra resumo pos-batch local, seguro e somente leitura.")
+    subparsers.add_parser(
+        "alpha-readiness",
+        help="Verifica prontidao documental e operacional minima para futura alfa, sem publicar nada.",
+    )
     docs_links_parser = subparsers.add_parser(
         "docs-links",
         help="Valida links relativos em Markdown local sem acessar rede.",
@@ -234,6 +287,9 @@ def run(argv: list[str] | None = None) -> int:
 
     if args.command == "batch-summary":
         return print_batch_summary(Path(args.project_root))
+
+    if args.command == "alpha-readiness":
+        return print_alpha_readiness(Path(args.project_root))
 
     if args.command == "docs-links":
         return print_markdown_link_validation(Path(args.base_dir or args.project_root))
@@ -523,6 +579,87 @@ def validate_markdown_links(base_dir: str | Path) -> MarkdownLinkValidationResul
     return MarkdownLinkValidationResult(base_dir=root, markdown_files=markdown_files, issues=tuple(issues))
 
 
+def check_alpha_readiness(project_root: str | Path) -> AlphaReadinessResult:
+    """Verifica prontidao alfa minima sem comandos externos e sem efeitos colaterais."""
+
+    root = Path(project_root)
+    status = collect_mission_directory_status(root)
+    blockers: list[str] = []
+    warnings: list[str] = []
+    passed: list[str] = []
+
+    if not root.exists():
+        blockers.append(f"Diretorio raiz nao existe: {root}")
+        return AlphaReadinessResult(
+            project_root=root,
+            mission_status=status,
+            classification="NÃO PRONTO",
+            blockers=tuple(blockers),
+        )
+
+    if not root.is_dir():
+        blockers.append(f"Raiz informada nao e diretorio: {root}")
+    else:
+        passed.append("raiz do projeto encontrada")
+
+    missing_files = tuple(path for path in ALPHA_REQUIRED_FILES if not (root / path).is_file())
+    if missing_files:
+        for path in missing_files:
+            blockers.append(f"Arquivo obrigatorio ausente: {path}")
+    else:
+        passed.append("arquivos documentais minimos presentes")
+
+    missing_directories = tuple(path for path in ALPHA_REQUIRED_DIRECTORIES if not (root / path).is_dir())
+    if missing_directories:
+        for path in missing_directories:
+            blockers.append(f"Diretorio obrigatorio ausente: {path}")
+    else:
+        passed.append("diretorios operacionais minimos presentes")
+
+    if status.running > 0:
+        blockers.append(f"missions/running contem {status.running} arquivo(s) .md")
+    else:
+        passed.append("missions/running sem arquivos .md")
+
+    if status.failed > 0:
+        blockers.append(f"missions/failed contem {status.failed} arquivo(s) .md")
+    else:
+        passed.append("missions/failed sem arquivos .md")
+
+    if status.queue > 0:
+        warnings.append(f"missions/queue contem {status.queue} arquivo(s) .md pendente(s)")
+    else:
+        passed.append("missions/queue sem arquivos .md pendentes")
+
+    ci_workflow = root / ".github" / "workflows" / "ci.yml"
+    if ci_workflow.is_file():
+        passed.append("workflow de CI encontrado em .github/workflows/ci.yml")
+    else:
+        warnings.append("workflow de CI ausente: .github/workflows/ci.yml")
+
+    release_notes = root / "docs" / "release" / "release-notes-alpha.md"
+    if _file_contains_casefolded_text(release_notes, "preliminar"):
+        warnings.append("release notes alfa existem, mas permanecem preliminares ate revisao humana")
+    elif release_notes.is_file():
+        passed.append("release notes alfa encontradas")
+
+    if blockers:
+        classification = "NÃO PRONTO"
+    elif warnings:
+        classification = "PRONTO COM RESSALVAS"
+    else:
+        classification = "PRONTO"
+
+    return AlphaReadinessResult(
+        project_root=root,
+        mission_status=status,
+        classification=classification,
+        blockers=tuple(blockers),
+        warnings=tuple(warnings),
+        passed=tuple(passed),
+    )
+
+
 def collect_markdown_documentation_files(base_dir: str | Path) -> tuple[Path, ...]:
     """Localiza documentos Markdown publicos relevantes para validacao local."""
 
@@ -585,6 +722,55 @@ def print_markdown_link_validation(base_dir: str | Path) -> int:
     return 1
 
 
+def print_alpha_readiness(project_root: str | Path) -> int:
+    """Imprime diagnostico auxiliar de prontidao alfa."""
+
+    result = check_alpha_readiness(project_root)
+    status = result.mission_status
+
+    print(f"vercosa-ai-framework: {__version__}")
+    print(f"project_root: {result.project_root}")
+    print("diagnostico: prontidao alfa local somente leitura")
+    print(f"classificacao: {result.classification}")
+    print(f"codigo_saida_ressalvas: {ALPHA_READINESS_EXIT_CODE_WITH_WARNINGS}")
+    print(f"queue:   {status.queue}")
+    print(f"running: {status.running}")
+    print(f"done:    {status.done}")
+    print(f"failed:  {status.failed}")
+
+    print("aprovados:")
+    if result.passed:
+        for item in result.passed:
+            print(f"- {item}")
+    else:
+        print("- nenhum item aprovado registrado")
+
+    print("ressalvas:")
+    if result.warnings:
+        for item in result.warnings:
+            print(f"- {item}")
+    else:
+        print("- nenhuma ressalva encontrada")
+
+    print("pendencias_bloqueantes:")
+    if result.blockers:
+        for item in result.blockers:
+            print(f"- {item}")
+    else:
+        print("- nenhuma pendencia bloqueante encontrada")
+
+    print("lembretes:")
+    print("- este comando nao cria tag.")
+    print("- este comando nao publica release.")
+    print("- este comando nao publica pacote.")
+    print("- este comando nao substitui o checklist pre-tag.")
+    print("- este comando nao substitui revisao humana.")
+    print("- rode pytest manualmente; este comando nao executa testes.")
+    print("- rode python3 -m compileall src manualmente; este comando nao compila modulos.")
+    print("limites: nao executa pytest, compileall, Git, tag, push, gh release, twine, scripts shell, batch, missoes, rede, banco ou providers; nao altera arquivos.")
+    return result.exit_code
+
+
 def print_batch_summary(project_root: str | Path) -> int:
     """Imprime diagnostico auxiliar pos-batch sem executar validacoes."""
 
@@ -645,6 +831,16 @@ def _find_last_log(logs_directory: Path) -> Path | None:
     if not candidates:
         return None
     return max(candidates, key=lambda path: (path.stat().st_mtime_ns, path.name))
+
+
+def _file_contains_casefolded_text(path: Path, needle: str) -> bool:
+    if not path.is_file():
+        return False
+    try:
+        content = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return False
+    return needle.casefold() in content.casefold()
 
 
 def _iter_markdown_files(directory: Path, *, ignore_runtime: bool = False) -> tuple[Path, ...]:

@@ -52,6 +52,7 @@ Uma release alfa só deve ser considerada quando todos os critérios abaixo esti
 - `python3 -m compileall src` passando.
 - CI mínimo passando.
 - Links Markdown relativos validados localmente com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validação de URLs externas.
+- Prontidão alfa diagnosticada localmente com `python3 -m vercosa_ai_framework.cli.main alpha-readiness`, sem tratar o comando como autorização automática.
 - Validação de instalação limpa executada e aprovada ou aprovada com ressalvas aceitáveis.
 - [CHANGELOG.md](../../CHANGELOG.md) atualizado.
 - Documentação pública mínima presente.
@@ -87,16 +88,17 @@ Qualquer item abaixo bloqueia tag ou release até correção ou decisão explíc
 2. Validar Git, branch, commits e sincronização com `origin/main`.
 3. Rodar `pytest`.
 4. Rodar `python3 -m vercosa_ai_framework.cli.main docs-links`.
-5. Rodar `python3 -m compileall src`.
-6. Rodar comandos principais da CLI.
-7. Revisar [CHANGELOG.md](../../CHANGELOG.md).
-8. Revisar esta política, o [checklist pré-tag](pre-release-checklist.md), o [plano alfa](alpha-version-plan.md), as [notas preliminares da futura alfa](release-notes-alpha.md), a [prontidão alfa](public-alpha-readiness.md) e a [validação limpa](clean-install-validation.md).
-9. Revisar [SECURITY.md](../../SECURITY.md) e a política de uso.
-10. Confirmar CI mínimo passando.
-11. Confirmar versão planejada.
-12. Obter autorização explícita.
-13. Criar tag somente em missão própria autorizada.
-14. Publicar release somente em missão própria autorizada, se aprovado.
+5. Rodar `python3 -m vercosa_ai_framework.cli.main alpha-readiness` como diagnóstico auxiliar.
+6. Rodar `python3 -m compileall src`.
+7. Rodar comandos principais da CLI.
+8. Revisar [CHANGELOG.md](../../CHANGELOG.md).
+9. Revisar esta política, o [checklist pré-tag](pre-release-checklist.md), o [plano alfa](alpha-version-plan.md), as [notas preliminares da futura alfa](release-notes-alpha.md), a [prontidão alfa](public-alpha-readiness.md) e a [validação limpa](clean-install-validation.md).
+10. Revisar [SECURITY.md](../../SECURITY.md) e a política de uso.
+11. Confirmar CI mínimo passando.
+12. Confirmar versão planejada.
+13. Obter autorização explícita.
+14. Criar tag somente em missão própria autorizada.
+15. Publicar release somente em missão própria autorizada, se aprovado.
 
 ## Convenção De Tag Planejada
 
@@ -113,3 +115,9 @@ Esta política apenas documenta a convenção. A tag não deve ser criada nesta 
 As [release notes alfa preliminares](release-notes-alpha.md) são artefato preparatório e não publicam a alfa. Release notes finais devem ser revisadas em missão específica antes de qualquer publicação. O [CHANGELOG.md](../../CHANGELOG.md) continua registrando mudanças em `Não publicado` até uma decisão explícita de release.
 
 Publicação em PyPI ou qualquer registry é decisão futura separada. Nenhuma etapa desta política autoriza `twine`, publicação automática, workflow de release ou pacote distribuído.
+
+## Diagnóstico `alpha-readiness`
+
+O comando `python3 -m vercosa_ai_framework.cli.main alpha-readiness` verifica presença documental mínima, diretórios operacionais, contagens de missões e workflow de CI em modo local e somente leitura. Ele pode classificar o estado como `PRONTO`, `PRONTO COM RESSALVAS` ou `NÃO PRONTO`.
+
+Esse comando não autoriza release sozinho. `PRONTO` não cria tag, não publica release, não publica pacote e não dispensa checklist pré-tag, validação limpa, `pytest`, `compileall`, revisão de segurança, revisão humana ou autorização explícita. `PRONTO COM RESSALVAS` retorna código `0` por decisão de uso diagnóstico, mas as ressalvas continuam exigindo avaliação antes de qualquer tag.

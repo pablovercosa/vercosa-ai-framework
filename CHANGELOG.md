@@ -28,6 +28,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Comando CLI `missions` para listar missões por estado, com contagens gerais, ordenação determinística, filtro opcional `--state` e sem executar, mover ou alterar arquivos.
 - Comando CLI `batch-summary` para resumo pós-batch local, com contagens de missões, último log encontrado, avisos de atenção e lembretes de validação manual, sem executar missões, scripts, testes, Git, rede, banco ou providers.
 - Comando CLI `docs-links` para validar links relativos em documentos Markdown locais, ignorando links externos sem acessar rede e validando apenas a existência do arquivo quando houver âncora.
+- Comando CLI `alpha-readiness` para diagnosticar prontidão documental e operacional mínima da futura alfa, com classificação `PRONTO`, `PRONTO COM RESSALVAS` ou `NÃO PRONTO`, sem criar tag, publicar release, publicar pacote, executar missões, acessar rede ou substituir revisão humana.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Templates iniciais de issues e pull request em `.github/`.
 - CI mínimo em `.github/workflows/ci.yml` com GitHub Actions para pull requests e pushes em `main`, instalação editável com extra `dev`, `pytest`, validação local de links Markdown relativos e `python -m compileall src`, sem secrets, providers, missões, release ou publicação de pacote.

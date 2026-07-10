@@ -85,6 +85,7 @@ A versão alfa inicial só deve ser publicada depois de:
 - templates de issue e pull request criados;
 - `CHANGELOG.md` criado e atualizado;
 - checklist de instalação limpa executado;
+- diagnóstico `alpha-readiness` executado e revisado como apoio local, sem autorização automática;
 - `pytest` passando;
 - `python3 -m compileall src` passando;
 - `git status` limpo;

@@ -173,6 +173,7 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main alpha-readiness
 ```
 
 `missions` é uma verificação opcional de leitura para confirmar quais arquivos `.md` estão em `queue`, `running`, `done` e `failed`. Ele não cria diretórios, não move arquivos, não executa missões e não substitui `./scripts/vaf-status.sh`.
@@ -181,10 +182,13 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 
 `docs-links` é uma validação local recomendada para documentação. Ele verifica links relativos em arquivos Markdown relevantes, ignora URLs externas sem acessá-las e não valida âncoras de forma completa.
 
+`alpha-readiness` é um diagnóstico auxiliar de preparação para futura alfa. Ele verifica arquivos mínimos, diretórios operacionais, contagens de missão e CI local em modo somente leitura. Ele não executa `pytest`, não executa `compileall`, não cria tag, não publica release, não publica pacote e não substitui o checklist pré-tag ou revisão humana.
+
 Se o pacote foi instalado no ambiente virtual com `python -m pip install -e ".[dev]"`, os console scripts locais também podem ser verificados dentro do ambiente virtual:
 
 ```bash
 vaf --help
+vaf alpha-readiness
 ```
 
 Esses atalhos não devem ser tratados como entrypoints globais do sistema. Para diagnóstico reproduzível de checkout, prefira a forma explícita com `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main`.
@@ -212,6 +216,7 @@ Não publique logs contendo tokens, credenciais, caminhos privados sensíveis, p
 - `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links` passa quando a documentação do checkout for validada.
 - `python3 -m compileall src` passa.
 - CLI responde pela forma `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main`.
+- `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main alpha-readiness` executa sem traceback e suas pendências ou ressalvas foram registradas.
 - Documentação mínima existe.
 - Nenhum segredo foi exposto nos registros da validação.
 - Nenhuma alteração local inesperada existe após a validação.

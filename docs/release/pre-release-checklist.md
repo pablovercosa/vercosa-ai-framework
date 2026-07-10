@@ -29,6 +29,7 @@ Executar este checklist não cria release, não cria tag, não publica pacote e 
 
 - [ ] `pytest` passa.
 - [ ] `python3 -m vercosa_ai_framework.cli.main docs-links` passa, validando links Markdown relativos locais sem acessar URLs externas.
+- [ ] `python3 -m vercosa_ai_framework.cli.main alpha-readiness` executado como diagnóstico auxiliar, com pendências e ressalvas revisadas manualmente.
 - [ ] `python3 -m compileall src` passa.
 - [ ] Comandos principais da CLI passam.
 - [ ] CI GitHub Actions mínimo passa no commit candidato.
@@ -98,6 +99,7 @@ python3 -m vercosa_ai_framework.cli.main validate
 python3 -m vercosa_ai_framework.cli.main doctor
 python3 -m vercosa_ai_framework.cli.main missions
 python3 -m vercosa_ai_framework.cli.main batch-summary
+python3 -m vercosa_ai_framework.cli.main alpha-readiness
 ```
 
 Use o entrypoint `vaf` somente se o projeto estiver instalado em modo desenvolvimento e esse entrypoint estiver documentado e disponível no ambiente ativo.
@@ -107,3 +109,5 @@ Use o entrypoint `vaf` somente se o projeto estiver instalado em modo desenvolvi
 Comandos de tag podem existir em missão futura específica e autorizada, mas não fazem parte da operação desta missão.
 
 Este checklist não inclui `git push --tags`, `gh release create`, `twine upload`, publicação PyPI, criação de release GitHub ou publicação de pacote.
+
+`alpha-readiness` também não inclui essas operações. Ele é somente leitura, retorna `0` para `PRONTO COM RESSALVAS` por ser diagnóstico auxiliar e não substitui os itens manuais deste checklist.

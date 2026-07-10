@@ -90,6 +90,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Comando CLI `missions` para listar missões por estado sem executar, mover ou alterar arquivos.
 - Comando CLI `batch-summary` para resumo pós-batch auxiliar com contagens, último log e lembretes manuais, sem executar missões, scripts, testes, Git, rede, banco ou providers.
 - Comando CLI `docs-links` para validação local de links relativos em Markdown, sem acessar URLs externas, sem executar missões e sem substituir revisão humana de documentação.
+- Comando CLI `alpha-readiness` para diagnóstico local de prontidão documental e operacional mínima da futura alfa, sem criar tag, publicar release, publicar pacote, executar missões, acessar rede ou substituir revisão humana.
 - Exemplos operacionais iniciais.
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.
@@ -639,6 +640,14 @@ Escopo permitido: CLI Python, testes unitários, CI mínimo e documentação de 
 Escopo proibido: validar URLs externas, implementar parser Markdown completo, criar release, criar tag, publicar pacote ou executar missões.
 Status: concluído como comando `docs-links`, com validação de links relativos locais, imagens básicas, âncoras tratadas por existência do arquivo, blocos de código cercados ignorados e documentação atualizada.
 Critérios de aceite resumidos: comando retorna `0` sem links quebrados, retorna falha com links relativos quebrados, ignora links externos sem rede e possui testes isolados com `tmp_path`.
+
+34. Código sugerido: `M034-cli-prontidao-alfa`
+Título: Criar comando CLI de prontidão alfa.
+Objetivo: consolidar verificações locais mínimas de prontidão documental e operacional para a futura alfa.
+Escopo permitido: CLI Python, testes unitários, documentação de release e CI diagnóstico.
+Escopo proibido: criar tag, publicar release, publicar pacote, alterar scripts shell, executar missões, executar batch, acessar rede, banco ou providers.
+Status: concluído como comando `alpha-readiness`, com classificação `PRONTO`, `PRONTO COM RESSALVAS` e `NÃO PRONTO`, código `0` para ressalvas e código `1` para bloqueios.
+Critérios de aceite resumidos: comando verifica arquivos mínimos, diretórios principais, contagens de missões, CI local, release notes, política de release e checklist pré-tag sem efeitos colaterais.
 
 ## Como Transformar Backlog Em Fila Executável
 

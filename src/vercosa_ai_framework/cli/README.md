@@ -16,6 +16,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - Expõe o comando `doctor` para diagnóstico local amigável, determinístico e não destrutivo sobre prontidão operacional básica.
 - Expõe o comando `batch-summary` para resumo pós-batch local, seguro e somente leitura.
 - Expõe o comando `docs-links` para validar links relativos em documentos Markdown locais sem acessar rede.
+- Expõe o comando `alpha-readiness` para diagnóstico local de prontidão documental e operacional mínima da futura alfa.
 - Permite informar `--project-root` para testar ou consultar outro worktree local.
 - Mostra versão operacional mínima com `--version` ou `version`.
 - Mostra ajuda com `--help`.
@@ -35,13 +36,14 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - Não adiciona dependências fora da biblioteca padrão do Python.
 - Não valida URLs externas, imagens remotas ou existência perfeita de âncoras Markdown.
 - Não implementa parser Markdown completo; `docs-links` cobre links inline e imagens básicos e ignora blocos de código cercados por crases ou tils e trechos simples de código inline.
+- Não cria tag, não publica release, não publica pacote e não autoriza alfa automaticamente.
 
 ## Principais Arquivos
 
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `__init__.py` | Exportações públicas da CLI operacional inicial. |
-| `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate`, `doctor`, `batch-summary` e `docs-links`, contagem local de missões, listagem local, validação estrutural, diagnóstico operacional local, resumo pós-batch auxiliar e validação local de links Markdown. |
+| `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate`, `doctor`, `batch-summary`, `docs-links` e `alpha-readiness`, contagem local de missões, listagem local, validação estrutural, diagnóstico operacional local, resumo pós-batch auxiliar, validação local de links Markdown e diagnóstico de prontidão alfa. |
 | `README.md` | Documentação do módulo. |
 | `../../../pyproject.toml` | Declara o console script local `vaf` para instalação editável em ambiente virtual. |
 
@@ -57,6 +59,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - `BatchSummaryResult`: resultado testável do resumo pós-batch local.
 - `MarkdownLinkIssue`: link Markdown relativo quebrado encontrado em documentação local.
 - `MarkdownLinkValidationResult`: resultado testável da validação de links Markdown locais.
+- `AlphaReadinessResult`: resultado testável do diagnóstico local de prontidão alfa.
 - `build_parser`: cria o parser da CLI.
 - `collect_mission_directory_status`: conta arquivos `.md` nos diretórios de missão.
 - `list_missions`: lista arquivos `.md` em `queue`, `running`, `done` e `failed` com ordenação determinística.
@@ -68,6 +71,8 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - `collect_markdown_documentation_files`: localiza documentos Markdown públicos relevantes para validação local.
 - `validate_markdown_links`: valida links relativos de Markdown local sem acessar rede.
 - `print_markdown_link_validation`: imprime o resultado do comando `docs-links`.
+- `check_alpha_readiness`: verifica arquivos mínimos, diretórios, contagens de missão e CI local para a futura alfa.
+- `print_alpha_readiness`: imprime o resultado do comando `alpha-readiness`.
 - `run`: executa a CLI e retorna código de saída.
 - `main`: ponto de entrada invocável por Python e console script.
 
@@ -89,8 +94,10 @@ Saídas:
 - Texto no terminal com listagem de missões por estado quando `missions` é usado.
 - Texto no terminal com resumo pós-batch, último log encontrado, avisos e lembretes manuais quando `batch-summary` é usado.
 - Texto no terminal com resultado da validação local de links Markdown quando `docs-links` é usado.
+- Texto no terminal com classificação `PRONTO`, `PRONTO COM RESSALVAS` ou `NÃO PRONTO` quando `alpha-readiness` é usado.
 - Código de saída `0` para sucesso.
-- Código de saída `1` para estrutura inválida no comando `validate`, erro estrutural relevante no comando `doctor` ou link relativo quebrado no comando `docs-links`.
+- Código de saída `0` para `PRONTO COM RESSALVAS` no comando `alpha-readiness`, por decisão conservadora de uso diagnóstico em CI e ambientes com fila pendente.
+- Código de saída `1` para estrutura inválida no comando `validate`, erro estrutural relevante no comando `doctor`, link relativo quebrado no comando `docs-links` ou classificação `NÃO PRONTO` no comando `alpha-readiness`.
 - Código de saída `2` para erro controlado de argumentos.
 
 ## Dependências Internas
@@ -150,6 +157,12 @@ Validação local de links Markdown em outro caminho: `PYTHONPATH=src python3 -m
 
 Alternativa após instalação editável local em ambiente virtual: `vaf docs-links`.
 
+Diagnóstico de prontidão alfa no checkout local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main alpha-readiness`.
+
+Diagnóstico de prontidão alfa em outro caminho local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto alpha-readiness`.
+
+Alternativa após instalação editável local em ambiente virtual: `vaf alpha-readiness`.
+
 O comando `validate` verifica, nesta fase:
 
 - se a raiz informada existe e é diretório;
@@ -188,7 +201,7 @@ Mesmo com filtro, as contagens gerais continuam sendo exibidas para manter conte
 
 Diferença em relação a `./scripts/vaf-status.sh`: o script continua sendo o resumo operacional dos scripts e diretórios de missão; `missions` é uma listagem Python local e testável dos nomes de arquivos por estado. Eles se complementam e nenhum substitui o runner seguro, o batch, `pytest`, `compileall` ou revisão humana.
 
-## Diferença Entre `status`, `missions`, `validate` E `doctor`
+## Diferença Entre `status`, `missions`, `validate`, `doctor`, `docs-links` E `alpha-readiness`
 
 `status` é uma leitura simples de contagens. Ele conta arquivos `.md` diretamente em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`. Diretórios ausentes contam como zero nesse comando.
 
@@ -198,6 +211,10 @@ Diferença em relação a `./scripts/vaf-status.sh`: o script continua sendo o r
 
 `doctor` é um diagnóstico local mais amigável construído sobre a mesma validação estrutural. Ele mostra `status_geral` como `ok`, `warning` ou `error`, reporta contagens, indica se `running` e `failed` estão vazios e sugere ação operacional segura. Erros estruturais retornam código `1`; warnings, como documentos auxiliares ausentes, são reportados sem retornar erro.
 
+`docs-links` valida links relativos em Markdown local. Ele foca coerência de documentação e não avalia prontidão de release.
+
+`alpha-readiness` consolida verificações locais mínimas para a futura alfa: arquivos documentais obrigatórios, diretórios principais, contagens de `queue`, `running` e `failed`, workflow de CI, política de release, checklist pré-tag, release notes alfa, `CHANGELOG.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md` e `pyproject.toml`. Ele classifica o resultado como `PRONTO`, `PRONTO COM RESSALVAS` ou `NÃO PRONTO`.
+
 `doctor` ajuda a entender se o projeto parece pronto para iniciar uma missão, iniciar um batch, investigar falhas ou revisar estado pós-batch. Ele não executa missões e não altera o fluxo `missions/queue`, `missions/running`, `missions/done` e `missions/failed`.
 
 Use os comandos em conjunto conforme a necessidade operacional:
@@ -206,6 +223,8 @@ Use os comandos em conjunto conforme a necessidade operacional:
 - `missions` para ver quais arquivos de missão estão em cada estado, sem executar ou mover nada.
 - `validate` para validação estrutural mínima e código de saída formal sobre essa estrutura.
 - `doctor` para diagnóstico local mais amigável antes de preparar batch, antes de executar batch, depois de batch ou durante investigação.
+- `docs-links` para validar links relativos em Markdown local.
+- `alpha-readiness` para diagnóstico auxiliar antes de revisão de release alfa, sem autorizar release.
 - `./scripts/vaf-status.sh` quando a necessidade for observar o estado operacional dos scripts e missões.
 - `pytest` quando a necessidade for validar testes.
 - `python3 -m compileall src` quando a necessidade for validar compilação dos módulos Python.
@@ -216,6 +235,7 @@ Exemplos:
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto doctor
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main alpha-readiness
 ```
 
 O comando `doctor` verifica, nesta fase:
@@ -286,6 +306,55 @@ Diferença prática:
 - O checklist pós-batch continua sendo a validação operacional obrigatória antes de push, novo batch ou retomada após falha.
 
 `batch-summary` pode indicar estado operacional aparentemente limpo quando `queue=0`, `running=0` e `failed=0`, mas isso não significa validação completa. Testes, `compileall`, revisão de logs, revisão de commits, checklist pós-batch e decisão humana continuam obrigatórios quando aplicáveis.
+
+## Comando `alpha-readiness`
+
+`alpha-readiness` é um diagnóstico auxiliar local, seguro e somente leitura para verificar prontidão documental e operacional mínima da futura alfa pública. Ele não executa release, não cria tag, não publica pacote e não substitui checklist pré-tag ou revisão humana.
+
+Forma real de execução no checkout local:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main alpha-readiness
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto alpha-readiness
+```
+
+Após instalação editável local em ambiente virtual, o console script também pode ser usado:
+
+```bash
+vaf alpha-readiness
+```
+
+Classificações:
+
+- `PRONTO`: arquivos mínimos, diretórios obrigatórios, CI local e contagens bloqueantes estão em estado saudável, sem ressalvas detectadas pela CLI.
+- `PRONTO COM RESSALVAS`: não há bloqueio, mas há atenção como `queue > 0`, CI ausente ou release notes ainda preliminares.
+- `NÃO PRONTO`: há bloqueio como arquivo obrigatório ausente, diretório obrigatório ausente, `running > 0`, `failed > 0`, ausência de `CHANGELOG.md`, `SECURITY.md`, política de release, `pyproject.toml` ou outra pendência obrigatória.
+
+Código de saída:
+
+- `0` para `PRONTO`.
+- `0` para `PRONTO COM RESSALVAS`, para permitir uso diagnóstico em CI e ambientes de desenvolvimento sem transformar ressalvas em falha obrigatória.
+- `1` para `NÃO PRONTO`.
+
+Arquivos mínimos verificados incluem `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `LICENSE`, `pyproject.toml`, documentos de release, checklist de instalação limpa, política de uso e índice de módulos. Diretórios mínimos incluem `src/`, `tests/`, `docs/` e `missions/queue`, `missions/running`, `missions/done`, `missions/failed`.
+
+Diferenças práticas:
+
+- `alpha-readiness` verifica prontidão documental e operacional mínima para futura alfa.
+- `pre-release-checklist.md` continua sendo checklist humano pré-tag.
+- `docs-links` valida links relativos em Markdown local.
+- `validate` verifica estrutura local mínima do projeto.
+- `doctor` diagnostica prontidão operacional básica para missão ou batch.
+
+Limites intencionais:
+
+- Não executa `pytest`.
+- Não executa `python3 -m compileall src`.
+- Não executa Git, `git tag`, `git push`, `git push --tags`, `gh release` ou `twine`.
+- Não executa scripts shell, batch ou missões.
+- Não acessa rede, banco, providers, OpenCode, MCPs ou secrets.
+- Não modifica arquivos.
+- Não substitui revisão humana, checklist pré-tag, validação limpa, `pytest` ou `compileall`.
 
 ## Comando `docs-links`
 

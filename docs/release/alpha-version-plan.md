@@ -49,6 +49,7 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - checklist pré-tag;
 - release notes alfa preliminares, ainda não finais;
 - checklist documental de instalação limpa;
+- comando CLI `alpha-readiness` como diagnóstico auxiliar local e somente leitura antes da tag;
 - empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, descoberta em `src`, versão `0.1.0a1` e entrypoint local `vaf`;
 - CI mínimo em GitHub Actions com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, usar secrets, executar missões ou chamar providers;
 - registro factual de uma execução de instalação limpa em cópia temporária local, atualmente classificada como `REPROVADO`.
@@ -64,6 +65,7 @@ Antes de publicar a alfa, ainda é necessário:
 - fazer revisão final do README;
 - validar links Markdown relativos com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validar URLs externas;
 - manter o CI mínimo passando no commit candidato;
+- executar `python3 -m vercosa_ai_framework.cli.main alpha-readiness` e revisar pendências ou ressalvas, sem tratar o comando como autorização de release;
 - executar `pytest`;
 - executar `python3 -m compileall src`;
 - revisar o `CHANGELOG.md`;
@@ -86,6 +88,7 @@ A alfa só deve ser considerada publicável quando todos os critérios mínimos 
 - CI mínimo passando;
 - `pytest` passando;
 - `python3 -m vercosa_ai_framework.cli.main docs-links` passando;
+- `python3 -m vercosa_ai_framework.cli.main alpha-readiness` executado e revisado;
 - `python3 -m compileall src` passando;
 - documentação mínima presente;
 - segurança básica documentada;
