@@ -145,7 +145,7 @@ O módulo `audit/` fornece `guardian_decision_event()` e `record_guardian_decisi
 
 O evento pode registrar categoria `guardian`, decisão operacional, risco, modo Guardian, origem da avaliação, quantidade de warnings, quantidade de bloqueios, sinal de `require_approval`, refs de políticas e contadores de violações. Os helpers não registram prompts completos, comandos brutos, segredos, credenciais ou tokens de API por padrão.
 
-Essa integração é opcional, sem persistência externa, sem observabilidade externa e sem alterar o comportamento de `GuardianEngine.evaluate()` ou `GuardianEngine.evaluate_context_package()`.
+Essa integração é opcional, em memória quando usada com `InMemoryEventLog` ou em JSONL local quando usada explicitamente com `JsonlAuditEventLog`, sem persistência externa, sem observabilidade externa e sem alterar o comportamento de `GuardianEngine.evaluate()` ou `GuardianEngine.evaluate_context_package()`.
 
 Detecção inicial de limite de uso:
 

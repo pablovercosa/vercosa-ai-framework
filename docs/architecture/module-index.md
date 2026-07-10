@@ -69,7 +69,7 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
 - `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/`, `context/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
-- `audit/` define contratos iniciais, implementação em memória e helpers opcionais para eventos de decisões Policy, Guardian e Context, além de eventos básicos de ciclo de vida de missão e batch; a integração com `MissionRunner` Python é opcional e não altera scripts shell, persistência externa ou fluxo operacional de diretórios. A arquitetura dedicada está em [Arquitetura de Audit/Event Log](audit-event-architecture.md).
+- `audit/` define contratos iniciais, implementação em memória, persistência local JSONL opt-in e helpers opcionais para eventos de decisões Policy, Guardian e Context, além de eventos básicos de ciclo de vida de missão e batch; a integração com `MissionRunner` Python é opcional e não altera scripts shell, persistência externa, banco ou fluxo operacional de diretórios. A arquitetura dedicada está em [Arquitetura de Audit/Event Log](audit-event-architecture.md).
 - `model_selection/` é transversal e decide modelos por política, catálogo local e requisitos opcionais de orçamento de tokens, não por hardcode; pode considerar políticas resolvidas opcionais para warnings, aprovação e exclusões determinísticas sem chamar providers, billing real, Context Router ou Guardian Engine.
 - `context/` monta pacotes de contexto, aplica orçamento de tokens, expõe `model_requirements` mínimos e considera políticas resolvidas opcionais sem buscar, indexar, persistir, chamar providers diretamente, resolver políticas, selecionar modelos ou decidir enforcement operacional amplo.
 - `knowledge/` organiza documentos, busca textual MVP e fornece adaptador determinístico para candidatos do Context Router; `canonicalizer/` prepara documentos canônicos antes de ingestão.
@@ -85,5 +85,5 @@ As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto]
 - fronteira entre Mission Runner e Mission Orchestrator;
 - integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;
-- persistência local controlada de eventos auditáveis;
+- integração automática de persistência local de eventos auditáveis nos fluxos operacionais;
 - Semantic Index, embeddings, pgvector e RAG semântico.

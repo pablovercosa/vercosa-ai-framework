@@ -126,7 +126,7 @@ O módulo `audit/` fornece `policy_resolution_event()` e `record_policy_resoluti
 
 O evento pode registrar categoria `policy`, quantidade de policy sets considerados, quantidade de políticas resolvidas, conflitos, warnings, refs de `deny` e refs de `require_approval`. Os helpers priorizam refs, contadores e metadados seguros, sem registrar prompts completos, segredos ou conteúdo bruto por padrão.
 
-Essa integração é opcional, em memória quando usada com `InMemoryEventLog`, sem persistência externa, sem observabilidade externa e sem alterar a assinatura do `PolicyEngine.resolve()`.
+Essa integração é opcional, em memória quando usada com `InMemoryEventLog` ou em JSONL local quando usada explicitamente com `JsonlAuditEventLog`, sem persistência externa, sem observabilidade externa e sem alterar a assinatura do `PolicyEngine.resolve()`.
 
 ## Integração Inicial Com Guardian Engine
 

@@ -102,7 +102,7 @@ O projeto ainda não possui:
 - mecanismo técnico completo de redaction;
 - gestão formal de chaves ou tokens.
 
-O Audit/Event Log atual é inicial e em memória, conforme [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md). Ele não deve ser tratado como observabilidade externa, trilha imutável, retenção formal ou mecanismo completo de investigação de incidentes.
+O Audit/Event Log atual é inicial, possui memória e persistência local JSONL opt-in, conforme [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md). Ele não deve ser tratado como observabilidade externa, trilha imutável, retenção formal, rotação formal ou mecanismo completo de investigação de incidentes.
 
 ## IA E Segurança Operacional
 

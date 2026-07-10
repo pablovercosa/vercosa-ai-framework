@@ -53,7 +53,7 @@ Implementado em estado MVP ou contrato inicial:
 - Model Selection Engine com catálogo em memória, políticas resolvidas opcionais e requisitos opcionais de orçamento de tokens.
 - Runtime Adapter inicial para OpenCode.
 - Provider Gateway, Tools, Skills, Capabilities e Agent Orchestrator como cadeia MVP de contratos.
-- Audit/Event Log em memória com helpers opcionais para decisões e ciclo de vida de missão; a arquitetura dedicada está em [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md).
+- Audit/Event Log em memória com persistência local JSONL opt-in e helpers opcionais para decisões e ciclo de vida de missão; a arquitetura dedicada está em [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md).
 - CLI operacional inicial com `status`, `missions`, `validate`, `doctor` e `batch-summary`.
 
 Ainda são futuros ou lacunas:
@@ -64,6 +64,7 @@ Ainda são futuros ou lacunas:
 - Semantic Index.
 - Múltiplos providers reais.
 - Persistência externa de eventos.
+- Retenção e rotação de eventos auditáveis.
 - Internacionalização dos READMEs.
 
 Esses recursos não devem ser interpretados como implementados no estado atual.

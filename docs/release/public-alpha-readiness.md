@@ -22,7 +22,7 @@ O estado atual deve ser lido assim:
 - alfa pública futura: ainda depende de decisões, validações e artefatos de release;
 - release publicada: ainda não ocorreu;
 - produção: fora do escopo atual;
-- recursos futuros: RAG semântico, embeddings, pgvector como adapter real, provider real obrigatório, persistência externa de eventos e internacionalização ainda não devem ser tratados como implementados.
+- recursos futuros: RAG semântico, embeddings, pgvector como adapter real, provider real obrigatório, persistência externa de eventos, retenção/rotação de eventos e internacionalização ainda não devem ser tratados como implementados.
 
 ## Checklist De Documentação Mínima
 
@@ -86,7 +86,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Ausência de documentação internacionalizada. | pendente | `README.md` permanece canônico em português do Brasil; `README.en.md` e `README.es.md` são futuros. |
 | Ausência de provider real configurado. | pendente | O estado atual não deve ser apresentado como integração real com provider externo. |
 | Ausência de RAG semântico. | pendente | Busca semântica e recuperação avançada continuam futuras. |
-| Ausência de persistência externa de eventos. | pendente | Audit/Event Log atual é em memória. |
+| Ausência de persistência externa de eventos. | pendente | Audit/Event Log atual possui memória e JSONL local opt-in, mas não possui banco, exportador remoto, retenção, rotação ou observabilidade externa. |
 | Ausência de execução real de instalação limpa em ambiente novo. | pendente | O checklist documental existe, mas ainda precisa ser executado fora do ambiente principal do mantenedor e registrado. |
 
 ## Decisões Já Tomadas
@@ -102,6 +102,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Sem pgvector por enquanto.
 - Sem provider real obrigatório por enquanto.
 - Sem persistência externa de eventos por enquanto.
+- Persistência local JSONL de eventos auditáveis é opt-in e não substitui retenção, rotação ou observabilidade externa.
 - Versão alfa inicial planejada como `0.1.0-alpha.1`, sem release publicada.
 - Tag futura planejada como `v0.1.0-alpha.1`, sem tag criada nesta fase.
 

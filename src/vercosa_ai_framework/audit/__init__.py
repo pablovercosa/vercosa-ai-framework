@@ -9,6 +9,7 @@ from .integrations import (
     record_guardian_decision_event,
     record_policy_resolution_event,
 )
+from .jsonl import AuditEventJsonlWriter, JsonlAuditEventLog, audit_event_to_json_dict, serialize_audit_event_jsonl
 from .mission_events import (
     batch_completed_event,
     batch_interrupted_event,
@@ -24,11 +25,14 @@ from .types import AuditEvent, EventCategory, EventResult, EventSeverity, genera
 
 __all__ = [
     "AuditEvent",
+    "AuditEventJsonlWriter",
     "EventCategory",
     "EventLog",
     "EventResult",
     "EventSeverity",
     "InMemoryEventLog",
+    "JsonlAuditEventLog",
+    "audit_event_to_json_dict",
     "batch_completed_event",
     "batch_interrupted_event",
     "batch_started_event",
@@ -45,5 +49,6 @@ __all__ = [
     "record_guardian_decision_event",
     "record_mission_event",
     "record_policy_resolution_event",
+    "serialize_audit_event_jsonl",
     "utc_now_iso",
 ]

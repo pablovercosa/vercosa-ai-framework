@@ -47,7 +47,7 @@ OpenCode é atualmente runtime e laboratório inicial. Ele não é o centro arqu
 
 ## Estado Do Repositório
 
-O repositório está em transição de fundação/MVP para um MVP interno mais coerente. A base operacional já permite executar missões locais de forma controlada, validar batches seguros, diagnosticar estado básico pela CLI, registrar eventos auditáveis iniciais em Python quando o chamador injeta um `EventLog` e consultar uma revisão arquitetural pós-integrações para orientar próximos blocos.
+O repositório está em transição de fundação/MVP para um MVP interno mais coerente. A base operacional já permite executar missões locais de forma controlada, validar batches seguros, diagnosticar estado básico pela CLI, registrar eventos auditáveis iniciais em Python quando o chamador injeta um `EventLog`, persistir eventos auditáveis em JSONL local quando o chamador opta explicitamente por `JsonlAuditEventLog` e consultar uma revisão arquitetural pós-integrações para orientar próximos blocos.
 
 Ativos principais:
 
@@ -102,7 +102,7 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
 - `policy/`: contratos e resolução determinística MVP de políticas declarativas, precedência simples e conflitos básicos.
 - `guardian/`: Guardian Engine determinístico com decisões estruturadas e detecção inicial de sinais textuais de limite de uso/API sem chamadas externas.
-- `audit/`: contratos iniciais de Audit/Event Log, tipos de evento, implementação em memória, helpers opcionais para decisões centrais e eventos básicos de ciclo de vida de missão.
+- `audit/`: contratos iniciais de Audit/Event Log, tipos de evento, implementação em memória, persistência local JSONL opt-in, helpers opcionais para decisões centrais e eventos básicos de ciclo de vida de missão.
 - `context/`: Context Router, Token Budget Manager e `ContextPackage` determinísticos.
 - `model_selection/`: políticas, tipos e selector MVP.
 - `runtime/`: contrato de Runtime Adapter e OpenCode Runtime Adapter MVP.
@@ -232,7 +232,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Adapter PostgreSQL/pgvector para Knowledge Hub e Code Intelligence.
 - Paridade de Runtime Adapter para Claude Code, Codex CLI, Cursor, VS Code, JetBrains, Web UI e API.
 - Persistência formal de Model Registry.
-- Persistência e retenção de audit logs além da implementação em memória inicial.
+- Retenção, rotação e persistência externa de audit logs além da persistência local JSONL opt-in inicial.
 - Provider real integrado como caminho obrigatório.
 - Billing real.
 - Observabilidade externa.

@@ -4,9 +4,9 @@ Links principais: [README do módulo audit](../../src/vercosa_ai_framework/audit
 
 ## Objetivo
 
-Documentar o papel arquitetural do Audit/Event Log no Vercosa AI Framework, seus contratos atuais, categorias, severidades, resultados, integrações iniciais, limites de segurança e próximos passos possíveis.
+Documentar o papel arquitetural do Audit/Event Log no Vercosa AI Framework, seus contratos atuais, categorias, severidades, resultados, persistência local controlada, integrações iniciais, limites de segurança e próximos passos possíveis.
 
-Este documento descreve a arquitetura atual e a direção de evolução. Ele não autoriza implementação de persistência externa, banco de dados, OpenTelemetry, dashboard, exportador ou integração automática adicional.
+Este documento descreve a arquitetura atual e a direção de evolução. Ele não autoriza implementação de persistência externa, banco de dados, OpenTelemetry, dashboard, exportador remoto ou integração automática adicional.
 
 ## Propósito
 
@@ -24,7 +24,9 @@ Evento auditável estruturado é um `AuditEvent` com campos normalizados, catego
 
 Telemetria externa futura seria integração com ferramentas de observabilidade, tracing, métricas ou sistemas externos. Ela ainda não existe no Vercosa AI Framework atual e não deve ser inferida a partir do `EventLog` em memória.
 
-Persistência futura seria gravação durável dos eventos em arquivo local, JSONL, banco ou outro adapter aprovado. Ela ainda não existe para o Audit/Event Log. A implementação atual mantém eventos somente em memória durante o processo.
+Persistência local controlada é a gravação opt-in de eventos em arquivo JSONL fornecido explicitamente pelo chamador. Ela é local, síncrona, usa UTF-8, grava uma linha JSON por evento e não altera a implementação em memória existente.
+
+Persistência externa futura seria gravação durável dos eventos em banco, serviço externo, exportador, OpenTelemetry ou outro adapter aprovado. Ela ainda não existe para o Audit/Event Log.
 
 ## Estado Atual
 
@@ -35,6 +37,7 @@ Implementado atualmente:
 - Tipos de evento em `types.py`.
 - Porta `EventLog` em `event_log.py`.
 - Implementação `InMemoryEventLog` em memória.
+- Implementação `JsonlAuditEventLog` para persistência local JSONL explícita e opt-in.
 - Helpers opcionais para eventos de Policy Engine, Guardian Engine e Context Router em `integrations.py`.
 - Helpers opcionais para eventos de ciclo de vida de missão e batch em `mission_events.py`.
 - Integração opcional do `MissionRunner` Python com `EventLog` fornecido pelo chamador.
@@ -50,6 +53,7 @@ Futuro ou fora do escopo atual:
 - Exportador.
 - Correlação completa com Git.
 - Retenção configurável.
+- Rotação de arquivo.
 
 ## Contrato De Evento
 
@@ -147,6 +151,28 @@ A implementação em memória serve para:
 
 Ela não grava arquivo, não acessa banco, não usa SQLite, não usa PostgreSQL, não exporta telemetria, não chama rede e não garante retenção após o fim do processo.
 
+## Persistência Local JSONL
+
+`JsonlAuditEventLog` implementa a mesma porta `EventLog` para persistir eventos em arquivo JSONL local quando o chamador instancia explicitamente a classe com um caminho de arquivo. A operação normal de `record()` é append-only: cada evento é serializado como uma linha JSON válida em UTF-8.
+
+Campos preservados por linha:
+
+| Campo | Observação |
+| --- | --- |
+| `event_id` | Identificador já calculado no `AuditEvent`. |
+| `category` | Valor textual da categoria. |
+| `name` | Nome específico do evento. |
+| `severity` | Valor textual da severidade. |
+| `result` | Valor textual do resultado. |
+| `message` | Mensagem curta recebida no evento. |
+| `source` | Origem lógica recebida no evento. |
+| `metadata` | Metadados JSON simples fornecidos pelo chamador. |
+| `created_at` | Timestamp opcional recebido no evento. |
+
+A criação de diretório pai é conservadora: por padrão, diretório inexistente causa erro. O chamador precisa usar `create_parent_dirs=True` para criar diretórios pai de forma explícita. A implementação não define caminho global fixo, não coleta dados automaticamente, não acessa rede, não acessa banco, não executa provider e não integra scripts shell.
+
+Se `metadata` contiver valor não serializável em JSON, a gravação falha com erro claro. A implementação não aplica redaction complexa nesta etapa; portanto o chamador é responsável por não passar secrets, tokens, credenciais, prompts completos, dados pessoais sensíveis ou logs brutos não sanitizados.
+
 ## Integrações Atuais
 
 As integrações atuais são explícitas e opcionais. Módulos consumidores não devem depender obrigatoriamente do Event Log para funcionar, salvo decisão futura explícita em Spec ou ADR.
@@ -184,7 +210,7 @@ event_log = InMemoryEventLog()
 event = record_guardian_decision_event(decision, event_log=event_log, origin="mission-runner")
 ```
 
-Se `event_log` não for fornecido aos helpers `record_*`, o evento é criado e retornado, mas não é armazenado.
+Se `event_log` não for fornecido aos helpers `record_*`, o evento é criado e retornado, mas não é armazenado. Se o chamador fornecer `JsonlAuditEventLog`, o helper grava localmente em JSONL; se fornecer `InMemoryEventLog`, mantém apenas em memória.
 
 ## Eventos Auditáveis De Alto Nível
 
@@ -250,8 +276,11 @@ O Audit/Event Log atual não possui:
 - OpenTelemetry.
 - Dashboard.
 - Exportador.
-- Correlação completa com Git.
 - Retenção configurável.
+- Rotação de arquivo.
+- Compressão.
+- Criptografia.
+- Correlação completa com Git.
 - Consulta real de billing.
 - Integração automática com scripts shell.
 - Integração automática com Provider Gateway.
@@ -263,14 +292,18 @@ Essas ausências são limites intencionais da fase atual. Elas evitam acoplament
 
 Próximos passos possíveis, ainda não implementados:
 
-- Persistência local controlada.
-- Exportação em JSONL.
 - Integração com Mission Runner real e scripts operacionais quando houver contrato seguro.
 - Integração com Provider Gateway.
 - Correlação com commits.
 - Relatórios pós-batch.
 - Política de retenção.
+- Rotação de arquivo.
 - Redaction de metadata.
+- Persistência externa.
+- Banco de dados.
+- OpenTelemetry.
+- Dashboard.
+- Exportador remoto.
 - Auditoria de uso de tools/providers.
 - Eventos estruturados para Usage/API Limit Guard.
 - Eventos estruturados para seleção de modelo, fallback e orçamento.

@@ -182,7 +182,7 @@ Quando o batch for interrompido por limite externo de API, trate como condição
 
 Os scripts seguros continuam usando logs textuais e movimentação de arquivos em `missions/queue`, `missions/running`, `missions/done` e `missions/failed`. Eles não emitem eventos auditáveis estruturados automaticamente nesta etapa.
 
-O módulo Python [audit](../../src/vercosa_ai_framework/audit/README.md) já possui helpers opcionais para representar eventos `mission.*` e `mission.batch.*`, e o `MissionRunner` Python pode registrar eventos quando recebe um `EventLog` opcional. Essa base não substitui os logs dos scripts, não cria persistência externa e não muda o fluxo operacional atual.
+O módulo Python [audit](../../src/vercosa_ai_framework/audit/README.md) já possui helpers opcionais para representar eventos `mission.*` e `mission.batch.*`, o `MissionRunner` Python pode registrar eventos quando recebe um `EventLog` opcional e existe persistência local JSONL opt-in quando o chamador fornece `JsonlAuditEventLog`. Essa base não substitui os logs dos scripts, não cria persistência externa e não muda o fluxo operacional atual.
 
 Integração completa dos scripts com Audit/Event Log pode ser feita em missão futura, com cuidado para não registrar conteúdo integral de missão, prompts completos, secrets, credenciais ou tokens.
 

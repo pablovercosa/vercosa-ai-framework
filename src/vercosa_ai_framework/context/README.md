@@ -119,7 +119,7 @@ O módulo `audit/` fornece `context_package_event()` e `record_context_package_e
 
 O evento pode registrar categoria `context`, quantidade de candidatos quando informada, itens selecionados, itens omitidos, uso estimado de tokens, reserva de output, warnings, motivos agregados de omissão, refs de políticas, refs Guardian e sinal de `require_approval`. O evento não registra conteúdo integral dos itens, prompts completos, segredos ou credenciais por padrão.
 
-Essa integração é opcional, em memória quando usada com `InMemoryEventLog`, sem persistência externa, sem observabilidade externa e sem alterar o comportamento de `DeterministicContextRouter.route()`.
+Essa integração é opcional, em memória quando usada com `InMemoryEventLog` ou em JSONL local quando usada explicitamente com `JsonlAuditEventLog`, sem persistência externa, sem observabilidade externa e sem alterar o comportamento de `DeterministicContextRouter.route()`.
 
 ## Dependências Internas
 

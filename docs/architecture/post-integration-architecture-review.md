@@ -30,7 +30,7 @@ Neste momento, o harness organiza:
 - seleção de modelo por catálogo local e política;
 - runtime adapter inicial para OpenCode;
 - Provider Gateway e cadeia capabilities, skills e tools em MVP;
-- Audit/Event Log inicial em memória;
+- Audit/Event Log inicial em memória, com persistência local JSONL opt-in;
 - CLI operacional inicial;
 - documentação pública alfa preparada, ainda sem release publicada.
 
@@ -44,7 +44,7 @@ Neste momento, o harness organiza:
 | Seleção de modelo | Model Selection Engine MVP com catálogo em memória, políticas resolvidas opcionais e requisitos de orçamento opcionais. | Sem descoberta real de modelos, billing real ou chamada a providers. |
 | Runtime | Runtime Adapter inicial para OpenCode. | OpenCode é laboratório/runtime atual, não núcleo; múltiplos runtimes reais ainda são futuros. |
 | Providers | Provider Gateway, registry e adapters injetáveis em MVP. | Sem múltiplos providers reais em produção. |
-| Auditoria | Audit/Event Log inicial em memória, helpers opcionais e eventos básicos de missão. | Sem persistência externa, dashboard, exportação ou integração automática com scripts shell. |
+| Auditoria | Audit/Event Log inicial em memória, persistência local JSONL opt-in, helpers opcionais e eventos básicos de missão. | Sem persistência externa, banco, dashboard, exportação remota, retenção, rotação ou integração automática com scripts shell. |
 | CLI operacional | Comandos `status`, `missions`, `batch-summary`, `validate` e `doctor`. | Não executa missões, Git, testes, scripts, providers, banco ou rede. |
 | Documentação operacional | Playbooks, checklist pós-batch, guia de instalação, contribuição, exemplos e checklist de alfa pública. | Documentação ainda precisa evitar promessa pública acima do implementado. |
 | Preparação pública alfa | Checklist documental, política inicial de versionamento e plano da versão alfa foram criados. | Alfa pública ainda não foi publicada; não há tag, changelog final, CI público ou release. |
@@ -181,7 +181,7 @@ Futuro:
 
 - Mission Orchestrator distinto.
 - Fluxo completo Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider.
-- Persistência local controlada de eventos auditáveis.
+- Retenção, rotação e integração opcional da persistência local de eventos auditáveis.
 - Integração real com providers.
 - Múltiplos runtime adapters reais.
 - Semantic Index, embeddings, pgvector e RAG semântico.
@@ -237,7 +237,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 - Sem banco por enquanto no fluxo operacional atual.
 - Sem RAG por enquanto.
 - Sem pgvector por enquanto.
-- Eventos auditáveis existem sem persistência externa por enquanto.
+- Eventos auditáveis existem com memória e JSONL local opt-in, sem persistência externa por enquanto.
 - Push manual permanece o padrão recomendado; push automático é opt-in.
 
 ## Próximos Refinamentos Arquiteturais Possíveis
@@ -250,7 +250,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 - Criar checklist de instalação limpa em ambiente novo.
 - Manter os comandos CLI `missions` e `batch-summary` como leituras locais seguras.
 - Refinar diagnósticos pós-batch somente quando houver contrato seguro.
-- Definir persistência local controlada de eventos auditáveis.
+- Definir retenção, rotação e integração opcional da persistência local de eventos auditáveis.
 - Planejar integração real com providers por adapters governados.
 - Avaliar Semantic Index sem implementar embeddings prematuramente.
 - Internacionalizar READMEs no final.
@@ -259,7 +259,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 
 1. Priorizar artefatos públicos mínimos antes da alfa: decisão de licença, canal público de vulnerabilidades, templates, changelog, versão inicial e validação de instalação limpa.
 2. Manter próximas implementações de CLI restritas a leitura local segura, como resumo pós-batch, sem executar Git destrutivo, providers, rede ou scripts automaticamente.
-3. Definir persistência local controlada para Audit/Event Log antes de observabilidade externa, dashboards ou bancos.
+3. Usar a persistência local JSONL opt-in do Audit/Event Log como base antes de observabilidade externa, dashboards ou bancos.
 4. Formalizar contratos Mission Runner -> Workflow Engine -> Task Queue antes de expandir loops de agentes.
 5. Formalizar Task Queue -> Agent Orchestrator -> Capability Resolver antes de dar efeitos concretos a agentes.
 6. Avaliar providers reais apenas depois de política, auditoria, limites de uso/API e Provider Gateway estarem claros.

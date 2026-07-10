@@ -35,7 +35,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Policy Engine integrado ao Model Selection por políticas resolvidas opcionais.
 - Token Budget Manager integrado ao Model Selection por requisitos mínimos de orçamento.
 - Usage/API Limit Guard integrado ao fluxo operacional por classificação determinística de logs já produzidos.
-- Audit/Event Log inicial em memória, com helpers opcionais para decisões centrais e eventos de missão/batch.
+- Audit/Event Log inicial em memória, com persistência local JSONL opt-in, helpers opcionais para decisões centrais e eventos de missão/batch.
 - CLI operacional inicial com `status`, `missions`, `batch-summary`, `validate` e `doctor`.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
@@ -89,7 +89,7 @@ Saídas recomendadas:
 - Manter a separação já adotada: Policy Engine resolve políticas declarativas; Guardian Engine aplica avaliação operacional.
 - Revisar se a ADR existente e as Specs descrevem adequadamente as novas pontes com Context Router, Model Selection e Audit/Event Log.
 - Definir como decisões de política, Guardian, contexto, modelo e uso/API devem ser registradas sem vazar conteúdo sensível.
-- Definir formato futuro de persistência local controlada para eventos auditáveis.
+- Refinar integração segura da persistência local controlada de eventos auditáveis sem torná-la global obrigatória.
 
 Esta decisão vem primeiro porque afeta missões, tools, providers, runtimes, context routing, seleção de modelos, logs, aprovações e validação.
 
@@ -152,7 +152,7 @@ Objetivo: persistir registros críticos por portas antes de adapters específico
 Ações recomendadas:
 
 - Definir stores para missões, workflows, tasks, decisões Guardian, decisões de modelo, audit logs, documentos canônicos e documentos de conhecimento.
-- Definir persistência local controlada para eventos auditáveis antes de exportação, banco ou observabilidade externa.
+- Usar a persistência local JSONL opt-in de eventos auditáveis como base antes de exportação, banco ou observabilidade externa.
 - Usar filesystem adapter como primeira implementação governada.
 - Definir registros JSON determinísticos e semântica de hash.
 - Definir política de retenção de logs.
@@ -214,7 +214,7 @@ Ações recomendadas:
 1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, política de release, CI público quando decidido e execução real do checklist de instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git, sem substituir scripts seguros.
 3. Manter os comandos CLI `missions` e `batch-summary` como apoio de diagnóstico operacional somente leitura.
-4. Definir persistência local controlada para Audit/Event Log.
+4. Refinar retenção, rotação e integração opcional da persistência local JSONL para Audit/Event Log.
 5. Atualizar Specs/ADRs quando a revisão pós-integrações identificar mudança material de fronteira.
 6. Contrato: Mission Runner -> Workflow Engine -> Task Queue.
 7. Contrato: Task Queue -> Agent Orchestrator -> Capability Resolver.
@@ -240,6 +240,7 @@ Ações recomendadas:
 Permanecem futuros e não devem ser tratados como implementados:
 
 - Persistência externa de eventos.
+- Retenção e rotação de eventos auditáveis.
 - Integração real com providers.
 - Múltiplos runtimes reais além do adapter inicial.
 - RAG semântico.

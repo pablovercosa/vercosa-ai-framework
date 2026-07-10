@@ -253,7 +253,7 @@ Limite externo de API não deve ser tratado automaticamente como bug interno do 
 
 O módulo Python [audit](../../src/vercosa_ai_framework/audit/README.md) já consegue representar `mission.batch.started`, `mission.batch.completed` e `mission.batch.interrupted` com metadados seguros como `batch_size`, `executed_count`, `queue_count`, `done_count`, `failed_count` e `commit_hash` quando disponível.
 
-O script `scripts/vaf-run-batch-safe.sh` ainda não emite esses eventos automaticamente. Nesta etapa, o batch continua dependendo de logs textuais, resumo no terminal, estado dos diretórios de missão e commits locais separados. Persistência de eventos, exportação e relação automática com commits continuam como próximos passos possíveis.
+O script `scripts/vaf-run-batch-safe.sh` ainda não emite esses eventos automaticamente. Nesta etapa, o batch continua dependendo de logs textuais, resumo no terminal, estado dos diretórios de missão e commits locais separados. Integração automática da persistência local JSONL, exportação e relação automática com commits continuam como próximos passos possíveis.
 
 ## Validações Pós-Batch
 
