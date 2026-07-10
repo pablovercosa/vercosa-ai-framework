@@ -1,12 +1,14 @@
 # Registro De Validação De Instalação Limpa
 
-Links principais: [README principal](../../README.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Instalação local](../getting-started/local-installation.md) | [Prontidão para alfa pública](public-alpha-readiness.md)
+Links principais: [README principal](../../README.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Instalação local](../getting-started/local-installation.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md)
 
 ## Objetivo
 
 Este documento registra o resultado factual de uma validação manual de instalação limpa do Vercosa AI Framework executada em cópia temporária local do repositório.
 
 O checklist operacional está em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md). A execução registrada abaixo não aprova release, não cria tag, não publica alfa, não publica pacote e não corrige automaticamente problemas encontrados.
+
+O resultado deste registro deve ser revisado antes de executar o [checklist pré-tag](pre-release-checklist.md). O estado atual permanece `REPROVADO` até nova validação aprovada ou decisão explícita de exceção com risco aceito.
 
 ## Regras De Registro
 

@@ -106,6 +106,8 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Persistência local controlada de eventos auditáveis concluída como `JsonlAuditEventLog`, sem banco, sem rede, sem retenção, sem rotação e sem ativação global obrigatória.
 - Empacotamento Python local mínimo concluído em `pyproject.toml` com `setuptools`, pacote em `src/vercosa_ai_framework`, versão PEP 440 `0.1.0a1`, extra opcional `dev` e entrypoint local `vaf`, sem publicação de pacote.
 - CI público mínimo concluído em `.github/workflows/ci.yml`, com GitHub Actions em pull requests e push para `main`, instalação editável com extra `dev`, `pytest` e `python -m compileall src`, sem secrets, providers, banco, batch, missões, release ou publicação de pacote.
+- Política inicial de release concluída em [docs/release/release-policy.md](../release/release-policy.md), sem criação de tag, release, pacote ou automação de deploy.
+- Checklist pré-tag concluído em [docs/release/pre-release-checklist.md](../release/pre-release-checklist.md), como pré-condição manual e sem autorização automática.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -263,6 +265,8 @@ Missões prováveis:
 - Criar licença se ainda não existir.
 - Definir política pública madura de vulnerabilidades e canal de reporte.
 - Revisar checklist de release alfa.
+- Executar checklist pré-tag antes de qualquer tag alfa.
+- Revisar release notes alfa em missão própria.
 - Revisar versão alfa planejada `0.1.0-alpha.1` antes de publicação.
 - Criar release/tag alfa.
 - Usar a revisão arquitetural pós-integrações como referência para não publicar alfa acima do estado real.
@@ -467,7 +471,8 @@ Missões futuras relacionadas:
 - Fazer revisão final pré-release.
 - Refinar comando adicional da CLI para resumir pós-batch quando houver necessidade concreta.
 - Definir retenção, rotação e relatórios futuros para eventos auditáveis.
-- Definir política de release.
+- Executar checklist pré-tag antes da tag alfa.
+- Revisar release notes alfa antes da publicação.
 - Revisar e criar `LICENSE` antes da release pública.
 - Decidir explicitamente se haverá pacote publicado ou apenas código-fonte na alfa.
 - Criar tag alfa somente após validações e decisão explícita.

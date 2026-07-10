@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Plano da versão alfa](alpha-version-plan.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
 
 ## Objetivo
 
@@ -33,6 +33,8 @@ O estado atual deve ser lido assim:
 | [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md) | existe | Código de conduta inicial e conservador; canal público para problemas de conduta ainda precisa ser definido antes de abertura pública ampla. |
 | [CHANGELOG.md](../../CHANGELOG.md) | existe | Changelog inicial criado com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade. |
 | [versioning-policy.md](versioning-policy.md) | existe | Política inicial e conservadora de versionamento. |
+| [release-policy.md](release-policy.md) | existe | Política inicial de release manual e explícita, sem tag, release ou pacote automático. |
+| [pre-release-checklist.md](pre-release-checklist.md) | existe | Checklist operacional pré-tag; não autoriza release por si só. |
 | [alpha-version-plan.md](alpha-version-plan.md) | existe | Plano documental para `0.1.0-alpha.1`, sem tag ou release publicada. |
 | [SECURITY.md](../../SECURITY.md) | existe | Política inicial e conservadora; canal público de vulnerabilidades ainda precisa ser definido antes da alfa pública. |
 | `LICENSE` | pendente | Não existe no repositório; a pendência está documentada em [license-notes.md](../legal/license-notes.md). |
@@ -74,6 +76,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | O roadmap não promete funcionalidades futuras como implementadas. | existe | Mantém próximos passos conservadores e lacunas explícitas. |
 | A revisão pós-integrações diferencia implementado, MVP, integração inicial, futuro e fora do escopo. | existe | Ajuda a evitar promessa pública acima do estado real. |
 | A estratégia inicial de versionamento está documentada. | existe | Define `0.1.0-alpha.1` como versão planejada, sem publicar release. |
+| A política inicial de release está documentada. | existe | Define critérios, bloqueios e etapas manuais sem criar tag, release ou pacote. |
+| O checklist pré-tag está documentado. | existe | Define validações mínimas como pré-condição, não como autorização automática. |
 | A versão alfa planejada está documentada. | existe | Diferencia versão planejada, tag futura, release GitHub e pacote publicado. |
 | CI público mínimo existe. | existe | Valida `pytest` e `python -m compileall src` em pull requests e pushes para `main`, sem executar missões ou providers. |
 
@@ -111,6 +115,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Versão alfa inicial planejada como `0.1.0-alpha.1`, sem release publicada.
 - Forma PEP 440 local da alfa planejada como `0.1.0a1` em `pyproject.toml`, sem release publicada e sem pacote publicado.
 - Tag futura planejada como `v0.1.0-alpha.1`, sem tag criada nesta fase.
+- Política inicial de release criada em [release-policy.md](release-policy.md), sem automatizar publicação.
+- Checklist pré-tag criado em [pre-release-checklist.md](pre-release-checklist.md), sem autorização automática.
 - CI público mínimo com GitHub Actions, sem release, sem publicação de pacote, sem secrets, sem providers externos e sem execução de missões.
 
 ## Pendências Antes De Release Alfa
@@ -121,6 +127,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Revisar templates de issue e pull request conforme o processo público amadurecer.
 - Manter `CHANGELOG.md` inicial atualizado sem criar release, tag ou versão enquanto não houver decisão explícita.
 - Corrigir os bloqueios encontrados na validação de instalação limpa e reexecutar o checklist antes da alfa.
+- Executar o checklist pré-tag antes de qualquer tag.
+- Obter autorização explícita para tag e release.
 - Manter CI público mínimo passando antes da tag alfa.
 - Decidir futuramente se haverá matriz de múltiplas versões de Python, lint e validação limpa automatizada no CI.
 - Revisar README final de alfa.

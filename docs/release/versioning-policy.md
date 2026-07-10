@@ -1,12 +1,14 @@
 # Política Inicial De Versionamento
 
-Links principais: [CHANGELOG.md](../../CHANGELOG.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Plano de versão alfa](alpha-version-plan.md) | [Backlog estratégico](../roadmap/mission-backlog.md)
+Links principais: [CHANGELOG.md](../../CHANGELOG.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Plano de versão alfa](alpha-version-plan.md) | [Backlog estratégico](../roadmap/mission-backlog.md)
 
 ## Objetivo
 
-Definir uma política inicial, conservadora e documental de versionamento para o Vercosa AI Framework.
+Definir uma política inicial, conservadora e documental de versionamento para o Vercosa AI Framework. O processo de publicação, critérios manuais e bloqueios de release estão em [release-policy.md](release-policy.md).
 
 Esta política prepara o caminho para uma futura alfa pública. Ela não cria release, não cria tag Git, não publica pacote, não define estabilidade de produção e não substitui uma missão específica de release.
+
+Versionamento é a escolha e documentação de números de versão. Publicação de release é o ato manual e autorizado de criar tag, publicar GitHub Release ou distribuir pacote. Esses passos permanecem separados nesta fase.
 
 ## Estado Atual
 

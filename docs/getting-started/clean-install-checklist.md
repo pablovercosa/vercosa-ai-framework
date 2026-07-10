@@ -1,6 +1,6 @@
 # Checklist De Instalação Limpa
 
-Links principais: [README principal](../../README.md) | [Instalação local](local-installation.md) | [Prontidão para alfa pública](../release/public-alpha-readiness.md) | [Registro de validação limpa](../release/clean-install-validation.md)
+Links principais: [README principal](../../README.md) | [Instalação local](local-installation.md) | [Prontidão para alfa pública](../release/public-alpha-readiness.md) | [Política de release](../release/release-policy.md) | [Checklist pré-tag](../release/pre-release-checklist.md) | [Registro de validação limpa](../release/clean-install-validation.md)
 
 ## Objetivo
 
@@ -9,6 +9,8 @@ Este documento define um checklist manual para validar uma instalação limpa do
 Instalação limpa significa usar um ambiente novo, sem reaproveitar ambiente virtual, cache local, artefatos antigos, diretórios de trabalho já modificados ou checkout usado em desenvolvimento diário.
 
 Este checklist deve ser executado antes de uma release alfa. Uma execução real foi registrada em [clean-install-validation.md](../release/clean-install-validation.md) em 2026-07-10 com resultado `REPROVADO`; portanto, uma nova execução aprovada ainda é necessária antes de qualquer release alfa.
+
+O checklist pré-tag em [docs/release/pre-release-checklist.md](../release/pre-release-checklist.md) consome o resultado desta validação como uma das evidências obrigatórias, mas não cria tag nem autoriza release automaticamente.
 
 ## Limites
 

@@ -22,6 +22,7 @@ Recursos como RAG semântico, embeddings, pgvector como adapter real, providers 
 - Atualize documentação quando a mudança afetar comportamento, fluxo, arquitetura, comandos, módulos ou roadmap.
 - Atualize [CHANGELOG.md](CHANGELOG.md) quando a mudança afetar comportamento público, arquitetura, operação, segurança, documentação pública ou preparação de release futura.
 - Siga a [política inicial de versionamento](docs/release/versioning-policy.md) quando a mudança afetar preparação de release, changelog ou documentação pública de versão.
+- Siga a [política inicial de release](docs/release/release-policy.md) quando a mudança afetar preparação de tag, release, pacote ou documentação pública de release.
 - Use commits em português do Brasil.
 - Não use `git add .`; faça staging explícito dos arquivos pretendidos.
 - Não faça force push.
@@ -52,6 +53,8 @@ python3 -m compileall src
 Para preparação de release alfa ou revisão conservadora de ambiente novo, use também o [checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). Ele complementa o guia local e não substitui `pytest`, `python3 -m compileall src` ou revisão humana.
 
 O CI mínimo não substitui validação local. Antes de abrir ou revisar um pull request, continue executando `pytest`, `python3 -m compileall src` e comandos de CLI seguros quando aplicável, como `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` e `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor`.
+
+Contribuições que afetem comportamento público, operação, segurança, documentação pública ou preparação de release devem considerar atualização de [CHANGELOG.md](CHANGELOG.md). Criação de tag, publicação de release e publicação de pacote exigem missão própria e autorização explícita; contribuição comum, push comum ou `VAF_AUTO_PUSH=1` não equivalem a release.
 
 O CI do projeto não deve depender de secrets, tokens, providers externos, OpenCode, Ollama, banco, Docker ou execução de missões. Dependências desse tipo só podem ser avaliadas em missão específica, com escopo, riscos e documentação próprios.
 
@@ -290,6 +293,8 @@ Não publique tokens, chaves, credenciais, logs completos com dados sensíveis o
 - [Checklist de instalação limpa](docs/getting-started/clean-install-checklist.md)
 - [Changelog inicial](CHANGELOG.md)
 - [Política inicial de versionamento](docs/release/versioning-policy.md)
+- [Política inicial de release](docs/release/release-policy.md)
+- [Checklist pré-tag](docs/release/pre-release-checklist.md)
 - [Plano da versão alfa inicial](docs/release/alpha-version-plan.md)
 - [Código de conduta inicial](CODE_OF_CONDUCT.md)
 - [Diretrizes de convivência e colaboração](docs/conduct/community-guidelines.md)

@@ -194,6 +194,8 @@ Decisões já encaminhadas:
 28. Os scripts operacionais devem aceitar raiz do projeto ou operar sempre pelo diretório atual para permitir validação de cópias temporárias?
 29. Quando adicionar lint ao CI sem introduzir dependências ou regras prematuras?
 30. Quando automatizar release, se houver decisão explícita, sem misturar validação de CI com publicação de pacote?
+31. Quando executar formalmente o checklist pré-tag antes da alfa planejada?
+32. Quando criar ou revisar release notes finais para a primeira alfa?
 
 ## ADRs Recomendadas
 

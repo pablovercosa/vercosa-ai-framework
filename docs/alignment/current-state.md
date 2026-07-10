@@ -62,6 +62,7 @@ Ativos principais:
 - `docs/release/public-alpha-readiness.md`: checklist de prontidão documental para futura alfa pública, sem criar release, tag, pacote ou promessa de estabilidade.
 - `docs/release/clean-install-validation.md`: registro factual da validação de instalação limpa de 2026-07-10, classificada como `REPROVADO`.
 - `docs/release/versioning-policy.md` e `docs/release/alpha-version-plan.md`: política inicial de versionamento e plano da versão alfa `0.1.0-alpha.1`, sem release publicada.
+- `docs/release/release-policy.md` e `docs/release/pre-release-checklist.md`: política inicial de release e checklist pré-tag, ambos manuais e sem criar tag, release ou pacote.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
 - `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
@@ -273,10 +274,11 @@ Esse estado é apenas documental:
 - não há pacote PyPI publicado;
 - há apenas empacotamento local mínimo para instalação editável em ambiente de desenvolvimento;
 - há CI mínimo com GitHub Actions para `pytest` e `python -m compileall src`, sem publicação de pacote ou release;
+- há política inicial de release e checklist pré-tag documentados;
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 
-Antes de qualquer publicação, ainda são necessárias correção ou decisão explícita sobre os bloqueios da validação limpa reprovada, reexecução do checklist de instalação limpa, testes, `compileall`, revisão do changelog, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
+Antes de qualquer publicação, ainda são necessárias correção ou decisão explícita sobre os bloqueios da validação limpa reprovada, reexecução do checklist de instalação limpa, execução do checklist pré-tag, testes, `compileall`, revisão do changelog, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
 
 ## Validação De Instalação Limpa
 
