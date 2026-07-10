@@ -41,6 +41,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Política inicial de versionamento, sem promessa de estabilidade, compatibilidade de API, tag ou release publicada.
 - Versão alfa planejada `0.1.0-alpha.1` e tag futura planejada `v0.1.0-alpha.1`, registradas apenas como plano documental.
 - Documentação pública inicial para futura alfa, incluindo README, guia de instalação local, guia de contribuição, documentação legal inicial, arquitetura, operações, exemplos e checklist de prontidão para alfa pública.
+- Validação real de instalação limpa em cópia temporária local, registrada como `REPROVADO`, sem criar release, tag ou pacote.
 - `SECURITY.md` inicial, com política conservadora de segurança, limites atuais e orientação para reporte responsável.
 - `CODE_OF_CONDUCT.md` inicial, com expectativas de conduta e limites de governança comunitária nesta fase.
 - Política inicial de uso responsável em `docs/legal/usage-policy.md`.
@@ -75,6 +76,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Sem persistência externa de eventos.
 - Sem múltiplos providers reais em produção.
 - Sem internacionalização dos READMEs.
+- Instalação limpa atual reprovada até correção ou decisão explícita sobre empacotamento offline, diretórios operacionais vazios, script de status acoplado a caminho absoluto e licença pendente.
 - Sem promessa de compatibilidade futura, SLA ou prontidão para produção.
 
 ### Futuro

@@ -168,7 +168,7 @@ Módulos principais:
 
 Guia inicial para preparar um checkout de desenvolvimento: [Instalação local para desenvolvimento](docs/getting-started/local-installation.md).
 
-Checklist manual para validar instalação limpa antes de uma futura alfa: [Checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). A execução real do checklist ainda deve ser feita e registrada antes de release.
+Checklist manual para validar instalação limpa antes de uma futura alfa: [Checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). Uma execução real foi registrada em [Registro de validação limpa](docs/release/clean-install-validation.md) com resultado `REPROVADO`; nova execução aprovada ainda é necessária antes de release.
 
 Guia inicial para contribuir com segurança: [CONTRIBUTING.md](CONTRIBUTING.md).
 

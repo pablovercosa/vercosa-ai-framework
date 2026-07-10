@@ -58,9 +58,9 @@ Ativos principais:
 - `SECURITY.md` e `docs/security/`: política inicial de segurança e orientação conservadora para reporte responsável, ainda sem canal público definitivo de vulnerabilidades.
 - `docs/legal/`: documentação legal inicial com política de uso responsável e notas sobre licença pendente.
 - `docs/getting-started/local-installation.md`: guia inicial de instalação local para desenvolvimento, validações básicas e uso inicial da CLI.
-- `docs/getting-started/clean-install-checklist.md`: checklist documental para validação manual futura de instalação limpa, ainda sem execução real registrada.
+- `docs/getting-started/clean-install-checklist.md`: checklist documental para validação manual de instalação limpa, executado uma vez em cópia temporária local com resultado `REPROVADO`.
 - `docs/release/public-alpha-readiness.md`: checklist de prontidão documental para futura alfa pública, sem criar release, tag, pacote ou promessa de estabilidade.
-- `docs/release/clean-install-validation.md`: modelo preparatório para registrar resultado futuro de validação limpa, sem dados preenchidos nesta fase.
+- `docs/release/clean-install-validation.md`: registro factual da validação de instalação limpa de 2026-07-10, classificada como `REPROVADO`.
 - `docs/release/versioning-policy.md` e `docs/release/alpha-version-plan.md`: política inicial de versionamento e plano da versão alfa `0.1.0-alpha.1`, sem release publicada.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
@@ -239,7 +239,7 @@ O projeto ainda precisa alinhar ou implementar:
 - Licença final publicada em `LICENSE`.
 - Processo público maduro de segurança, incluindo canal definitivo de reporte de vulnerabilidades.
 - Canal público definitivo para problemas de conduta e política de governança comunitária madura.
-- Publicação de release alfa; o checklist de prontidão, o checklist de instalação limpa e a versão planejada existem, mas não criam tag, pacote, execução real de validação ou marco público por si só.
+- Publicação de release alfa; o checklist de prontidão, o checklist de instalação limpa, a validação limpa reprovada e a versão planejada existem, mas não criam tag, pacote ou marco público por si só.
 - CI público e política pública madura de segurança. O changelog inicial existe, mas ainda não há changelog de release versionado.
 - Testes de contrato entre portas/adapters.
 - ADRs para fronteiras ainda ambíguas.
@@ -272,7 +272,24 @@ Esse estado é apenas documental:
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 
-Antes de qualquer publicação, ainda são necessárias execução real do checklist de instalação limpa, registro do resultado, testes, `compileall`, revisão do changelog, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
+Antes de qualquer publicação, ainda são necessárias correção ou decisão explícita sobre os bloqueios da validação limpa reprovada, reexecução do checklist de instalação limpa, testes, `compileall`, revisão do changelog, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
+
+## Validação De Instalação Limpa
+
+A validação de instalação limpa foi executada em 2026-07-10 no commit `365ea328399495434d3727fcf212f8aaf4ae25f4`, em cópia temporária local criada com `mktemp -d` e clone local com `git clone --no-hardlinks`, sem rede e sem publicar artefatos.
+
+Classificação real: `REPROVADO`.
+
+Limitações relevantes encontradas:
+
+- instalação editável offline falhou por ausência local de `hatchling>=1.25`;
+- CLI `validate` e `doctor` falharam porque `missions/running` e `missions/failed` não existem no clone limpo;
+- `scripts/vaf-status.sh` usa caminho absoluto para o checkout principal e não valida corretamente uma cópia temporária;
+- `pytest` passou como evidência complementar, mas não comprova instalação de desenvolvimento isolada porque a instalação editável falhou;
+- `compileall` passou;
+- `LICENSE` continua pendente e há inconsistência com o metadado de licença em `pyproject.toml`.
+
+Esse resultado reduz a prontidão da alfa: o projeto ainda não deve criar tag, release ou pacote até nova validação aprovada ou decisão explícita de exceção com risco aceito.
 
 ## Recomendação De Alinhamento
 

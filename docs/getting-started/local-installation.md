@@ -84,6 +84,8 @@ python -m pip install -e ".[dev]"
 
 Essa instalação é local ao ambiente virtual ativo. Ela não significa que exista pacote publicado no PyPI e não deve ser confundida com instalação global para uso final.
 
+Em ambiente sem acesso a índice remoto, essa instalação só funciona se o build backend e as dependências de desenvolvimento declaradas já estiverem disponíveis localmente. A validação limpa registrada em [docs/release/clean-install-validation.md](../release/clean-install-validation.md) falhou sem rede porque `hatchling>=1.25` não estava disponível no ambiente temporário.
+
 Após essa instalação, os console scripts declarados no projeto, como `vaf` e `vercosa`, podem existir dentro do ambiente virtual. Use-os apenas quando o ambiente virtual estiver ativado e confirme com `--help` antes de depender deles:
 
 ```bash

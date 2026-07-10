@@ -39,7 +39,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - CLI operacional inicial com `status`, `missions`, `batch-summary`, `validate` e `doctor`.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
-- Checklist documental de instalação limpa em `docs/getting-started/clean-install-checklist.md`, com execução real ainda pendente.
+- Checklist documental de instalação limpa em `docs/getting-started/clean-install-checklist.md`, com execução real registrada em 2026-07-10 e resultado `REPROVADO`.
 - Guia inicial de contribuição em `CONTRIBUTING.md`.
 - Código de conduta inicial em `CODE_OF_CONDUCT.md` e diretrizes em `docs/conduct/`, ainda sem canal público definitivo para problemas de conduta.
 - Política inicial de segurança em `SECURITY.md` e documentação inicial em `docs/security/`, ainda sem canal público definitivo de vulnerabilidades.
@@ -211,7 +211,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, política de release, CI público quando decidido e execução real do checklist de instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, política de release, CI público quando decidido, correção dos bloqueios da instalação limpa reprovada e reexecução do checklist.
 2. Integrar a CLI com validações locais seguras de Git, sem substituir scripts seguros.
 3. Manter os comandos CLI `missions` e `batch-summary` como apoio de diagnóstico operacional somente leitura.
 4. Refinar retenção, rotação e integração opcional da persistência local JSONL para Audit/Event Log.

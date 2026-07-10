@@ -189,6 +189,9 @@ Decisões já encaminhadas:
 23. Qual versão mínima de Python será formalizada como requisito público da alfa?
 24. Haverá CI para repetir a validação de instalação limpa no futuro?
 25. Haverá container apenas para validação futura, sem transformar Docker em requisito do framework?
+26. A instalação de desenvolvimento offline deve ser suportada oficialmente ou o guia deve exigir acesso controlado a índice remoto para `hatchling` e dependências `dev`?
+27. Como garantir que diretórios operacionais vazios, como `missions/running` e `missions/failed`, existam em clones limpos sem depender de estado local?
+28. Os scripts operacionais devem aceitar raiz do projeto ou operar sempre pelo diretório atual para permitir validação de cópias temporárias?
 
 ## ADRs Recomendadas
 

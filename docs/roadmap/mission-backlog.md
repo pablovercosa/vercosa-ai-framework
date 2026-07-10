@@ -101,7 +101,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - `CHANGELOG.md` inicial criado, agora com versão alfa planejada documentada, mas sem tag, release publicada ou promessa de estabilidade de produção.
 - Preparação documental para futura alfa pública concluída como checklist inicial em [docs/release/public-alpha-readiness.md](../release/public-alpha-readiness.md), sem criação de release, tag, pacote ou changelog de release.
 - Definição documental da versão alfa inicial concluída como `0.1.0-alpha.1`, com política inicial em [docs/release/versioning-policy.md](../release/versioning-policy.md) e plano em [docs/release/alpha-version-plan.md](../release/alpha-version-plan.md), sem criação de tag, release ou pacote.
-- Checklist documental de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md), com modelo de registro futuro em [docs/release/clean-install-validation.md](../release/clean-install-validation.md), sem execução real da validação.
+- Checklist documental de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md), com execução real registrada em [docs/release/clean-install-validation.md](../release/clean-install-validation.md) em 2026-07-10 e resultado `REPROVADO`.
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 - Persistência local controlada de eventos auditáveis concluída como `JsonlAuditEventLog`, sem banco, sem rede, sem retenção, sem rotação e sem ativação global obrigatória.
 
@@ -457,8 +457,8 @@ Missões futuras relacionadas:
 - Revisar segurança antes de release alfa.
 - Criar CI público quando houver decisão de automação.
 - Manter o changelog inicial atualizado sem criar release versionada.
-- Executar instalação limpa real em ambiente novo.
-- Registrar resultado da instalação limpa real.
+- Corrigir bloqueios encontrados na instalação limpa real reprovada.
+- Reexecutar e registrar instalação limpa antes da alfa.
 - Fazer revisão final pré-release.
 - Refinar comando adicional da CLI para resumir pós-batch quando houver necessidade concreta.
 - Definir retenção, rotação e relatórios futuros para eventos auditáveis.
@@ -600,8 +600,24 @@ Título: Criar checklist de instalação limpa.
 Objetivo: documentar procedimento manual para validar instalação limpa em ambiente novo antes de alfa pública.
 Escopo permitido: documentação em `docs/getting-started/` e `docs/release/`, links em documentos de release e README.
 Escopo proibido: executar instalação limpa, alterar código, alterar scripts, adicionar dependências, criar CI, criar tag ou publicar release.
-Status: concluído como checklist documental em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) e modelo de registro em [docs/release/clean-install-validation.md](../release/clean-install-validation.md); execução real continua futura.
+Status: concluído como checklist documental em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md); a execução real posterior foi registrada em [docs/release/clean-install-validation.md](../release/clean-install-validation.md) com resultado `REPROVADO`.
 Critérios de aceite resumidos: checklist diferencia guia local, validação limpa, registro futuro e release alfa sem prometer PyPI, Docker, CI ou produção.
+
+32. Código sugerido: `M032-executar-validacao-instalacao-limpa`
+Título: Executar e registrar validação de instalação limpa.
+Objetivo: validar uma cópia temporária local do repositório sem rede, registrar evidências e atualizar prontidão alfa.
+Escopo permitido: documentação de release, roadmap e alinhamento.
+Escopo proibido: alterar código Python, scripts shell, dependências, empacotamento, CI, tag, release ou push.
+Status: executado em 2026-07-10 com resultado `REPROVADO`, registrado em [docs/release/clean-install-validation.md](../release/clean-install-validation.md).
+Critérios de aceite resumidos: execução real registrada com commit, ambiente, mecanismo de instalação, CLI, `pytest`, `compileall`, estado Git e problemas encontrados.
+
+Pendências sustentadas por essa execução:
+
+- Corrigir empacotamento ou estratégia de instalação offline para o backend `hatchling`.
+- Garantir diretórios operacionais obrigatórios em clones limpos.
+- Remover acoplamento de `scripts/vaf-status.sh` ao caminho absoluto do checkout principal.
+- Resolver inconsistência entre licença pendente na documentação e metadado `MIT` em `pyproject.toml`.
+- Reexecutar a validação limpa antes da tag alfa.
 
 ## Como Transformar Backlog Em Fila Executável
 

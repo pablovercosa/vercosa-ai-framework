@@ -38,7 +38,8 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - playbooks operacionais;
 - documentação de arquitetura;
 - checklist de alfa pública;
-- checklist documental de instalação limpa.
+- checklist documental de instalação limpa;
+- registro factual de uma execução de instalação limpa em cópia temporária local, atualmente classificada como `REPROVADO`.
 
 Esses artefatos reduzem risco documental, mas não substituem validação final de release.
 
@@ -46,8 +47,8 @@ Esses artefatos reduzem risco documental, mas não substituem validação final 
 
 Antes de publicar a alfa, ainda é necessário:
 
-- executar o checklist de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md);
-- registrar o resultado real em [docs/release/clean-install-validation.md](clean-install-validation.md);
+- corrigir ou decidir explicitamente os bloqueios encontrados na validação de instalação limpa registrada em [docs/release/clean-install-validation.md](clean-install-validation.md);
+- reexecutar o checklist de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) com resultado aprovado ou exceção aceita;
 - fazer revisão final do README;
 - validar links;
 - executar `pytest`;
@@ -74,6 +75,19 @@ A alfa só deve ser considerada publicável quando todos os critérios mínimos 
 - changelog atualizado;
 - versão planejada documentada;
 - autorização explícita para tag/release.
+
+## Estado Da Validação De Instalação Limpa
+
+A validação real executada em 2026-07-10 no commit `365ea328399495434d3727fcf212f8aaf4ae25f4` foi classificada como `REPROVADO`.
+
+Bloqueios registrados:
+
+- instalação editável offline falhou por ausência local de `hatchling>=1.25`;
+- `validate` e `doctor` falharam porque `missions/running` e `missions/failed` não existem no clone limpo;
+- `scripts/vaf-status.sh` usa caminho absoluto para o checkout principal e não representa corretamente uma cópia temporária;
+- `LICENSE` permanece ausente e há inconsistência com o metadado `license = { text = "MIT" }` em `pyproject.toml`.
+
+Esse resultado não altera a versão planejada `0.1.0-alpha.1`, não cria tag, não publica release e bloqueia a aprovação da alfa até nova validação ou decisão explícita de exceção.
 
 ## Fora Do Escopo Deste Plano
 

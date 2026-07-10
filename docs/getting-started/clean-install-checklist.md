@@ -8,7 +8,7 @@ Este documento define um checklist manual para validar uma instalação limpa do
 
 Instalação limpa significa usar um ambiente novo, sem reaproveitar ambiente virtual, cache local, artefatos antigos, diretórios de trabalho já modificados ou checkout usado em desenvolvimento diário.
 
-Este checklist deve ser executado antes de uma release alfa, mas sua criação documental não significa que a validação já foi executada. A execução real deve ser registrada futuramente em [clean-install-validation.md](../release/clean-install-validation.md).
+Este checklist deve ser executado antes de uma release alfa. Uma execução real foi registrada em [clean-install-validation.md](../release/clean-install-validation.md) em 2026-07-10 com resultado `REPROVADO`; portanto, uma nova execução aprovada ainda é necessária antes de qualquer release alfa.
 
 ## Limites
 
@@ -87,6 +87,8 @@ python -m pip install -e ".[dev]"
 ```
 
 Essa instalação é local ao ambiente virtual ativo. Ela não significa que exista pacote publicado no PyPI.
+
+Em validações sem rede, esse comando depende de o build backend e as dependências de desenvolvimento já estarem disponíveis localmente. Na execução de 2026-07-10, `python -m pip install --no-index -e ".[dev]"` falhou por ausência local de `hatchling>=1.25`.
 
 Não use `pip install vercosa-ai-framework` como validação deste checklist enquanto não houver pacote publicado e documentado.
 
@@ -273,4 +275,4 @@ Se houver dúvida sobre a origem do diretório, descarte a validação e reinici
 
 ## Registro Do Resultado
 
-Este checklist define o procedimento. O resultado de uma execução real futura deve ser registrado em [docs/release/clean-install-validation.md](../release/clean-install-validation.md), sem preencher dados inventados e sem declarar aprovação quando a validação não tiver sido executada.
+Este checklist define o procedimento. O resultado de cada execução real deve ser registrado em [docs/release/clean-install-validation.md](../release/clean-install-validation.md), sem preencher dados inventados e sem declarar aprovação quando a validação não tiver sido executada. O resultado atual registrado é `REPROVADO`.
