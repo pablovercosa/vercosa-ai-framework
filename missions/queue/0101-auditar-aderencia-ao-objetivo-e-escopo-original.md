@@ -39,6 +39,7 @@ Leia também, se existirem:
 - .opencode/
 - agents/
 - skills/
+- logs/pre-audit-evidence.md
 
 Assuma o papel de:
 - strategic-project-auditor;
