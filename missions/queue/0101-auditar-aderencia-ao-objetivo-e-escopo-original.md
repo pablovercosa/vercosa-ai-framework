@@ -28,6 +28,11 @@ Leia obrigatoriamente:
 - scripts/
 - missions/done/
 
+Regra para itens ausentes:
+- Se um arquivo ou diretório listado não existir, registrar a ausência como evidência e continuar a auditoria.
+- Interromper somente se faltar um elemento estrutural indispensável: AGENTS.md, README.md, pyproject.toml, src/, tests/, scripts/ ou missions/done/.
+- A ausência de LICENSE ou de documento previsto de release deve ser tratada como achado, não como erro de leitura da missão.
+
 Leia também, se existirem:
 - logs/pre-audit-model-selection-core-followup.md
 - logs/pre-audit-targeted-module-verification.md
@@ -66,6 +71,7 @@ Não basta o projeto compilar, passar nos testes e estar bem documentado. É nec
 
 Contexto:
 - Em caso de divergência sobre Core, Guardian ou Model Selection, priorize logs/pre-audit-targeted-module-verification.md e logs/pre-audit-model-selection-core-followup.md sobre o levantamento dinâmico geral, pois as verificações direcionadas corrigiram falsos negativos da instrumentação anterior.
+- Pré-condição: as missões 0098, 0099 e 0100 devem estar concluídas em missions/done antes desta auditoria. Se não estiverem, interromper sem alterar arquivos e relatar a pré-condição não atendida.
 - O projeto completou a faixa de missões até 0100.
 - Houve crescimento relevante de arquitetura, documentação, governança, CLI, testes e preparação para alfa.
 - Existe risco de o processo de missões ter produzido componentes tecnicamente corretos, mas fora de prioridade ou escopo.
@@ -161,18 +167,31 @@ Questões obrigatórias da auditoria:
    - ser removidas futuramente;
    - ser reavaliadas?
 
-Classificações obrigatórias:
-Cada componente relevante deve receber uma das classificações:
+21. Quais especificações são:
+   - canônicas e atuais;
+   - históricas;
+   - substituídas;
+   - divergentes da implementação;
+   - documentadas, mas não implementadas;
+   - implementadas sem especificação atualizada?
 
+Classificações obrigatórias:
+Cada componente relevante deve receber classificações em dois eixos.
+
+Classificação principal de aderência — exatamente uma:
 - ADERENTE
 - ADERENTE COM RESSALVAS
 - FORA DO ESCOPO
+- ESTADO INDETERMINADO
+
+Marcadores complementares de estado — zero ou mais:
 - PREMATURO
 - DUPLICADO
 - NÃO INTEGRADO
 - DOCUMENTADO, MAS NÃO IMPLEMENTADO
 - IMPLEMENTADO, MAS NÃO DOCUMENTADO
-- ESTADO INDETERMINADO
+
+Um marcador de estado não substitui a classificação principal de aderência.
 
 A classificação deve incluir:
 - evidência;
@@ -211,6 +230,9 @@ Componentes mínimos a avaliar:
 - pgvector planejado
 - RAG planejado
 - internacionalização planejada
+- especificações canônicas
+- especificações históricas em missions/done
+- ADRs e decisões arquiteturais
 
 Requisitos para docs/audits/objective-and-scope-alignment-audit.md:
 1. Registrar o objetivo canônico identificado.
@@ -329,12 +351,14 @@ Requisitos para docs/history/mission-milestones.md:
 1. Registrar os marcos por faixa de missões.
 
 2. Usar pelo menos:
-   - 0001–0025;
+   - 0002–0025;
    - 0026–0050;
    - 0051–0075;
    - 0076–0100.
 
-3. Não inventar detalhes sem evidência.
+3. Registrar que a série versionada disponível começa em 0002 e não presumir, sem evidência, que uma missão 0001 foi perdida ou removida.
+
+4. Não inventar detalhes sem evidência.
 
 4. Resumir:
    - objetivo da faixa;

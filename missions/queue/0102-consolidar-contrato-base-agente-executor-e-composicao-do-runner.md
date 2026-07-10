@@ -70,9 +70,11 @@ arquivo específico da missão
 Contexto:
 - As missões atuais repetem grandes blocos de regras, restrições e critérios comuns.
 - Essa repetição aumenta custo, consumo de contexto, risco de divergência e dificuldade de manutenção.
+- Pré-condição: a missão 0101 deve estar concluída em missions/done e seus entregáveis obrigatórios devem existir. Se a pré-condição não for atendida, interromper sem alterar arquivos.
 - A missão 0101 audita a aderência do projeto ao objetivo original.
 - Esta missão deve usar os resultados da 0101 como referência.
-- As missões 0001–0102 são consideradas missões legadas e não devem ser reescritas.
+- As missões 0002–0102 são consideradas missões legadas e não devem ser reescritas.
+- A série versionada disponível começa em 0002; não presumir a existência de uma missão 0001.
 - As missões 0103 em diante deverão usar formato compacto.
 - O runner deve continuar compatível com missões legadas.
 - Regras comuns devem ser centralizadas.
@@ -137,23 +139,40 @@ Entregáveis obrigatórios:
 16. Não fazer push.
 
 Arquitetura obrigatória:
-1. AGENTS.md deve continuar sendo a fonte das regras permanentes do repositório.
+1. AGENTS.md deve continuar sendo a fonte das regras globais e permanentes do repositório.
 
-2. O contrato base deve conter regras comuns de execução de missões.
+2. O contrato base deve ser a fonte normativa das regras comuns específicas da execução de missões.
 
-3. O agente executor base deve conter comportamento operacional e critérios gerais de atuação.
+3. AGENTS.md e o contrato base não devem duplicar integralmente o mesmo conteúdo; cada regra deve possuir uma fonte canônica clara.
 
-4. O arquivo específico da missão deve conter somente:
+4. O agente executor base deve conter comportamento operacional e critérios gerais de atuação.
+
+5. O arquivo específico da missão deve conter somente:
    - identificação;
    - título;
    - objetivo;
+   - papéis temporários;
+   - agentes operacionais especializados;
    - contexto específico;
    - entradas específicas;
    - entregáveis específicos;
    - permissões excepcionais;
    - critérios de aceite específicos.
 
-5. O runner deve carregar os componentes na ordem definida.
+6. A taxonomia obrigatória deve distinguir:
+   - role: persona temporária usada somente como orientação da missão;
+   - operational agent: definição versionada carregável a partir de .opencode/agents/;
+   - product agent: implementação pertencente a src/vercosa_ai_framework/agents/;
+   - operational skill: procedimento reutilizável carregável pelo ambiente de desenvolvimento;
+   - product skill: implementação pertencente a src/vercosa_ai_framework/skills/.
+
+7. Papéis temporários não devem ser resolvidos como arquivos de agentes.
+
+8. Não confundir .opencode/agents/ com src/vercosa_ai_framework/agents/.
+
+9. Não confundir .opencode/skills/ com src/vercosa_ai_framework/skills/.
+
+10. O runner deve carregar os componentes na ordem definida.
 
 6. A composição não pode depender de instrução verbal para o modelo ler os arquivos.
 
@@ -177,7 +196,9 @@ Arquitetura obrigatória:
 
 16. Uma falha de composição não deve criar commit.
 
-17. Uma falha de composição não deve alterar arquivos do projeto.
+17. Uma falha de composição não deve deixar alterações persistentes no projeto.
+
+18. Se a missão tiver sido movida temporariamente para running antes da falha, o runner deve restaurá-la integralmente para queue e deixar running limpo.
 
 Contrato base:
 1. O contrato deve ser versionado.
@@ -301,6 +322,7 @@ Formato compacto:
    - id;
    - title;
    - base_contract;
+   - roles;
    - agents;
    - network;
    - database;
@@ -320,8 +342,10 @@ Formato compacto:
 id: "0103"
 title: "Inventariar integralmente o repositório"
 base_contract: "v1"
-agents:
+roles:
   - repository-auditor
+agents:
+  - framework-architect
 network: deny
 database: deny
 providers: deny
@@ -337,9 +361,15 @@ destructive_commands: deny
 
 Conteúdo específico.
 
-7. O agente executor base deve ser incluído automaticamente pelo compositor.
+7. O campo roles deve ser opcional, preservar a ordem declarada e não exigir arquivo correspondente.
 
-8. Se mission-executor-base também aparecer na lista agents, ele deve ser deduplicado.
+8. O campo agents deve ser opcional; quando presente, cada nome deve corresponder a um agente operacional versionado.
+
+9. Uma missão pode declarar roles sem declarar agents.
+
+10. O agente executor base deve ser incluído automaticamente pelo compositor.
+
+11. Se mission-executor-base também aparecer na lista agents, ele deve ser deduplicado.
 
 9. O template deve mostrar:
    - objetivo;
@@ -412,7 +442,11 @@ Agentes especializados:
 
 2. Não criar todos os agentes especializados nesta missão.
 
-3. Utilizar agentes existentes quando declarados.
+3. Não converter automaticamente cada papel histórico de missão em agente operacional.
+
+4. Utilizar agentes existentes quando declarados.
+
+5. Subagentes e skills operacionais não devem ser criados em massa nesta missão; sua inclusão futura depende de necessidade comprovada pela auditoria.
 
 4. Agente inexistente deve gerar erro claro antes da execução.
 
@@ -554,7 +588,11 @@ Testes obrigatórios:
 
 10. Testar agente especializado inexistente.
 
-11. Testar agente duplicado.
+11. Testar missão com role sem agente correspondente e confirmar que ela permanece válida.
+
+12. Testar preservação da ordem dos roles.
+
+13. Testar agente duplicado.
 
 12. Testar tentativa de path traversal em nome de agente.
 
