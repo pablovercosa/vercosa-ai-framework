@@ -41,7 +41,7 @@ No estado atual do repositório, a alfa planejada consolida os seguintes itens c
 - Audit/Event Log inicial em memória.
 - Persistência local JSONL opt-in de eventos auditáveis por `JsonlAuditEventLog`.
 - CLI operacional inicial.
-- Comandos `status`, `validate`, `doctor`, `missions` e `batch-summary`.
+- Comandos `status`, `validate`, `doctor`, `missions`, `batch-summary` e `docs-links`.
 - Documentação pública inicial.
 - Guia de instalação local para desenvolvimento.
 - Guia inicial de contribuição.
@@ -96,6 +96,7 @@ python3 -m vercosa_ai_framework.cli.main validate
 python3 -m vercosa_ai_framework.cli.main doctor
 python3 -m vercosa_ai_framework.cli.main missions
 python3 -m vercosa_ai_framework.cli.main batch-summary
+python3 -m vercosa_ai_framework.cli.main docs-links
 ```
 
 Em checkouts sem instalação editável, a forma com `PYTHONPATH=src` pode ser necessária para diagnosticar a CLI local:
@@ -112,6 +113,7 @@ vaf validate
 vaf doctor
 vaf missions
 vaf batch-summary
+vaf docs-links
 ```
 
 O entrypoint `vaf` não deve ser tratado como comando global publicado ou pacote distribuído.
@@ -132,6 +134,7 @@ Antes de qualquer release real, ainda é necessário:
 
 - executar o checklist pré-tag;
 - confirmar CI passando;
+- validar links Markdown relativos com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validar URLs externas;
 - revisar `CHANGELOG.md`;
 - revisar estas notas preliminares e transformá-las, se aprovado, em release notes finais;
 - confirmar instalação limpa com resultado aprovado ou exceção explícita aceita;

@@ -36,7 +36,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Token Budget Manager integrado ao Model Selection por requisitos mínimos de orçamento.
 - Usage/API Limit Guard integrado ao fluxo operacional por classificação determinística de logs já produzidos.
 - Audit/Event Log inicial em memória, com persistência local JSONL opt-in, helpers opcionais para decisões centrais e eventos de missão/batch.
-- CLI operacional inicial com `status`, `missions`, `batch-summary`, `validate` e `doctor`.
+- CLI operacional inicial com `status`, `missions`, `batch-summary`, `validate`, `doctor` e `docs-links`.
 - Exemplos operacionais iniciais em `docs/examples/`.
 - Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
 - Checklist documental de instalação limpa em `docs/getting-started/clean-install-checklist.md`, com execução real registrada em 2026-07-10 e resultado `REPROVADO`.
@@ -51,7 +51,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Release notes alfa preliminares em `docs/release/release-notes-alpha.md`, como preparação para a futura `0.1.0-alpha.1`, sem release publicada.
 - Changelog inicial em `CHANGELOG.md`, sem data de release, tag ou promessa de estabilidade.
 - Empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, versão PEP 440 `0.1.0a1`, pacote em `src/vercosa_ai_framework` e entrypoint local `vaf`, sem publicação de pacote.
-- CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest` e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
+- CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest`, validação local de links Markdown relativos e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
@@ -215,7 +215,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, revisão final das release notes, execução do checklist pré-tag, manutenção do CI mínimo passando, correção dos bloqueios remanescentes da instalação limpa reprovada e reexecução do checklist de instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, validação local de links Markdown relativos, revisão final das release notes, execução do checklist pré-tag, manutenção do CI mínimo passando, correção dos bloqueios remanescentes da instalação limpa reprovada e reexecução do checklist de instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git, sem substituir scripts seguros.
 3. Manter os comandos CLI `missions` e `batch-summary` como apoio de diagnóstico operacional somente leitura.
 4. Refinar retenção, rotação e integração opcional da persistência local JSONL para Audit/Event Log.

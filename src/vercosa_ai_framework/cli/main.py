@@ -4,14 +4,19 @@ from __future__ import annotations
 
 import argparse
 import platform
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 
 from vercosa_ai_framework import __version__
 
 
 MISSION_DIRECTORIES = ("queue", "running", "done", "failed")
+MARKDOWN_LINK_PATTERN = re.compile(r"!?\[[^\]\n]*\]\(([^)\n]*)\)")
+EXTERNAL_LINK_SCHEMES = {"http", "https", "mailto", "tel"}
+IGNORED_DOCS_DIRECTORIES = {".git", ".venv", "__pycache__", "logs", "dist", "build", ".pytest_cache"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -122,6 +127,29 @@ class BatchSummaryResult:
         return tuple(items)
 
 
+@dataclass(frozen=True, slots=True)
+class MarkdownLinkIssue:
+    """Link Markdown relativo quebrado encontrado em documento local."""
+
+    source: Path
+    line: int
+    target: str
+    resolved_path: Path
+
+
+@dataclass(frozen=True, slots=True)
+class MarkdownLinkValidationResult:
+    """Resultado deterministico da validacao local de links Markdown."""
+
+    base_dir: Path
+    markdown_files: tuple[Path, ...]
+    issues: tuple[MarkdownLinkIssue, ...] = ()
+
+    @property
+    def ok(self) -> bool:
+        return not self.issues
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Cria o parser da CLI operacional sem acoplar a scripts shell."""
 
@@ -160,6 +188,14 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("validate", help="Valida a estrutura local basica sem executar missoes.")
     subparsers.add_parser("doctor", help="Executa diagnostico local amigavel e nao destrutivo.")
     subparsers.add_parser("batch-summary", help="Mostra resumo pos-batch local, seguro e somente leitura.")
+    docs_links_parser = subparsers.add_parser(
+        "docs-links",
+        help="Valida links relativos em Markdown local sem acessar rede.",
+    )
+    docs_links_parser.add_argument(
+        "--base-dir",
+        help="Diretorio base para localizar documentos Markdown. Padrao: valor de --project-root.",
+    )
     return parser
 
 
@@ -198,6 +234,9 @@ def run(argv: list[str] | None = None) -> int:
 
     if args.command == "batch-summary":
         return print_batch_summary(Path(args.project_root))
+
+    if args.command == "docs-links":
+        return print_markdown_link_validation(Path(args.base_dir or args.project_root))
 
     parser.print_help()
     return 0
@@ -446,6 +485,106 @@ def summarize_batch(project_root: str | Path) -> BatchSummaryResult:
     )
 
 
+def validate_markdown_links(base_dir: str | Path) -> MarkdownLinkValidationResult:
+    """Valida links relativos de Markdown local sem rede e sem parser completo."""
+
+    root = Path(base_dir)
+    markdown_files = collect_markdown_documentation_files(root)
+    issues: list[MarkdownLinkIssue] = []
+
+    for markdown_file in markdown_files:
+        try:
+            content = markdown_file.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+
+        for line_number, raw_target in _iter_markdown_links(content):
+            target = _normalize_markdown_link_target(raw_target)
+            if _should_ignore_markdown_link(target):
+                continue
+
+            target_without_anchor = target.split("#", 1)[0]
+            target_without_query = target_without_anchor.split("?", 1)[0]
+            decoded_target = unquote(target_without_query)
+            if not decoded_target:
+                continue
+
+            resolved_path = (markdown_file.parent / decoded_target).resolve(strict=False)
+            if not resolved_path.exists():
+                issues.append(
+                    MarkdownLinkIssue(
+                        source=markdown_file,
+                        line=line_number,
+                        target=target,
+                        resolved_path=resolved_path,
+                    )
+                )
+
+    return MarkdownLinkValidationResult(base_dir=root, markdown_files=markdown_files, issues=tuple(issues))
+
+
+def collect_markdown_documentation_files(base_dir: str | Path) -> tuple[Path, ...]:
+    """Localiza documentos Markdown publicos relevantes para validacao local."""
+
+    root = Path(base_dir)
+    if not root.is_dir():
+        return ()
+
+    candidates: set[Path] = set()
+    for filename in ("README.md", "CONTRIBUTING.md", "CHANGELOG.md", "SECURITY.md", "CODE_OF_CONDUCT.md"):
+        path = root / filename
+        if path.is_file():
+            candidates.add(path)
+
+    docs_root = root / "docs"
+    if docs_root.is_dir():
+        candidates.update(_iter_markdown_files(docs_root, ignore_runtime=True))
+
+    package_root = root / "src" / "vercosa_ai_framework"
+    if package_root.is_dir():
+        candidates.update(
+            path
+            for path in _iter_markdown_files(package_root)
+            if path.name == "README.md"
+        )
+
+    return tuple(sorted(candidates, key=lambda path: path.relative_to(root).as_posix()))
+
+
+def print_markdown_link_validation(base_dir: str | Path) -> int:
+    """Imprime validacao local de links Markdown e retorna codigo controlado."""
+
+    root = Path(base_dir)
+    if not root.is_dir():
+        print(f"vercosa-ai-framework: {__version__}")
+        print(f"base_dir: {root}")
+        print("validacao: links Markdown locais")
+        print("resultado: invalido")
+        print(f"problema: diretorio base nao encontrado: {root}")
+        return 1
+
+    result = validate_markdown_links(base_dir)
+    print(f"vercosa-ai-framework: {__version__}")
+    print(f"base_dir: {result.base_dir}")
+    print("validacao: links Markdown locais")
+    print(f"arquivos_markdown: {len(result.markdown_files)}")
+
+    if result.ok:
+        print("resultado: links Markdown relativos validos")
+        print("limites: links externos e ancoras internas puras foram ignorados; ancoras em arquivos existentes nao sao validadas.")
+        return 0
+
+    print("resultado: links Markdown relativos quebrados")
+    for issue in result.issues:
+        try:
+            source = issue.source.relative_to(result.base_dir)
+        except ValueError:
+            source = issue.source
+        print(f"problema: {source}:{issue.line} -> {issue.target} (nao encontrado: {issue.resolved_path})")
+    print("limites: links externos e ancoras internas puras foram ignorados; ancoras em arquivos existentes nao sao validadas.")
+    return 1
+
+
 def print_batch_summary(project_root: str | Path) -> int:
     """Imprime diagnostico auxiliar pos-batch sem executar validacoes."""
 
@@ -506,6 +645,60 @@ def _find_last_log(logs_directory: Path) -> Path | None:
     if not candidates:
         return None
     return max(candidates, key=lambda path: (path.stat().st_mtime_ns, path.name))
+
+
+def _iter_markdown_files(directory: Path, *, ignore_runtime: bool = False) -> tuple[Path, ...]:
+    files: list[Path] = []
+    for path in directory.rglob("*.md"):
+        if not path.is_file():
+            continue
+        if any(part in IGNORED_DOCS_DIRECTORIES for part in path.parts):
+            continue
+        if ignore_runtime and "runtime" in path.parts:
+            continue
+        if "missions" in path.parts and "done" in path.parts:
+            continue
+        files.append(path)
+    return tuple(files)
+
+
+def _iter_markdown_links(content: str) -> tuple[tuple[int, str], ...]:
+    links: list[tuple[int, str]] = []
+    in_fenced_code = False
+
+    for line_number, line in enumerate(content.splitlines(), start=1):
+        stripped = line.lstrip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fenced_code = not in_fenced_code
+            continue
+        if in_fenced_code:
+            continue
+        for match in MARKDOWN_LINK_PATTERN.finditer(_remove_inline_code_spans(line)):
+            links.append((line_number, match.group(1)))
+
+    return tuple(links)
+
+
+def _normalize_markdown_link_target(raw_target: str) -> str:
+    target = raw_target.strip()
+    if target.startswith("<") and ">" in target:
+        return target[1 : target.index(">")].strip()
+    return target.split()[0] if target.split() else ""
+
+
+def _remove_inline_code_spans(line: str) -> str:
+    return re.sub(r"`[^`]*`", "", line)
+
+
+def _should_ignore_markdown_link(target: str) -> bool:
+    if not target or target.startswith("#"):
+        return True
+    parsed = urlparse(target)
+    if parsed.scheme.lower() in EXTERNAL_LINK_SCHEMES:
+        return True
+    if parsed.scheme or parsed.netloc:
+        return True
+    return False
 
 
 if __name__ == "__main__":

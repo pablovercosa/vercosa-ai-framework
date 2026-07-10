@@ -28,6 +28,7 @@ Executar este checklist não cria release, não cria tag, não publica pacote e 
 ## Testes
 
 - [ ] `pytest` passa.
+- [ ] `python3 -m vercosa_ai_framework.cli.main docs-links` passa, validando links Markdown relativos locais sem acessar URLs externas.
 - [ ] `python3 -m compileall src` passa.
 - [ ] Comandos principais da CLI passam.
 - [ ] CI GitHub Actions mínimo passa no commit candidato.
@@ -46,6 +47,7 @@ Executar este checklist não cria release, não cria tag, não publica pacote e 
 - [ ] `docs/release/alpha-version-plan.md` alinhado.
 - [ ] `docs/release/public-alpha-readiness.md` alinhado.
 - [ ] `docs/release/clean-install-validation.md` atualizado com execução real aplicável.
+- [ ] Links relativos Markdown validados localmente com `python3 -m vercosa_ai_framework.cli.main docs-links`.
 
 ## Segurança
 
@@ -89,6 +91,7 @@ Os comandos abaixo são sugestões para execução manual. Eles não devem ser a
 git status --short
 git log --oneline --decorate -10
 pytest
+python3 -m vercosa_ai_framework.cli.main docs-links
 python3 -m compileall src
 python3 -m vercosa_ai_framework.cli.main --help
 python3 -m vercosa_ai_framework.cli.main validate

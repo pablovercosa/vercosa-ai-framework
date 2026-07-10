@@ -62,7 +62,7 @@ Antes de publicar a alfa, ainda é necessário:
 - corrigir ou decidir explicitamente os bloqueios encontrados na validação de instalação limpa registrada em [docs/release/clean-install-validation.md](clean-install-validation.md);
 - reexecutar o checklist de instalação limpa criado em [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) com resultado aprovado ou exceção aceita;
 - fazer revisão final do README;
-- validar links;
+- validar links Markdown relativos com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validar URLs externas;
 - manter o CI mínimo passando no commit candidato;
 - executar `pytest`;
 - executar `python3 -m compileall src`;
@@ -85,6 +85,7 @@ A alfa só deve ser considerada publicável quando todos os critérios mínimos 
 - `git status` limpo;
 - CI mínimo passando;
 - `pytest` passando;
+- `python3 -m vercosa_ai_framework.cli.main docs-links` passando;
 - `python3 -m compileall src` passando;
 - documentação mínima presente;
 - segurança básica documentada;

@@ -89,6 +89,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Comando CLI `doctor`.
 - Comando CLI `missions` para listar missões por estado sem executar, mover ou alterar arquivos.
 - Comando CLI `batch-summary` para resumo pós-batch auxiliar com contagens, último log e lembretes manuais, sem executar missões, scripts, testes, Git, rede, banco ou providers.
+- Comando CLI `docs-links` para validação local de links relativos em Markdown, sem acessar URLs externas, sem executar missões e sem substituir revisão humana de documentação.
 - Exemplos operacionais iniciais.
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.
@@ -105,7 +106,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Revisão arquitetural pós-integrações concluída em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md), sem implementação nova.
 - Persistência local controlada de eventos auditáveis concluída como `JsonlAuditEventLog`, sem banco, sem rede, sem retenção, sem rotação e sem ativação global obrigatória.
 - Empacotamento Python local mínimo concluído em `pyproject.toml` com `setuptools`, pacote em `src/vercosa_ai_framework`, versão PEP 440 `0.1.0a1`, extra opcional `dev` e entrypoint local `vaf`, sem publicação de pacote.
-- CI público mínimo concluído em `.github/workflows/ci.yml`, com GitHub Actions em pull requests e push para `main`, instalação editável com extra `dev`, `pytest` e `python -m compileall src`, sem secrets, providers, banco, batch, missões, release ou publicação de pacote.
+- CI público mínimo concluído em `.github/workflows/ci.yml`, com GitHub Actions em pull requests e push para `main`, instalação editável com extra `dev`, `pytest`, validação local de links Markdown relativos e `python -m compileall src`, sem secrets, providers, banco, batch, missões, release ou publicação de pacote.
 - Política inicial de release concluída em [docs/release/release-policy.md](../release/release-policy.md), sem criação de tag, release, pacote ou automação de deploy.
 - Checklist pré-tag concluído em [docs/release/pre-release-checklist.md](../release/pre-release-checklist.md), como pré-condição manual e sem autorização automática.
 - Release notes alfa preliminares concluídas em [docs/release/release-notes-alpha.md](../release/release-notes-alpha.md), sem declarar release publicada, tag criada ou pacote publicado.
@@ -467,6 +468,7 @@ Missões futuras relacionadas:
 - Avaliar CI com lint em missão futura, se desejado.
 - Avaliar CI com validação de instalação limpa automatizada em missão futura.
 - Manter o changelog inicial atualizado sem criar release versionada.
+- Manter validação local de links Markdown relativos com `docs-links` antes da alfa, sem validar URLs externas.
 - Corrigir bloqueios encontrados na instalação limpa real reprovada.
 - Reexecutar e registrar instalação limpa antes da alfa.
 - Fazer revisão final pré-release.
@@ -629,6 +631,14 @@ Pendências sustentadas por essa execução:
 - Remover acoplamento de `scripts/vaf-status.sh` ao caminho absoluto do checkout principal.
 - Resolver licença pendente e decidir quando declarar metadado de licença definitivo no pacote local.
 - Reexecutar a validação limpa antes da tag alfa.
+
+33. Código sugerido: `M033-validar-links-markdown`
+Título: Criar validador local de links Markdown.
+Objetivo: validar links relativos em documentação Markdown sem acessar rede, sem adicionar dependências e sem alterar scripts shell.
+Escopo permitido: CLI Python, testes unitários, CI mínimo e documentação de uso e limites.
+Escopo proibido: validar URLs externas, implementar parser Markdown completo, criar release, criar tag, publicar pacote ou executar missões.
+Status: concluído como comando `docs-links`, com validação de links relativos locais, imagens básicas, âncoras tratadas por existência do arquivo, blocos de código cercados ignorados e documentação atualizada.
+Critérios de aceite resumidos: comando retorna `0` sem links quebrados, retorna falha com links relativos quebrados, ignora links externos sem rede e possui testes isolados com `tmp_path`.
 
 ## Como Transformar Backlog Em Fila Executável
 

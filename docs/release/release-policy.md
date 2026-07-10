@@ -51,6 +51,7 @@ Uma release alfa só deve ser considerada quando todos os critérios abaixo esti
 - `pytest` passando.
 - `python3 -m compileall src` passando.
 - CI mínimo passando.
+- Links Markdown relativos validados localmente com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validação de URLs externas.
 - Validação de instalação limpa executada e aprovada ou aprovada com ressalvas aceitáveis.
 - [CHANGELOG.md](../../CHANGELOG.md) atualizado.
 - Documentação pública mínima presente.
@@ -85,16 +86,17 @@ Qualquer item abaixo bloqueia tag ou release até correção ou decisão explíc
 1. Revisar status das missões.
 2. Validar Git, branch, commits e sincronização com `origin/main`.
 3. Rodar `pytest`.
-4. Rodar `python3 -m compileall src`.
-5. Rodar comandos principais da CLI.
-6. Revisar [CHANGELOG.md](../../CHANGELOG.md).
-7. Revisar esta política, o [checklist pré-tag](pre-release-checklist.md), o [plano alfa](alpha-version-plan.md), as [notas preliminares da futura alfa](release-notes-alpha.md), a [prontidão alfa](public-alpha-readiness.md) e a [validação limpa](clean-install-validation.md).
-8. Revisar [SECURITY.md](../../SECURITY.md) e a política de uso.
-9. Confirmar CI mínimo passando.
-10. Confirmar versão planejada.
-11. Obter autorização explícita.
-12. Criar tag somente em missão própria autorizada.
-13. Publicar release somente em missão própria autorizada, se aprovado.
+4. Rodar `python3 -m vercosa_ai_framework.cli.main docs-links`.
+5. Rodar `python3 -m compileall src`.
+6. Rodar comandos principais da CLI.
+7. Revisar [CHANGELOG.md](../../CHANGELOG.md).
+8. Revisar esta política, o [checklist pré-tag](pre-release-checklist.md), o [plano alfa](alpha-version-plan.md), as [notas preliminares da futura alfa](release-notes-alpha.md), a [prontidão alfa](public-alpha-readiness.md) e a [validação limpa](clean-install-validation.md).
+9. Revisar [SECURITY.md](../../SECURITY.md) e a política de uso.
+10. Confirmar CI mínimo passando.
+11. Confirmar versão planejada.
+12. Obter autorização explícita.
+13. Criar tag somente em missão própria autorizada.
+14. Publicar release somente em missão própria autorizada, se aprovado.
 
 ## Convenção De Tag Planejada
 

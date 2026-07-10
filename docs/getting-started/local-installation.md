@@ -135,6 +135,7 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 ```
 
 Se o pacote foi instalado em modo desenvolvimento no ambiente virtual ativo, os comandos abaixo também podem funcionar como atalhos locais:
@@ -145,6 +146,7 @@ vaf missions
 vaf batch-summary
 vaf validate
 vaf doctor
+vaf docs-links
 ```
 
 Não trate esses atalhos como requisito global do sistema. Para documentação, automação reproduzível e diagnóstico de checkout, prefira a forma explícita com `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main` quando houver dúvida.
@@ -163,6 +165,7 @@ python3 -m compileall src
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --help
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 ```
 
 Não execute batch sem entender o [playbook de execução em batch](../operations/batch-execution-playbook.md). Os scripts operacionais dependem do estado local do projeto, dos diretórios em `missions/`, de permissões de execução e de convenções do repositório.
@@ -212,6 +215,14 @@ Diagnóstico local:
 ```bash
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
 ```
+
+Validação local de links Markdown relativos:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
+```
+
+`docs-links` valida links relativos em Markdown sem acessar URLs externas. Ele não substitui revisão humana de documentação, não valida links remotos e não promete validação perfeita de âncoras.
 
 Versão operacional:
 

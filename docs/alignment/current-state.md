@@ -66,7 +66,7 @@ Ativos principais:
 - `docs/release/release-notes-alpha.md`: release notes alfa preliminares para a futura `0.1.0-alpha.1`, sem declarar release publicada, tag criada ou pacote publicado.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
-- `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
+- `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest`, validação local de links Markdown relativos e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
 - `.github/ISSUE_TEMPLATE/` e `.github/PULL_REQUEST_TEMPLATE.md`: templates iniciais para colaboração pública futura, sem processo público maduro ou SLA.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
@@ -100,7 +100,7 @@ Specs atuais:
 O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos para:
 
 - `core/`: primitivas de domínio e política.
-- `cli/`: CLI operacional inicial para status local básico, listagem de missões por estado, resumo pós-batch auxiliar, validação estrutural local, versão e diagnóstico simples; ela não substitui scripts shell nem executa missões nesta fase.
+- `cli/`: CLI operacional inicial para status local básico, listagem de missões por estado, resumo pós-batch auxiliar, validação estrutural local, validação local de links Markdown, versão e diagnóstico simples; ela não substitui scripts shell nem executa missões nesta fase.
 - `missions/`: tipos, fila em diretório e runner de missões.
 - `workflows/`: tipos e engine sequencial de workflow.
 - `tasks/`: tipos, fila, scheduler, tentativas e transições de estado.
@@ -153,7 +153,7 @@ Integrações já feitas em estado MVP ou integração inicial:
 - Usage/API Limit Guard disponível para classificar sinais textuais de limite externo de API em logs já recebidos.
 - Audit/Event Log inicial com helpers opcionais para eventos de Policy, Guardian, Context e ciclo de vida de missão/batch.
 - `MissionRunner` Python capaz de registrar eventos de missão quando recebe `EventLog` opcional.
-- CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate` e `doctor`.
+- CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate`, `doctor` e `docs-links`.
 - Runner seguro individual e runner seguro em batch documentados como fluxo operacional local.
 
 O projeto validou batch de 3 como fluxo de teste, retomada, bloco pequeno e recuperação. O projeto também executou batch de 10 como fluxo funcional para blocos normais revisados e seguros, com ressalva operacional: limites externos de API, quota, rate limit ou billing podem interromper o batch e exigem parada segura antes de retomada.
@@ -274,7 +274,7 @@ Esse estado é apenas documental:
 - não há GitHub Release publicada;
 - não há pacote PyPI publicado;
 - há apenas empacotamento local mínimo para instalação editável em ambiente de desenvolvimento;
-- há CI mínimo com GitHub Actions para `pytest` e `python -m compileall src`, sem publicação de pacote ou release;
+- há CI mínimo com GitHub Actions para `pytest`, `python -m vercosa_ai_framework.cli.main docs-links` e `python -m compileall src`, sem publicação de pacote ou release;
 - há política inicial de release e checklist pré-tag documentados;
 - há release notes alfa preliminares, ainda pendentes de revisão final antes de publicação real;
 - não há garantia de estabilidade de produção;

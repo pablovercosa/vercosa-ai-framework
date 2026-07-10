@@ -15,6 +15,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - Expõe o comando `validate` para validar a estrutura local mínima do projeto sem executar missões.
 - Expõe o comando `doctor` para diagnóstico local amigável, determinístico e não destrutivo sobre prontidão operacional básica.
 - Expõe o comando `batch-summary` para resumo pós-batch local, seguro e somente leitura.
+- Expõe o comando `docs-links` para validar links relativos em documentos Markdown locais sem acessar rede.
 - Permite informar `--project-root` para testar ou consultar outro worktree local.
 - Mostra versão operacional mínima com `--version` ou `version`.
 - Mostra ajuda com `--help`.
@@ -32,13 +33,15 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - Não executa `git`; `batch-summary` apenas lembra o operador de rodar `git status --short` manualmente.
 - Não acessa rede, banco, LLM, provider externo, OpenCode ou MCPs para os comandos operacionais iniciais.
 - Não adiciona dependências fora da biblioteca padrão do Python.
+- Não valida URLs externas, imagens remotas ou existência perfeita de âncoras Markdown.
+- Não implementa parser Markdown completo; `docs-links` cobre links inline e imagens básicos e ignora blocos de código cercados por crases ou tils e trechos simples de código inline.
 
 ## Principais Arquivos
 
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `__init__.py` | Exportações públicas da CLI operacional inicial. |
-| `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate`, `doctor` e `batch-summary`, contagem local de missões, listagem local, validação estrutural, diagnóstico operacional local e resumo pós-batch auxiliar. |
+| `main.py` | Parser, função `main`, comandos `status`, `missions`, `validate`, `doctor`, `batch-summary` e `docs-links`, contagem local de missões, listagem local, validação estrutural, diagnóstico operacional local, resumo pós-batch auxiliar e validação local de links Markdown. |
 | `README.md` | Documentação do módulo. |
 | `../../../pyproject.toml` | Declara o console script local `vaf` para instalação editável em ambiente virtual. |
 
@@ -52,6 +55,8 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - `DiagnosticIssue`: item de diagnóstico classificado como `error` ou `warning`.
 - `DiagnosticResult`: resultado testável do diagnóstico local do `doctor`, com status geral `ok`, `warning` ou `error`.
 - `BatchSummaryResult`: resultado testável do resumo pós-batch local.
+- `MarkdownLinkIssue`: link Markdown relativo quebrado encontrado em documentação local.
+- `MarkdownLinkValidationResult`: resultado testável da validação de links Markdown locais.
 - `build_parser`: cria o parser da CLI.
 - `collect_mission_directory_status`: conta arquivos `.md` nos diretórios de missão.
 - `list_missions`: lista arquivos `.md` em `queue`, `running`, `done` e `failed` com ordenação determinística.
@@ -60,6 +65,9 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 - `validate_project_structure`: valida a estrutura mínima do projeto sem efeitos colaterais.
 - `diagnose_project`: combina validação estrutural e avisos operacionais locais para o `doctor`.
 - `summarize_batch`: coleta contagens locais, último log e avisos pós-batch sem executar comandos externos.
+- `collect_markdown_documentation_files`: localiza documentos Markdown públicos relevantes para validação local.
+- `validate_markdown_links`: valida links relativos de Markdown local sem acessar rede.
+- `print_markdown_link_validation`: imprime o resultado do comando `docs-links`.
 - `run`: executa a CLI e retorna código de saída.
 - `main`: ponto de entrada invocável por Python e console script.
 
@@ -71,6 +79,7 @@ Entradas:
 - Caminho raiz do projeto informado por `--project-root` ou o diretório atual.
 - Diretórios locais `missions/queue`, `missions/running`, `missions/done` e `missions/failed`, quando existirem.
 - Diretório local `logs/`, quando existir, para identificar o último arquivo `.log` ou `.out` no comando `batch-summary`.
+- Documentos Markdown relevantes: `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `docs/**/*.md` e `src/vercosa_ai_framework/**/README.md`.
 - Arquivo `README.md` e diretório `src/vercosa_ai_framework` para o comando `validate`.
 - Documentos auxiliares `docs/operations/post-batch-validation-checklist.md` e `docs/roadmap/mission-backlog.md` para avisos do comando `doctor`.
 
@@ -79,8 +88,9 @@ Saídas:
 - Texto no terminal com versão, ajuda, status básico ou validação estrutural.
 - Texto no terminal com listagem de missões por estado quando `missions` é usado.
 - Texto no terminal com resumo pós-batch, último log encontrado, avisos e lembretes manuais quando `batch-summary` é usado.
+- Texto no terminal com resultado da validação local de links Markdown quando `docs-links` é usado.
 - Código de saída `0` para sucesso.
-- Código de saída `1` para estrutura inválida no comando `validate` ou erro estrutural relevante no comando `doctor`.
+- Código de saída `1` para estrutura inválida no comando `validate`, erro estrutural relevante no comando `doctor` ou link relativo quebrado no comando `docs-links`.
 - Código de saída `2` para erro controlado de argumentos.
 
 ## Dependências Internas
@@ -133,6 +143,12 @@ Diagnóstico local de outro caminho: `PYTHONPATH=src python3 -m vercosa_ai_frame
 Resumo pós-batch local: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary`.
 
 Resumo pós-batch de outro caminho: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main --project-root /caminho/do/projeto batch-summary`.
+
+Validação local de links Markdown: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links`.
+
+Validação local de links Markdown em outro caminho: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links --base-dir /caminho/do/projeto`.
+
+Alternativa após instalação editável local em ambiente virtual: `vaf docs-links`.
 
 O comando `validate` verifica, nesta fase:
 
@@ -270,6 +286,50 @@ Diferença prática:
 - O checklist pós-batch continua sendo a validação operacional obrigatória antes de push, novo batch ou retomada após falha.
 
 `batch-summary` pode indicar estado operacional aparentemente limpo quando `queue=0`, `running=0` e `failed=0`, mas isso não significa validação completa. Testes, `compileall`, revisão de logs, revisão de commits, checklist pós-batch e decisão humana continuam obrigatórios quando aplicáveis.
+
+## Comando `docs-links`
+
+`docs-links` valida links relativos em documentos Markdown locais para reduzir risco de documentação pública com links quebrados antes de uma futura alfa.
+
+Forma real de execução no checkout local:
+
+```bash
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links --base-dir /caminho/do/projeto
+```
+
+Após instalação editável local em ambiente virtual, o console script também pode ser usado:
+
+```bash
+vaf docs-links
+```
+
+Escopo validado:
+
+- `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `SECURITY.md` e `CODE_OF_CONDUCT.md` na raiz informada.
+- `docs/**/*.md`.
+- `src/vercosa_ai_framework/**/README.md`.
+- Links inline básicos no formato `[texto](destino)`.
+- Imagens básicas no formato `![alt](destino)`.
+- Links relativos com `./`, `../`, subdiretórios e fragmentos como `arquivo.md#secao`.
+- Espaços codificados de forma básica, como `%20`.
+
+Limites intencionais:
+
+- Não acessa `https://`, `http://`, `mailto:` ou `tel:`.
+- Não valida links externos, imagens remotas ou disponibilidade HTTP.
+- Não valida existência de âncoras; para `arquivo.md#secao`, valida apenas se `arquivo.md` existe.
+- Não implementa parser Markdown completo.
+- Ignora blocos de código cercados por cercas de crases ou tils e trechos simples de código inline quando possível.
+- Ignora diretórios como `.git`, `.venv`, `__pycache__`, `logs`, `runtime`, `dist`, `build` e `.pytest_cache`.
+- Não valida documentação operacional arquivada em `missions/done`.
+
+Diferença prática em relação a `validate` e `doctor`:
+
+- `docs-links` verifica coerência local de links relativos em Markdown.
+- `validate` verifica estrutura mínima do projeto e diretórios de missão.
+- `doctor` agrega diagnóstico operacional amigável baseado na estrutura local.
+- Nenhum desses comandos executa missões, scripts shell, Git, `pytest`, `compileall`, rede, banco ou providers.
 
 Uso por Python: `from vercosa_ai_framework.cli import main`.
 

@@ -45,7 +45,7 @@ Neste momento, o harness organiza:
 | Runtime | Runtime Adapter inicial para OpenCode. | OpenCode é laboratório/runtime atual, não núcleo; múltiplos runtimes reais ainda são futuros. |
 | Providers | Provider Gateway, registry e adapters injetáveis em MVP. | Sem múltiplos providers reais em produção. |
 | Auditoria | Audit/Event Log inicial em memória, persistência local JSONL opt-in, helpers opcionais e eventos básicos de missão. | Sem persistência externa, banco, dashboard, exportação remota, retenção, rotação ou integração automática com scripts shell. |
-| CLI operacional | Comandos `status`, `missions`, `batch-summary`, `validate` e `doctor`. | Não executa missões, Git, testes, scripts, providers, banco ou rede. |
+| CLI operacional | Comandos `status`, `missions`, `batch-summary`, `validate`, `doctor` e `docs-links`. | Não executa missões, Git, testes, scripts, providers, banco ou rede; `docs-links` valida apenas links Markdown relativos locais. |
 | Documentação operacional | Playbooks, checklist pós-batch, guia de instalação, contribuição, exemplos e checklist de alfa pública. | Documentação ainda precisa evitar promessa pública acima do implementado. |
 | Preparação pública alfa | Checklist documental, política inicial de versionamento, plano da versão alfa e CI mínimo foram criados. | Alfa pública ainda não foi publicada; não há tag, changelog final, matriz ampla de CI ou release. |
 
@@ -84,7 +84,7 @@ As integrações abaixo existem como MVP ou integração inicial. Elas devem ser
 - Usage/API Limit Guard com fluxo operacional: logs locais já produzidos podem ser classificados para detectar quota, rate limit, billing ou limite de uso.
 - Audit/Event Log com decisões centrais: helpers opcionais transformam resultados de Policy, Guardian e Context em eventos estruturados.
 - Audit/Event Log com Mission Runner: o `MissionRunner` Python pode registrar eventos de missão quando recebe um `EventLog` opcional.
-- CLI com `status`, `missions`, `batch-summary`, `validate` e `doctor`: comandos locais de leitura, listagem de missões por estado, resumo pós-batch auxiliar, validação estrutural e diagnóstico básico.
+- CLI com `status`, `missions`, `batch-summary`, `validate`, `doctor` e `docs-links`: comandos locais de leitura, listagem de missões por estado, resumo pós-batch auxiliar, validação estrutural, diagnóstico básico e validação local de links Markdown relativos.
 - Batch como fluxo operacional padrão quando seguro: `scripts/vaf-run-batch-safe.sh` é recomendado para blocos revisados, com parada na primeira falha e push manual por padrão.
 
 ## Fluxos Arquiteturais De Alto Nível
@@ -155,7 +155,7 @@ Audit/Event Log e documentação de evidências
 
 Implementado:
 
-- CLI `status`, `missions`, `batch-summary`, `validate` e `doctor`.
+- CLI `status`, `missions`, `batch-summary`, `validate`, `doctor` e `docs-links`.
 - Mission Runner Python e fila local em diretórios.
 - Scripts operacionais seguros para missão individual e batch.
 - Policy Engine, Guardian Engine, Context Router, Token Budget Manager, Knowledge Hub textual, Model Selection, Runtime Adapter, Provider Gateway, capabilities, skills, tools, tasks e workflows em MVP ou contratos.

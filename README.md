@@ -44,7 +44,7 @@ A revisão arquitetural pós-integrações está em [docs/architecture/post-inte
 
 O repositório possui empacotamento Python local mínimo em `pyproject.toml`, com versão PEP 440 `0.1.0a1` equivalente à alfa planejada `0.1.0-alpha.1`. Isso permite instalação editável em ambiente virtual para desenvolvimento, mas não significa pacote publicado, release alfa publicada, tag criada ou distribuição via PyPI.
 
-O repositório também possui CI mínimo em GitHub Actions em `.github/workflows/ci.yml`. O workflow roda em pull requests e pushes para `main`, instala o projeto em modo desenvolvimento com o extra `dev`, executa `pytest` e valida `python -m compileall src`. Esse CI não publica pacote, não cria release, não usa secrets, não executa missões, não chama providers e não substitui a validação local.
+O repositório também possui CI mínimo em GitHub Actions em `.github/workflows/ci.yml`. O workflow roda em pull requests e pushes para `main`, instala o projeto em modo desenvolvimento com o extra `dev`, executa `pytest`, valida links Markdown relativos com `python -m vercosa_ai_framework.cli.main docs-links` e valida `python -m compileall src`. Esse CI não publica pacote, não cria release, não usa secrets, não executa missões, não chama providers e não substitui a validação local.
 
 Implementado em estado MVP ou contrato inicial:
 
@@ -58,7 +58,7 @@ Implementado em estado MVP ou contrato inicial:
 - Runtime Adapter inicial para OpenCode.
 - Provider Gateway, Tools, Skills, Capabilities e Agent Orchestrator como cadeia MVP de contratos.
 - Audit/Event Log em memória com persistência local JSONL opt-in e helpers opcionais para decisões e ciclo de vida de missão; a arquitetura dedicada está em [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md).
-- CLI operacional inicial com `status`, `missions`, `validate`, `doctor` e `batch-summary`.
+- CLI operacional inicial com `status`, `missions`, `validate`, `doctor`, `batch-summary` e `docs-links`.
 
 Ainda são futuros ou lacunas:
 
@@ -119,7 +119,7 @@ Eixo operacional:
 
 - Runner seguro de uma missão: `scripts/vaf-run-next-safe.sh`.
 - Runner seguro em batch: `scripts/vaf-run-batch-safe.sh`.
-- CLI operacional: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status|missions|batch-summary|validate|doctor`.
+- CLI operacional: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main status|missions|batch-summary|validate|doctor|docs-links`.
 - Listagem local de missões por estado: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions [--state queue|running|done|failed]`.
 - Resumo pós-batch auxiliar: `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary`.
 - Playbooks e checklists documentam execução, validação e revisão pós-batch.
@@ -209,9 +209,10 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 ```
 
-A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros ou revisão humana quando a política exigir. O comando `missions` apenas lista arquivos Markdown por estado e não executa, move ou edita missões. O comando `batch-summary` resume contagens pós-batch, último log local e lembretes de validação manual, sem executar testes, Git, scripts, missões, rede, banco ou providers.
+A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros ou revisão humana quando a política exigir. O comando `missions` apenas lista arquivos Markdown por estado e não executa, move ou edita missões. O comando `batch-summary` resume contagens pós-batch, último log local e lembretes de validação manual, sem executar testes, Git, scripts, missões, rede, banco ou providers. O comando `docs-links` valida links relativos em documentos Markdown locais e ignora links externos, sem acessar rede e sem validar âncoras de forma completa.
 
 ## Documentação Relevante
 

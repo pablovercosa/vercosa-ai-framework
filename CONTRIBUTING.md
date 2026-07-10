@@ -8,7 +8,7 @@ O projeto evolui por missões em Markdown, com escopo claro, referências rastre
 
 O repositório possui contratos e MVPs iniciais, runners operacionais locais, documentação de instalação, playbooks de batch, validações básicas, [política inicial de segurança](SECURITY.md), [código de conduta inicial](CODE_OF_CONDUCT.md) e templates iniciais de issues e pull requests. Ainda não há release alfa pública nem processo público completo de pull requests neste momento.
 
-O repositório possui CI mínimo em GitHub Actions para pull requests e pushes em `main`. Esse CI valida instalação local em modo desenvolvimento, `pytest` e `python -m compileall src`; ele não publica pacote, não cria release, não executa missões, não chama providers externos e não usa secrets.
+O repositório possui CI mínimo em GitHub Actions para pull requests e pushes em `main`. Esse CI valida instalação local em modo desenvolvimento, `pytest`, links Markdown relativos com `python -m vercosa_ai_framework.cli.main docs-links` e `python -m compileall src`; ele não publica pacote, não cria release, não executa missões, não chama providers externos e não usa secrets.
 
 Recursos como RAG semântico, embeddings, pgvector como adapter real, providers reais obrigatórios, múltiplos runtimes reais e publicação de pacote continuam futuros ou fora do escopo atual, salvo missão específica aprovada.
 
@@ -47,12 +47,15 @@ Comandos mínimos para validar o checkout local:
 
 ```bash
 pytest
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 python3 -m compileall src
 ```
 
+Rode `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links` sempre que alterar README, guias, documentos em `docs/` ou READMEs de módulos. O comando valida apenas links relativos locais, ignora URLs externas sem acessá-las e não substitui revisão humana de conteúdo.
+
 Para preparação de release alfa ou revisão conservadora de ambiente novo, use também o [checklist de instalação limpa](docs/getting-started/clean-install-checklist.md). Ele complementa o guia local e não substitui `pytest`, `python3 -m compileall src` ou revisão humana.
 
-O CI mínimo não substitui validação local. Antes de abrir ou revisar um pull request, continue executando `pytest`, `python3 -m compileall src` e comandos de CLI seguros quando aplicável, como `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` e `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor`.
+O CI mínimo não substitui validação local. Antes de abrir ou revisar um pull request, continue executando `pytest`, `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links`, `python3 -m compileall src` e comandos de CLI seguros quando aplicável, como `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate` e `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor`.
 
 Contribuições que afetem comportamento público, operação, segurança, documentação pública ou preparação de release devem considerar atualização de [CHANGELOG.md](CHANGELOG.md). Criação de tag, publicação de release e publicação de pacote exigem missão própria e autorização explícita; contribuição comum, push comum ou `VAF_AUTO_PUSH=1` não equivalem a release.
 
@@ -145,6 +148,7 @@ A prática preferida é fazer push manual depois de validar:
 
 ```bash
 pytest
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 python3 -m compileall src
 git status --short
 git log --oneline --decorate -12
@@ -200,6 +204,7 @@ Antes de entregar uma mudança, execute:
 
 ```bash
 pytest
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 python3 -m compileall src
 ```
 
@@ -219,6 +224,7 @@ Verifique:
 - roadmap/backlog quando o escopo estratégico mudar;
 - docs operacionais quando o fluxo operacional mudar.
 - `CHANGELOG.md` quando houver mudança pública relevante ou preparação de release futura.
+- links Markdown relativos com `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links` quando a mudança alterar documentação.
 
 Consulte [docs/documentation/documentation-update-policy.md](docs/documentation/documentation-update-policy.md) e [docs/documentation/readme-standard.md](docs/documentation/readme-standard.md).
 

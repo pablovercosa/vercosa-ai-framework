@@ -81,7 +81,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | O checklist pré-tag está documentado. | existe | Define validações mínimas como pré-condição, não como autorização automática. |
 | A versão alfa planejada está documentada. | existe | Diferencia versão planejada, tag futura, release GitHub e pacote publicado. |
 | Release notes alfa preliminares foram criadas. | existe | Documento preparatório criado, sem declarar alfa publicada e ainda pendente de revisão final. |
-| CI público mínimo existe. | existe | Valida `pytest` e `python -m compileall src` em pull requests e pushes para `main`, sem executar missões ou providers. |
+| Validador local de links Markdown existe. | existe | `docs-links` valida links relativos locais, ignora URLs externas sem acessar rede e não promete parser Markdown completo ou validação perfeita de âncoras. |
+| CI público mínimo existe. | existe | Valida `pytest`, `python -m vercosa_ai_framework.cli.main docs-links` e `python -m compileall src` em pull requests e pushes para `main`, sem executar missões ou providers. |
 
 ## Riscos Antes Da Alfa Pública
 
@@ -148,6 +149,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 
 - `README.md` revisado para alfa, sem prometer produção, provider real obrigatório, RAG, embeddings, pgvector, Docker, PyPI, matriz ampla de CI ou release inexistente.
 - Checklist de instalação limpa criado e executado em ambiente novo, com resultado aprovado ou exceção explicitamente aceita; o resultado atual é `REPROVADO`.
+- Links relativos Markdown validados localmente com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validar URLs externas.
 - Guia de contribuição revisado para processo público inicial, sem prometer maturidade inexistente.
 - Código de conduta inicial criado e revisado sem prometer governança comunitária madura inexistente.
 - Licença final decidida e publicada em `LICENSE` ou pendência tratada antes de distribuição pública.

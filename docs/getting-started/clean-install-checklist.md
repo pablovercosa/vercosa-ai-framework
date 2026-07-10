@@ -172,11 +172,14 @@ PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main missions --state queue
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main batch-summary
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main validate
 PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main doctor
+PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links
 ```
 
 `missions` é uma verificação opcional de leitura para confirmar quais arquivos `.md` estão em `queue`, `running`, `done` e `failed`. Ele não cria diretórios, não move arquivos, não executa missões e não substitui `./scripts/vaf-status.sh`.
 
 `batch-summary` é uma verificação opcional de leitura para conferir resumo pós-batch local, último log quando existir e lembretes de validação manual. Ele não executa `pytest`, não executa `python3 -m compileall src`, não executa Git, não chama scripts shell, não executa missões e não substitui o checklist pós-batch.
+
+`docs-links` é uma validação local recomendada para documentação. Ele verifica links relativos em arquivos Markdown relevantes, ignora URLs externas sem acessá-las e não valida âncoras de forma completa.
 
 Se o pacote foi instalado no ambiente virtual com `python -m pip install -e ".[dev]"`, os console scripts locais também podem ser verificados dentro do ambiente virtual:
 
@@ -206,6 +209,7 @@ Não publique logs contendo tokens, credenciais, caminhos privados sensíveis, p
 - Comandos básicos de ambiente funcionam.
 - `./scripts/vaf-status.sh` executa sem erro.
 - `pytest` passa.
+- `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main docs-links` passa quando a documentação do checkout for validada.
 - `python3 -m compileall src` passa.
 - CLI responde pela forma `PYTHONPATH=src python3 -m vercosa_ai_framework.cli.main`.
 - Documentação mínima existe.
@@ -216,6 +220,7 @@ Não publique logs contendo tokens, credenciais, caminhos privados sensíveis, p
 
 - Dependência ausente sem documentação.
 - Teste falhando.
+- Link relativo Markdown quebrado detectado por `docs-links` sem justificativa documentada.
 - `python3 -m compileall src` falhando.
 - CLI não inicia.
 - Scripts sem permissão de execução.
