@@ -10,6 +10,9 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 
 ### Adicionado
 
+- Auditoria estratégica de aderência ao objetivo e escopo original em `docs/audits/objective-and-scope-alignment-audit.md`, com classificação geral `ALINHADO COM RESSALVAS`.
+- Checklist canônico factual de implementação em `docs/alignment/implementation-status.md`, separando planejado, implementado, integrado, validado, adiado, fora do escopo e em revisão.
+- Histórico de marcos por faixa de missões em `docs/history/mission-milestones.md`, registrando a série disponível iniciada em `0002`.
 - Fundação modular inicial do framework como camada de Harness Engineering para agentes de IA, desenvolvimento orientado por especificações e execução governada.
 - Evolução por missões em Markdown, com backlog estratégico, fila operacional, critérios de aceite, validações locais e rastreabilidade documental.
 - Mission Runner local, fila em diretórios e runner seguro de uma missão.
@@ -42,6 +45,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 
 ### Alterado
 
+- Estado atual, roadmap, perguntas em aberto e backlog estratégico alinhados à auditoria de escopo, priorizando fluxo de valor integrado antes de nova preparação de tag alfa.
 - README principal consolidado com a identidade pública do VAF como framework de Harness Engineering, sem tratar modelo, runtime ou provider como núcleo do projeto.
 - Batch de 10 documentado como fluxo operacional padrão para blocos normais revisados e seguros; batch de 3 preservado para testes, retomadas, blocos pequenos e recuperação.
 - Execução individual preservada para missões sensíveis, críticas, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.

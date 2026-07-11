@@ -20,6 +20,8 @@ Prefira integrar contratos MVP existentes antes de adicionar novos frameworks, p
 
 A próxima fase deve reduzir ambiguidade, não aumentar superfície funcional.
 
+Atualização da missão 0101: a auditoria de aderência classificou o projeto como `ALINHADO COM RESSALVAS`. A prioridade imediata deixa de ser avanço de release alfa e passa a ser provar um fluxo de valor integrado mínimo. O checklist factual de implementação está em [implementation-status.md](implementation-status.md), e a auditoria está em [docs/audits/objective-and-scope-alignment-audit.md](../audits/objective-and-scope-alignment-audit.md).
+
 ## Estado Pós-Batch Funcional
 
 O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. O estado atual considerado por este roadmap inclui:
@@ -219,16 +221,16 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, validação local de links Markdown relativos, bloqueios do diagnóstico local `alpha-readiness` classificado como `NÃO PRONTO`, bloqueios do checklist pré-tag local classificado como `REPROVADO`, validação final pós-batch, push manual do bloco quando autorizado, confirmação de CI remoto após push, revisão final das release notes, nova execução do checklist pré-tag quando houver candidato apto, correção dos bloqueios remanescentes da instalação limpa reprovada e reexecução do checklist de instalação limpa.
-2. Integrar a CLI com validações locais seguras de Git, sem substituir scripts seguros.
-3. Manter os comandos CLI `missions` e `batch-summary` como apoio de diagnóstico operacional somente leitura.
-4. Refinar retenção, rotação e integração opcional da persistência local JSONL para Audit/Event Log.
-5. Atualizar Specs/ADRs quando a revisão pós-integrações identificar mudança material de fronteira.
-6. Contrato: Mission Runner -> Workflow Engine -> Task Queue.
-7. Contrato: Task Queue -> Agent Orchestrator -> Capability Resolver.
-8. Testes de contrato para fronteiras MVP existentes.
-9. Design de Semantic Index do Knowledge Hub, ainda sem embeddings obrigatórios.
-10. Avaliação de providers reais e conformidade de Runtime Adapter antes de novos runtimes reais.
+1. Definir o fluxo de valor principal e o consumidor principal do framework.
+2. Contrato mínimo: Mission Runner -> Workflow Engine -> Task Queue.
+3. Contrato mínimo: Task Queue -> Agent Orchestrator -> Capability Resolver.
+4. Demonstração seca: Capability -> Skill -> Tool -> Provider Gateway, com Guardian, Policy e Audit/Event Log explícitos.
+5. Integrar Context Router, Token Budget Manager, Knowledge Hub textual e Model Selection ao fluxo mínimo sem RAG semântico.
+6. Atualizar Specs/ADRs apenas quando a integração mínima alterar fronteiras arquiteturais.
+7. Manter CLI `missions`, `batch-summary`, `docs-links` e `alpha-readiness` como diagnósticos somente leitura.
+8. Resolver pendências mínimas de alfa somente depois do fluxo integrado mínimo ou em paralelo sem criar tag: licença, instalação limpa, CI remoto, release notes finais e checklist pré-tag.
+9. Adiar Semantic Index, embeddings, pgvector, RAG semântico, providers reais e múltiplos runtimes até o fluxo central estar demonstrado.
+10. Internacionalizar em fases somente após estabilizar conteúdo canônico em português do Brasil: documentação pública, depois CLI, depois demais mensagens expostas.
 
 ## Trabalho A Evitar Por Enquanto
 

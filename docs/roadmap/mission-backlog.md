@@ -74,6 +74,33 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - Exemplos operacionais iniciais existem em `docs/examples/`.
 - Integrações completas com Provider Gateway, persistência externa de eventos, providers reais, múltiplos runtimes reais, documentação pública completa e release alfa ainda são lacunas.
 
+Atualização da missão 0101: a auditoria de aderência ao objetivo e escopo classificou o projeto como `ALINHADO COM RESSALVAS`. O ciclo 0101-0110 passa a ser tratado como ciclo de auditoria, alinhamento e integração mínima. Estimativas anteriores de missões futuras são provisórias e não devem ser lidas como quantidade final de missões antes da conclusão da 0110.
+
+## Ciclo 0101-0110: Auditoria, Alinhamento E Integração Mínima
+
+Objetivo do ciclo: comprovar que o que foi construído serve ao objetivo real do VAF antes de avançar release, PostgreSQL, pgvector, RAG, providers reais, múltiplos runtimes ou internacionalização.
+
+Missões orientadoras:
+
+- 0101: auditar aderência ao objetivo e escopo original, criar checklist canônico de implementação e registrar marcos históricos.
+- 0102: definir contrato base do agente executor e composição obrigatória do runner somente se a auditoria confirmar o caminho de integração.
+- 0103: explicitar o fluxo de valor principal e o consumidor principal do framework.
+- 0104: integrar Mission Runner, Workflow Engine e Task Queue em fluxo mínimo validável.
+- 0105: integrar Task Queue, Agent Orchestrator e Capability Resolver sem dar acesso direto a tools/providers.
+- 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado.
+- 0107: integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo.
+- 0108: revisar Specs/ADRs afetadas pela integração mínima.
+- 0109: reduzir duplicação documental apontando para `docs/alignment/implementation-status.md` como checklist canônico.
+- 0110: reavaliar prontidão alfa com base no fluxo integrado mínimo, sem criar tag ou release.
+
+Restrições do ciclo:
+
+- Não implementar PostgreSQL, pgvector ou RAG antes de decisão posterior.
+- Não iniciar internacionalização antes de estabilizar documentação canônica em português do Brasil.
+- Não criar novos providers reais antes de demonstrar Provider Gateway em dry-run governado.
+- Não criar tag alfa enquanto instalação limpa, licença, CI remoto e fluxo de valor integrado estiverem pendentes.
+- Não criar novos arquivos em `missions/queue` apenas por este backlog.
+
 ## Itens Já Concluídos Ou Absorvidos
 
 Os itens abaixo não devem ser recriados como novas missões executáveis sem revisão de escopo. Eles já foram concluídos, absorvidos no estado atual ou documentados como integração inicial:

@@ -4,6 +4,12 @@
 
 Registrar o estado arquitetural do Vercosa AI Framework após as integrações concluídas até a missão 0080 e antes da próxima onda de implementação.
 
+Atualização da missão 0101: a auditoria estratégica de aderência ao objetivo e escopo está registrada em [docs/audits/objective-and-scope-alignment-audit.md](../audits/objective-and-scope-alignment-audit.md). O checklist canônico de implementação passa a ser [docs/alignment/implementation-status.md](implementation-status.md). Este documento deve resumir estado e apontar para o checklist, não duplicar todo o controle operacional.
+
+Classificação geral da auditoria: `ALINHADO COM RESSALVAS`.
+
+Ressalvas principais: o fluxo operacional interno por missões e batch existe, mas o fluxo arquitetural Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta; vários motores são MVPs isolados ou opcionais; a preparação alfa avançou antes de uma demonstração de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
+
 Este checkpoint é apenas documental. Ele não aprova novo código, novo comportamento de runtime, alterações de configuração global, operações privilegiadas ou expansão de funcionalidades.
 
 A revisão arquitetural pós-integrações está registrada em [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md).

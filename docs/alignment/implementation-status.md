@@ -1,0 +1,114 @@
+# Status De Implementação
+
+Links principais: [README principal](../../README.md) | [Auditoria de aderência](../audits/objective-and-scope-alignment-audit.md) | [Estado atual](current-state.md) | [Roadmap](roadmap.md) | [Perguntas em aberto](open-questions.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [CHANGELOG.md](../../CHANGELOG.md)
+
+## Objetivo
+
+Este documento é a fonte canônica do checklist factual de implementação do Vercosa AI Framework.
+
+Ele diferencia planejado, implementado, integrado e validado. Existência de documentação não conta como implementação. Teste unitário isolado não conta como integração validada de fluxo.
+
+Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejamento futuro: [mission-backlog.md](../roadmap/mission-backlog.md).
+
+## Definições
+
+- Planejado: há intenção, Spec, roadmap ou pergunta em aberto, mas não há implementação operacional.
+- Implementado: há código, documentação ou artefato local com testes ou evidência direta.
+- Integrado: o item participa de um fluxo real com outros componentes.
+- Validado: o fluxo integrado foi executado por teste, CLI, script ou relatório factual suficiente.
+
+## Integrado E Validado
+
+| Área | Item | Evidência | Observação |
+| --- | --- | --- | --- |
+| Fundação | Estrutura Python em `src/`, pacote importável e testes locais | `pyproject.toml`, `tests/`, `pytest` | Validado localmente; instalação limpa histórica ainda reprovada. |
+| Runners | Runner shell individual e batch | `scripts/`, docs operacionais, logs de missões | Integração operacional real do projeto; não prova fluxo arquitetural completo. |
+| CLI | Comandos `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links`, `alpha-readiness` | `src/vercosa_ai_framework/cli/main.py`, testes CLI | CLI é leitura/diagnóstico; não executa missões. |
+| Testes | Suíte pytest | `tests/` | Testes cobrem contratos e integrações parciais; não substituem fluxo ponta a ponta. |
+| Empacotamento | Instalação editável local planejada com entrypoint `vaf` | `pyproject.toml`, `tests/test_python_packaging.py` | Validado por testes; reexecução limpa ainda pendente. |
+| CI | Workflow mínimo localmente definido | `.github/workflows/ci.yml` | Existe; confirmação remota depende de push/execução GitHub. |
+| Documentação | README, contribuição, segurança, conduta, release e arquitetura | `README.md`, `docs/`, `CHANGELOG.md` | Ampla e factual, mas volumosa. |
+
+## Implementado
+
+| Área | Item | Evidência | Observação |
+| --- | --- | --- | --- |
+| Arquitetura | Specs canônicas `0001` a `0014` | `specs/framework/` | Mais amplas que o código atual. |
+| Motores centrais | Mission Runner Python | `src/vercosa_ai_framework/missions/runner.py` | Implementado; integração com Workflow/Task ainda não é padrão. |
+| Motores centrais | Workflow Engine sequencial | `src/vercosa_ai_framework/workflows/engine.py` | Implementado; não orquestrado pelo runner principal. |
+| Motores centrais | Task Queue e scheduler | `src/vercosa_ai_framework/tasks/` | Implementado; integração com Workflow/Agent ainda parcial. |
+| Motores centrais | Agent Orchestrator | `src/vercosa_ai_framework/agents/` | Implementado; sem fluxo real completo com capabilities. |
+| Motores centrais | Policy Engine | `src/vercosa_ai_framework/policy/` | Implementado; consumidores recebem `ResolvedPolicySet` opcional. |
+| Motores centrais | Guardian Engine | `src/vercosa_ai_framework/guardian/` | Implementado e testado; aplicação obrigatória varia por fluxo. |
+| Motores centrais | Context Router e Token Budget Manager | `src/vercosa_ai_framework/context/` | Implementados; ainda dependem de candidatos explícitos. |
+| Motores centrais | Model Selection Engine | `src/vercosa_ai_framework/model_selection/` | Implementado com catálogo em memória; sem descoberta real. |
+| Motores centrais | Knowledge Hub textual | `src/vercosa_ai_framework/knowledge/` | Implementado em memória; sem Semantic Index. |
+| Motores centrais | Provider Gateway | `src/vercosa_ai_framework/providers/` | Implementado com adapters injetáveis e dry-run. |
+| Motores centrais | Runtime Adapter OpenCode | `src/vercosa_ai_framework/runtime/` | Implementado como adapter inicial. |
+| Motores centrais | Capabilities, Skills e Tools | `src/vercosa_ai_framework/capabilities/`, `skills/`, `tools/` | Implementados como cadeia MVP; não padrão no fluxo operacional. |
+| Auditoria | Audit/Event Log em memória | `src/vercosa_ai_framework/audit/` | Implementado; integração opcional. |
+| Auditoria | Persistência JSONL opt-in | `src/vercosa_ai_framework/audit/jsonl.py` | Implementada; sem retenção, rotação ou uso global. |
+| Segurança | Usage/API Limit Guard | `src/vercosa_ai_framework/guardian/usage_limits.py` | Implementado como classificação textual local. |
+| Persistência | Filesystem repository | `src/vercosa_ai_framework/persistence/` | Implementado como adapter local genérico. |
+
+## Implementado Parcialmente
+
+| Área | Item | Evidência | Lacuna |
+| --- | --- | --- | --- |
+| Arquitetura | Mission -> Workflow -> Task | módulos `missions`, `workflows`, `tasks` | Não há handoff padrão integrado e validado ponta a ponta. |
+| Arquitetura | Task -> Agent | `agents` depende de `tasks` | Não é caminho operacional padrão. |
+| Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Falta caso de uso concreto integrado. |
+| Auditoria | Eventos de decisões centrais | `audit/integrations.py` | Helpers opcionais; não obrigatórios em todos os fluxos. |
+| Release | Preparação alfa | `docs/release/` | Diagnóstico `NÃO PRONTO`, checklist `REPROVADO`, tag não autorizada. |
+| Segurança | Política pública inicial | `SECURITY.md` | Falta canal público definitivo e processo maduro. |
+| Produção | CI mínimo | `.github/workflows/ci.yml` | Sem matriz ampla, lint, release workflow ou validação limpa automatizada. |
+
+## Planejado
+
+| Área | Item | Fonte | Observação |
+| --- | --- | --- | --- |
+| PostgreSQL | Adapter de persistência ou Knowledge/Code Intelligence | `AGENTS.md`, roadmap | Planejado como opção, não requisito. |
+| pgvector | Vector store adapter | `AGENTS.md`, roadmap | Depende de contrato de Semantic Index. |
+| RAG | Retrieval semântico governado | README, roadmap | Futuro; não implementado. |
+| Providers | Providers reais múltiplos | Specs e docs | Devem passar por Provider Gateway. |
+| Runtimes | Claude Code, Codex CLI, Cursor, VS Code, JetBrains, Web UI, API | `AGENTS.md` | Futuros adapters. |
+| Internacionalização | Documentação pública, CLI e demais mensagens | roadmap | Em fases, após estabilização em pt-BR. |
+| Observabilidade | Exportação externa, dashboard, retenção e rotação | docs arquitetura | Futuro; não confundir com Audit/Event Log atual. |
+| Produção | Hardening, SLA, suporte, release estável | docs release/security | Fora do estágio atual. |
+
+## Adiado
+
+| Área | Item | Motivo |
+| --- | --- | --- |
+| PostgreSQL | Implementação real | Fluxo central ainda não integrado. |
+| pgvector | Implementação real | Sem contrato final de vector store e retrieval. |
+| RAG | Implementação real | Context Router e Knowledge Hub precisam de fluxo real primeiro. |
+| Providers reais | Integração externa | Política, auditoria e limites ainda precisam de fluxo mínimo. |
+| Múltiplos runtimes | Novos adapters | OpenCode adapter ainda precisa contrato de conformidade consolidado. |
+| Internacionalização | READMEs multilíngues | Conteúdo canônico em português ainda está mudando. |
+| Release alfa | Tag e publicação | Gates atuais reprovados ou pendentes. |
+
+## Fora Do Escopo Atual
+
+| Área | Item | Observação |
+| --- | --- | --- |
+| Produção | Uso crítico, SLA, hardening completo | Não prometido. |
+| Release | Publicação de pacote, PyPI, GitHub Release | Exige missão e autorização explícita. |
+| Infraestrutura | Tornar PostgreSQL, pgvector, Ollama, Docker, ARM64 ou systemd obrigatórios | Contraria agnosticismo do framework. |
+| Segurança | Bug bounty, disclosure formal completo, sandbox garantido | Futuro. |
+
+## Em Revisão
+
+| Área | Item | Pergunta |
+| --- | --- | --- |
+| Produto | Consumidor principal | Mantenedor interno, contribuidor, usuário Python, operador CLI ou integrador? |
+| Produto | Fluxo de valor principal | Qual problema concreto deve ser demonstrado primeiro? |
+| Arquitetura | Mission Runner vs Mission Orchestrator | Separar módulo antes da próxima integração? |
+| Arquitetura | Workflow Engine vs Task Queue | Qual handoff mínimo será canônico? |
+| Arquitetura | Agentes e capabilities | Qual catálogo mínimo é necessário para o primeiro fluxo? |
+| Release | Tag alfa | Deve ser adiada até fluxo de valor integrado? |
+| Documentação | Volume e repetição | Quais documentos devem apontar para este checklist em vez de repetir estado? |
+
+## Próximo Uso Deste Checklist
+
+Atualize este documento quando uma missão alterar estado de implementação, integração, validação, release, segurança, arquitetura ou produção. Não use o `CHANGELOG.md` como checklist operacional.

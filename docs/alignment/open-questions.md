@@ -8,6 +8,14 @@ As perguntas são agrupadas por área de decisão. Cada item não resolvido deve
 
 ## Fronteiras Centrais
 
+- Qual é o fluxo de valor principal que o Vercosa AI Framework deve demonstrar primeiro para provar seu objetivo real?
+- Quem é o consumidor principal do framework no próximo ciclo: mantenedor interno via SSH, contribuidor técnico, usuário da biblioteca Python, operador de CLI, agente executor ou integrador de runtime?
+- Quais componentes devem ser integrados primeiro para evitar que Mission Runner e batch virem o centro indevido do produto?
+- Quais abstrações devem ser simplificadas, congeladas ou adiadas até haver caso de uso concreto?
+- A tag alfa deve ser adiada formalmente até existir fluxo de valor integrado mínimo, além dos gates de release já reprovados?
+- PostgreSQL é necessário no próximo ciclo ou deve permanecer adiado até contrato de Semantic Index e persistência externa?
+- Quando iniciar internacionalização sem criar divergência entre README canônico em português do Brasil, CLI e demais mensagens expostas?
+
 1. Mission Orchestrator deve ser implementado como módulo separado antes de expandir Mission Runner?
 2. Qual é a fronteira exata entre Mission Runner e Mission Orchestrator?
 3. Qual é a fronteira exata entre Workflow Engine e Task Queue?
