@@ -45,3 +45,16 @@ The scheduler preserves every `TaskAttempt` and never retries indefinitely.
 ## Boundaries
 
 This MVP is not a runtime adapter and not an agent orchestrator. Future execution layers must call the queue through explicit framework contracts and return normalized outcomes without exposing the queue to provider-specific details.
+
+## Uso No Fluxo Integrado
+
+No caminho integrado da missão 0104, `WorkflowEngine.execute_with_queue()` materializa `WorkflowTask` em `Task` e entrega a fila ao `TaskScheduler`.
+
+Nesse fluxo:
+
+- `TaskScheduler` é o único loop operacional de tasks;
+- `TaskQueue` controla dependências, tentativas e retries;
+- o executor injetado chama o runtime por uma fronteira acima da fila;
+- `tasks/` não importa `workflows/`, `missions/`, runtime, providers, agentes, capabilities, skills ou tools.
+
+Documento arquitetural: [Integração Mission Runner, Workflow Engine e Task Queue](architecture/mission-workflow-task-integration.md).

@@ -11,6 +11,7 @@ O Workflow Engine MVP executa um `Workflow` sequencialmente por meio de um `Runt
 - Consulta o Guardian Engine antes de chamar o runtime para uma task.
 - Usa apenas o contrato `RuntimeAdapter`; não chama OpenCode diretamente.
 - Não usa `subprocess`, `sudo`, shell ou comandos reais.
+- Expõe `execute_with_queue()` como caminho integrado com `TaskQueue` e `TaskScheduler`.
 
 ## API
 
@@ -29,6 +30,10 @@ result = engine.execute(workflow)
 ```
 
 `execute()` retorna um `WorkflowResult`. O último workflow com estados atualizados fica disponível em `engine.last_workflow` para inspeção pelo Mission Runner, Task Queue ou testes.
+
+Para o caminho integrado com Mission Runner, use `QueueBackedWorkflowExecutor`, que chama `WorkflowEngine.execute_with_queue()`. Nesse caminho, o engine materializa `WorkflowTask` como `Task`, drena a fila por `TaskScheduler`, recebe `TaskExecutionOutcome` e reconstrói `WorkflowResult`.
+
+`execute()` permanece disponível como compatibilidade legada e não é o caminho canônico validado pela missão 0104.
 
 ## Regras de task obrigatória
 
@@ -64,7 +69,9 @@ O engine chama somente `RuntimeAdapter.execute_task()` com um `RuntimeExecutionR
 ## Limitações do MVP
 
 - Não implementa paralelismo.
-- Não implementa retries.
+- Retries existem apenas no caminho `execute_with_queue()`, controlados pela Task Queue.
 - Não persiste eventos em banco ou arquivo.
 - Não escolhe modelo concreto.
 - Não substitui Mission Runner, Task Queue ou Agent Orchestrator.
+
+Documento arquitetural: [Integração Mission Runner, Workflow Engine e Task Queue](architecture/mission-workflow-task-integration.md).

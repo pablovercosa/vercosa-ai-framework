@@ -10,8 +10,10 @@ Representar e executar workflows sequenciais mínimos derivados de missões.
 
 - Define tipos de workflow, task de workflow, dependência e resultado.
 - Executa tasks em ordem determinística no MVP.
+- Executa o caminho integrado com Task Queue por `execute_with_queue()`.
 - Consulta Guardian antes da execução de tasks quando configurado.
 - Delega execução concreta para RuntimeAdapter.
+- Materializa `WorkflowTask` como `Task` por mapeamento explícito.
 
 ## O Que Este Módulo Não Faz
 
@@ -27,6 +29,7 @@ Representar e executar workflows sequenciais mínimos derivados de missões.
 | --- | --- |
 | `types.py` | Tipos de workflow, task, dependência e resultado. |
 | `engine.py` | `WorkflowEngine` sequencial. |
+| `task_mapping.py` | Conversão explícita entre `WorkflowTask` e `Task`. |
 | `__init__.py` | Exportações públicas do módulo. |
 
 ## Principais Tipos, Classes E Funções
@@ -37,6 +40,8 @@ Representar e executar workflows sequenciais mínimos derivados de missões.
 - `WorkflowResult`: resultado agregado.
 - `TaskResult`: resultado individual.
 - `WorkflowEngine`: executor sequencial MVP.
+- `WorkflowEngine.execute_with_queue`: caminho integrado com Task Queue e Task Scheduler.
+- `workflow_task_to_task`: materializa `WorkflowTask` como `Task` operacional.
 
 ## Entradas E Saídas
 
@@ -69,6 +74,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Workflow Engine](../../../docs/workflow-engine.md)
+- [Integração Mission Runner, Workflow Engine e Task Queue](../../../docs/architecture/mission-workflow-task-integration.md)
 - [Task Queue](../../../docs/task-queue.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
@@ -98,9 +104,9 @@ workflow = Workflow(
 
 Status: `MVP`.
 
-Há execução sequencial mínima; a integração padrão com Task Queue e Agent Orchestrator ainda é lacuna arquitetural.
+Há execução sequencial mínima e caminho integrado com Task Queue. A integração com Agent Orchestrator ainda é lacuna arquitetural.
 
 ## Próximos Passos
 
-- Definir contrato Workflow Engine -> Task Queue.
-- Registrar decisão sobre execução sequencial direta versus uso obrigatório da Task Queue.
+- Revisar Specs/ADRs do contrato Workflow Engine -> Task Queue.
+- Decidir se a execução sequencial direta permanece como compatibilidade legada ou se o caminho queue-backed se torna obrigatório.

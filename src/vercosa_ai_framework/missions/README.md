@@ -11,6 +11,7 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 - Define tipos de missão e resultado.
 - Mantém uma fila local baseada em diretório.
 - Executa uma missão por meio de `MissionRunner` com avaliação Guardian e RuntimeAdapter injetado.
+- Executa uma missão pelo caminho integrado opcional com Workflow Engine e Task Queue quando `workflow_provider` e `workflow_executor` são injetados.
 - Compõe contexto efetivo de execução por `prompt_composer`, usado pelo runner shell antes do OpenCode.
 - Controla estados básicos como fila, execução, conclusão, falha e cancelamento.
 - Pode registrar eventos auditáveis estruturados de ciclo de vida quando um `EventLog` opcional é fornecido ao `MissionRunner`.
@@ -33,6 +34,7 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 | `types.py` | `Mission`, `MissionStatus` e `MissionResult`. |
 | `queue.py` | `DirectoryMissionQueue` para fila local. |
 | `runner.py` | `MissionRunner` e contratos auxiliares de execução. |
+| `workflow_integration.py` | Contratos injetáveis para resolver e executar workflows a partir de missões. |
 | `prompt_composer.py` | Composição determinística de `AGENTS.md`, contrato base, agentes operacionais e missão. |
 | `__init__.py` | Exportações públicas do módulo. |
 
@@ -43,6 +45,9 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 - `MissionResult`: resultado normalizado de execução.
 - `DirectoryMissionQueue`: fila local de missões em filesystem.
 - `MissionRunner`: executa uma missão com Guardian e RuntimeAdapter.
+- `MissionWorkflowProvider`: protocolo para resolver uma missão em workflow sem catálogo persistente obrigatório.
+- `MissionWorkflowExecutor`: protocolo para executar workflow e retornar `WorkflowResult` ao runner.
+- `QueueBackedWorkflowExecutor`: adapter para usar `WorkflowEngine.execute_with_queue()` no Mission Runner.
 - `compose_mission_prompt`: compõe o contexto efetivo de execução sem modificar os arquivos de origem.
 - `validate_mission_prompt`: valida a composição sem persistir prompt composto.
 - `AutoCommitter`: protocolo para commit automático quando política permitir.
@@ -56,6 +61,7 @@ Entradas:
 - `Mission` carregada de arquivo, fila ou chamada Python.
 - `GuardianEngine` ou avaliador compatível.
 - `RuntimeAdapter` para execução concreta.
+- `MissionWorkflowProvider` e `MissionWorkflowExecutor` quando o caminho integrado for usado.
 
 Saídas:
 
@@ -68,6 +74,7 @@ Saídas:
 
 - `../guardian/`: avaliação de políticas antes da execução.
 - `../runtime/`: execução concreta por adapter.
+- `../workflows/`: caminho integrado opcional Mission -> Workflow -> Task Queue.
 - `../audit/`: contrato opcional de eventos auditáveis estruturados.
 
 ## Módulos Relacionados
@@ -101,6 +108,7 @@ Logs textuais dos scripts continuam sendo saída operacional humana. Eventos aud
 ## Docs Relacionadas
 
 - [Mission Runner](../../../docs/mission-runner.md)
+- [Integração Mission Runner, Workflow Engine e Task Queue](../../../docs/architecture/mission-workflow-task-integration.md)
 - [Contrato de execução de missões](../../../docs/operations/mission-execution-contract.md)
 - [Formato compacto de missão](../../../docs/operations/compact-mission-format.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
@@ -118,10 +126,10 @@ mission = Mission(title="Documentar módulo", goal="Criar README técnico")
 
 Status: `MVP`.
 
-Existe execução local mínima com eventos auditáveis opcionais em Python e composição obrigatória de contexto no runner shell. A separação final entre Mission Runner e Mission Orchestrator ainda está em aberto.
+Existe execução local mínima com eventos auditáveis opcionais em Python, composição obrigatória de contexto no runner shell e integração opcional Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis. A separação final entre Mission Runner e Mission Orchestrator ainda está em aberto.
 
 ## Próximos Passos
 
 - Resolver a fronteira Mission Runner versus Mission Orchestrator.
-- Integrar formalmente com Workflow Engine e Task Queue.
+- Revisar Specs/ADRs da integração Mission Runner -> Workflow Engine -> Task Queue na missão 0108.
 - Integrar, em missão futura, os scripts operacionais aos eventos auditáveis sem substituir logs textuais nem alterar o fluxo `queue`, `running`, `done` e `failed`.

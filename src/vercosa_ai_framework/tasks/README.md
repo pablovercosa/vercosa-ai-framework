@@ -13,6 +13,7 @@ Gerenciar estado, elegibilidade, tentativas e agendamento determinístico de tas
 - Calcula elegibilidade por dependências.
 - Registra início, conclusão, falha, bloqueio, cancelamento e retry.
 - Oferece scheduler sequencial determinístico.
+- Serve como substrato operacional do caminho integrado `WorkflowEngine.execute_with_queue()`.
 
 ## O Que Este Módulo Não Faz
 
@@ -70,6 +71,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Task Queue](../../../docs/task-queue.md)
+- [Integração Mission Runner, Workflow Engine e Task Queue](../../../docs/architecture/mission-workflow-task-integration.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
@@ -93,9 +95,9 @@ queue.add(
 
 Status: `MVP`.
 
-O módulo cobre fila e scheduler em memória, mas ainda não é o substrato padrão de todos os workflows.
+O módulo cobre fila e scheduler em memória e já é o substrato operacional do caminho integrado Mission Runner -> Workflow Engine -> Task Queue. Ele ainda não está integrado ao Agent Orchestrator.
 
 ## Próximos Passos
 
-- Integrar Task Queue como executor padrão do Workflow Engine.
+- Integrar Task Queue ao Agent Orchestrator por executor injetado em missão futura.
 - Definir persistência de estado e retries além de memória.

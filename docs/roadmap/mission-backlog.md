@@ -86,7 +86,7 @@ Missões orientadoras:
 - 0101: auditar aderência ao objetivo e escopo original, criar checklist canônico de implementação e registrar marcos históricos.
 - 0102: consolidar contrato base de execução, agente executor base, formato compacto de missão e composição obrigatória pelo runner. Status: em consolidação nesta missão.
 - 0103: explicitar o fluxo de valor principal, consumidores plausíveis, limites e comparação factual com OpenSpec e GitHub Spec Kit. Status: concluída documentalmente; `SpecificationProvider` registrado apenas como hipótese não implementada.
-- 0104: integrar Mission Runner, Workflow Engine e Task Queue em fluxo mínimo validável.
+- 0104: integrar Mission Runner, Workflow Engine e Task Queue em fluxo mínimo validável. Status: concluída como integração local por contratos injetáveis, sem Agent Orchestrator, capabilities, skills, tools ou providers.
 - 0105: integrar Task Queue, Agent Orchestrator e Capability Resolver sem dar acesso direto a tools/providers.
 - 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado.
 - 0107: integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo.
@@ -119,6 +119,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Comando CLI `batch-summary` para resumo pós-batch auxiliar com contagens, último log e lembretes manuais, sem executar missões, scripts, testes, Git, rede, banco ou providers.
 - Comando CLI `docs-links` para validação local de links relativos em Markdown, sem acessar URLs externas, sem executar missões e sem substituir revisão humana de documentação.
 - Comando CLI `alpha-readiness` para diagnóstico local de prontidão documental e operacional mínima da futura alfa, sem criar tag, publicar release, publicar pacote, executar missões, acessar rede ou substituir revisão humana.
+- Integração mínima Mission Runner -> Workflow Engine -> Task Queue concluída com `TaskScheduler` como loop operacional único de tasks no caminho integrado e teste ponta a ponta local.
 - Exemplos operacionais iniciais.
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.

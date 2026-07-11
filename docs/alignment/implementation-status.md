@@ -30,18 +30,19 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | CI | Workflow mínimo localmente definido | `.github/workflows/ci.yml` | Existe; confirmação remota depende de push/execução GitHub. |
 | Documentação | README, contribuição, segurança, conduta, release e arquitetura | `README.md`, `docs/`, `CHANGELOG.md` | Ampla e factual, mas volumosa. |
 | Documentação | Comparação pública com OpenSpec e GitHub Spec Kit | `docs/comparacoes.md` | Documental; não implementa integração nem adapter. |
+| Arquitetura | Mission Runner -> Workflow Engine -> Task Queue | `src/vercosa_ai_framework/missions/workflow_integration.py`, `src/vercosa_ai_framework/workflows/task_mapping.py`, `WorkflowEngine.execute_with_queue()`, `tests/test_mission_workflow_task_integration.py` | Validado localmente como fluxo mínimo; não integra Agent Orchestrator, capabilities, skills, tools ou providers. |
 
 ## Implementado
 
 | Área | Item | Evidência | Observação |
 | --- | --- | --- | --- |
 | Arquitetura | Specs canônicas `0001` a `0014` | `specs/framework/` | Mais amplas que o código atual. |
-| Motores centrais | Mission Runner Python | `src/vercosa_ai_framework/missions/runner.py` | Implementado; integração com Workflow/Task ainda não é padrão. |
+| Motores centrais | Mission Runner Python | `src/vercosa_ai_framework/missions/runner.py` | Implementado; caminho integrado opcional com Workflow/Task por injeção explícita. |
 | Motores centrais | Contrato base de execução de missões `v1` | `missions/base/EXECUTION_CONTRACT.md` | Fonte normativa das regras comuns de execução; `AGENTS.md` permanece fonte global. |
 | Motores centrais | Agente executor base operacional | `.opencode/agents/mission-executor-base.md` | Composto automaticamente; complementa o contrato sem substituí-lo. |
 | Motores centrais | Formato compacto de missão | `missions/templates/COMPACT_MISSION_TEMPLATE.md`, `docs/operations/compact-mission-format.md` | Padrão para missões novas a partir de `0103`; legado continua compatível. |
-| Motores centrais | Workflow Engine sequencial | `src/vercosa_ai_framework/workflows/engine.py` | Implementado; não orquestrado pelo runner principal. |
-| Motores centrais | Task Queue e scheduler | `src/vercosa_ai_framework/tasks/` | Implementado; integração com Workflow/Agent ainda parcial. |
+| Motores centrais | Workflow Engine sequencial | `src/vercosa_ai_framework/workflows/engine.py` | Implementado; `execute_with_queue()` integra Task Queue no caminho Mission Runner configurado. |
+| Motores centrais | Task Queue e scheduler | `src/vercosa_ai_framework/tasks/` | Implementado; integrado ao Workflow Engine no caminho mínimo, ainda sem Agent Orchestrator. |
 | Motores centrais | Agent Orchestrator | `src/vercosa_ai_framework/agents/` | Implementado; sem fluxo real completo com capabilities. |
 | Motores centrais | Policy Engine | `src/vercosa_ai_framework/policy/` | Implementado; consumidores recebem `ResolvedPolicySet` opcional. |
 | Motores centrais | Guardian Engine | `src/vercosa_ai_framework/guardian/` | Implementado e testado; aplicação obrigatória varia por fluxo. |
@@ -60,9 +61,8 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 
 | Área | Item | Evidência | Lacuna |
 | --- | --- | --- | --- |
-| Arquitetura | Mission -> Workflow -> Task | módulos `missions`, `workflows`, `tasks` | Não há handoff padrão integrado e validado ponta a ponta. |
-| Arquitetura | Composição de prompt/contexto | `prompt_composer` e runner shell | Integrado ao fluxo shell; ainda não substitui Context Router arquitetural. |
 | Arquitetura | Task -> Agent | `agents` depende de `tasks` | Não é caminho operacional padrão. |
+| Arquitetura | Composição de prompt/contexto | `prompt_composer` e runner shell | Integrado ao fluxo shell; ainda não substitui Context Router arquitetural. |
 | Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Falta caso de uso concreto integrado. |
 | Auditoria | Eventos de decisões centrais | `audit/integrations.py` | Helpers opcionais; não obrigatórios em todos os fluxos. |
 | Release | Preparação alfa | `docs/release/` | Diagnóstico `NÃO PRONTO`, checklist `REPROVADO`, tag não autorizada. |
@@ -111,7 +111,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Produto | Fluxo de valor principal | Qual problema concreto deve ser demonstrado primeiro? |
 | Arquitetura | `SpecificationProvider` | Hipótese para integrar OpenSpec, Spec Kit ou Markdown nativo; não implementada. |
 | Arquitetura | Mission Runner vs Mission Orchestrator | Separar módulo antes da próxima integração? |
-| Arquitetura | Workflow Engine vs Task Queue | Qual handoff mínimo será canônico? |
+| Arquitetura | Workflow Engine vs Task Queue | Handoff mínimo implementado por `execute_with_queue()`; missão 0108 deve revisar Specs/ADRs e decidir se o executor direto legado permanece. |
 | Arquitetura | Agentes e capabilities | Qual catálogo mínimo é necessário para o primeiro fluxo? |
 | Release | Tag alfa | Deve ser adiada até fluxo de valor integrado? |
 | Documentação | Volume e repetição | Quais documentos devem apontar para este checklist em vez de repetir estado? |

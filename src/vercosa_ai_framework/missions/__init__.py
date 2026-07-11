@@ -9,16 +9,26 @@ from vercosa_ai_framework.missions.runner import (
     MissionRunnerError,
 )
 from vercosa_ai_framework.missions.types import Mission, MissionResult, MissionStatus
+from vercosa_ai_framework.missions.workflow_integration import (
+    InMemoryWorkflowProvider,
+    MissionWorkflowExecutor,
+    MissionWorkflowProvider,
+    QueueBackedWorkflowExecutor,
+)
 
 __all__ = [
     "AutoCommitResult",
     "AutoCommitter",
     "DirectoryMissionQueue",
     "GuardianEvaluator",
+    "InMemoryWorkflowProvider",
     "Mission",
     "MissionQueueError",
     "MissionResult",
     "MissionRunner",
     "MissionRunnerError",
     "MissionStatus",
+    "MissionWorkflowExecutor",
+    "MissionWorkflowProvider",
+    "QueueBackedWorkflowExecutor",
 ]

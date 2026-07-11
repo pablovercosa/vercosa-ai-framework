@@ -10,7 +10,7 @@ Atualização da missão 0103: o README passou a explicitar o problema central, 
 
 Classificação geral da auditoria: `ALINHADO COM RESSALVAS`.
 
-Ressalvas principais: o fluxo operacional interno por missões e batch existe, mas o fluxo arquitetural Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta; vários motores são MVPs isolados ou opcionais; a preparação alfa avançou antes de uma demonstração de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
+Ressalvas principais: o fluxo operacional interno por missões e batch existe, e o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi integrado por contratos injetáveis, mas o fluxo arquitetural Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta; vários motores seguem MVPs opcionais; a preparação alfa avançou antes de uma demonstração completa de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
 
 Este checkpoint é apenas documental. Ele não aprova novo código, novo comportamento de runtime, alterações de configuração global, operações privilegiadas ou expansão de funcionalidades.
 
@@ -170,6 +170,7 @@ Integrações já feitas em estado MVP ou integração inicial:
 - Usage/API Limit Guard disponível para classificar sinais textuais de limite externo de API em logs já recebidos.
 - Audit/Event Log inicial com helpers opcionais para eventos de Policy, Guardian, Context e ciclo de vida de missão/batch.
 - `MissionRunner` Python capaz de registrar eventos de missão quando recebe `EventLog` opcional.
+- `MissionRunner` Python capaz de executar caminho integrado opcional com `WorkflowEngine.execute_with_queue()` e `TaskQueue` quando recebe `MissionWorkflowProvider` e `MissionWorkflowExecutor`.
 - `prompt_composer` em `src/vercosa_ai_framework/missions/` capaz de compor contexto efetivo de execução com `AGENTS.md`, contrato base, agente executor base, agentes operacionais especializados declarados, permissões e missão específica.
 - Runner shell integrado ao compositor antes da chamada ao OpenCode, com restauração para `queue` quando a composição falha.
 - CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links` e `alpha-readiness`.
@@ -209,19 +210,23 @@ Provider Gateway
 Providers / MCPs / APIs / Runtimes
 ```
 
-Cadeia MVP atual:
+Cadeia MVP atual integrada para Mission/Workflow/Task:
 
 ```text
-CLI, scripts shell ou chamador Python
+Chamador Python
 ↓
-Mission Runner ou Workflow Engine
+MissionRunner
 ↓
-Guardian Engine
+MissionWorkflowProvider
 ↓
-Runtime Adapter
+WorkflowEngine.execute_with_queue()
 ↓
-OpenCode adapter em modo dry-run ou execução controlada
+TaskQueue + TaskScheduler
+↓
+RuntimeAdapter.execute_task()
 ```
+
+O runner shell e o batch operacional continuam usando o fluxo de arquivos de missão e OpenCode como runtime/laboratório. A integração Python acima é local, determinística e validada por testes, mas ainda não aciona Agent Orchestrator, capabilities, skills, tools ou providers.
 
 A cadeia capabilities/skills/tools/provider existe como contratos MVP, mas ainda não está integrada de ponta a ponta no loop missão-agente.
 
@@ -249,7 +254,7 @@ O projeto ainda precisa alinhar ou implementar:
 
 - Mission Orchestrator como camada distinta de Mission Runner.
 - Integração orquestrada e obrigatória entre Policy Engine, Guardian Engine, Context Router, Model Selection e Audit/Event Log nos fluxos completos, além das pontes opcionais já existentes.
-- Fluxo ponta a ponta Mission -> Workflow -> Task Queue -> Agent Orchestrator -> Capability -> Skill -> Tool -> Provider.
+- Fluxo ponta a ponta Task Queue -> Agent Orchestrator -> Capability -> Skill -> Tool -> Provider.
 - Integração completa do Context Router ao fluxo de missão, agente, modelo e recuperação governada.
 - RAG semântico.
 - Embeddings.

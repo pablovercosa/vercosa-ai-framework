@@ -44,9 +44,9 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 | --- | --- | --- | --- | --- | --- |
 | Interface operacional | `cli/` | [cli](../../src/vercosa_ai_framework/cli/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [CLI](../cli.md) |
 | Fundacional | `core/` | [core](../../src/vercosa_ai_framework/core/README.md) | MVP | [0001](../../specs/framework/0001-framework-foundation.md) | [Mapa de arquitetura](../alignment/architecture-map.md) |
-| Missões | `missions/` | [missions](../../src/vercosa_ai_framework/missions/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [Mission Runner](../mission-runner.md) |
-| Workflows | `workflows/` | [workflows](../../src/vercosa_ai_framework/workflows/README.md) | MVP | [0006](../../specs/framework/0006-workflow-engine.md) | [Workflow Engine](../workflow-engine.md) |
-| Tarefas | `tasks/` | [tasks](../../src/vercosa_ai_framework/tasks/README.md) | MVP | [0007](../../specs/framework/0007-task-queue.md) | [Task Queue](../task-queue.md) |
+| Missões | `missions/` | [missions](../../src/vercosa_ai_framework/missions/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [Mission Runner](../mission-runner.md), [Integração Mission/Workflow/Task](mission-workflow-task-integration.md) |
+| Workflows | `workflows/` | [workflows](../../src/vercosa_ai_framework/workflows/README.md) | MVP | [0006](../../specs/framework/0006-workflow-engine.md) | [Workflow Engine](../workflow-engine.md), [Integração Mission/Workflow/Task](mission-workflow-task-integration.md) |
+| Tarefas | `tasks/` | [tasks](../../src/vercosa_ai_framework/tasks/README.md) | MVP | [0007](../../specs/framework/0007-task-queue.md) | [Task Queue](../task-queue.md), [Integração Mission/Workflow/Task](mission-workflow-task-integration.md) |
 | Agentes | `agents/` | [agents](../../src/vercosa_ai_framework/agents/README.md) | MVP | [0008](../../specs/framework/0008-agent-orchestrator.md) | [Agent Orchestrator](../agent-orchestrator.md) |
 | Capabilities | `capabilities/` | [capabilities](../../src/vercosa_ai_framework/capabilities/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
 | Governança | `policy/` | [policy](../../src/vercosa_ai_framework/policy/README.md) | MVP | [0005](../../specs/framework/0005-guardian-engine.md) | [ADR Policy/Guardian](../../knowledge/decisions/2026-07-04-policy-engine-vs-guardian-engine.md) |
@@ -64,8 +64,8 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 
 ## Relações Principais
 
-- `missions/` controla ciclo operacional de missões, compõe contexto de execução por contrato base e deve delegar planejamento para `workflows/` quando a ponte estiver consolidada.
-- `workflows/` define plano e execução sequencial MVP; `tasks/` concentra estado, elegibilidade e tentativas de tasks.
+- `missions/` controla ciclo operacional de missões, compõe contexto de execução por contrato base e pode delegar para `workflows/` por `MissionWorkflowProvider` e `MissionWorkflowExecutor` injetados.
+- `workflows/` define plano e execução sequencial MVP; no caminho integrado, `execute_with_queue()` usa `tasks/` como substrato de estado, elegibilidade, tentativas e retries.
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
 - `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/`, `context/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
@@ -83,7 +83,7 @@ As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto]
 
 - integração orquestrada entre Policy Engine, Context Router, Guardian Engine, Model Selection e Audit/Event Log nos fluxos completos, além das pontes iniciais via `ResolvedPolicySet` opcional, requisitos opcionais de orçamento de tokens e helpers de eventos;
 - fronteira entre Mission Runner e Mission Orchestrator;
-- integração completa Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider;
+- integração completa a partir de Task Queue -> Agent -> Capability -> Skill -> Tool -> Provider;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;
 - integração automática de persistência local de eventos auditáveis nos fluxos operacionais;
 - Semantic Index, embeddings, pgvector e RAG semântico.

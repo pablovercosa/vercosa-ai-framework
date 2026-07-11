@@ -27,7 +27,9 @@ from vercosa_ai_framework.guardian import (
 )
 from vercosa_ai_framework.missions.queue import DirectoryMissionQueue, MissionQueueError
 from vercosa_ai_framework.missions.types import Mission, MissionResult, MissionStatus
+from vercosa_ai_framework.missions.workflow_integration import MissionWorkflowExecutor, MissionWorkflowProvider
 from vercosa_ai_framework.runtime import RuntimeAdapter, RuntimeExecutionRequest, RuntimeStatus
+from vercosa_ai_framework.workflows import WorkflowResult, WorkflowStatus
 
 
 class MissionRunnerError(RuntimeError):
@@ -76,6 +78,8 @@ class MissionRunner:
         interactive: bool = False,
         runner_id: str = "mission-runner",
         event_log: EventLog | None = None,
+        workflow_provider: MissionWorkflowProvider | None = None,
+        workflow_executor: MissionWorkflowExecutor | None = None,
     ) -> None:
         self.queue = queue
         self.runtime = runtime
@@ -85,6 +89,8 @@ class MissionRunner:
         self.interactive = interactive
         self.runner_id = runner_id
         self.event_log = event_log
+        self.workflow_provider = workflow_provider
+        self.workflow_executor = workflow_executor
         self.results: dict[str, MissionResult] = {}
         self.audit_log: list[str] = []
 
@@ -123,6 +129,12 @@ class MissionRunner:
             max_cycles = self._max_cycles_for(running)
             if max_cycles < 1:
                 return self._fail(running, "mission requires max_cycles >= 1")
+
+            if self.workflow_provider is not None or self.workflow_executor is not None:
+                if self.workflow_provider is None or self.workflow_executor is None:
+                    return self._fail(running, "workflow integration requires provider and executor")
+                running = self.queue.record_cycle(mission_id, 1)
+                return self._run_workflow_path(running, guardian_decision)
 
             last_result = None
             for cycle_number in range(1, max_cycles + 1):
@@ -190,6 +202,84 @@ class MissionRunner:
             execution_limits={**mission.execution_limits, "max_cycles": max_cycles},
             logging_policy={"sanitize_secrets": True},
             approval_policy=dict(mission.commit_policy),
+        )
+
+    def _run_workflow_path(self, mission: Mission, guardian_decision: GuardianDecision | None) -> MissionResult:
+        assert self.workflow_provider is not None
+        assert self.workflow_executor is not None
+
+        workflow = self.workflow_provider.resolve(mission)
+        if workflow.mission_id != mission.mission_id:
+            return self._fail(
+                mission,
+                f"workflow mission_id mismatch: mission={mission.mission_id} workflow={workflow.mission_id}",
+            )
+
+        workflow_result = self.workflow_executor.execute(workflow)
+        result = self._result_from_workflow(mission, workflow_result)
+        result = self._apply_guardian_warnings(result, guardian_decision)
+
+        if result.status == MissionStatus.DONE:
+            result = self._validate(mission, result)
+            if result.status == MissionStatus.DONE:
+                result = self._auto_commit(mission, result)
+
+        if result.status == MissionStatus.DONE:
+            self.queue.complete(mission.mission_id)
+        elif result.status == MissionStatus.CANCELLED:
+            self.queue.cancel(mission.mission_id, self._error_summary(result))
+        else:
+            self.queue.fail(mission.mission_id, self._error_summary(result))
+
+        self._record_result(result)
+        return result
+
+    def _result_from_workflow(self, mission: Mission, workflow_result: WorkflowResult) -> MissionResult:
+        if workflow_result.mission_id != mission.mission_id:
+            return MissionResult(
+                mission_id=mission.mission_id,
+                status=MissionStatus.FAILED,
+                errors=(
+                    f"workflow result mission_id mismatch: mission={mission.mission_id} result={workflow_result.mission_id}",
+                ),
+                requires_review=True,
+            )
+
+        recommendation = workflow_result.closure_recommendation
+        if recommendation == "conclude" and workflow_result.status == WorkflowStatus.DONE:
+            status = MissionStatus.DONE
+        elif recommendation == "cancel" or workflow_result.status == WorkflowStatus.CANCELLED:
+            status = MissionStatus.CANCELLED
+        elif recommendation in {"fail", "review", "pause"}:
+            status = MissionStatus.FAILED
+        else:
+            return MissionResult(
+                mission_id=mission.mission_id,
+                status=MissionStatus.FAILED,
+                summary=workflow_result.summary,
+                artifacts=workflow_result.artifacts,
+                validation_results=workflow_result.validation_results,
+                warnings=workflow_result.warnings,
+                errors=(*workflow_result.errors, f"unrecognized workflow closure recommendation: {recommendation}"),
+                requires_review=True,
+                audit_log_ref=workflow_result.audit_log_ref,
+            )
+
+        if status == MissionStatus.DONE and recommendation != "conclude":
+            status = MissionStatus.FAILED
+        if status == MissionStatus.DONE and workflow_result.requires_review:
+            status = MissionStatus.FAILED
+
+        return MissionResult(
+            mission_id=mission.mission_id,
+            status=status,
+            summary=workflow_result.summary,
+            artifacts=workflow_result.artifacts,
+            validation_results=workflow_result.validation_results,
+            warnings=workflow_result.warnings,
+            errors=workflow_result.errors,
+            requires_review=workflow_result.requires_review or recommendation in {"review", "pause"},
+            audit_log_ref=workflow_result.audit_log_ref,
         )
 
     def _evaluate_guardian(self, mission: Mission) -> GuardianDecision | None:

@@ -76,6 +76,27 @@ Supported policies:
 
 The runner never executes git directly. If `after_validation` is requested without an injected committer, the mission fails safely.
 
+## Integração Com Workflow Engine E Task Queue
+
+O `MissionRunner` aceita um caminho integrado opcional por injeção explícita de `workflow_provider` e `workflow_executor`.
+
+Quando ambos são configurados, o runner:
+
+- mantém o controle do estado global da missão;
+- avalia Guardian de missão antes do workflow;
+- resolve um `Workflow` por `MissionWorkflowProvider`;
+- executa o workflow por `MissionWorkflowExecutor`;
+- não chama `RuntimeAdapter.execute_mission()`;
+- recebe `WorkflowResult` e converte para `MissionResult`;
+- valida artefatos globais e aplica auto-commit opcional somente depois do resultado do workflow;
+- conclui, falha ou cancela a missão de forma conservadora conforme recomendação do workflow.
+
+Quando nenhum provider/executor de workflow é configurado, o caminho legado permanece ativo e continua chamando `RuntimeAdapter.execute_mission()`.
+
+Se a integração for configurada parcialmente, a missão falha com erro claro. O runner não decompõe missões em tasks por conta própria e não controla dependências internas da Task Queue.
+
+Documento arquitetural: [Integração Mission Runner, Workflow Engine e Task Queue](architecture/mission-workflow-task-integration.md).
+
 ## Testing Notes
 
 Tests use fake runtime and commit implementations. They must not invoke real OpenCode or real git.

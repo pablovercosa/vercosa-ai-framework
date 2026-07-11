@@ -27,6 +27,7 @@ Um exemplo pode misturar quatro tipos de informação:
 ## Exemplos Disponíveis
 
 - [Fluxo operacional de missões em batch](mission-batch-operational-flow.md)
+- [Fluxo mínimo Mission, Workflow e Task](minimal-mission-workflow-task-flow.md)
 - [Fluxo Policy, Context e Guardian](policy-context-guardian-flow.md)
 - [Fluxo de diagnóstico da CLI operacional](cli-diagnostics-flow.md)
 

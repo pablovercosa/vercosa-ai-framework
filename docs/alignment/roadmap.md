@@ -26,6 +26,8 @@ Atualização da missão 0102: o contrato base `v1`, o agente executor base, o t
 
 Atualização da missão 0103: o README passou a explicitar problema, fluxo de valor, consumidores plausíveis, limites e estado real. A comparação com OpenSpec e GitHub Spec Kit foi documentada em [docs/comparacoes.md](../comparacoes.md). A fronteira `SpecificationProvider` permanece hipótese arquitetural não implementada e não deve ser materializada antes das integrações mínimas previstas para 0104-0108.
 
+Atualização da missão 0104: o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi implementado por contratos injetáveis, com `TaskScheduler` como único loop operacional de tasks no caminho integrado. A próxima prioridade de integração passa a ser Task Queue -> Agent Orchestrator -> Capability Resolver, sem antecipar skills, tools ou providers reais.
+
 ## Estado Pós-Batch Funcional
 
 O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. O estado atual considerado por este roadmap inclui:
@@ -63,6 +65,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, versão PEP 440 `0.1.0a1`, pacote em `src/vercosa_ai_framework` e entrypoint local `vaf`, sem publicação de pacote.
 - CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
+- Integração mínima Mission Runner -> Workflow Engine -> Task Queue validada por `tests/test_mission_workflow_task_integration.py`, sem Agent Orchestrator ou providers reais.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -123,14 +126,14 @@ Saída recomendada: revisão de Spec ou ADR para Context Router e contrato míni
 
 ## Bloco 4: Integração Mission-To-Task
 
-Objetivo: conectar MVPs de missão, workflow e task por contratos explícitos.
+Objetivo: manter e revisar a conexão MVP de missão, workflow e task por contratos explícitos.
 
 Ações recomendadas:
 
 - Definir Mission Orchestrator como distinto de Mission Runner.
 - Definir saída de Mission Orchestrator como Workflow Plan ou decisão de seleção de workflow.
-- Definir handoff de Workflow Engine para Task Queue.
-- Definir retorno de estado de Task Queue para Workflow Engine e Mission Runner.
+- Revisar em Spec/ADR o handoff mínimo implementado entre Workflow Engine e Task Queue.
+- Preservar `TaskScheduler` como único loop operacional de tasks no caminho integrado enquanto não houver decisão de paralelismo.
 
 Implementação deve permanecer sequencial até existirem políticas de paralelismo e locks.
 
@@ -226,7 +229,7 @@ Ações recomendadas:
 ## Ordem Recomendada De Curto Prazo
 
 1. Definir o fluxo de valor principal e o consumidor principal do framework.
-2. Contrato mínimo: Mission Runner -> Workflow Engine -> Task Queue.
+2. Revisar Specs/ADRs da integração mínima Mission Runner -> Workflow Engine -> Task Queue.
 3. Contrato mínimo: Task Queue -> Agent Orchestrator -> Capability Resolver.
 4. Demonstração seca: Capability -> Skill -> Tool -> Provider Gateway, com Guardian, Policy e Audit/Event Log explícitos.
 5. Integrar Context Router, Token Budget Manager, Knowledge Hub textual e Model Selection ao fluxo mínimo sem RAG semântico.

@@ -19,8 +19,8 @@ As perguntas são agrupadas por área de decisão. Cada item não resolvido deve
 
 1. Mission Orchestrator deve ser implementado como módulo separado antes de expandir Mission Runner?
 2. Qual é a fronteira exata entre Mission Runner e Mission Orchestrator?
-3. Qual é a fronteira exata entre Workflow Engine e Task Queue?
-4. Workflow Engine deve sempre usar Task Queue ou pode manter um executor sequencial direto para workflows locais simples?
+3. A fronteira mínima entre Workflow Engine e Task Queue implementada por `execute_with_queue()` deve ser promovida a caminho canônico exclusivo na Spec 0006?
+4. O executor sequencial direto `WorkflowEngine.execute()` deve permanecer como compatibilidade legada ou ser removido em missão futura?
 5. Qual componente é responsável por replanejamento após falha de validação?
 6. Qual componente é responsável pelo encerramento final da missão e pela agregação de evidências de validação?
 
@@ -29,6 +29,7 @@ Decisões já encaminhadas:
 - Policy Engine e Guardian Engine são componentes separados: Policy Engine resolve políticas declarativas; Guardian Engine avalia enforcement operacional.
 - A precedência de políticas é responsabilidade do Policy Engine no estado atual, com resultados repassados como `ResolvedPolicySet` opcional para consumidores.
 - Templates iniciais mínimos de issue e pull request foram criados em `.github/`, cobrindo bug, melhoria, documentação, proposta de missão e pull request. Refinamentos futuros dependem do amadurecimento do processo público.
+- A missão 0104 implementou handoff mínimo Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis; missão 0108 deve revisar Specs/ADRs antes de consolidar essa decisão como arquitetura final.
 
 ## Ciclo De Vida SDD
 

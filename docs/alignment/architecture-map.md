@@ -43,10 +43,10 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 | Camada | Objetivo | Estado atual | Não deve fazer |
 | --- | --- | --- | --- |
 | Mission | Intenção do usuário/sistema e entregáveis exigidos | Representada por `missions/types.py` e arquivos de fila | Codificar comandos específicos de runtime como arquitetura |
-| Mission Runner | Ciclo operacional, fila, ciclos, validação e estado final | MVP em `missions/runner.py` e `missions/queue.py` | Substituir Mission Orchestrator ou Workflow Engine permanentemente |
+| Mission Runner | Ciclo operacional, fila, ciclos, validação e estado final | MVP em `missions/runner.py` e `missions/queue.py`, com ponte opcional para Workflow/Task por contratos injetáveis | Substituir Mission Orchestrator ou Workflow Engine permanentemente |
 | Mission Orchestrator | Decidir qual workflow satisfaz uma missão | Conceitual, ainda sem módulo distinto claro | Virar runtime adapter ou comando CLI |
-| Workflow Engine | Construir/executar plano de workflow e ordem de tasks | MVP sequencial em `workflows/engine.py` | Controlar ciclo de missão, registry de agentes ou execução de providers |
-| Task Queue | Gerenciar estados, dependências, tentativas e retries | MVP em `tasks/` | Executar providers concretos ou escolher agentes por conta própria |
+| Workflow Engine | Construir/executar plano de workflow e ordem de tasks | MVP sequencial em `workflows/engine.py`, com `execute_with_queue()` para Task Queue | Controlar ciclo de missão, registry de agentes ou execução de providers |
+| Task Queue | Gerenciar estados, dependências, tentativas e retries | MVP em `tasks/`, usado como substrato operacional no fluxo integrado Mission/Workflow/Task | Executar providers concretos ou escolher agentes por conta própria |
 | Agent Orchestrator | Selecionar perfil de agente e preparar execução | MVP em `agents/` | Chamar OpenCode, MCPs, APIs, bancos ou tools diretamente |
 | Agents/Subagents | Executar responsabilidades por fronteiras do framework | Conceitual/MVP no nível de perfil | Conhecer providers ou infraestrutura concreta |
 | Capabilities | Representar capacidades abstratas solicitadas | MVP em `capabilities/` | Codificar detalhes concretos de tool/provider |
@@ -88,6 +88,28 @@ GuardianDecision / ContextPackage / SelectionDecision
 ↓
 Audit/Event Log opcional quando EventLog é fornecido
 ```
+
+Fluxo mínimo integrado por chamada explícita:
+
+```text
+MissionRunner
+↓
+MissionWorkflowProvider
+↓
+WorkflowEngine.execute_with_queue()
+↓
+TaskQueue
+↓
+TaskScheduler
+↓
+RuntimeAdapter.execute_task()
+↓
+WorkflowResult
+↓
+MissionResult
+```
+
+Esse fluxo foi validado localmente e não inclui Agent Orchestrator, capabilities, skills, tools ou providers reais.
 
 Fluxo futuro ainda não integrado de ponta a ponta:
 
@@ -158,14 +180,34 @@ OpenCodeRuntimeAdapter or injected fake adapter
 MissionResult
 ```
 
-Caminho de Workflow:
+Caminho integrado Mission/Workflow/Task:
 
 ```text
-Workflow file
+MissionRunner
 ↓
-WorkflowEngine
+MissionWorkflowProvider
 ↓
-GuardianEngine per task
+QueueBackedWorkflowExecutor
+↓
+WorkflowEngine.execute_with_queue()
+↓
+TaskQueue + TaskScheduler
+↓
+RuntimeAdapter.execute_task() por executor injetado
+↓
+WorkflowResult
+↓
+MissionResult
+```
+
+Caminho legado de Workflow:
+
+```text
+Workflow
+↓
+WorkflowEngine.execute()
+↓
+GuardianEngine por task
 ↓
 RuntimeAdapter.execute_task()
 ↓
@@ -231,7 +273,6 @@ Relações atuais da CLI operacional:
 ## Pontes Ausentes
 
 - Mission Orchestrator para Workflow Engine.
-- Workflow Engine para Task Queue como substrato padrão de execução.
 - Task Queue para Agent Orchestrator como executor padrão de tasks.
 - Agent Orchestrator para Capability Resolver em capabilities solicitadas por agentes.
 - Caminho Capability/Skill/Tool para Provider Gateway como fluxo padrão de efeitos.

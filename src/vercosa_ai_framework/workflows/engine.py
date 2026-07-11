@@ -22,6 +22,19 @@ from vercosa_ai_framework.runtime import (
     RuntimeExecutionResult,
     RuntimeStatus,
 )
+from vercosa_ai_framework.tasks import (
+    Task,
+    TaskAttempt,
+    TaskExecutionOutcome,
+    TaskQueue,
+    TaskQueueState,
+    TaskScheduler,
+)
+from vercosa_ai_framework.workflows.task_mapping import (
+    task_result_from_task,
+    task_to_workflow_task,
+    workflow_task_to_task,
+)
 from vercosa_ai_framework.workflows.types import (
     TaskResult,
     TaskStatus,
@@ -63,6 +76,68 @@ class WorkflowEngine:
         self.engine_id = engine_id
         self.audit_log: list[str] = []
         self.last_workflow: Workflow | None = None
+
+    def execute_with_queue(self, workflow: Workflow) -> WorkflowResult:
+        """Run a workflow through Task Queue and Task Scheduler.
+
+        This is the integrated path used by Mission Runner. The legacy
+        ``execute`` method remains available for compatibility tests and callers.
+        """
+
+        if workflow.execution_mode != "sequential":
+            return self._workflow_result(
+                workflow.with_status(WorkflowStatus.FAILED, finished_at=utc_now_iso()),
+                errors=(f"unsupported execution mode: {workflow.execution_mode}",),
+                closure_recommendation="fail",
+            )
+
+        dependency_error = self._dependency_error(workflow)
+        if dependency_error is not None:
+            failed = workflow.with_status(WorkflowStatus.FAILED, finished_at=utc_now_iso())
+            self.last_workflow = failed
+            return self._workflow_result(failed, errors=(dependency_error,), closure_recommendation="fail")
+
+        working = workflow.with_status(WorkflowStatus.RUNNING, started_at=workflow.started_at or utc_now_iso())
+        self._log(working, "queue-backed workflow started")
+        queue = TaskQueue(
+            workflow_id=working.workflow_id,
+            mission_id=working.mission_id,
+            execution_mode=working.execution_mode,
+            max_parallel_tasks=int(working.execution_limits.get("max_parallel_tasks", 1)),
+        )
+        source_tasks = {task.task_id: task for task in working.tasks}
+        runtime_errors: dict[str, tuple[str, ...]] = {}
+
+        for workflow_task in working.tasks:
+            queue.add_task(workflow_task_to_task(workflow_task))
+
+        scheduler = TaskScheduler()
+        scheduler_result = scheduler.run_until_idle(
+            queue,
+            lambda task, attempt: self._execute_queue_task(working, source_tasks[task.task_id], task, attempt, runtime_errors),
+        )
+
+        final_tasks = queue.list_tasks()
+        updated_task_map = {
+            task.task_id: task_to_workflow_task(task, source_tasks[task.task_id]) for task in final_tasks
+        }
+        task_results = tuple(
+            task_result_from_task(task, source_tasks[task.task_id], errors=runtime_errors.get(task.task_id, ()))
+            for task in final_tasks
+        )
+        final_workflow = self._workflow_with_tasks(working, updated_task_map).with_status(
+            self._workflow_status_from_scheduler(scheduler_result.status),
+            finished_at=utc_now_iso(),
+        )
+        self.last_workflow = final_workflow
+        self._log(final_workflow, f"queue-backed workflow finished status={final_workflow.status.value}")
+        return self._workflow_result(
+            final_workflow,
+            task_results=task_results,
+            errors=tuple(dict.fromkeys((*scheduler_result.errors, *(error for result in task_results for error in result.errors)))),
+            closure_recommendation=self._closure_from_workflow_status(final_workflow.status),
+            requires_review=any(result.requires_review for result in task_results),
+        )
 
     def execute(self, workflow: Workflow) -> WorkflowResult:
         """Run eligible tasks one at a time until the workflow closes."""
@@ -217,6 +292,68 @@ class WorkflowEngine:
         decision = self.guardian.evaluate(context)
         self._log(workflow, f"guardian decision={decision.decision.value} task_id={task.task_id}")
         return decision
+
+    def _execute_queue_task(
+        self,
+        workflow: Workflow,
+        workflow_task: WorkflowTask,
+        task: Task,
+        attempt: TaskAttempt,
+        runtime_errors: dict[str, tuple[str, ...]],
+    ) -> TaskExecutionOutcome:
+        guardian_decision = self._evaluate_task(workflow, workflow_task)
+        if guardian_decision.decision == GuardianAction.REQUIRE_APPROVAL:
+            reason = self._guardian_reason(guardian_decision)
+            runtime_errors[task.task_id] = (f"guardian approval required: {reason}",)
+            return TaskExecutionOutcome(status=TaskQueueState.BLOCKED, error_message=reason, retryable=False)
+        if guardian_decision.decision == GuardianAction.BLOCK:
+            reason = self._guardian_reason(guardian_decision)
+            runtime_errors[task.task_id] = (f"guardian blocked task: {reason}",)
+            return TaskExecutionOutcome(status=TaskQueueState.FAILED, error_message=runtime_errors[task.task_id][0], retryable=False)
+
+        runtime_result = self._execute_task_from_attempt(workflow, workflow_task, attempt)
+        if runtime_result.status == RuntimeStatus.DONE:
+            runtime_errors.pop(task.task_id, None)
+            return TaskExecutionOutcome(
+                status=TaskQueueState.DONE,
+                artifact_refs=tuple(dict.fromkeys((*runtime_result.artifacts, *runtime_result.changed_files))),
+                retryable=False,
+            )
+
+        error = self._runtime_error(runtime_result)
+        runtime_errors[task.task_id] = tuple(runtime_result.errors) or (error,)
+        return TaskExecutionOutcome(status=TaskQueueState.FAILED, error_message=error, retryable=True)
+
+    def _execute_task_from_attempt(
+        self,
+        workflow: Workflow,
+        task: WorkflowTask,
+        attempt: TaskAttempt,
+    ) -> RuntimeExecutionResult:
+        running = task.with_status(TaskStatus.RUNNING, started_at=utc_now_iso(), attempt_count=attempt.attempt_number)
+        request = RuntimeExecutionRequest(
+            mission_id=workflow.mission_id,
+            workspace=self.workspace,
+            workflow_id=workflow.workflow_id,
+            task_id=running.task_id,
+            context={
+                "workflow_title": workflow.title,
+                "workflow_goal": workflow.goal,
+                "task_title": running.title,
+                "task_goal": running.goal,
+                "task_type": running.task_type,
+                "inputs": running.inputs,
+                "expected_outputs": running.expected_outputs,
+                "acceptance_criteria": running.acceptance_criteria,
+                "model_policy": running.model_policy,
+                "attempt_number": attempt.attempt_number,
+            },
+            execution_limits=dict(running.execution_limits),
+            logging_policy={"sanitize_secrets": True},
+            approval_policy=dict(running.validation_policy),
+        )
+        self._log(workflow, f"queue-backed task started task_id={running.task_id} attempt={attempt.attempt_number}")
+        return self.runtime.execute_task(request)
 
     def _execute_task(self, workflow: Workflow, task: WorkflowTask) -> RuntimeExecutionResult:
         running = task.with_status(TaskStatus.RUNNING, started_at=utc_now_iso(), attempt_count=task.attempt_count + 1)
@@ -373,6 +510,24 @@ class WorkflowEngine:
             requires_review=requires_review,
             audit_log_ref=f"memory://workflow/{workflow.workflow_id}",
         )
+
+    def _workflow_status_from_scheduler(self, scheduler_status: str) -> WorkflowStatus:
+        if scheduler_status == "done":
+            return WorkflowStatus.DONE
+        if scheduler_status == "blocked":
+            return WorkflowStatus.PAUSED
+        if scheduler_status == "idle":
+            return WorkflowStatus.PAUSED
+        return WorkflowStatus.FAILED
+
+    def _closure_from_workflow_status(self, status: WorkflowStatus) -> str:
+        if status == WorkflowStatus.DONE:
+            return "conclude"
+        if status == WorkflowStatus.CANCELLED:
+            return "cancel"
+        if status == WorkflowStatus.PAUSED:
+            return "review"
+        return "fail"
 
     def _workflow_with_tasks(self, workflow: Workflow, task_map: dict[str, WorkflowTask]) -> Workflow:
         return replace(workflow, tasks=tuple(task_map[task.task_id] for task in workflow.tasks))
