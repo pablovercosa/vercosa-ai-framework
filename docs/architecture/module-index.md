@@ -64,7 +64,7 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 
 ## Relações Principais
 
-- `missions/` controla ciclo operacional de missões e deve delegar planejamento para `workflows/` quando a ponte estiver consolidada.
+- `missions/` controla ciclo operacional de missões, compõe contexto de execução por contrato base e deve delegar planejamento para `workflows/` quando a ponte estiver consolidada.
 - `workflows/` define plano e execução sequencial MVP; `tasks/` concentra estado, elegibilidade e tentativas de tasks.
 - `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.

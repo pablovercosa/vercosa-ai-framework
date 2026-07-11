@@ -4,7 +4,7 @@ Links principais: [Exemplos](README.md) | [Uso do runner seguro](../operations/s
 
 ## Objetivo
 
-Explicar o fluxo operacional atual de missões locais no Vercosa AI Framework, incluindo execução segura de uma missão, execução segura em batch como padrão quando seguro, batch de 3 e batch de 10.
+Explicar o fluxo operacional atual de missões locais no Vercosa AI Framework, incluindo execução segura de uma missão, execução segura em batch como padrão quando seguro, batch de 3 e batch recomendado de até 8.
 
 Status deste exemplo: exemplo operacional executável quando houver missões revisadas em `missions/queue/` e o ambiente local estiver pronto.
 
@@ -92,7 +92,7 @@ Comando sem variável explícita, usando o default implementado pelo script:
 ./scripts/vaf-run-batch-safe.sh
 ```
 
-O padrão implementado pelo script é `VAF_BATCH_SIZE=3` quando a variável não é informada. O padrão operacional recomendado para blocos normais já revisados e seguros é `VAF_BATCH_SIZE=10`.
+O padrão implementado pelo script é `VAF_BATCH_SIZE=3` quando a variável não é informada. O teto operacional recomendado para blocos normais já revisados e seguros é `VAF_BATCH_SIZE=8`.
 
 Com tamanho explícito:
 
@@ -130,17 +130,17 @@ Use batch de 3 quando:
 - Há alguma dúvida operacional leve, mas não bloqueante.
 - Houve falha corrigida, limite externo resolvido ou retomada após interrupção.
 
-## Batch De 10
+## Batch De Até 8
 
-Batch de 10 é o limite máximo seguro inicial documentado.
+Batch de até 8 é o teto operacional recomendado para blocos normais já revisados e seguros.
 
 Comando:
 
 ```bash
-VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
+VAF_BATCH_SIZE=8 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Use batch de 10 como fluxo operacional padrão somente quando:
+Use batch de até 8 como fluxo operacional recomendado somente quando:
 
 - O fluxo já foi validado ou não há mudança recente no runner, na fila ou no ambiente operacional.
 - As missões são pequenas ou médias.
@@ -150,7 +150,7 @@ Use batch de 10 como fluxo operacional padrão somente quando:
 - O risco de conflito entre missões é baixo.
 - Commits separados por missão continuam aceitáveis para revisão.
 
-Não use batch de 10 quando:
+Não use batch normal quando:
 
 - Houver mudança arquitetural profunda.
 - Houver alteração em scripts críticos.
@@ -164,7 +164,7 @@ Não use batch de 10 quando:
 
 ## Validação Pós-Batch
 
-Validação pós-batch é obrigatória antes de push, novo batch ou liberação de batch de 10.
+Validação pós-batch é obrigatória antes de push, novo batch ou retomada de batch normal.
 
 Comandos recomendados pelo checklist operacional:
 

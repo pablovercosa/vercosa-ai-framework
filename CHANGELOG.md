@@ -13,6 +13,10 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Auditoria estratégica de aderência ao objetivo e escopo original em `docs/audits/objective-and-scope-alignment-audit.md`, com classificação geral `ALINHADO COM RESSALVAS`.
 - Checklist canônico factual de implementação em `docs/alignment/implementation-status.md`, separando planejado, implementado, integrado, validado, adiado, fora do escopo e em revisão.
 - Histórico de marcos por faixa de missões em `docs/history/mission-milestones.md`, registrando a série disponível iniciada em `0002`.
+- Contrato base versionado de execução de missões em `missions/base/EXECUTION_CONTRACT.md`.
+- Agente executor base operacional em `.opencode/agents/mission-executor-base.md`.
+- Template compacto de missão em `missions/templates/COMPACT_MISSION_TEMPLATE.md`.
+- Compositor determinístico de contexto de missão em `src/vercosa_ai_framework/missions/prompt_composer.py`.
 - Fundação modular inicial do framework como camada de Harness Engineering para agentes de IA, desenvolvimento orientado por especificações e execução governada.
 - Evolução por missões em Markdown, com backlog estratégico, fila operacional, critérios de aceite, validações locais e rastreabilidade documental.
 - Mission Runner local, fila em diretórios e runner seguro de uma missão.
@@ -48,6 +52,8 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Estado atual, roadmap, perguntas em aberto e backlog estratégico alinhados à auditoria de escopo, priorizando fluxo de valor integrado antes de nova preparação de tag alfa.
 - README principal consolidado com a identidade pública do VAF como framework de Harness Engineering, sem tratar modelo, runtime ou provider como núcleo do projeto.
 - Batch de 10 documentado como fluxo operacional padrão para blocos normais revisados e seguros; batch de 3 preservado para testes, retomadas, blocos pequenos e recuperação.
+- Runner shell passa a compor contexto efetivo antes de chamar OpenCode e restaura a missão para `queue` quando a composição falha.
+- Recomendação operacional de batch normal ajustada para até 8 missões, preservando blocos menores para missões estruturais, pesadas ou de recuperação.
 - Execução individual preservada para missões sensíveis, críticas, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.
 - OpenCode documentado como runtime/laboratório inicial atrás de adapter, não como centro arquitetural do framework.
 

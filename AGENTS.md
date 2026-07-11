@@ -25,6 +25,12 @@ Permitir que qualquer pessoa desenvolva software orientado por especificações 
 
 Nenhum código deve ser implementado sem uma Spec aprovada.
 
+## Contrato de execução de missões
+
+`AGENTS.md` continua sendo a fonte das regras globais e permanentes do repositório. As regras comuns específicas de execução de missões ficam centralizadas no contrato base versionado em `missions/base/EXECUTION_CONTRACT.md` e documentadas em `docs/operations/mission-execution-contract.md`.
+
+O runner deve compor explicitamente o contexto final de execução com `AGENTS.md`, contrato base, agente executor base, agentes operacionais especializados declarados e missão específica. Missões novas a partir de `0103` devem usar o formato compacto em `missions/templates/COMPACT_MISSION_TEMPLATE.md`, sem repetir integralmente o contrato.
+
 ## Idioma oficial
 
 O idioma oficial da documentação do Vercosa AI Framework é português do Brasil.

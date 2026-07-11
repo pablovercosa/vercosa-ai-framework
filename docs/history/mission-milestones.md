@@ -134,3 +134,22 @@ Limitações:
 - A preparação alfa ocorreu antes de um fluxo central completo de valor externo.
 
 Resultado: preparação alfa ficou documentada de forma conservadora, mas a decisão correta no estado atual é adiar publicação até resolver bloqueios e demonstrar fluxo integrado mínimo.
+
+## 0101-0102
+
+Objetivo da faixa: auditar aderência ao objetivo original e consolidar infraestrutura de execução de missões para reduzir repetição operacional.
+
+Principais entregas:
+
+- Auditoria estratégica de aderência ao objetivo e escopo original.
+- Checklist factual de implementação.
+- Contrato base versionado `v1` para execução de missões.
+- Agente executor base operacional em `.opencode/agents/`.
+- Formato compacto de missão para a série a partir de `0103`.
+- Compositor obrigatório de contexto integrado ao runner shell.
+
+Limitações:
+
+- A composição de prompt não substitui sandbox técnico completo.
+- Missões legadas continuam compatíveis e não foram reescritas.
+- O fluxo arquitetural completo Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda permanece pendente.

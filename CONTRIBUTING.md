@@ -108,7 +108,7 @@ Runner em batch:
 
 ```bash
 VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
-VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
+VAF_BATCH_SIZE=8 ./scripts/vaf-run-batch-safe.sh
 ```
 
 O batch deve parar na primeira falha. Se uma missão falhar, preserve logs, revise `missions/failed/`, verifique Git, rode validações e não adicione novas missões à fila antes de diagnosticar.
@@ -139,7 +139,9 @@ Use batch somente quando houver:
 - nenhuma falha recente sem diagnóstico;
 - aceitação de revisar commits e documentação depois da execução.
 
-Use `VAF_BATCH_SIZE=3` para validação, retomada, recuperação ou blocos pequenos. Use `VAF_BATCH_SIZE=10` apenas para blocos normais já revisados e seguros.
+Use `VAF_BATCH_SIZE=3` para validação, retomada, recuperação ou blocos pequenos. Use `VAF_BATCH_SIZE=8` como teto recomendado para blocos normais já revisados e seguros. Missões estruturais ou pesadas devem usar blocos menores.
+
+Missões novas a partir de `0103` devem usar o template compacto em [missions/templates/COMPACT_MISSION_TEMPLATE.md](missions/templates/COMPACT_MISSION_TEMPLATE.md). O runner compõe `AGENTS.md`, contrato base, agente executor base, agentes operacionais especializados declarados e missão específica antes da execução.
 
 ## Push E Publicação
 

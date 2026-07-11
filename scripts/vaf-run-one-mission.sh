@@ -16,8 +16,16 @@ BASE="$(basename "$MISSION")"
 NAME="${BASE%.md}"
 RUNNING="missions/running/$BASE"
 LOG="logs/${NAME}-$(date +%Y%m%d-%H%M%S).log"
+COMPOSED_PROMPT=""
 
 mv "$MISSION" "$RUNNING"
+
+cleanup_composed_prompt() {
+  if [ -n "$COMPOSED_PROMPT" ] && [ -f "$COMPOSED_PROMPT" ]; then
+    rm -f "$COMPOSED_PROMPT"
+  fi
+}
+trap cleanup_composed_prompt EXIT
 
 echo "== Missão =="
 echo "$RUNNING"
@@ -25,6 +33,16 @@ echo
 echo "== Log =="
 echo "$LOG"
 echo
+
+COMPOSED_PROMPT="$(mktemp)"
+if ! PYTHONPATH=src python3 -m vercosa_ai_framework.missions.prompt_composer --compose "$RUNNING" --project-root . >"$COMPOSED_PROMPT" 2>"$LOG.compose"; then
+  echo "Falha de composição antes da execução da missão." | tee "$LOG"
+  cat "$LOG.compose" | tee -a "$LOG"
+  rm -f "$LOG.compose"
+  mv "$RUNNING" "$MISSION"
+  exit 1
+fi
+rm -f "$LOG.compose"
 
 set +e
 
@@ -37,7 +55,7 @@ opencode \
   "${AUTO_ARGS[@]}" \
   --print-logs \
   --log-level INFO \
-  run "$(cat "$RUNNING")" \
+  run "$(cat "$COMPOSED_PROMPT")" \
   2>&1 | tee "$LOG"
 
 STATUS="${PIPESTATUS[0]}"
@@ -47,7 +65,10 @@ if [ "$STATUS" -eq 0 ]; then
   mv "$RUNNING" "missions/done/$BASE"
 
   if [ "${VAF_AUTO_COMMIT:-0}" = "1" ]; then
-    git add -A
+    mapfile -t CHANGED_FILES < <(git ls-files --modified --deleted --others --exclude-standard)
+    if [ "${#CHANGED_FILES[@]}" -gt 0 ]; then
+      git add -- "${CHANGED_FILES[@]}"
+    fi
     if ! git diff --cached --quiet; then
       COMMIT_MESSAGE="${VAF_COMMIT_MESSAGE:-}"
       if [ -z "$COMMIT_MESSAGE" ]; then

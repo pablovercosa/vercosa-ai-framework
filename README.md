@@ -50,6 +50,8 @@ Implementado em estado MVP ou contrato inicial:
 
 - Mission Runner local, fila em diretórios e integração opcional com eventos auditáveis em Python.
 - Runner seguro de uma missão e runner seguro em batch por scripts operacionais.
+- Composição obrigatória de contexto de missão pelo runner, com `AGENTS.md`, contrato base versionado, agente executor base, agentes operacionais especializados declarados e missão específica.
+- Formato compacto para missões novas a partir de `0103`, com frontmatter validável e negação por padrão para capacidades perigosas.
 - Policy Engine declarativo e Guardian Engine determinístico.
 - Usage/API Limit Guard para classificar sinais textuais de limite externo em logs já recebidos.
 - Context Router, Token Budget Manager e `ContextPackage` determinísticos.
@@ -128,7 +130,9 @@ Eixo operacional:
 
 O fluxo operacional padrão do projeto é executar missões em batch quando o bloco em `missions/queue/` estiver bem especificado, revisado e seguro. O batch continua usando missões completas em Markdown, uma missão por arquivo, escopo claro, restrições explícitas, critérios de aceite verificáveis, commits separados, parada na primeira falha, validação pós-batch e push manual por padrão.
 
-Use `VAF_BATCH_SIZE=10` para blocos normais já revisados. Use `VAF_BATCH_SIZE=3` para testes, retomadas, blocos pequenos ou recuperação. Use `./scripts/vaf-run-next-safe.sh` para missões sensíveis, arquiteturais, incertas, de alto risco, investigação de erro ou recuperação após falha.
+Antes da execução, o runner compõe determinísticamente o contexto com `AGENTS.md`, `missions/base/EXECUTION_CONTRACT.md`, `.opencode/agents/mission-executor-base.md`, agentes operacionais especializados declarados e a missão. Missões compactas usam `missions/templates/COMPACT_MISSION_TEMPLATE.md`; missões legadas continuam compatíveis.
+
+Use `VAF_BATCH_SIZE=8` para blocos normais já revisados. Use `VAF_BATCH_SIZE=3` para testes, retomadas, blocos pequenos ou recuperação. Use `./scripts/vaf-run-next-safe.sh` para missões sensíveis, arquiteturais, incertas, de alto risco, investigação de erro ou recuperação após falha.
 
 `VAF_AUTO_PUSH=1` continua sendo opt-in. A prática recomendada é validar o batch com o checklist operacional e fazer push manual somente depois de revisar estado das missões, testes, `compileall`, Git e commits.
 
@@ -161,6 +165,8 @@ Módulos principais:
 ## Estrutura Do Repositório
 
 - `AGENTS.md`: contexto central para agentes e regras de colaboração.
+- `missions/base/EXECUTION_CONTRACT.md`: contrato base versionado das regras comuns de execução de missões.
+- `missions/templates/COMPACT_MISSION_TEMPLATE.md`: template compacto para missões novas.
 - `specs/framework/`: Specs do framework.
 - `docs/`: documentação técnica, alinhamento, arquitetura, operações e exemplos.
 - `src/vercosa_ai_framework/`: contratos e MVPs do framework.

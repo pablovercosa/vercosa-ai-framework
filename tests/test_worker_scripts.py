@@ -113,6 +113,6 @@ def test_safe_runner_usage_documentation_exists_and_covers_required_commands():
     assert "não substitui revisão humana" in doc
     assert "./scripts/vaf-run-batch-safe.sh" in doc
     assert "VAF_BATCH_SIZE=3" in doc
-    assert "VAF_BATCH_SIZE=10" in doc
+    assert "VAF_BATCH_SIZE=8" in doc
     assert "batch para na primeira falha" in doc
     assert "commits continuam separados por missão" in doc

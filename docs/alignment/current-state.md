@@ -75,6 +75,9 @@ Ativos principais:
 - `docs/release/alpha-candidate-summary.md`: consolidação local preparatória do candidato alfa `0.1.0-alpha.1`, sem criar tag, publicar release, publicar pacote, fazer push ou confirmar CI remoto.
 - `docs/release/tag-decision-request.md`: solicitação futura de decisão sobre tag alfa, sem autorização automática e dependente de validação final, push, CI remoto e autorização explícita.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
+- `missions/base/EXECUTION_CONTRACT.md`: contrato base versionado `v1` para regras comuns de execução de missões.
+- `missions/templates/COMPACT_MISSION_TEMPLATE.md`: template compacto para missões novas a partir de `0103`.
+- `.opencode/agents/mission-executor-base.md`: agente executor base operacional composto automaticamente pelo runner.
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
 - `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
@@ -163,10 +166,12 @@ Integrações já feitas em estado MVP ou integração inicial:
 - Usage/API Limit Guard disponível para classificar sinais textuais de limite externo de API em logs já recebidos.
 - Audit/Event Log inicial com helpers opcionais para eventos de Policy, Guardian, Context e ciclo de vida de missão/batch.
 - `MissionRunner` Python capaz de registrar eventos de missão quando recebe `EventLog` opcional.
+- `prompt_composer` em `src/vercosa_ai_framework/missions/` capaz de compor contexto efetivo de execução com `AGENTS.md`, contrato base, agente executor base, agentes operacionais especializados declarados, permissões e missão específica.
+- Runner shell integrado ao compositor antes da chamada ao OpenCode, com restauração para `queue` quando a composição falha.
 - CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links` e `alpha-readiness`.
 - Runner seguro individual e runner seguro em batch documentados como fluxo operacional local.
 
-O projeto validou batch de 3 como fluxo de teste, retomada, bloco pequeno e recuperação. O projeto também executou batch de 10 como fluxo funcional para blocos normais revisados e seguros, com ressalva operacional: limites externos de API, quota, rate limit ou billing podem interromper o batch e exigem parada segura antes de retomada.
+O projeto validou batch de 3 como fluxo de teste, retomada, bloco pequeno e recuperação. O projeto também executou batch de 10 como fluxo funcional histórico para blocos normais revisados e seguros, com ressalva operacional: limites externos de API, quota, rate limit ou billing podem interromper o batch e exigem parada segura antes de retomada. A recomendação operacional atual passa a ser batch normal de até 8 missões, blocos de 2 a 4 para missões estruturais ou pesadas e 1 a 3 para recuperação.
 
 ## Cadeia De Execução Atual
 
@@ -220,6 +225,8 @@ Fluxo operacional atual:
 
 ```text
 missions/queue
+↓
+prompt_composer
 ↓
 scripts/vaf-run-next-safe.sh ou scripts/vaf-run-batch-safe.sh
 ↓

@@ -6,7 +6,7 @@ Links principais: [README principal](../../README.md) | [Uso do runner seguro](s
 
 Padronizar a validação operacional obrigatória do Vercosa AI Framework depois de uma execução em batch, antes de fazer push, iniciar novo bloco de missões ou retomar execução após interrupção.
 
-Este checklist deve ser usado depois de `./scripts/vaf-run-batch-safe.sh`, depois de qualquer batch com `VAF_BATCH_SIZE=3`, depois de qualquer batch com `VAF_BATCH_SIZE=10`, antes de `git push` e antes de iniciar novo bloco de missões.
+Este checklist deve ser usado depois de `./scripts/vaf-run-batch-safe.sh`, depois de qualquer batch com `VAF_BATCH_SIZE=3`, depois de qualquer batch normal de até `VAF_BATCH_SIZE=8`, antes de `git push` e antes de iniciar novo bloco de missões.
 
 Batch é o fluxo operacional padrão quando o bloco estiver bem especificado, revisado e seguro. Este checklist é o bloqueio operacional antes de publicação: sem validação pós-batch, não faça push.
 
@@ -155,7 +155,7 @@ Não faça push quando qualquer item abaixo ocorrer:
 
 ## Quando parar e investigar
 
-Pare antes de novo batch, push ou liberação de batch de 10 quando houver:
+Pare antes de novo batch, push ou retomada de batch normal quando houver:
 
 - `failed > 0`.
 - `running > 0` com worker parado.
@@ -189,9 +189,9 @@ Se o log mencionar `Usage/API Limit Guard`, `usage limit has been reached`, `quo
 
 Limite externo de API não é, por si só, bug interno do projeto. Não insista em retries. Verifique `missions/queue`, `missions/running`, `missions/done` e `missions/failed`; se houver missão presa em `running`, devolva para `queue` somente quando for seguro e depois de entender o estado real da entrega. Retome com execução individual ou `VAF_BATCH_SIZE=3` apenas quando quota, rate limit, crédito ou billing estiverem disponíveis.
 
-## Quando usar batch de 10
+## Quando usar batch de até 8
 
-Batch de 10 é o fluxo operacional padrão para blocos normais já revisados e seguros. Use somente quando:
+Batch de até 8 é o teto recomendado para blocos normais já revisados e seguros. Use somente quando:
 
 - O fluxo já foi validado ou não há mudança recente no runner, na fila ou no ambiente operacional.
 - `failed=0`.
@@ -203,11 +203,11 @@ Batch de 10 é o fluxo operacional padrão para blocos normais já revisados e s
 - Não houve falha recente.
 - Não há missão de alto risco no próximo bloco.
 
-O operador deve usar batch de 3 quando o risco, a revisão, a retomada, a recuperação ou a dependência entre missões recomendar blocos menores. Use execução individual para missões sensíveis, arquiteturais, incertas, investigativas ou críticas.
+O operador deve usar batch de 3 quando o risco, a revisão, a retomada, a recuperação ou a dependência entre missões recomendar blocos menores. Use blocos de 2 a 4 para missões estruturais ou pesadas e execução individual para missões sensíveis, arquiteturais, incertas, investigativas ou críticas.
 
-## Quando suspender batch de 10
+## Quando suspender batch normal
 
-Suspenda batch de 10 quando:
+Suspenda batch normal quando:
 
 - Houve falha no batch anterior.
 - Houve falha de quota, rate limit, billing hard limit ou crédito insuficiente no batch anterior.
@@ -248,4 +248,4 @@ O valor de `queue` pode ser maior que `0` quando o batch executou apenas parte d
 - Se houver falha, parar.
 - Se houver limite externo de API, parar e retomar somente quando a quota estiver disponível.
 - Se a missão for sensível, usar execução individual.
-- Se o bloco estiver revisado e seguro, batch de 10 é o fluxo operacional padrão.
+- Se o bloco estiver revisado e seguro, batch de até 8 é o teto recomendado.

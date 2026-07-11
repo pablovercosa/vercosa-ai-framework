@@ -72,7 +72,7 @@ Uso sem variável explícita, usando o default implementado pelo script:
 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Por padrão implementado, o script usa `VAF_BATCH_SIZE=3` quando a variável não é informada. Operacionalmente, use `VAF_BATCH_SIZE=10` para blocos normais já revisados e seguros, `VAF_BATCH_SIZE=3` para testes, retomadas, blocos pequenos ou recuperação, e execução individual para missões sensíveis.
+Por padrão implementado, o script usa `VAF_BATCH_SIZE=3` quando a variável não é informada. Operacionalmente, use `VAF_BATCH_SIZE=8` como teto recomendado para blocos normais já revisados e seguros, `VAF_BATCH_SIZE=3` para testes, retomadas, blocos pequenos ou recuperação, e execução individual para missões sensíveis.
 
 Uso com tamanho explícito:
 
@@ -83,10 +83,10 @@ VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
 Uso com limite máximo inicial:
 
 ```bash
-VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
+VAF_BATCH_SIZE=8 ./scripts/vaf-run-batch-safe.sh
 ```
 
-`VAF_BATCH_SIZE` deve ser um inteiro entre 1 e 10. O limite máximo seguro inicial é 10 e não deve ser aumentado sem nova decisão explícita.
+`VAF_BATCH_SIZE` deve ser um inteiro entre 1 e 10 por compatibilidade do script atual. O teto operacional recomendado é 8 missões para blocos normais; missões pesadas ou estruturais devem usar blocos de 2 a 4, e recuperação deve usar 1 a 3.
 
 O batch executa cada missão chamando `./scripts/vaf-run-next-safe.sh` com push desativado para aquela iteração. Os commits continuam separados por missão, porque o commit continua sendo feito pelo worker acionado pelo runner de uma missão. O push automático, quando solicitado, ocorre somente ao final do batch e somente se todas as missões executadas passarem.
 
@@ -107,7 +107,7 @@ Riscos de batch grande:
 - Mais missões executadas antes de revisão humana aumentam o volume de mudanças a auditar.
 - Falhas tardias podem exigir análise de múltiplos commits locais já criados.
 - `VAF_COMMIT_MESSAGE` único pode ser inadequado para múltiplas missões, porque a mesma mensagem será repassada para cada commit do batch.
-- Use `VAF_BATCH_SIZE=10` apenas para blocos normais já revisados e seguros.
+- Use `VAF_BATCH_SIZE=8` como teto recomendado para blocos normais já revisados e seguros.
 - Use `VAF_BATCH_SIZE=3` para validação, retomada, blocos pequenos ou recuperação.
 - Use execução individual para missões sensíveis ou de alto risco.
 
@@ -169,6 +169,8 @@ O script `scripts/vaf-run-batch-safe.sh` executa o seguinte fluxo local:
 O runner usa `set -euo pipefail` e aborta em caso de erro. Falhas de preflight, worker, estado da fila, `pytest`, `compileall`, auto-commit ou push interrompem o fluxo.
 
 Esse comportamento preserva evidências locais para revisão, em vez de seguir com entrega parcial.
+
+Antes de chamar o OpenCode, `scripts/vaf-run-one-mission.sh` compõe o contexto efetivo com `PYTHONPATH=src python3 -m vercosa_ai_framework.missions.prompt_composer --compose`. Uma falha de composição ocorre antes da execução, retorna a missão para `missions/queue`, mantém `missions/running` limpo, registra erro local e não cria commit.
 
 O runner em batch também usa `set -euo pipefail` e herda a parada por falha do runner de próxima missão. O batch não continua para a próxima missão quando qualquer validação falha.
 

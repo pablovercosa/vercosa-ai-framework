@@ -22,6 +22,8 @@ A próxima fase deve reduzir ambiguidade, não aumentar superfície funcional.
 
 Atualização da missão 0101: a auditoria de aderência classificou o projeto como `ALINHADO COM RESSALVAS`. A prioridade imediata deixa de ser avanço de release alfa e passa a ser provar um fluxo de valor integrado mínimo. O checklist factual de implementação está em [implementation-status.md](implementation-status.md), e a auditoria está em [docs/audits/objective-and-scope-alignment-audit.md](../audits/objective-and-scope-alignment-audit.md).
 
+Atualização da missão 0102: o contrato base `v1`, o agente executor base, o template compacto e o compositor obrigatório do runner passam a ser infraestrutura operacional. As missões novas de `0103` a `0110` devem usar o formato compacto e declarar exceções de capacidade explicitamente.
+
 ## Estado Pós-Batch Funcional
 
 O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. O estado atual considerado por este roadmap inclui:
@@ -82,7 +84,7 @@ Objetivo: manter batch como fluxo operacional padrão quando seguro, sem transfo
 
 Saídas recomendadas:
 
-- Manter `VAF_BATCH_SIZE=10` como recomendação para blocos normais revisados e seguros.
+- Manter `VAF_BATCH_SIZE=8` como teto recomendado para blocos normais revisados e seguros, sem alterar nesta missão o limite técnico atual do script.
 - Manter `VAF_BATCH_SIZE=3` para validação, retomada, blocos pequenos ou recuperação.
 - Manter execução individual para missões sensíveis, críticas, arquiteturais, incertas, investigativas ou de alto risco.
 - Integrar a CLI gradualmente com validações locais de Git e logs, sem executar comandos destrutivos nem substituir revisão humana.

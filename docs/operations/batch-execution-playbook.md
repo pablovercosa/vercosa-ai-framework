@@ -69,13 +69,13 @@ Batch de validação, retomada ou bloco pequeno com 3 missões:
 VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Batch operacional padrão com 10 missões:
+Batch operacional recomendado com até 8 missões:
 
 ```bash
-VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
+VAF_BATCH_SIZE=8 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Batch de 10 é o tamanho recomendado para blocos normais já revisados e seguros. Batch de 3 é recomendado para testes, retomadas, blocos pequenos ou recuperação.
+Batch de até 8 é o teto recomendado para blocos normais já revisados e seguros. Batch de 3 é recomendado para testes, retomadas, blocos pequenos ou recuperação. Missões pesadas, estruturais ou de runner devem usar blocos de 2 a 4.
 
 ## Diagnóstico Local Com `doctor` E `batch-summary`
 
@@ -154,7 +154,7 @@ Se `doctor` retornar `status_geral: error`, não inicie nem retome batch antes d
 `VAF_BATCH_SIZE` controla quantas missões o batch tenta executar.
 
 - O padrão implementado no script é `3` quando `VAF_BATCH_SIZE` não é informado.
-- O padrão operacional recomendado para blocos normais já revisados é `10`.
+- O teto operacional recomendado para blocos normais já revisados é `8`.
 - O padrão operacional recomendado para testes, retomadas, blocos pequenos ou recuperação é `3`.
 - Valores aceitos vão de `1` a `10`.
 - Valores menores que `1` devem ser recusados.
@@ -218,15 +218,15 @@ VAF_BATCH_SIZE=3 ./scripts/vaf-run-batch-safe.sh
 
 Durante esse teste, prefira não usar `VAF_AUTO_PUSH=1`. Revise localmente o resultado, os commits separados, os logs, os arquivos movidos em `missions/` e as validações finais.
 
-## Como Executar Batch Operacional Padrão Com 10 Missões
+## Como Executar Batch Operacional Recomendado Com Até 8 Missões
 
-Use batch de 10 para blocos normais já revisados, seguros e com dependências claras:
+Use batch de até 8 para blocos normais já revisados, seguros e com dependências claras:
 
 ```bash
-VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh
+VAF_BATCH_SIZE=8 ./scripts/vaf-run-batch-safe.sh
 ```
 
-Batch de 10 é o fluxo operacional padrão quando essas condições forem atendidas. Ele deve ser suspenso se houver falha recente, mudança arquitetural sensível, limite externo de API, Git sujo, missão presa em `running`, missão em `failed`, alteração fora do escopo ou dúvida sobre a entrega.
+Batch de até 8 é o fluxo operacional recomendado quando essas condições forem atendidas. Ele deve ser reduzido se houver falha recente, mudança arquitetural sensível, limite externo de API, Git sujo, missão presa em `running`, missão em `failed`, alteração fora do escopo ou dúvida sobre a entrega.
 
 ## Validações Durante O Batch
 
@@ -339,7 +339,7 @@ Verifique o último commit:
 git log --oneline --decorate -1
 ```
 
-Depois de diagnosticar, corrija a causa, valide localmente e só então considere novo batch. Para recuperação, prefira execução individual ou `VAF_BATCH_SIZE=3` antes de voltar a `VAF_BATCH_SIZE=10`.
+Depois de diagnosticar, corrija a causa, valide localmente e só então considere novo batch. Para recuperação, prefira execução individual ou `VAF_BATCH_SIZE=3` antes de voltar a blocos normais de até `VAF_BATCH_SIZE=8`.
 
 Quando o diagnóstico indicar limitação externa de uso/API, trate a falha como condição operacional externa, não como bug interno do framework, até prova em contrário. Não reexecute em loop e não amplie o batch antes de confirmar quota, rate limit, crédito ou billing do provider.
 

@@ -23,6 +23,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | --- | --- | --- | --- |
 | Fundação | Estrutura Python em `src/`, pacote importável e testes locais | `pyproject.toml`, `tests/`, `pytest` | Validado localmente; instalação limpa histórica ainda reprovada. |
 | Runners | Runner shell individual e batch | `scripts/`, docs operacionais, logs de missões | Integração operacional real do projeto; não prova fluxo arquitetural completo. |
+| Runners | Composição obrigatória de contexto de missão | `src/vercosa_ai_framework/missions/prompt_composer.py`, `scripts/vaf-run-one-mission.sh`, testes de composição | Validado por testes locais; não implementa sandbox técnico completo. |
 | CLI | Comandos `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links`, `alpha-readiness` | `src/vercosa_ai_framework/cli/main.py`, testes CLI | CLI é leitura/diagnóstico; não executa missões. |
 | Testes | Suíte pytest | `tests/` | Testes cobrem contratos e integrações parciais; não substituem fluxo ponta a ponta. |
 | Empacotamento | Instalação editável local planejada com entrypoint `vaf` | `pyproject.toml`, `tests/test_python_packaging.py` | Validado por testes; reexecução limpa ainda pendente. |
@@ -35,6 +36,9 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | --- | --- | --- | --- |
 | Arquitetura | Specs canônicas `0001` a `0014` | `specs/framework/` | Mais amplas que o código atual. |
 | Motores centrais | Mission Runner Python | `src/vercosa_ai_framework/missions/runner.py` | Implementado; integração com Workflow/Task ainda não é padrão. |
+| Motores centrais | Contrato base de execução de missões `v1` | `missions/base/EXECUTION_CONTRACT.md` | Fonte normativa das regras comuns de execução; `AGENTS.md` permanece fonte global. |
+| Motores centrais | Agente executor base operacional | `.opencode/agents/mission-executor-base.md` | Composto automaticamente; complementa o contrato sem substituí-lo. |
+| Motores centrais | Formato compacto de missão | `missions/templates/COMPACT_MISSION_TEMPLATE.md`, `docs/operations/compact-mission-format.md` | Padrão para missões novas a partir de `0103`; legado continua compatível. |
 | Motores centrais | Workflow Engine sequencial | `src/vercosa_ai_framework/workflows/engine.py` | Implementado; não orquestrado pelo runner principal. |
 | Motores centrais | Task Queue e scheduler | `src/vercosa_ai_framework/tasks/` | Implementado; integração com Workflow/Agent ainda parcial. |
 | Motores centrais | Agent Orchestrator | `src/vercosa_ai_framework/agents/` | Implementado; sem fluxo real completo com capabilities. |
@@ -56,6 +60,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Área | Item | Evidência | Lacuna |
 | --- | --- | --- | --- |
 | Arquitetura | Mission -> Workflow -> Task | módulos `missions`, `workflows`, `tasks` | Não há handoff padrão integrado e validado ponta a ponta. |
+| Arquitetura | Composição de prompt/contexto | `prompt_composer` e runner shell | Integrado ao fluxo shell; ainda não substitui Context Router arquitetural. |
 | Arquitetura | Task -> Agent | `agents` depende de `tasks` | Não é caminho operacional padrão. |
 | Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Falta caso de uso concreto integrado. |
 | Auditoria | Eventos de decisões centrais | `audit/integrations.py` | Helpers opcionais; não obrigatórios em todos os fluxos. |

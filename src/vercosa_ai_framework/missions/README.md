@@ -11,6 +11,7 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 - Define tipos de missão e resultado.
 - Mantém uma fila local baseada em diretório.
 - Executa uma missão por meio de `MissionRunner` com avaliação Guardian e RuntimeAdapter injetado.
+- Compõe contexto efetivo de execução por `prompt_composer`, usado pelo runner shell antes do OpenCode.
 - Controla estados básicos como fila, execução, conclusão, falha e cancelamento.
 - Pode registrar eventos auditáveis estruturados de ciclo de vida quando um `EventLog` opcional é fornecido ao `MissionRunner`.
 
@@ -32,6 +33,7 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 | `types.py` | `Mission`, `MissionStatus` e `MissionResult`. |
 | `queue.py` | `DirectoryMissionQueue` para fila local. |
 | `runner.py` | `MissionRunner` e contratos auxiliares de execução. |
+| `prompt_composer.py` | Composição determinística de `AGENTS.md`, contrato base, agentes operacionais e missão. |
 | `__init__.py` | Exportações públicas do módulo. |
 
 ## Principais Tipos, Classes E Funções
@@ -41,6 +43,8 @@ Controlar o ciclo operacional de missões em uma implementação local inicial.
 - `MissionResult`: resultado normalizado de execução.
 - `DirectoryMissionQueue`: fila local de missões em filesystem.
 - `MissionRunner`: executa uma missão com Guardian e RuntimeAdapter.
+- `compose_mission_prompt`: compõe o contexto efetivo de execução sem modificar os arquivos de origem.
+- `validate_mission_prompt`: valida a composição sem persistir prompt composto.
 - `AutoCommitter`: protocolo para commit automático quando política permitir.
 - `GuardianEvaluator`: protocolo para avaliação de política.
 - `event_log` opcional em `MissionRunner`: permite registrar eventos `mission.queued`, `mission.started`, `mission.completed` e `mission.failed` em memória ou outra porta compatível fornecida pelo chamador.
@@ -58,6 +62,7 @@ Saídas:
 - `MissionResult` com status, saída, erro e metadados.
 - Arquivos de fila atualizados quando `DirectoryMissionQueue` é usado.
 - Eventos auditáveis estruturados somente quando um `EventLog` opcional é injetado.
+- Prompt composto em memória ou stdout quando solicitado explicitamente; o runner shell usa arquivo temporário removido ao final.
 
 ## Dependências Internas
 
@@ -96,6 +101,8 @@ Logs textuais dos scripts continuam sendo saída operacional humana. Eventos aud
 ## Docs Relacionadas
 
 - [Mission Runner](../../../docs/mission-runner.md)
+- [Contrato de execução de missões](../../../docs/operations/mission-execution-contract.md)
+- [Formato compacto de missão](../../../docs/operations/compact-mission-format.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 - [SDD Lifecycle](../../../docs/alignment/sdd-lifecycle.md)
 
@@ -111,7 +118,7 @@ mission = Mission(title="Documentar módulo", goal="Criar README técnico")
 
 Status: `MVP`.
 
-Existe execução local mínima com eventos auditáveis opcionais em Python. A separação final entre Mission Runner e Mission Orchestrator ainda está em aberto.
+Existe execução local mínima com eventos auditáveis opcionais em Python e composição obrigatória de contexto no runner shell. A separação final entre Mission Runner e Mission Orchestrator ainda está em aberto.
 
 ## Próximos Passos
 

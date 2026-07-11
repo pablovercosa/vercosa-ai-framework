@@ -35,14 +35,15 @@ O objetivo é permitir que o projeto escolha blocos pequenos e revisáveis para 
 O modelo operacional padrão é batch governado quando a fila executável estiver revisada e segura. O modelo continua incremental e não autoriza execução cega:
 
 1. Preparar um bloco pequeno de missões executáveis em `missions/queue`.
-2. Usar `VAF_BATCH_SIZE=10 ./scripts/vaf-run-batch-safe.sh` para blocos normais já revisados e seguros.
+2. Usar `VAF_BATCH_SIZE=8 ./scripts/vaf-run-batch-safe.sh` como teto recomendado para blocos normais já revisados e seguros.
 3. Parar sempre na primeira falha.
 4. Testar após cada missão por reaproveitamento do runner seguro de uma missão.
 5. Manter commit separado por missão.
 6. Revisar resultados, diffs, documentação e commits locais após o batch.
 7. Preferir push manual após revisão.
 8. Usar `VAF_BATCH_SIZE=3` para testes, retomadas, blocos pequenos ou recuperação.
-9. Usar execução individual para missões sensíveis, arquiteturais, incertas, investigativas ou de alto risco.
+9. Usar blocos de 2 a 4 para missões estruturais ou pesadas.
+10. Usar execução individual para missões sensíveis, arquiteturais, incertas, investigativas ou de alto risco.
 
 Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de aceite, referências a documentos ou validações locais.
 
@@ -83,8 +84,8 @@ Objetivo do ciclo: comprovar que o que foi construído serve ao objetivo real do
 Missões orientadoras:
 
 - 0101: auditar aderência ao objetivo e escopo original, criar checklist canônico de implementação e registrar marcos históricos.
-- 0102: definir contrato base do agente executor e composição obrigatória do runner somente se a auditoria confirmar o caminho de integração.
-- 0103: explicitar o fluxo de valor principal e o consumidor principal do framework.
+- 0102: consolidar contrato base de execução, agente executor base, formato compacto de missão e composição obrigatória pelo runner. Status: em consolidação nesta missão.
+- 0103: explicitar o fluxo de valor principal e o consumidor principal do framework usando o novo formato compacto.
 - 0104: integrar Mission Runner, Workflow Engine e Task Queue em fluxo mínimo validável.
 - 0105: integrar Task Queue, Agent Orchestrator e Capability Resolver sem dar acesso direto a tools/providers.
 - 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado.
@@ -149,7 +150,7 @@ Esses itens podem gerar missões futuras de refinamento, persistência, integra�
 
 Objetivo da fase: manter batch governado como fluxo operacional padrão para blocos seguros e preservar execução individual para risco alto.
 
-Por que a fase existe: o projeto já possui runner seguro de uma missão, runner seguro em batch, validação de batch de 3 e primeiro bloco de 10 concluído; agora precisa manter governança para que batch de 10 seja padrão apenas quando seguro.
+Por que a fase existe: o projeto já possui runner seguro de uma missão, runner seguro em batch, validação de batch de 3 e primeiro bloco histórico de 10 concluído; agora precisa manter governança para que batch normal de até 8 seja usado apenas quando seguro.
 
 Riscos se a fase for pulada: execução cega, commits difíceis de revisar, falhas repetidas, perda de rastreabilidade e entrada prematura de missões dependentes na fila.
 
@@ -158,7 +159,7 @@ Missões prováveis:
 - Integrar CLI com validações de Git de forma segura e somente leitura.
 - Manter comando CLI `missions` alinhado ao fluxo operacional, sem executar, mover ou alterar arquivos.
 - Manter comando CLI `batch-summary` alinhado ao fluxo operacional, sem executar batch, testes, Git ou scripts shell.
-- Revisar periodicamente critérios de batch de 10 após interrupções por limite externo de API.
+- Revisar periodicamente critérios de batch normal após interrupções por limite externo de API.
 
 Dependências:
 
@@ -170,9 +171,9 @@ Dependências:
 Critérios para avançar:
 
 - Batch de 3 missões executado com sucesso ou falhas documentadas e corrigidas.
-- Primeiro bloco de 10 missões reais validado.
+- Primeiro bloco histórico de 10 missões reais validado.
 - Checklist pós-batch aplicado.
-- Critérios claros para quando usar ou não batch de 10.
+- Critérios claros para quando usar batch de até 8, batch reduzido ou execução individual.
 - Nenhuma falha recente sem diagnóstico.
 
 ## Fase 2 — Integrações Centrais
@@ -374,19 +375,19 @@ Critérios de aceite resumidos: checklist cobre sucesso, falha, revisão de comm
 Título: Testar batch de 3 missões.
 Objetivo: validar ou retomar o fluxo operacional com `VAF_BATCH_SIZE=3`.
 Escopo permitido: preparar até 3 missões pequenas, executar runner seguro em batch e registrar resultado.
-Escopo proibido: usar batch de 10, alterar scripts, pular revisão ou fazer push automático por padrão.
+Escopo proibido: usar batch normal amplo, alterar scripts, pular revisão ou fazer push automático por padrão.
 Dependências: playbook e checklist pós-batch.
 Status: validado como fluxo de teste, retomada, bloco pequeno e recuperação.
 Critérios de aceite resumidos: 3 missões passam ou falhas são registradas com diagnóstico e correção antes de nova tentativa.
 
 4. Código sugerido: `M004-liberar-batch-10`
-Título: Liberar uso de batch de 10.
-Objetivo: registrar batch de 10 como fluxo operacional padrão para blocos adequados, revisados e seguros.
+Título: Liberar uso de batch normal.
+Objetivo: registrar batch normal de até 8 como fluxo operacional recomendado para blocos adequados, revisados e seguros.
 Escopo permitido: documentação de critérios, atualização discreta de guias e registro de riscos.
-Escopo proibido: tornar batch de 10 obrigatório para todos os casos, remover limite máximo ou eliminar revisão.
+Escopo proibido: tornar batch normal obrigatório para todos os casos, remover limite máximo ou eliminar revisão.
 Dependências: runner seguro em batch, checklist pós-batch, fluxo validado e ausência de falha recente sem diagnóstico.
 Status: consolidado como padrão operacional para blocos normais já revisados e seguros.
-Critérios de aceite resumidos: documentação deixa claro quando usar batch de 10, quando usar batch de 3, quando usar execução individual e como revisar antes de push.
+Critérios de aceite resumidos: documentação deixa claro quando usar batch de até 8, quando usar batch de 3, quando usar execução individual e como revisar antes de push.
 
 5. Código sugerido: `M005-policy-model-selection`
 Título: Integrar Policy Engine com Model Selection.
@@ -720,7 +721,7 @@ Pendências sustentadas por essa execução:
 4. Gere arquivos `.md` individuais em `missions/queue` apenas para as missões escolhidas.
 5. Inclua objetivo, escopo permitido, escopo proibido, dependências, critérios de aceite e validações em cada arquivo.
 6. Revise a fila antes da execução.
-7. Rode batch somente após revisão; use `VAF_BATCH_SIZE=10` para blocos normais seguros e `VAF_BATCH_SIZE=3` para validação, retomada, bloco pequeno ou recuperação.
+7. Rode batch somente após revisão; use `VAF_BATCH_SIZE=8` para blocos normais seguros e `VAF_BATCH_SIZE=3` para validação, retomada, bloco pequeno ou recuperação.
 8. Se houver falha, não adicione mais missões à fila até diagnosticar e corrigir o problema.
 
 ## Quando NÃO Usar Batch De 10

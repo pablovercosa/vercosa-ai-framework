@@ -26,6 +26,7 @@ Fornecer uma CLI Python operacional inicial para consulta local, determinística
 
 - Não substitui `scripts/vaf-status.sh`.
 - Não substitui `scripts/vaf-run-next-safe.sh` ou `scripts/vaf-run-batch-safe.sh`.
+- Não substitui o compositor de missão `vercosa_ai_framework.missions.prompt_composer`, usado pelo runner antes de executar OpenCode.
 - Não executa missões nesta fase.
 - Não move arquivos entre `queue`, `running`, `done` e `failed`.
 - Não chama scripts shell para calcular o status básico.
@@ -119,6 +120,8 @@ Saídas:
 
 - [Uso do runner seguro](../../../docs/operations/safe-runner-usage.md)
 - [Playbook de execução em batch](../../../docs/operations/batch-execution-playbook.md)
+- [Contrato de execução de missões](../../../docs/operations/mission-execution-contract.md)
+- [Formato compacto de missão](../../../docs/operations/compact-mission-format.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
