@@ -196,6 +196,7 @@ Decisões já encaminhadas:
 30. Quando automatizar release, se houver decisão explícita, sem misturar validação de CI com publicação de pacote?
 31. Quando executar formalmente o checklist pré-tag antes da alfa planejada?
 32. Qual missão específica deve autorizar a revisão final das release notes antes da primeira alfa?
+33. A validação pré-tag deve exigir instalação editável para que `python3 -m vercosa_ai_framework.cli.main` funcione sem `PYTHONPATH=src`, ou a forma explícita com `PYTHONPATH=src` continuará sendo o padrão para checkout não instalado?
 
 ## ADRs Recomendadas
 

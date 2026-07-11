@@ -64,6 +64,7 @@ Ativos principais:
 - `docs/release/versioning-policy.md` e `docs/release/alpha-version-plan.md`: política inicial de versionamento e plano da versão alfa `0.1.0-alpha.1`, sem release publicada.
 - `docs/release/release-policy.md` e `docs/release/pre-release-checklist.md`: política inicial de release e checklist pré-tag, ambos manuais e sem criar tag, release ou pacote.
 - `docs/release/release-notes-alpha.md`: release notes alfa preliminares para a futura `0.1.0-alpha.1`, sem declarar release publicada, tag criada ou pacote publicado.
+- `docs/release/alpha-readiness-diagnostic.md`: diagnóstico local de prontidão alfa executado em 2026-07-11, classificado como `NÃO PRONTO`, sem criar tag, release ou pacote.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
 - `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
@@ -277,10 +278,33 @@ Esse estado é apenas documental:
 - há CI mínimo com GitHub Actions para `pytest`, `python -m vercosa_ai_framework.cli.main docs-links`, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem publicação de pacote ou release;
 - há política inicial de release e checklist pré-tag documentados;
 - há release notes alfa preliminares, ainda pendentes de revisão final antes de publicação real;
+- há diagnóstico local de prontidão alfa registrado com classificação `NÃO PRONTO`;
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 
-Antes de qualquer publicação, ainda são necessárias correção ou decisão explícita sobre os bloqueios da validação limpa reprovada, reexecução do checklist de instalação limpa, execução do checklist pré-tag, testes, `compileall`, revisão do changelog, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
+Antes de qualquer publicação, ainda são necessárias correção ou decisão explícita sobre os bloqueios da validação limpa reprovada, resolução dos bloqueios do diagnóstico local de prontidão alfa, reexecução do checklist de instalação limpa, execução do checklist pré-tag, testes, `compileall`, revisão do changelog, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
+
+## Diagnóstico Local De Prontidão Alfa
+
+O diagnóstico local de prontidão alfa foi executado em 2026-07-11 no commit `7552ba140b5bd42db072a586cb49008ed02a64e1` e registrado em [docs/release/alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md).
+
+Classificação real: `NÃO PRONTO`.
+
+Bloqueios principais registrados:
+
+- `LICENSE` ausente.
+- `missions/running` continha 1 missão.
+- Git estava sujo durante o diagnóstico.
+- A forma literal `python3 -m vercosa_ai_framework.cli.main ...` falhou sem instalação editável ou `PYTHONPATH=src`.
+- A validação de instalação limpa anterior continuava `REPROVADO`.
+
+Resultados positivos registrados:
+
+- `pytest` passou com `444` testes.
+- `python3 -m compileall src` passou.
+- `docs-links` passou pela forma local documentada com `PYTHONPATH=src`.
+
+Esse diagnóstico não declara release publicada, não cria tag e não publica pacote.
 
 ## Validação De Instalação Limpa
 

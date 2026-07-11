@@ -9,7 +9,8 @@ Status conservador:
 - release publicada: não;
 - tag criada: não;
 - pacote publicado: não;
-- publicação em PyPI: não prometida.
+- publicação em PyPI: não prometida;
+- diagnóstico local de prontidão alfa: executado em 2026-07-11 com classificação `NÃO PRONTO`.
 
 Estas notas não são release notes finais, não declaram data de release, não criam marco publicado, não prometem estabilidade, não prometem suporte formal, não prometem SLA e não prometem compatibilidade de API.
 
@@ -18,6 +19,8 @@ Estas notas não são release notes finais, não declaram data de release, não 
 O Vercosa AI Framework, ou VAF, é um framework de Harness Engineering para agentes de IA. O objetivo do projeto é organizar a camada operacional ao redor de agentes e modelos: missões, runners, políticas, guardrails, contexto, orçamento de tokens, auditoria, seleção de modelos, providers, runtimes, validações e documentação orientada por Specs.
 
 A futura alfa `0.1.0-alpha.1` deve representar um marco inicial de experimentação e revisão pública conservadora. Ela ainda não foi publicada. O estado atual é de preparação documental e técnica, com MVPs e contratos em evolução.
+
+O diagnóstico local de prontidão alfa está registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). Ele classificou o estado como `NÃO PRONTO` e não criou tag, release ou pacote.
 
 ## O Que Está Incluído Nesta Alfa Planejada
 
@@ -65,6 +68,7 @@ Esses itens não tornam o projeto pronto para produção e não significam que o
 - Não há pacote publicado.
 - Não há promessa de publicação em PyPI.
 - A validação de instalação limpa registrada está `REPROVADO` até nova execução aprovada ou decisão explícita de exceção.
+- O diagnóstico local de prontidão alfa registrado está `NÃO PRONTO` até resolução dos bloqueios ou decisão explícita de exceção compatível com o risco.
 - `LICENSE` final ainda está pendente no repositório.
 - Não há RAG semântico.
 - Não há embeddings.
@@ -133,6 +137,7 @@ O VAF ainda não possui processo público maduro de segurança, canal definitivo
 Antes de qualquer release real, ainda é necessário:
 
 - executar o checklist pré-tag;
+- revisar o diagnóstico local de prontidão alfa em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md);
 - confirmar CI passando;
 - validar links Markdown relativos com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validar URLs externas;
 - revisar `CHANGELOG.md`;
@@ -154,5 +159,6 @@ Sem essas decisões, a versão permanece planejada e não publicada.
 - [Política de release](release-policy.md)
 - [Checklist pré-tag](pre-release-checklist.md)
 - [Checklist de prontidão para alfa pública](public-alpha-readiness.md)
+- [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md)
 - [CONTRIBUTING.md](../../CONTRIBUTING.md)
 - [SECURITY.md](../../SECURITY.md)

@@ -1,6 +1,6 @@
 # Checklist Pré-Tag
 
-Links principais: [Política de release](release-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
+Links principais: [Política de release](release-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Objetivo
 
@@ -30,6 +30,7 @@ Executar este checklist não cria release, não cria tag, não publica pacote e 
 - [ ] `pytest` passa.
 - [ ] `python3 -m vercosa_ai_framework.cli.main docs-links` passa, validando links Markdown relativos locais sem acessar URLs externas.
 - [ ] `python3 -m vercosa_ai_framework.cli.main alpha-readiness` executado como diagnóstico auxiliar, com pendências e ressalvas revisadas manualmente.
+- [ ] Diagnóstico local de prontidão alfa registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) revisado como evidência, sem tratar o relatório como autorização automática.
 - [ ] `python3 -m compileall src` passa.
 - [ ] Comandos principais da CLI passam.
 - [ ] CI GitHub Actions mínimo passa no commit candidato.
@@ -47,6 +48,7 @@ Executar este checklist não cria release, não cria tag, não publica pacote e 
 - [ ] `docs/release/versioning-policy.md` alinhado.
 - [ ] `docs/release/alpha-version-plan.md` alinhado.
 - [ ] `docs/release/public-alpha-readiness.md` alinhado.
+- [ ] `docs/release/alpha-readiness-diagnostic.md` revisado quando existir execução local aplicável.
 - [ ] `docs/release/clean-install-validation.md` atualizado com execução real aplicável.
 - [ ] Links relativos Markdown validados localmente com `python3 -m vercosa_ai_framework.cli.main docs-links`.
 
@@ -82,6 +84,12 @@ Executar este checklist não cria release, não cria tag, não publica pacote e 
 - [ ] Há autorização explícita para publicar pacote, se um dia houver essa decisão.
 
 Sem autorização explícita, pare. Checklist aprovado não equivale a autorização.
+
+## Evidências Recomendadas Antes Da Tag
+
+O diagnóstico local de prontidão alfa em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) deve ser revisado antes da tag quando existir execução recente. Esse relatório é evidência auxiliar, não gate automático e não autorização de publicação.
+
+Se o relatório estiver classificado como `NÃO PRONTO`, a tag deve permanecer bloqueada até correção dos bloqueios ou decisão explícita de exceção compatível com o risco. Se estiver classificado como `PRONTO COM RESSALVAS`, as ressalvas devem ser avaliadas manualmente antes de qualquer autorização.
 
 ## Comandos Sugeridos
 

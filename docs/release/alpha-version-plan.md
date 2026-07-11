@@ -1,6 +1,6 @@
 # Plano Da Versão Alfa Inicial
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
 
 ## Objetivo
 
@@ -24,10 +24,13 @@ A política inicial de release está em [release-policy.md](release-policy.md). 
 | Tag Git | não criada |
 | Pacote PyPI | não publicado |
 | Garantia de estabilidade | inexistente nesta fase |
+| Diagnóstico local de prontidão alfa | executado em 2026-07-11 com classificação `NÃO PRONTO` |
 
 `0.1.0-alpha.1` é uma versão planejada para organizar uma entrega pública inicial. Ela não deve ser tratada como release feita, marco estável, pacote distribuído ou promessa de compatibilidade de API.
 
 O metadado local em `pyproject.toml` usa `0.1.0a1`, forma PEP 440 equivalente para ferramentas Python. Esse metadado prepara instalação editável local e não publica a alfa.
+
+O diagnóstico local de prontidão alfa foi executado e registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). A classificação real foi `NÃO PRONTO`, sem criar tag, sem publicar release e sem publicar pacote.
 
 ## O Que Já Apoia A Alfa
 
@@ -53,6 +56,7 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, descoberta em `src`, versão `0.1.0a1` e entrypoint local `vaf`;
 - CI mínimo em GitHub Actions com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, usar secrets, executar missões ou chamar providers;
 - registro factual de uma execução de instalação limpa em cópia temporária local, atualmente classificada como `REPROVADO`.
+- registro factual de diagnóstico local de prontidão alfa, atualmente classificado como `NÃO PRONTO` em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md).
 
 Esses artefatos reduzem risco documental, mas não substituem validação final de release.
 
@@ -66,6 +70,7 @@ Antes de publicar a alfa, ainda é necessário:
 - validar links Markdown relativos com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validar URLs externas;
 - manter o CI mínimo passando no commit candidato;
 - executar `python3 -m vercosa_ai_framework.cli.main alpha-readiness` e revisar pendências ou ressalvas, sem tratar o comando como autorização de release;
+- revisar o relatório local [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) e resolver bloqueios ou registrar exceção explícita compatível com o risco;
 - executar `pytest`;
 - executar `python3 -m compileall src`;
 - revisar o `CHANGELOG.md`;

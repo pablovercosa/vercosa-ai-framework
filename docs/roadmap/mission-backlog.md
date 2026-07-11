@@ -111,6 +111,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Política inicial de release concluída em [docs/release/release-policy.md](../release/release-policy.md), sem criação de tag, release, pacote ou automação de deploy.
 - Checklist pré-tag concluído em [docs/release/pre-release-checklist.md](../release/pre-release-checklist.md), como pré-condição manual e sem autorização automática.
 - Release notes alfa preliminares concluídas em [docs/release/release-notes-alpha.md](../release/release-notes-alpha.md), sem declarar release publicada, tag criada ou pacote publicado.
+- Diagnóstico local de prontidão alfa executado e registrado em [docs/release/alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md), com classificação `NÃO PRONTO`, sem criar tag, release ou pacote.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -648,6 +649,14 @@ Escopo permitido: CLI Python, testes unitários, documentação de release e CI 
 Escopo proibido: criar tag, publicar release, publicar pacote, alterar scripts shell, executar missões, executar batch, acessar rede, banco ou providers.
 Status: concluído como comando `alpha-readiness`, com classificação `PRONTO`, `PRONTO COM RESSALVAS` e `NÃO PRONTO`, código `0` para ressalvas e código `1` para bloqueios.
 Critérios de aceite resumidos: comando verifica arquivos mínimos, diretórios principais, contagens de missões, CI local, release notes, política de release e checklist pré-tag sem efeitos colaterais.
+
+35. Código sugerido: `M035-diagnostico-local-prontidao-alfa`
+Título: Executar e registrar diagnóstico local de prontidão alfa.
+Objetivo: executar comandos locais de diagnóstico, testes, `compileall`, validação de links e registrar resultado factual antes de qualquer tag alfa.
+Escopo permitido: documentação de release, alinhamento, roadmap e changelog.
+Escopo proibido: alterar código Python, scripts shell, workflow de CI, criar tag, publicar release, publicar pacote, executar missões, executar batch, acessar rede, banco ou providers.
+Status: concluído como diagnóstico local registrado em [docs/release/alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md), com classificação `NÃO PRONTO`.
+Critérios de aceite resumidos: relatório registra ambiente, branch, commit, estado das missões, estado Git, comandos de CLI, `pytest`, `compileall`, links Markdown, bloqueios, ressalvas e recomendações sem ocultar falhas.
 
 ## Como Transformar Backlog Em Fila Executável
 

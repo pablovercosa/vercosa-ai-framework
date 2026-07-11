@@ -4,7 +4,7 @@ Todas as mudanças relevantes do Vercosa AI Framework devem ser registradas nest
 
 O projeto ainda está em desenvolvimento. Ainda não há release estável publicada, versão alfa publicada, tag de release ou pacote distribuído. Este changelog inicial registra a evolução já consolidada do projeto até o estado atual, sem criar release formal, sem definir versão definitiva e sem prometer estabilidade de produção.
 
-Links úteis: [README.md](README.md) | [Política de versionamento](docs/release/versioning-policy.md) | [Política de release](docs/release/release-policy.md) | [Checklist pré-tag](docs/release/pre-release-checklist.md) | [Plano da versão alfa](docs/release/alpha-version-plan.md) | [Notas preliminares da futura alfa](docs/release/release-notes-alpha.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
+Links úteis: [README.md](README.md) | [Política de versionamento](docs/release/versioning-policy.md) | [Política de release](docs/release/release-policy.md) | [Checklist pré-tag](docs/release/pre-release-checklist.md) | [Plano da versão alfa](docs/release/alpha-version-plan.md) | [Notas preliminares da futura alfa](docs/release/release-notes-alpha.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](docs/release/alpha-readiness-diagnostic.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
 
 ## Não publicado
 
@@ -35,6 +35,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Política inicial de release em `docs/release/release-policy.md`, diferenciando versão planejada, tag Git, GitHub Release, pacote publicado, changelog, release notes, branch `main` e produção.
 - Checklist pré-tag em `docs/release/pre-release-checklist.md`, com validações manuais de Git, missões, testes, documentação, segurança, empacotamento, instalação limpa e autorização explícita.
 - Release notes alfa preliminares em `docs/release/release-notes-alpha.md`, como artefato preparatório para a futura alfa planejada, sem criar versão publicada, data de release, tag, release ou pacote.
+- Diagnóstico local de prontidão alfa em `docs/release/alpha-readiness-diagnostic.md`, executado com classificação `NÃO PRONTO`, sem criar tag, publicar release ou publicar pacote.
 
 ### Alterado
 
@@ -49,6 +50,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Versão alfa planejada `0.1.0-alpha.1` e tag futura planejada `v0.1.0-alpha.1`, registradas apenas como plano documental.
 - Documentação pública inicial para futura alfa, incluindo README, guia de instalação local, guia de contribuição, documentação legal inicial, arquitetura, operações, exemplos e checklist de prontidão para alfa pública.
 - Validação real de instalação limpa em cópia temporária local, registrada como `REPROVADO`, sem criar release, tag ou pacote.
+- Diagnóstico local de prontidão alfa executado em checkout local, com ambiente, branch, commit, estado das missões, estado Git, comandos de CLI, links Markdown, `pytest`, `compileall`, bloqueios, ressalvas e recomendações registrados.
 - `SECURITY.md` inicial, com política conservadora de segurança, limites atuais e orientação para reporte responsável.
 - `CODE_OF_CONDUCT.md` inicial, com expectativas de conduta e limites de governança comunitária nesta fase.
 - Política inicial de uso responsável em `docs/legal/usage-policy.md`.
