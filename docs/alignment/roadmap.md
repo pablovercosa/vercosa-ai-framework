@@ -51,6 +51,8 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Release notes alfa preliminares em `docs/release/release-notes-alpha.md`, como preparação para a futura `0.1.0-alpha.1`, sem release publicada.
 - Diagnóstico local de prontidão alfa em `docs/release/alpha-readiness-diagnostic.md`, executado em 2026-07-11 com classificação `NÃO PRONTO`, sem tag, release ou pacote.
 - Execução local do checklist pré-tag alfa em `docs/release/pre-tag-checklist-execution.md`, executada em 2026-07-11 com classificação `REPROVADO`, sem tag, release, pacote, push ou confirmação de CI remoto.
+- Consolidação local do candidato alfa em `docs/release/alpha-candidate-summary.md`, como fechamento preparatório do bloco 0091-0100, sem tag, release, pacote, push ou confirmação de CI remoto.
+- Solicitação futura de decisão de tag em `docs/release/tag-decision-request.md`, sem autorização automática.
 - Changelog inicial em `CHANGELOG.md`, sem data de release, tag ou promessa de estabilidade.
 - Empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, versão PEP 440 `0.1.0a1`, pacote em `src/vercosa_ai_framework` e entrypoint local `vaf`, sem publicação de pacote.
 - CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
@@ -217,7 +219,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, validação local de links Markdown relativos, bloqueios do diagnóstico local `alpha-readiness` classificado como `NÃO PRONTO`, bloqueios do checklist pré-tag local classificado como `REPROVADO`, revisão final das release notes, nova execução do checklist pré-tag quando houver candidato apto, manutenção do CI mínimo passando após push, correção dos bloqueios remanescentes da instalação limpa reprovada e reexecução do checklist de instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, validação local de links Markdown relativos, bloqueios do diagnóstico local `alpha-readiness` classificado como `NÃO PRONTO`, bloqueios do checklist pré-tag local classificado como `REPROVADO`, validação final pós-batch, push manual do bloco quando autorizado, confirmação de CI remoto após push, revisão final das release notes, nova execução do checklist pré-tag quando houver candidato apto, correção dos bloqueios remanescentes da instalação limpa reprovada e reexecução do checklist de instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git, sem substituir scripts seguros.
 3. Manter os comandos CLI `missions` e `batch-summary` como apoio de diagnóstico operacional somente leitura.
 4. Refinar retenção, rotação e integração opcional da persistência local JSONL para Audit/Event Log.

@@ -11,7 +11,8 @@ Status conservador:
 - pacote publicado: não;
 - publicação em PyPI: não prometida;
 - diagnóstico local de prontidão alfa: executado em 2026-07-11 com classificação `NÃO PRONTO`;
-- checklist pré-tag local: executado em 2026-07-11 com classificação `REPROVADO`.
+- checklist pré-tag local: executado em 2026-07-11 com classificação `REPROVADO`;
+- consolidação local do candidato alfa: registrada em [alpha-candidate-summary.md](alpha-candidate-summary.md), sem publicar release.
 
 Estas notas não são release notes finais, não declaram data de release, não criam marco publicado, não prometem estabilidade, não prometem suporte formal, não prometem SLA e não prometem compatibilidade de API.
 
@@ -24,6 +25,8 @@ A futura alfa `0.1.0-alpha.1` deve representar um marco inicial de experimentaç
 O diagnóstico local de prontidão alfa está registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). Ele classificou o estado como `NÃO PRONTO` e não criou tag, release ou pacote.
 
 O checklist pré-tag local está registrado em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). Ele classificou o estado como `REPROVADO`, não criou tag, não publicou release, não publicou pacote e não confirmou CI remoto. Estas notas continuam preliminares e ainda exigem revisão final antes de qualquer publicação real.
+
+Estas notas foram incluídas na consolidação local do candidato alfa registrada em [alpha-candidate-summary.md](alpha-candidate-summary.md). Isso não altera seu status preliminar, não cria data de release e não declara release publicada.
 
 ## O Que Está Incluído Nesta Alfa Planejada
 

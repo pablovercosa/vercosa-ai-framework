@@ -1,6 +1,6 @@
 # Checklist Pré-Tag
 
-Links principais: [Política de release](release-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
+Links principais: [Política de release](release-policy.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Consolidação local do candidato alfa](alpha-candidate-summary.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Objetivo
 
@@ -9,6 +9,8 @@ Definir um checklist operacional pré-tag para a futura alfa do Vercosa AI Frame
 Executar este checklist não cria release, não cria tag, não publica pacote e não concede autorização automática. Ele é pré-condição para uma decisão explícita posterior.
 
 Este documento permanece como checklist reutilizável. Uma execução local real foi registrada separadamente em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md), com classificação `REPROVADO`; esse relatório não transforma este checklist em documento único de execução e não autoriza tag.
+
+A consolidação local do candidato alfa em [alpha-candidate-summary.md](alpha-candidate-summary.md) é evidência preparatória adicional. Ela não transforma este checklist em autorização automática e não remove os gates manuais.
 
 ## Estado Git
 
@@ -34,6 +36,7 @@ Este documento permanece como checklist reutilizável. Uma execução local real
 - [ ] `python3 -m vercosa_ai_framework.cli.main alpha-readiness` executado como diagnóstico auxiliar, com pendências e ressalvas revisadas manualmente.
 - [ ] Diagnóstico local de prontidão alfa registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) revisado como evidência, sem tratar o relatório como autorização automática.
 - [ ] Execução local do checklist pré-tag registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) revisada como evidência, sem tratar o relatório como autorização automática.
+- [ ] Consolidação local do candidato alfa em [alpha-candidate-summary.md](alpha-candidate-summary.md) revisada como evidência preparatória, sem tratar a consolidação como autorização automática.
 - [ ] `python3 -m compileall src` passa.
 - [ ] Comandos principais da CLI passam.
 - [ ] CI GitHub Actions mínimo passa no commit candidato.

@@ -1,6 +1,6 @@
 # Plano Da Versão Alfa Inicial
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Consolidação local do candidato alfa](alpha-candidate-summary.md) | [Solicitação futura de decisão de tag](tag-decision-request.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
 
 ## Objetivo
 
@@ -35,6 +35,8 @@ O diagnóstico local de prontidão alfa foi executado e registrado em [alpha-rea
 
 O checklist pré-tag local foi executado e registrado em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). A classificação real foi `REPROVADO`, sem criar tag, sem publicar release, sem publicar pacote e sem confirmar CI remoto. A versão permanece planejada, não publicada.
 
+A consolidação local do candidato alfa está registrada em [alpha-candidate-summary.md](alpha-candidate-summary.md), e a solicitação futura de decisão de tag está em [tag-decision-request.md](tag-decision-request.md). Ambos são preparatórios e mantêm a versão como planejada, não publicada, sem tag criada e sem release publicada.
+
 ## O Que Já Apoia A Alfa
 
 O projeto já possui artefatos que apoiam a preparação de uma futura alfa pública:
@@ -61,6 +63,8 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - registro factual de uma execução de instalação limpa em cópia temporária local, atualmente classificada como `REPROVADO`.
 - registro factual de diagnóstico local de prontidão alfa, atualmente classificado como `NÃO PRONTO` em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md).
 - registro factual de execução local do checklist pré-tag alfa, atualmente classificado como `REPROVADO` em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md).
+- consolidação local do candidato alfa, sem publicação, em [alpha-candidate-summary.md](alpha-candidate-summary.md).
+- solicitação futura de decisão sobre tag, sem autorização automática, em [tag-decision-request.md](tag-decision-request.md).
 
 Esses artefatos reduzem risco documental, mas não substituem validação final de release.
 

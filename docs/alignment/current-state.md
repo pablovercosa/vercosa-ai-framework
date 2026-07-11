@@ -66,6 +66,8 @@ Ativos principais:
 - `docs/release/release-notes-alpha.md`: release notes alfa preliminares para a futura `0.1.0-alpha.1`, sem declarar release publicada, tag criada ou pacote publicado.
 - `docs/release/alpha-readiness-diagnostic.md`: diagnóstico local de prontidão alfa executado em 2026-07-11, classificado como `NÃO PRONTO`, sem criar tag, release ou pacote.
 - `docs/release/pre-tag-checklist-execution.md`: execução local do checklist pré-tag alfa registrada em 2026-07-11, classificada como `REPROVADO`, sem criar tag, release, pacote ou confirmação de CI remoto.
+- `docs/release/alpha-candidate-summary.md`: consolidação local preparatória do candidato alfa `0.1.0-alpha.1`, sem criar tag, publicar release, publicar pacote, fazer push ou confirmar CI remoto.
+- `docs/release/tag-decision-request.md`: solicitação futura de decisão sobre tag alfa, sem autorização automática e dependente de validação final, push, CI remoto e autorização explícita.
 - `CHANGELOG.md`: changelog inicial do estado não publicado, com versão alfa planejada documentada, sem tag, release publicada ou promessa de estabilidade de produção.
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
 - `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
@@ -281,10 +283,14 @@ Esse estado é apenas documental:
 - há release notes alfa preliminares, ainda pendentes de revisão final antes de publicação real;
 - há diagnóstico local de prontidão alfa registrado com classificação `NÃO PRONTO`;
 - há execução local do checklist pré-tag alfa registrada com classificação `REPROVADO`;
+- há consolidação local do candidato alfa registrada como preparação, sem publicação;
+- há solicitação futura de decisão de tag registrada, sem autorização automática;
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 
 Antes de qualquer publicação, ainda são necessárias correção ou decisão explícita sobre os bloqueios da validação limpa reprovada, resolução dos bloqueios do diagnóstico local de prontidão alfa, resolução dos bloqueios da execução local do checklist pré-tag, reexecução do checklist de instalação limpa, nova execução pré-tag quando houver candidato apto, testes, `compileall`, revisão do changelog, confirmação de CI remoto após push, decisão explícita de tag/release e resolução das pendências aplicáveis de licença e distribuição.
+
+O candidato alfa local foi consolidado, mas a tag não foi criada, a release não foi publicada e nenhum pacote foi publicado. A próxima etapa depende de validação final pós-batch, push manual quando autorizado, confirmação do CI remoto e autorização explícita para uma missão futura de tag.
 
 ## Execução Local Do Checklist Pré-Tag Alfa
 

@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Consolidação local do candidato alfa](alpha-candidate-summary.md) | [Solicitação futura de decisão de tag](tag-decision-request.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
 
 ## Objetivo
 
@@ -28,6 +28,8 @@ Diagnóstico local de prontidão alfa executado em 2026-07-11: [alpha-readiness-
 
 Execução local do checklist pré-tag alfa registrada em 2026-07-11: [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). Classificação real registrada: `REPROVADO`. A execução local não criou tag, não publicou release, não publicou pacote, não confirmou CI remoto e não substitui autorização humana.
 
+Consolidação local do candidato alfa registrada em [alpha-candidate-summary.md](alpha-candidate-summary.md), com solicitação futura de decisão em [tag-decision-request.md](tag-decision-request.md). Esses documentos são preparatórios: não declaram alfa publicada, não criam tag, não publicam release, não publicam pacote e não substituem autorização explícita.
+
 ## Checklist De Documentação Mínima
 
 | Item | Status | Observação |
@@ -40,6 +42,8 @@ Execução local do checklist pré-tag alfa registrada em 2026-07-11: [pre-tag-c
 | [release-policy.md](release-policy.md) | existe | Política inicial de release manual e explícita, sem tag, release ou pacote automático. |
 | [pre-release-checklist.md](pre-release-checklist.md) | existe | Checklist operacional pré-tag; não autoriza release por si só. |
 | [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) | existe | Execução local do checklist pré-tag classificada como `REPROVADO`; bloqueada por `LICENSE` ausente, missão em `running`, Git sujo, `alpha-readiness` `NÃO PRONTO` e CI remoto pendente. |
+| [alpha-candidate-summary.md](alpha-candidate-summary.md) | existe | Consolidação local preparatória do candidato alfa; mantém bloqueios e pendências antes da tag. |
+| [tag-decision-request.md](tag-decision-request.md) | existe | Solicitação futura de decisão; não autoriza tag por si só. |
 | [alpha-version-plan.md](alpha-version-plan.md) | existe | Plano documental para `0.1.0-alpha.1`, sem tag ou release publicada. |
 | [release-notes-alpha.md](release-notes-alpha.md) | existe | Release notes alfa preliminares criadas como artefato preparatório; ainda exigem revisão final antes de publicação real. |
 | [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) | existe | Diagnóstico local executado com classificação `NÃO PRONTO`; bloqueado por `LICENSE` ausente, missão em `running`, Git sujo e validação limpa anterior reprovada. |
@@ -146,9 +150,14 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Corrigir os bloqueios encontrados na validação de instalação limpa e reexecutar o checklist antes da alfa.
 - Corrigir ou aceitar explicitamente os bloqueios do diagnóstico local de prontidão alfa registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md).
 - Corrigir ou aceitar explicitamente os bloqueios da execução local do checklist pré-tag registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md).
+- Revisar a consolidação local do candidato alfa em [alpha-candidate-summary.md](alpha-candidate-summary.md).
+- Revisar a solicitação futura de decisão de tag em [tag-decision-request.md](tag-decision-request.md) apenas após validação final.
 - Reexecutar o checklist pré-tag antes de qualquer tag quando houver novo candidato local.
 - Executar `python3 -m vercosa_ai_framework.cli.main alpha-readiness` como diagnóstico auxiliar antes da revisão final, sem tratar resultado como autorização automática.
 - Obter autorização explícita para tag e release.
+- Executar validação final pós-batch.
+- Fazer push manual quando autorizado operacionalmente.
+- Confirmar CI remoto após push.
 - Manter CI público mínimo passando antes da tag alfa.
 - Decidir futuramente se haverá matriz de múltiplas versões de Python, lint e validação limpa automatizada no CI.
 - Revisar README final de alfa.

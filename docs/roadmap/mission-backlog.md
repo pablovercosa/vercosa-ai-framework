@@ -113,6 +113,8 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Release notes alfa preliminares concluídas em [docs/release/release-notes-alpha.md](../release/release-notes-alpha.md), sem declarar release publicada, tag criada ou pacote publicado.
 - Diagnóstico local de prontidão alfa executado e registrado em [docs/release/alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md), com classificação `NÃO PRONTO`, sem criar tag, release ou pacote.
 - Checklist pré-tag local executado e registrado em [docs/release/pre-tag-checklist-execution.md](../release/pre-tag-checklist-execution.md), com classificação `REPROVADO`, sem criar tag, release, pacote, push ou confirmação de CI remoto.
+- Consolidação local do candidato alfa executada em [docs/release/alpha-candidate-summary.md](../release/alpha-candidate-summary.md), sem criar tag, release, pacote ou push.
+- Solicitação futura de decisão de tag preparada em [docs/release/tag-decision-request.md](../release/tag-decision-request.md), sem autorização automática.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -483,6 +485,10 @@ Missões futuras relacionadas:
 - Revisar release notes alfa finais antes da publicação.
 - Revisar e criar `LICENSE` antes da release pública.
 - Decidir explicitamente se haverá pacote publicado ou apenas código-fonte na alfa.
+- Executar validação final pós-batch.
+- Fazer push do bloco somente após validação local e revisão.
+- Revisar [CHANGELOG.md](../../CHANGELOG.md) antes da decisão de tag.
+- Obter decisão explícita sobre a tag alfa antes de qualquer comando de tag.
 - Criar tag alfa somente após validações e decisão explícita.
 - Publicar release alfa somente após validações e decisão explícita.
 - Internacionalizar READMEs no final, mantendo `README.md` canônico em português do Brasil.

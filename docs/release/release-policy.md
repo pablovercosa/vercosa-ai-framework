@@ -1,6 +1,6 @@
 # Política Inicial De Release
 
-Links principais: [CHANGELOG.md](../../CHANGELOG.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Validação de instalação limpa](clean-install-validation.md) | [SECURITY.md](../../SECURITY.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
+Links principais: [CHANGELOG.md](../../CHANGELOG.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Consolidação local do candidato alfa](alpha-candidate-summary.md) | [Solicitação futura de decisão de tag](tag-decision-request.md) | [Validação de instalação limpa](clean-install-validation.md) | [SECURITY.md](../../SECURITY.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Objetivo
 
@@ -13,6 +13,8 @@ Esta política não cria tag, não publica release, não publica pacote, não de
 O projeto ainda não possui release estável. A primeira release prevista é uma alfa, planejada como `0.1.0-alpha.1`, com tag futura planejada `v0.1.0-alpha.1`.
 
 Execução local do checklist pré-tag alfa foi registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) com classificação `REPROVADO`. Essa execução local não substitui autorização explícita, não cria tag, não publica release, não publica pacote e não confirma CI remoto. Quando houver push aplicável do bloco atual, o CI remoto deve ser confirmado antes de qualquer missão de tag.
+
+A consolidação local do candidato alfa está em [alpha-candidate-summary.md](alpha-candidate-summary.md). Uma decisão futura sobre tag deve usar [tag-decision-request.md](tag-decision-request.md) como apoio, mas esse documento não autoriza tag por si só.
 
 Uma release alfa não significa estabilidade de produção, compatibilidade de API, suporte formal, SLA, hardening completo ou adequação a uso crítico. Ela deve ser tratada como marco inicial para experimentação controlada e revisão pública conservadora.
 
@@ -35,6 +37,9 @@ Uma release alfa não significa estabilidade de produção, compatibilidade de A
 - Nenhuma tag deve ser criada sem autorização explícita.
 - Nenhuma release deve ser publicada sem autorização explícita.
 - Nenhum pacote deve ser publicado sem missão específica.
+- A decisão de tag deve ser registrada em missão própria e autorizada explicitamente.
+- A publicação de release depende de missão própria autorizada.
+- A publicação de pacote depende de missão própria autorizada.
 - `VAF_AUTO_PUSH=1` não equivale a release.
 - `git push` comum não equivale a release.
 - A tag planejada `v0.1.0-alpha.1` não deve ser criada nesta missão.

@@ -197,6 +197,10 @@ Decisões já encaminhadas:
 31. Quando executar formalmente o checklist pré-tag antes da alfa planejada?
 32. Qual missão específica deve autorizar a revisão final das release notes antes da primeira alfa?
 33. A validação pré-tag deve exigir instalação editável para que `python3 -m vercosa_ai_framework.cli.main` funcione sem `PYTHONPATH=src`, ou a forma explícita com `PYTHONPATH=src` continuará sendo o padrão para checkout não instalado?
+34. Autorizar futura missão de tag alfa somente após validação final, push e confirmação de CI remoto?
+35. Publicar GitHub Release após tag ou manter apenas a tag inicialmente?
+36. Quais ressalvas precisam ser resolvidas antes da tag e quais poderiam ser aceitas explicitamente com risco documentado?
+37. Internacionalizar READMEs antes ou depois da alfa `0.1.0-alpha.1`?
 
 ## ADRs Recomendadas
 

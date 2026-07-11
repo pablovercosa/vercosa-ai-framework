@@ -4,7 +4,7 @@ Todas as mudanças relevantes do Vercosa AI Framework devem ser registradas nest
 
 O projeto ainda está em desenvolvimento. Ainda não há release estável publicada, versão alfa publicada, tag de release ou pacote distribuído. Este changelog inicial registra a evolução já consolidada do projeto até o estado atual, sem criar release formal, sem definir versão definitiva e sem prometer estabilidade de produção.
 
-Links úteis: [README.md](README.md) | [Política de versionamento](docs/release/versioning-policy.md) | [Política de release](docs/release/release-policy.md) | [Checklist pré-tag](docs/release/pre-release-checklist.md) | [Execução local do checklist pré-tag](docs/release/pre-tag-checklist-execution.md) | [Plano da versão alfa](docs/release/alpha-version-plan.md) | [Notas preliminares da futura alfa](docs/release/release-notes-alpha.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](docs/release/alpha-readiness-diagnostic.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
+Links úteis: [README.md](README.md) | [Política de versionamento](docs/release/versioning-policy.md) | [Política de release](docs/release/release-policy.md) | [Checklist pré-tag](docs/release/pre-release-checklist.md) | [Execução local do checklist pré-tag](docs/release/pre-tag-checklist-execution.md) | [Plano da versão alfa](docs/release/alpha-version-plan.md) | [Notas preliminares da futura alfa](docs/release/release-notes-alpha.md) | [Checklist de alfa pública](docs/release/public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](docs/release/alpha-readiness-diagnostic.md) | [Consolidação local do candidato alfa](docs/release/alpha-candidate-summary.md) | [Solicitação futura de decisão de tag](docs/release/tag-decision-request.md) | [Backlog estratégico de missões](docs/roadmap/mission-backlog.md)
 
 ## Não publicado
 
@@ -37,6 +37,8 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Release notes alfa preliminares em `docs/release/release-notes-alpha.md`, como artefato preparatório para a futura alfa planejada, sem criar versão publicada, data de release, tag, release ou pacote.
 - Diagnóstico local de prontidão alfa em `docs/release/alpha-readiness-diagnostic.md`, executado com classificação `NÃO PRONTO`, sem criar tag, publicar release ou publicar pacote.
 - Execução local do checklist pré-tag alfa em `docs/release/pre-tag-checklist-execution.md`, executada com classificação `REPROVADO`, sem criar tag, publicar release, publicar pacote, fazer push ou confirmar CI remoto.
+- Consolidação local do candidato alfa em `docs/release/alpha-candidate-summary.md`, preservando os estados `REPROVADO` e `NÃO PRONTO`, sem declarar alfa publicada.
+- Solicitação futura de decisão de tag em `docs/release/tag-decision-request.md`, sem autorizar tag, release, pacote ou push.
 
 ### Alterado
 
@@ -53,6 +55,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Validação real de instalação limpa em cópia temporária local, registrada como `REPROVADO`, sem criar release, tag ou pacote.
 - Diagnóstico local de prontidão alfa executado em checkout local, com ambiente, branch, commit, estado das missões, estado Git, comandos de CLI, links Markdown, `pytest`, `compileall`, bloqueios, ressalvas e recomendações registrados.
 - Checklist pré-tag alfa local executado como gate documental, com ambiente, branch, commit, estado das missões, estado Git, comandos de CLI, links Markdown, `pytest`, `compileall`, CI remoto pendente, bloqueios, ressalvas e recomendações registrados.
+- Candidato alfa local consolidado como preparação para decisão futura, mantendo pendentes validação final pós-batch, push, confirmação de CI remoto, revisão final de release notes, revisão do changelog, licença e autorização explícita para tag.
 - `SECURITY.md` inicial, com política conservadora de segurança, limites atuais e orientação para reporte responsável.
 - `CODE_OF_CONDUCT.md` inicial, com expectativas de conduta e limites de governança comunitária nesta fase.
 - Política inicial de uso responsável em `docs/legal/usage-policy.md`.
