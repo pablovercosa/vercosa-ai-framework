@@ -50,6 +50,7 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Política inicial de release em `docs/release/release-policy.md` e checklist pré-tag em `docs/release/pre-release-checklist.md`, sem criação de tag, release, pacote ou automação de deploy.
 - Release notes alfa preliminares em `docs/release/release-notes-alpha.md`, como preparação para a futura `0.1.0-alpha.1`, sem release publicada.
 - Diagnóstico local de prontidão alfa em `docs/release/alpha-readiness-diagnostic.md`, executado em 2026-07-11 com classificação `NÃO PRONTO`, sem tag, release ou pacote.
+- Execução local do checklist pré-tag alfa em `docs/release/pre-tag-checklist-execution.md`, executada em 2026-07-11 com classificação `REPROVADO`, sem tag, release, pacote, push ou confirmação de CI remoto.
 - Changelog inicial em `CHANGELOG.md`, sem data de release, tag ou promessa de estabilidade.
 - Empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, versão PEP 440 `0.1.0a1`, pacote em `src/vercosa_ai_framework` e entrypoint local `vaf`, sem publicação de pacote.
 - CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
@@ -216,7 +217,7 @@ Ações recomendadas:
 
 ## Ordem Recomendada De Curto Prazo
 
-1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, validação local de links Markdown relativos, bloqueios do diagnóstico local `alpha-readiness` classificado como `NÃO PRONTO`, revisão final das release notes, execução do checklist pré-tag, manutenção do CI mínimo passando, correção dos bloqueios remanescentes da instalação limpa reprovada e reexecução do checklist de instalação limpa.
+1. Resolver pendências mínimas para futura alfa: licença, canal público de vulnerabilidades, canal público de conduta, revisão dos templates iniciais, manutenção do changelog inicial, validação local de links Markdown relativos, bloqueios do diagnóstico local `alpha-readiness` classificado como `NÃO PRONTO`, bloqueios do checklist pré-tag local classificado como `REPROVADO`, revisão final das release notes, nova execução do checklist pré-tag quando houver candidato apto, manutenção do CI mínimo passando após push, correção dos bloqueios remanescentes da instalação limpa reprovada e reexecução do checklist de instalação limpa.
 2. Integrar a CLI com validações locais seguras de Git, sem substituir scripts seguros.
 3. Manter os comandos CLI `missions` e `batch-summary` como apoio de diagnóstico operacional somente leitura.
 4. Refinar retenção, rotação e integração opcional da persistência local JSONL para Audit/Event Log.
@@ -256,6 +257,7 @@ Permanecem futuros e não devem ser tratados como implementados:
 - Guia público completo de release, distribuição, empacotamento e processo público maduro de contribuição para uso final.
 - Release notes finais revisadas para publicação real.
 - Diagnóstico local de prontidão alfa aprovado ou aprovado com ressalvas explicitamente aceitas.
+- Checklist pré-tag local aprovado ou aprovado com ressalvas explicitamente aceitas.
 - Licença final em `LICENSE`.
 - Processo público maduro de segurança e canal definitivo de vulnerabilidades.
 - Release alfa.

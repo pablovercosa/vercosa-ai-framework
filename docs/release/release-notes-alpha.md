@@ -10,7 +10,8 @@ Status conservador:
 - tag criada: não;
 - pacote publicado: não;
 - publicação em PyPI: não prometida;
-- diagnóstico local de prontidão alfa: executado em 2026-07-11 com classificação `NÃO PRONTO`.
+- diagnóstico local de prontidão alfa: executado em 2026-07-11 com classificação `NÃO PRONTO`;
+- checklist pré-tag local: executado em 2026-07-11 com classificação `REPROVADO`.
 
 Estas notas não são release notes finais, não declaram data de release, não criam marco publicado, não prometem estabilidade, não prometem suporte formal, não prometem SLA e não prometem compatibilidade de API.
 
@@ -21,6 +22,8 @@ O Vercosa AI Framework, ou VAF, é um framework de Harness Engineering para agen
 A futura alfa `0.1.0-alpha.1` deve representar um marco inicial de experimentação e revisão pública conservadora. Ela ainda não foi publicada. O estado atual é de preparação documental e técnica, com MVPs e contratos em evolução.
 
 O diagnóstico local de prontidão alfa está registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). Ele classificou o estado como `NÃO PRONTO` e não criou tag, release ou pacote.
+
+O checklist pré-tag local está registrado em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). Ele classificou o estado como `REPROVADO`, não criou tag, não publicou release, não publicou pacote e não confirmou CI remoto. Estas notas continuam preliminares e ainda exigem revisão final antes de qualquer publicação real.
 
 ## O Que Está Incluído Nesta Alfa Planejada
 
@@ -69,6 +72,7 @@ Esses itens não tornam o projeto pronto para produção e não significam que o
 - Não há promessa de publicação em PyPI.
 - A validação de instalação limpa registrada está `REPROVADO` até nova execução aprovada ou decisão explícita de exceção.
 - O diagnóstico local de prontidão alfa registrado está `NÃO PRONTO` até resolução dos bloqueios ou decisão explícita de exceção compatível com o risco.
+- O checklist pré-tag local registrado está `REPROVADO` até resolução dos bloqueios ou decisão explícita de exceção compatível com o risco.
 - `LICENSE` final ainda está pendente no repositório.
 - Não há RAG semântico.
 - Não há embeddings.
@@ -136,7 +140,8 @@ O VAF ainda não possui processo público maduro de segurança, canal definitivo
 
 Antes de qualquer release real, ainda é necessário:
 
-- executar o checklist pré-tag;
+- resolver ou aceitar explicitamente os bloqueios da execução local do checklist pré-tag em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md);
+- reexecutar o checklist pré-tag quando houver candidato local apto;
 - revisar o diagnóstico local de prontidão alfa em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md);
 - confirmar CI passando;
 - validar links Markdown relativos com `python3 -m vercosa_ai_framework.cli.main docs-links`, sem validar URLs externas;

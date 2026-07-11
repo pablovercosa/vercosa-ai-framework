@@ -1,6 +1,6 @@
 # Plano Da Versão Alfa Inicial
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Checklist de alfa pública](public-alpha-readiness.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
 
 ## Objetivo
 
@@ -25,12 +25,15 @@ A política inicial de release está em [release-policy.md](release-policy.md). 
 | Pacote PyPI | não publicado |
 | Garantia de estabilidade | inexistente nesta fase |
 | Diagnóstico local de prontidão alfa | executado em 2026-07-11 com classificação `NÃO PRONTO` |
+| Checklist pré-tag local | executado em 2026-07-11 com classificação `REPROVADO` |
 
 `0.1.0-alpha.1` é uma versão planejada para organizar uma entrega pública inicial. Ela não deve ser tratada como release feita, marco estável, pacote distribuído ou promessa de compatibilidade de API.
 
 O metadado local em `pyproject.toml` usa `0.1.0a1`, forma PEP 440 equivalente para ferramentas Python. Esse metadado prepara instalação editável local e não publica a alfa.
 
 O diagnóstico local de prontidão alfa foi executado e registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). A classificação real foi `NÃO PRONTO`, sem criar tag, sem publicar release e sem publicar pacote.
+
+O checklist pré-tag local foi executado e registrado em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). A classificação real foi `REPROVADO`, sem criar tag, sem publicar release, sem publicar pacote e sem confirmar CI remoto. A versão permanece planejada, não publicada.
 
 ## O Que Já Apoia A Alfa
 
@@ -57,6 +60,7 @@ O projeto já possui artefatos que apoiam a preparação de uma futura alfa púb
 - CI mínimo em GitHub Actions com instalação editável, `pytest` e `python -m compileall src`, sem publicar pacote, criar release, usar secrets, executar missões ou chamar providers;
 - registro factual de uma execução de instalação limpa em cópia temporária local, atualmente classificada como `REPROVADO`.
 - registro factual de diagnóstico local de prontidão alfa, atualmente classificado como `NÃO PRONTO` em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md).
+- registro factual de execução local do checklist pré-tag alfa, atualmente classificado como `REPROVADO` em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md).
 
 Esses artefatos reduzem risco documental, mas não substituem validação final de release.
 
@@ -75,7 +79,8 @@ Antes de publicar a alfa, ainda é necessário:
 - executar `python3 -m compileall src`;
 - revisar o `CHANGELOG.md`;
 - revisar as release notes alfa preliminares;
-- executar o checklist pré-tag;
+- resolver ou aceitar explicitamente os bloqueios da execução local do checklist pré-tag registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md);
+- reexecutar o checklist pré-tag quando houver candidato local apto;
 - decidir explicitamente criar a tag;
 - decidir explicitamente publicar a release;
 - definir se haverá pacote ou apenas código-fonte;

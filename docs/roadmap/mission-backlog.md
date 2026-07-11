@@ -112,6 +112,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Checklist pré-tag concluído em [docs/release/pre-release-checklist.md](../release/pre-release-checklist.md), como pré-condição manual e sem autorização automática.
 - Release notes alfa preliminares concluídas em [docs/release/release-notes-alpha.md](../release/release-notes-alpha.md), sem declarar release publicada, tag criada ou pacote publicado.
 - Diagnóstico local de prontidão alfa executado e registrado em [docs/release/alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md), com classificação `NÃO PRONTO`, sem criar tag, release ou pacote.
+- Checklist pré-tag local executado e registrado em [docs/release/pre-tag-checklist-execution.md](../release/pre-tag-checklist-execution.md), com classificação `REPROVADO`, sem criar tag, release, pacote, push ou confirmação de CI remoto.
 
 Esses itens podem gerar missões futuras de refinamento, persistência, integração completa ou documentação pública, mas não devem ser duplicados como se ainda não existissem.
 
@@ -477,6 +478,8 @@ Missões futuras relacionadas:
 - Refinar comando adicional da CLI para resumir pós-batch quando houver necessidade concreta.
 - Definir retenção, rotação e relatórios futuros para eventos auditáveis.
 - Executar checklist pré-tag antes da tag alfa.
+- Resolver bloqueios da execução local do checklist pré-tag antes de qualquer missão de tag.
+- Confirmar CI remoto após push do bloco atual quando aplicável.
 - Revisar release notes alfa finais antes da publicação.
 - Revisar e criar `LICENSE` antes da release pública.
 - Decidir explicitamente se haverá pacote publicado ou apenas código-fonte na alfa.
@@ -657,6 +660,24 @@ Escopo permitido: documentação de release, alinhamento, roadmap e changelog.
 Escopo proibido: alterar código Python, scripts shell, workflow de CI, criar tag, publicar release, publicar pacote, executar missões, executar batch, acessar rede, banco ou providers.
 Status: concluído como diagnóstico local registrado em [docs/release/alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md), com classificação `NÃO PRONTO`.
 Critérios de aceite resumidos: relatório registra ambiente, branch, commit, estado das missões, estado Git, comandos de CLI, `pytest`, `compileall`, links Markdown, bloqueios, ressalvas e recomendações sem ocultar falhas.
+
+36. Código sugerido: `M036-checklist-pre-tag-local`
+Título: Executar e registrar checklist pré-tag alfa local.
+Objetivo: executar o checklist pré-tag local como gate documental antes de qualquer decisão futura de tag.
+Escopo permitido: documentação de release, roadmap, alinhamento e changelog.
+Escopo proibido: alterar código Python, scripts shell, workflow de CI, criar tag, publicar release, publicar pacote, executar missões, executar batch, acessar rede, banco ou providers.
+Status: executado em 2026-07-11 com resultado `REPROVADO`, registrado em [docs/release/pre-tag-checklist-execution.md](../release/pre-tag-checklist-execution.md).
+Critérios de aceite resumidos: relatório registra ambiente, branch, commit, estado Git, estado das missões, comandos locais, `pytest`, `compileall`, CI remoto pendente, bloqueios, ressalvas e classificação conservadora.
+
+Pendências sustentadas por essa execução:
+
+- Concluir a missão `0100` de consolidação final do candidato alfa.
+- Confirmar CI remoto após push quando aplicável.
+- Obter autorização explícita para tag em missão futura, se os gates forem aceitáveis.
+- Criar a tag alfa somente em missão própria autorizada.
+- Publicar release alfa somente em missão própria autorizada.
+- Decidir explicitamente se haverá pacote PyPI ou apenas código-fonte.
+- Internacionalizar READMEs em fase futura, após estabilização do conteúdo canônico.
 
 ## Como Transformar Backlog Em Fila Executável
 

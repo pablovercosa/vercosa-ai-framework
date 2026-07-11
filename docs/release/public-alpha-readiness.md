@@ -1,6 +1,6 @@
 # Checklist De Prontidão Para Alfa Pública
 
-Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
+Links principais: [README principal](../../README.md) | [Política de versionamento](versioning-policy.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Diagnóstico local de prontidão alfa](alpha-readiness-diagnostic.md) | [Checklist de instalação limpa](../getting-started/clean-install-checklist.md) | [Registro de validação limpa](clean-install-validation.md) | [Roadmap](../alignment/roadmap.md) | [Estado atual](../alignment/current-state.md) | [Revisão pós-integrações](../architecture/post-integration-architecture-review.md) | [Backlog estratégico](../roadmap/mission-backlog.md) | [Documentação legal](../legal/README.md) | [Política de segurança](../../SECURITY.md) | [Código de conduta](../../CODE_OF_CONDUCT.md)
 
 ## Objetivo
 
@@ -26,6 +26,8 @@ O estado atual deve ser lido assim:
 
 Diagnóstico local de prontidão alfa executado em 2026-07-11: [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). Classificação real registrada: `NÃO PRONTO`. Esse diagnóstico não criou tag, não publicou release, não publicou pacote e não substitui revisão humana.
 
+Execução local do checklist pré-tag alfa registrada em 2026-07-11: [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). Classificação real registrada: `REPROVADO`. A execução local não criou tag, não publicou release, não publicou pacote, não confirmou CI remoto e não substitui autorização humana.
+
 ## Checklist De Documentação Mínima
 
 | Item | Status | Observação |
@@ -37,6 +39,7 @@ Diagnóstico local de prontidão alfa executado em 2026-07-11: [alpha-readiness-
 | [versioning-policy.md](versioning-policy.md) | existe | Política inicial e conservadora de versionamento. |
 | [release-policy.md](release-policy.md) | existe | Política inicial de release manual e explícita, sem tag, release ou pacote automático. |
 | [pre-release-checklist.md](pre-release-checklist.md) | existe | Checklist operacional pré-tag; não autoriza release por si só. |
+| [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) | existe | Execução local do checklist pré-tag classificada como `REPROVADO`; bloqueada por `LICENSE` ausente, missão em `running`, Git sujo, `alpha-readiness` `NÃO PRONTO` e CI remoto pendente. |
 | [alpha-version-plan.md](alpha-version-plan.md) | existe | Plano documental para `0.1.0-alpha.1`, sem tag ou release publicada. |
 | [release-notes-alpha.md](release-notes-alpha.md) | existe | Release notes alfa preliminares criadas como artefato preparatório; ainda exigem revisão final antes de publicação real. |
 | [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) | existe | Diagnóstico local executado com classificação `NÃO PRONTO`; bloqueado por `LICENSE` ausente, missão em `running`, Git sujo e validação limpa anterior reprovada. |
@@ -86,6 +89,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Release notes alfa preliminares foram criadas. | existe | Documento preparatório criado, sem declarar alfa publicada e ainda pendente de revisão final. |
 | Diagnóstico CLI de prontidão alfa existe. | existe | `python3 -m vercosa_ai_framework.cli.main alpha-readiness` consolida verificações locais mínimas, sem criar tag, release ou pacote e sem substituir revisão humana. |
 | Diagnóstico local de prontidão alfa foi executado. | precisa de revisão | Execução registrada em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) com classificação `NÃO PRONTO`. |
+| Checklist pré-tag local foi executado. | precisa de revisão | Execução registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) com classificação `REPROVADO`; não autoriza tag. |
 | Validador local de links Markdown existe. | existe | `docs-links` valida links relativos locais, ignora URLs externas sem acessar rede e não promete parser Markdown completo ou validação perfeita de âncoras. |
 | CI público mínimo existe. | existe | Valida `pytest`, `python -m vercosa_ai_framework.cli.main docs-links`, executa `alpha-readiness` como diagnóstico não bloqueante e valida `python -m compileall src` em pull requests e pushes para `main`, sem executar missões ou providers. |
 
@@ -106,6 +110,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Ausência de persistência externa de eventos. | pendente | Audit/Event Log atual possui memória e JSONL local opt-in, mas não possui banco, exportador remoto, retenção, rotação ou observabilidade externa. |
 | Validação de instalação limpa reprovada. | pendente | A execução real de 2026-07-10 falhou no commit validado. O empacotamento local foi ajustado depois, mas diretórios operacionais vazios ausentes no clone, script de status acoplado ao checkout principal, licença pendente e reexecução aprovada ainda permanecem. |
 | Diagnóstico local de prontidão alfa reprovado. | pendente | A execução de 2026-07-11 foi classificada como `NÃO PRONTO` por bloqueios documentados em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). |
+| Checklist pré-tag local reprovado. | pendente | A execução de 2026-07-11 foi classificada como `REPROVADO` por bloqueios documentados em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). |
 
 ## Decisões Já Tomadas
 
@@ -126,6 +131,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Tag futura planejada como `v0.1.0-alpha.1`, sem tag criada nesta fase.
 - Política inicial de release criada em [release-policy.md](release-policy.md), sem automatizar publicação.
 - Checklist pré-tag criado em [pre-release-checklist.md](pre-release-checklist.md), sem autorização automática.
+- Checklist pré-tag local executado e registrado em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md), com classificação `REPROVADO` e sem autorização automática.
 - Release notes alfa preliminares criadas em [release-notes-alpha.md](release-notes-alpha.md), sem publicação de release.
 - CI público mínimo com GitHub Actions, sem release, sem publicação de pacote, sem secrets, sem providers externos e sem execução de missões.
 
@@ -139,7 +145,8 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 - Revisar as release notes alfa preliminares antes de qualquer publicação real.
 - Corrigir os bloqueios encontrados na validação de instalação limpa e reexecutar o checklist antes da alfa.
 - Corrigir ou aceitar explicitamente os bloqueios do diagnóstico local de prontidão alfa registrado em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md).
-- Executar o checklist pré-tag antes de qualquer tag.
+- Corrigir ou aceitar explicitamente os bloqueios da execução local do checklist pré-tag registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md).
+- Reexecutar o checklist pré-tag antes de qualquer tag quando houver novo candidato local.
 - Executar `python3 -m vercosa_ai_framework.cli.main alpha-readiness` como diagnóstico auxiliar antes da revisão final, sem tratar resultado como autorização automática.
 - Obter autorização explícita para tag e release.
 - Manter CI público mínimo passando antes da tag alfa.

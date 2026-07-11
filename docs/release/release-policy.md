@@ -1,6 +1,6 @@
 # Política Inicial De Release
 
-Links principais: [CHANGELOG.md](../../CHANGELOG.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Checklist pré-tag](pre-release-checklist.md) | [Validação de instalação limpa](clean-install-validation.md) | [SECURITY.md](../../SECURITY.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
+Links principais: [CHANGELOG.md](../../CHANGELOG.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Prontidão para alfa pública](public-alpha-readiness.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Validação de instalação limpa](clean-install-validation.md) | [SECURITY.md](../../SECURITY.md) | [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Objetivo
 
@@ -11,6 +11,8 @@ Esta política não cria tag, não publica release, não publica pacote, não de
 ## Estado Atual
 
 O projeto ainda não possui release estável. A primeira release prevista é uma alfa, planejada como `0.1.0-alpha.1`, com tag futura planejada `v0.1.0-alpha.1`.
+
+Execução local do checklist pré-tag alfa foi registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) com classificação `REPROVADO`. Essa execução local não substitui autorização explícita, não cria tag, não publica release, não publica pacote e não confirma CI remoto. Quando houver push aplicável do bloco atual, o CI remoto deve ser confirmado antes de qualquer missão de tag.
 
 Uma release alfa não significa estabilidade de produção, compatibilidade de API, suporte formal, SLA, hardening completo ou adequação a uso crítico. Ela deve ser tratada como marco inicial para experimentação controlada e revisão pública conservadora.
 

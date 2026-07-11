@@ -1,12 +1,14 @@
 # Diagnóstico Local De Prontidão Alfa
 
-Links principais: [Prontidão para alfa pública](public-alpha-readiness.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
+Links principais: [Prontidão para alfa pública](public-alpha-readiness.md) | [Política de release](release-policy.md) | [Checklist pré-tag](pre-release-checklist.md) | [Execução local do checklist pré-tag](pre-tag-checklist-execution.md) | [Plano da versão alfa](alpha-version-plan.md) | [Notas preliminares da futura alfa](release-notes-alpha.md) | [Validação de instalação limpa](clean-install-validation.md) | [CHANGELOG.md](../../CHANGELOG.md)
 
 ## Objetivo
 
 Registrar o diagnóstico local de prontidão alfa do Vercosa AI Framework executado no checkout atual.
 
 Este documento é um diagnóstico local. Ele não é release, não cria tag, não publica pacote, não publica GitHub Release e não substitui revisão humana, checklist pré-tag, autorização explícita, CI remoto ou validação de instalação limpa.
+
+Etapa posterior: a execução local do checklist pré-tag alfa foi registrada em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) com classificação `REPROVADO`. Esse relatório posterior não altera os resultados históricos deste diagnóstico; ele apenas registra novo gate local baseado no estado observado em execução própria.
 
 ## Ambiente Registrado
 
