@@ -796,3 +796,66 @@ O conteúdo em outros idiomas deve preservar a rastreabilidade técnica e não t
 ## Regra De Ouro
 
 Backlog pode ser grande. Fila deve ser pequena. Batch deve ser seguro. Revisão continua obrigatória.
+
+## Decisões Operacionais Registradas Em 2026-07-11
+
+### Reserva histórica da missão 0001
+
+O identificador `0001` será tratado como número reservado retroativamente.
+
+Ele não corresponde a uma missão original localizada ou executada, não deve ser colocado em `missions/done/` e não deve alterar as contagens operacionais de missões.
+
+A missão `0109`, dedicada à consolidação documental, deverá:
+
+- criar o marcador histórico apropriado fora das filas operacionais;
+- registrar que `0002` é a primeira missão real preservada;
+- impedir que `0001` seja reutilizada para uma implementação futura;
+- manter `0001` fora das contagens de `queue`, `running`, `done` e `failed`.
+
+### Automação da finalização pós-batch
+
+Após a conclusão da missão `0105`, deverá ser preparada uma missão própria, provisoriamente numerada como `0111`, para implementar:
+
+- `scripts/vaf-finalize-batch.sh`.
+
+A numeração `0111` preserva os escopos já reservados para `0106` a `0110`.
+
+A rotina deverá automatizar:
+
+- validação da branch atual;
+- validação do working tree;
+- contagem de `queue`, `running`, `done` e `failed`;
+- confirmação de worker parado;
+- execução do diagnóstico local;
+- confirmação dos resultados de `pytest` e `compileall`;
+- verificação dos commits produzidos pelo batch;
+- comparação segura entre `HEAD` e `origin/main`;
+- resumo final legível;
+- push somente quando solicitado explicitamente por `--push`;
+- confirmação posterior de que `HEAD` e `origin/main` estão sincronizados.
+
+A rotina deverá bloquear o push quando houver:
+
+- working tree suja;
+- missão em `running`;
+- missão em `failed`;
+- worker ativo;
+- diagnóstico com erro;
+- testes ou compileall com falha;
+- branch diferente de `main`;
+- remoto inesperado;
+- divergência ou avanço remoto não resolvido;
+- estado inconsistente do batch.
+
+A rotina não poderá executar automaticamente:
+
+- `git pull`;
+- `git reset`;
+- `git rebase`;
+- `git commit --amend`;
+- force push;
+- criação de tag;
+- criação de release;
+- publicação de pacote.
+
+O comportamento padrão será somente validar e resumir. A publicação remota continuará exigindo a opção explícita `--push`.
