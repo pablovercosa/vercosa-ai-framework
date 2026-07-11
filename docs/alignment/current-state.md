@@ -6,6 +6,8 @@ Registrar o estado arquitetural do Vercosa AI Framework após as integrações c
 
 Atualização da missão 0101: a auditoria estratégica de aderência ao objetivo e escopo está registrada em [docs/audits/objective-and-scope-alignment-audit.md](../audits/objective-and-scope-alignment-audit.md). O checklist canônico de implementação passa a ser [docs/alignment/implementation-status.md](implementation-status.md). Este documento deve resumir estado e apontar para o checklist, não duplicar todo o controle operacional.
 
+Atualização da missão 0103: o README passou a explicitar o problema central, o fluxo de valor pretendido, consumidores plausíveis, limites do projeto e o estado real do VAF. A comparação factual com OpenSpec e GitHub Spec Kit está em [docs/comparacoes.md](../comparacoes.md).
+
 Classificação geral da auditoria: `ALINHADO COM RESSALVAS`.
 
 Ressalvas principais: o fluxo operacional interno por missões e batch existe, mas o fluxo arquitetural Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta; vários motores são MVPs isolados ou opcionais; a preparação alfa avançou antes de uma demonstração de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
@@ -50,6 +52,8 @@ O framework não é:
 - substituto para Specs, validação, revisão de segurança ou aprovação humana quando política exigir.
 
 OpenCode é atualmente runtime e laboratório inicial. Ele não é o centro arquitetural.
+
+O VAF também não substitui ferramentas completas de Specification-Driven Development. Projetos como OpenSpec e GitHub Spec Kit podem ser complementares como fontes de artefatos ou processos de especificação, mas qualquer integração deve ser tratada como hipótese/adaptação futura até decisão e implementação específicas.
 
 ## Estado Do Repositório
 

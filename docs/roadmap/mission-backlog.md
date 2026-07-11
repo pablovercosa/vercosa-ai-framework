@@ -85,7 +85,7 @@ Missões orientadoras:
 
 - 0101: auditar aderência ao objetivo e escopo original, criar checklist canônico de implementação e registrar marcos históricos.
 - 0102: consolidar contrato base de execução, agente executor base, formato compacto de missão e composição obrigatória pelo runner. Status: em consolidação nesta missão.
-- 0103: explicitar o fluxo de valor principal e o consumidor principal do framework usando o novo formato compacto.
+- 0103: explicitar o fluxo de valor principal, consumidores plausíveis, limites e comparação factual com OpenSpec e GitHub Spec Kit. Status: concluída documentalmente; `SpecificationProvider` registrado apenas como hipótese não implementada.
 - 0104: integrar Mission Runner, Workflow Engine e Task Queue em fluxo mínimo validável.
 - 0105: integrar Task Queue, Agent Orchestrator e Capability Resolver sem dar acesso direto a tools/providers.
 - 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado.

@@ -10,6 +10,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 
 ### Adicionado
 
+- Comparação factual pública entre VAF, OpenSpec e GitHub Spec Kit em `docs/comparacoes.md`, com separação entre VAF atual e VAF pretendido.
 - Auditoria estratégica de aderência ao objetivo e escopo original em `docs/audits/objective-and-scope-alignment-audit.md`, com classificação geral `ALINHADO COM RESSALVAS`.
 - Checklist canônico factual de implementação em `docs/alignment/implementation-status.md`, separando planejado, implementado, integrado, validado, adiado, fora do escopo e em revisão.
 - Histórico de marcos por faixa de missões em `docs/history/mission-milestones.md`, registrando a série disponível iniciada em `0002`.
@@ -49,6 +50,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 
 ### Alterado
 
+- README principal reorganizado para explicitar problema resolvido, fluxo de valor pretendido, consumidores plausíveis, limites, estado real e relação do VAF com Mission Runner, OpenSpec e GitHub Spec Kit.
 - Estado atual, roadmap, perguntas em aberto e backlog estratégico alinhados à auditoria de escopo, priorizando fluxo de valor integrado antes de nova preparação de tag alfa.
 - README principal consolidado com a identidade pública do VAF como framework de Harness Engineering, sem tratar modelo, runtime ou provider como núcleo do projeto.
 - Batch de 10 documentado como fluxo operacional padrão para blocos normais revisados e seguros; batch de 3 preservado para testes, retomadas, blocos pequenos e recuperação.

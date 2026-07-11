@@ -24,6 +24,8 @@ Atualização da missão 0101: a auditoria de aderência classificou o projeto c
 
 Atualização da missão 0102: o contrato base `v1`, o agente executor base, o template compacto e o compositor obrigatório do runner passam a ser infraestrutura operacional. As missões novas de `0103` a `0110` devem usar o formato compacto e declarar exceções de capacidade explicitamente.
 
+Atualização da missão 0103: o README passou a explicitar problema, fluxo de valor, consumidores plausíveis, limites e estado real. A comparação com OpenSpec e GitHub Spec Kit foi documentada em [docs/comparacoes.md](../comparacoes.md). A fronteira `SpecificationProvider` permanece hipótese arquitetural não implementada e não deve ser materializada antes das integrações mínimas previstas para 0104-0108.
+
 ## Estado Pós-Batch Funcional
 
 O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. O estado atual considerado por este roadmap inclui:

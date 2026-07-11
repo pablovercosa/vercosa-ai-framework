@@ -15,6 +15,7 @@ As perguntas são agrupadas por área de decisão. Cada item não resolvido deve
 - A tag alfa deve ser adiada formalmente até existir fluxo de valor integrado mínimo, além dos gates de release já reprovados?
 - PostgreSQL é necessário no próximo ciclo ou deve permanecer adiado até contrato de Semantic Index e persistência externa?
 - Quando iniciar internacionalização sem criar divergência entre README canônico em português do Brasil, CLI e demais mensagens expostas?
+- Uma fronteira `SpecificationProvider` deve existir para integrar OpenSpec, GitHub Spec Kit e Markdown nativo, ou esses formatos devem entrar inicialmente apenas como documentos canônicos do Knowledge Hub?
 
 1. Mission Orchestrator deve ser implementado como módulo separado antes de expandir Mission Runner?
 2. Qual é a fronteira exata entre Mission Runner e Mission Orchestrator?

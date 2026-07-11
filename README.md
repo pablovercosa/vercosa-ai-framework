@@ -8,6 +8,106 @@ O projeto não trata o modelo de IA como o sistema inteiro. O modelo é apenas u
 
 Permitir que pessoas e agentes executem trabalho de engenharia de software de forma rastreável, segura e reproduzível, mantendo Specs, missões, workflows, tasks, agentes, capabilities, skills, tools, policies, Knowledge Hub, validações e adapters substituíveis sob uma arquitetura coerente.
 
+O problema central que o VAF busca resolver é transformar desenvolvimento assistido por IA baseado em prompts improvisados em um processo controlado, reproduzível, auditável e orientado por especificações.
+
+## O Problema Que O Projeto Resolve
+
+Desenvolvimento com IA costuma falhar quando o trabalho fica concentrado em conversas soltas com modelos. Problemas recorrentes:
+
+- dependência de prompts improvisados;
+- repetição ou esquecimento de regras do projeto;
+- ampliação silenciosa de escopo;
+- seleção de modelos e providers sem política clara;
+- crescimento de contexto sem controle;
+- interrupções por quota, rate limit ou billing e estados inconsistentes após falha;
+- falta de rastreabilidade entre objetivo, especificação, implementação, validação e commit;
+- ações perigosas sem governança explícita;
+- dificuldade de diferenciar planejado, implementado, integrado e validado.
+
+## Como O VAF Pretende Resolver
+
+O fluxo conceitual de valor pretendido é:
+
+```text
+objetivo
+↓
+especificação
+↓
+missão
+↓
+políticas e permissões
+↓
+composição de contexto
+↓
+agentes e skills
+↓
+seleção de modelo
+↓
+runtime e provider
+↓
+execução
+↓
+testes
+↓
+evidências
+↓
+auditoria
+↓
+commit
+```
+
+Parte desse fluxo já existe como operação local, contratos, MVPs determinísticos ou documentação. O fluxo público completo de ponta a ponta ainda não está integrado como produto único para usuário externo.
+
+## O Produto Não É Somente O Mission Runner
+
+O Mission Runner e o batch são infraestrutura operacional de suporte. Eles ajudam a executar missões locais com validações, parada segura e rastreabilidade, mas não são o produto inteiro.
+
+O produto maior é a camada de Harness Engineering formada, conforme o estado aplicável de cada componente, por:
+
+- Policy Engine, Guardian Engine e Usage/API Limit Guard;
+- Context Router e Token Budget Manager;
+- Model Selection Engine;
+- Provider Gateway e Runtime Adapter;
+- Agent Orchestrator, Capabilities, Skills e Tools;
+- Knowledge Hub e Canonicalizer;
+- persistência local inicial e futura persistência externa por adapters;
+- Audit/Event Log;
+- Mission Runner, scripts seguros, batch e CLI operacional.
+
+Implementado hoje em MVP, contrato ou integração inicial: runners seguros, composição determinística de contexto de missão, Policy Engine, Guardian Engine, Usage/API Limit Guard, Context Router, Token Budget Manager, Knowledge Hub textual, Model Selection Engine, Runtime Adapter inicial para OpenCode, Provider Gateway, Capabilities, Skills, Tools, Agent Orchestrator, Audit/Event Log, persistência JSONL opt-in e CLI diagnóstica.
+
+Parcialmente integrado: pontes entre políticas, Guardian, contexto, orçamento de tokens, seleção de modelo, eventos auditáveis e fluxo operacional local. Essas pontes dependem de chamada explícita ou de integração operacional específica.
+
+Planejado ou adiado: providers reais múltiplos, persistência externa, Semantic Index, embeddings, pgvector, RAG semântico, múltiplos runtimes reais, observabilidade externa e internacionalização.
+
+## Para Quem O Projeto É Útil
+
+Consumidores principais plausíveis nesta fase:
+
+- desenvolvedor individual que usa múltiplos agentes, modelos ou ferramentas e precisa reduzir improviso;
+- equipe que executa desenvolvimento assistido por IA com regras, validações e auditoria;
+- projeto que exige governança, segurança e rastreabilidade entre intenção, Spec, implementação e teste;
+- ambiente com múltiplos modelos, providers ou runtimes que não devem ficar hardcoded no processo;
+- projeto orientado por especificações que precisa transformar mudanças em missões verificáveis;
+- pipeline de execução prolongada que precisa preservar contexto, estado, evidências e recuperação após falhas.
+
+Essa lista descreve consumidores pretendidos ou plausíveis. O repositório ainda não declara adoção real por usuários externos.
+
+## O Que O Framework Não Pretende Substituir
+
+O VAF não pretende substituir:
+
+- modelos de IA;
+- Git;
+- CI/CD;
+- bancos de dados;
+- OpenCode ou outros executores;
+- ferramentas completas de Specification-Driven Development;
+- controles do sistema operacional;
+- revisão humana.
+
+PostgreSQL, pgvector, RAG e internacionalização só devem avançar quando servirem ao fluxo principal de valor. No estado atual, eles permanecem futuros, opcionais ou adiados.
+
 ## Prompt Engineering, Agent Framework E Harness Engineering
 
 - Prompt Engineering foca em instruções, exemplos e formato de entrada para melhorar a resposta de um modelo.
@@ -62,8 +162,33 @@ Implementado em estado MVP ou contrato inicial:
 - Audit/Event Log em memória com persistência local JSONL opt-in e helpers opcionais para decisões e ciclo de vida de missão; a arquitetura dedicada está em [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md).
 - CLI operacional inicial com `status`, `missions`, `validate`, `doctor`, `batch-summary`, `docs-links` e `alpha-readiness`.
 
+O que já funciona de forma factual e resumida:
+
+- fila local de missões;
+- execução segura individual;
+- execução segura em batch;
+- parada na primeira falha;
+- recuperação operacional por estado de missão e restauração quando a composição falha;
+- commit por missão quando o fluxo operacional configurado o exige;
+- bloqueio de push automático por padrão;
+- detecção textual de sinais de limite de uso/API em logs já recebidos;
+- testes e validações locais;
+- logs operacionais e eventos auditáveis opcionais;
+- diagnósticos pela CLI;
+- contrato base de execução;
+- formato compacto para missões novas;
+- composição determinística de contexto de missão.
+
 Ainda são futuros ou lacunas:
 
+- Fluxo público completo de ponta a ponta para usuário externo.
+- CLI predominantemente diagnóstica, sem executar missões.
+- Motores centrais ainda parcialmente integrados ou acionados por chamador explícito.
+- Providers reais adiados.
+- Persistência externa adiada.
+- PostgreSQL, pgvector e RAG adiados.
+- Internacionalização adiada.
+- Tag alfa bloqueada até demonstração do fluxo de valor e cumprimento dos gates documentados.
 - RAG semântico.
 - Embeddings.
 - pgvector como adapter real.
@@ -74,6 +199,12 @@ Ainda são futuros ou lacunas:
 - Internacionalização dos READMEs.
 
 Esses recursos não devem ser interpretados como implementados no estado atual.
+
+## Comparação Com Outras Abordagens
+
+OpenSpec e GitHub Spec Kit atuam principalmente na organização e execução de processos orientados por especificações para agentes de codificação. O VAF pretende concentrar sua diferenciação na execução governada, auditável e agnóstica de runtime/provider, sem tratar esses projetos como adversários.
+
+A comparação factual, com fontes oficiais consultadas e separação entre VAF atual e VAF pretendido, está em [docs/comparacoes.md](docs/comparacoes.md).
 
 ## Runtime Inicial
 
@@ -226,6 +357,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 - [Guia inicial de contribuição](CONTRIBUTING.md)
 - [Código de conduta inicial](CODE_OF_CONDUCT.md)
 - [Changelog inicial](CHANGELOG.md)
+- [Comparação com OpenSpec e GitHub Spec Kit](docs/comparacoes.md)
 - [Política inicial de versionamento](docs/release/versioning-policy.md)
 - [Política inicial de release](docs/release/release-policy.md)
 - [Checklist pré-tag](docs/release/pre-release-checklist.md)

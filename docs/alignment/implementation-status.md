@@ -29,6 +29,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Empacotamento | Instalação editável local planejada com entrypoint `vaf` | `pyproject.toml`, `tests/test_python_packaging.py` | Validado por testes; reexecução limpa ainda pendente. |
 | CI | Workflow mínimo localmente definido | `.github/workflows/ci.yml` | Existe; confirmação remota depende de push/execução GitHub. |
 | Documentação | README, contribuição, segurança, conduta, release e arquitetura | `README.md`, `docs/`, `CHANGELOG.md` | Ampla e factual, mas volumosa. |
+| Documentação | Comparação pública com OpenSpec e GitHub Spec Kit | `docs/comparacoes.md` | Documental; não implementa integração nem adapter. |
 
 ## Implementado
 
@@ -108,6 +109,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | --- | --- | --- |
 | Produto | Consumidor principal | Mantenedor interno, contribuidor, usuário Python, operador CLI ou integrador? |
 | Produto | Fluxo de valor principal | Qual problema concreto deve ser demonstrado primeiro? |
+| Arquitetura | `SpecificationProvider` | Hipótese para integrar OpenSpec, Spec Kit ou Markdown nativo; não implementada. |
 | Arquitetura | Mission Runner vs Mission Orchestrator | Separar módulo antes da próxima integração? |
 | Arquitetura | Workflow Engine vs Task Queue | Qual handoff mínimo será canônico? |
 | Arquitetura | Agentes e capabilities | Qual catálogo mínimo é necessário para o primeiro fluxo? |
