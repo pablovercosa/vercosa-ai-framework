@@ -13,12 +13,15 @@ Task Queue
 
 No caminho integrado da missão 0106, o orquestrador também pode receber um `CapabilityResolver` e um `capability_executor` configurados explicitamente para resolver e executar, em dry-run governado, todas as capabilities obrigatórias antes do runtime.
 
+No caminho integrado da missão 0107, o orquestrador pode receber `execution_governance` para preparar a execução com Policy, Context Router, Token Budget, Guardian, Model Selection e Audit/Event Log antes de capabilities e runtime.
+
 ## Responsabilidades
 
 - Receber uma `Task`.
 - Selecionar um `AgentProfile` compativel por `role`, `domain`, `tags`, `task_type`, `required_capabilities`, `complexity` e `risk_level`.
 - Consultar o Guardian Engine antes da execucao e antes de aceitar o resultado.
 - Selecionar modelo via Model Selection Engine quando `model_catalog` e `model_policy` forem fornecidos.
+- Delegar preparação governada para `AgentExecutionGovernance` quando configurado explicitamente.
 - Montar um `AgentExecutionRequest` provider-neutral.
 - Resolver capabilities obrigatórias por `CapabilityResolver` quando `require_capability_resolution=True`.
 - Executar capabilities obrigatórias por contrato injetável de alto nível quando `capability_executor` e `require_capability_execution=True` forem configurados.
@@ -61,6 +64,22 @@ O orquestrador nao escolhe modelo por hardcode.
 
 Quando existe catalogo de modelos e a Task declara `metadata["model_policy"]`, a politica e normalizada para `ModelSelectionPolicy` e enviada ao `ModelSelector`. A decisao e passada ao `RuntimeAdapter` dentro de `RuntimeExecutionRequest.selection_decision`.
 
+No caminho 0107, a decisão de modelo vem do `AgentExecutionGovernance` e recebe também `ResolvedPolicySet` e `ContextPackage.model_requirements`. Falha de seleção ou aprovação humana requerida bloqueia o runtime antes de executar capabilities.
+
+## Governança De Execução
+
+Quando `execution_governance` é fornecido, o orquestrador usa o resultado de preparação para propagar:
+
+- `policy_resolution_id` e `matched_policy_refs`;
+- `context_request_id` e `context_package_id`;
+- `estimated_context_tokens`, `reserved_output_tokens` e orçamento disponível;
+- `selected_model_id`;
+- `guardian_decision_refs`;
+- `audit_event_refs`;
+- warnings e requisitos de aprovação.
+
+Quando `require_execution_governance=True`, a ausência da dependência falha antes do runtime. Quando a dependência não é fornecida e a flag permanece no padrão `False`, o comportamento legado continua disponível.
+
 ## Runtime Adapter
 
 O runtime recebe uma `RuntimeExecutionRequest` contendo:
@@ -102,7 +121,11 @@ O fluxo validado pela missão 0106 usa `ProviderGateway` real em `dry_run=True`,
 
 Documento complementar: [Integração Task, Agent e Capability](architecture/task-agent-capability-integration.md).
 
+Documento complementar: [Integração de Governança da Execução 0107](architecture/execution-governance-0107.md).
+
 Exemplo complementar: [Fluxo Capability, Skill, Tool e Provider Gateway em dry-run](examples/minimal-capability-skill-tool-provider-dry-run.md).
+
+Exemplo complementar: [Governança de Execução 0107](examples/minimal-execution-governance-0107.md).
 
 ## Validacao
 

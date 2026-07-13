@@ -18,6 +18,8 @@ O `ContextPackage` expõe `model_requirements` mínimos derivados do orçamento 
 
 O Guardian Engine possui verificação determinística inicial para `ContextPackage` já montado. Essa verificação é chamada explicitamente pelo componente orquestrador ou por testes; ela não muda o fluxo principal do Context Router.
 
+Na integração 0107, `AgentExecutionGovernance` chama o Context Router com candidatos explícitos, repassa o `ResolvedPolicySet`, aplica o orçamento via `SimpleTokenBudgetManager`, avalia o `ContextPackage` com Guardian e envia `model_requirements` ao Model Selection Engine.
+
 ## Componentes
 
 `Context Router` recebe uma `ContextRequest`, considera candidatos explícitos de contexto, deduplica itens por id, hash ou conteúdo, aplica orçamento simples de tokens e produz um `ContextPackage` rastreável.
@@ -89,6 +91,7 @@ Model Selection Engine quando o chamador repassar os requisitos de orçamento
 - Exposição de requisitos mínimos de orçamento para consumo opcional por Model Selection sem acoplamento circular.
 - Integração opcional com `ResolvedPolicySet` sem chamada a Policy Engine, Guardian Engine, LLM, provider, rede ou banco.
 - Avaliação Guardian determinística, local e sem chamadas externas quando `evaluate_context_package()` receber um pacote.
+- Integração explícita no caminho 0107 por `AgentExecutionGovernance`, sem fazer o Context Router chamar Policy Engine, Model Selection ou runtime diretamente.
 
 ## Limites Conhecidos
 
@@ -101,7 +104,7 @@ Model Selection Engine quando o chamador repassar os requisitos de orçamento
 - Redaction é apenas preservada quando já existe no item; o módulo não executa redaction.
 - A integração com Policy Engine é inicial e limitada a `ResolvedPolicySet` opcional já resolvido.
 - O Context Router não resolve políticas, não interpreta DSL, não carrega arquivos de política e não aplica enforcement operacional amplo.
-- Guardian Engine avalia `ContextPackage` por chamada explícita, mas o Context Router ainda não chama Guardian automaticamente.
+- Guardian Engine avalia `ContextPackage` por chamada explícita; no caminho 0107 essa chamada é feita pelo coordenador de governança, não pelo Context Router.
 - Model Selection pode consumir requisitos de orçamento repassados pelo chamador, mas o Context Router e o Token Budget Manager não selecionam modelos.
 - Não há precificação real por token, consulta de billing real ou consulta real de limites de contexto de providers.
 - Semantic Index e cache persistido continuam como trabalho futuro.

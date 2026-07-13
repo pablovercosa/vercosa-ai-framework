@@ -14,6 +14,7 @@ from vercosa_ai_framework.audit.event_log import EventLog
 from vercosa_ai_framework.audit.types import AuditEvent, EventCategory, EventResult, EventSeverity
 from vercosa_ai_framework.context.types import ContextPackage
 from vercosa_ai_framework.guardian.types import GuardianAction, GuardianDecision
+from vercosa_ai_framework.model_selection.types import SelectionDecision
 from vercosa_ai_framework.policy.types import PolicyEffect, PolicyResolutionResult, PolicySeverity
 
 
@@ -210,6 +211,78 @@ def record_context_package_event(
     return event_log.record(event) if event_log is not None else event
 
 
+def model_selection_event(
+    decision: SelectionDecision,
+    *,
+    metadata: Mapping[str, Any] | None = None,
+) -> AuditEvent:
+    """Create a structured audit event for a Model Selection decision."""
+
+    event_metadata = _safe_metadata(metadata)
+    requirements = decision.token_budget_requirements
+    event_metadata.update(
+        {
+            "selected_model_id": decision.selected_model.id,
+            "selected_provider": decision.selected_provider,
+            "selected_runtime": decision.selected_runtime,
+            "small_model_id": decision.small_model.id if decision.small_model else None,
+            "fallback_model_ids": tuple(model.id for model in decision.fallback_chain),
+            "estimated_cost": decision.estimated_cost,
+            "quality_expectation": decision.quality_expectation,
+            "policy_sources": decision.policy_sources,
+            "requires_review": decision.requires_review,
+            "requires_user_approval": decision.requires_user_approval,
+            "minimum_context_window": requirements.minimum_context_window if requirements else None,
+            "estimated_context_tokens": requirements.estimated_context_tokens if requirements else None,
+            "reserved_output_tokens": requirements.reserved_output_tokens if requirements else None,
+            "available_context_tokens": requirements.available_context_tokens if requirements else None,
+            "token_budget_compatibility": dict(sorted(decision.token_budget_compatibility.items())),
+            "warning_count": len(decision.security_notes) + len(decision.token_budget_warnings),
+        }
+    )
+    result = EventResult.REQUIRES_APPROVAL if decision.requires_user_approval else EventResult.SUCCESS
+    severity = EventSeverity.WARNING if decision.requires_review or decision.requires_user_approval else EventSeverity.INFO
+    return AuditEvent(
+        category=EventCategory.MODEL_SELECTION,
+        name="model_selection.decision",
+        severity=severity,
+        result=result,
+        message="Decisão de Model Selection registrada de forma estruturada.",
+        source="model_selection",
+        metadata=event_metadata,
+    )
+
+
+def agent_execution_event(
+    name: str,
+    *,
+    result: str = "success",
+    metadata: Mapping[str, Any] | None = None,
+) -> AuditEvent:
+    """Create a sanitized Agent Assignment execution audit event."""
+
+    result_map = {
+        "success": EventResult.SUCCESS,
+        "failed": EventResult.FAILED,
+        "blocked": EventResult.BLOCKED,
+        "requires_approval": EventResult.REQUIRES_APPROVAL,
+        "warning": EventResult.WARNING,
+    }
+    event_result = result_map.get(result, EventResult.SUCCESS)
+    severity = EventSeverity.ERROR if event_result in {EventResult.FAILED, EventResult.BLOCKED} else EventSeverity.INFO
+    if event_result in {EventResult.REQUIRES_APPROVAL, EventResult.WARNING}:
+        severity = EventSeverity.WARNING
+    return AuditEvent(
+        category=EventCategory.RUNTIME,
+        name=f"agent_execution.{name}",
+        severity=severity,
+        result=event_result,
+        message="Evento de execução de Agent Assignment registrado de forma estruturada.",
+        source="agents",
+        metadata=_safe_metadata(metadata),
+    )
+
+
 def _policy_event_severity(conflicts: tuple[Any, ...], has_warnings: bool, requires_approval: bool) -> EventSeverity:
     if any(conflict.severity is PolicySeverity.CRITICAL for conflict in conflicts):
         return EventSeverity.ERROR
@@ -295,7 +368,9 @@ def _tuple_from_metadata(value: Any) -> tuple[Any, ...]:
 
 __all__ = [
     "context_package_event",
+    "agent_execution_event",
     "guardian_decision_event",
+    "model_selection_event",
     "policy_resolution_event",
     "record_context_package_event",
     "record_guardian_decision_event",

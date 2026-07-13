@@ -38,7 +38,7 @@ Implementado atualmente:
 - Porta `EventLog` em `event_log.py`.
 - Implementação `InMemoryEventLog` em memória.
 - Implementação `JsonlAuditEventLog` para persistência local JSONL explícita e opt-in.
-- Helpers opcionais para eventos de Policy Engine, Guardian Engine e Context Router em `integrations.py`.
+- Helpers opcionais para eventos de Policy Engine, Guardian Engine, Context Router, Model Selection e execução de Agent em `integrations.py`.
 - Helpers opcionais para eventos de ciclo de vida de missão e batch em `mission_events.py`.
 - Integração opcional do `MissionRunner` Python com `EventLog` fornecido pelo chamador.
 
@@ -106,8 +106,8 @@ Categorias existentes no contrato:
 | `policy` | Resolução de políticas, conflitos, warnings e efeitos declarativos relevantes. |
 | `guardian` | Decisões do Guardian Engine, bloqueios, avisos, aprovações requeridas e risco operacional. |
 | `context` | Montagem de `ContextPackage`, itens selecionados, omissões, warnings e orçamento estimado. |
-| `model_selection` | Seleção de modelo, fallback e restrições de orçamento. Categoria existente, integração específica ainda futura. |
-| `runtime` | Planos e resultados de runtime. Categoria existente, integração específica ainda futura. |
+| `model_selection` | Seleção de modelo, fallback e restrições de orçamento. A integração 0107 registra decisões do `ModelSelector` quando o caminho governado é usado. |
+| `runtime` | Planos, resultados de runtime e eventos sanitizados de execução de Agent. A integração 0107 registra início governado, bloqueio de preparação, resultado de runtime e resultado final quando há `EventLog` injetado. |
 | `provider` | Chamadas governadas e decisões no Provider Gateway. Categoria existente, integração específica ainda futura. |
 | `usage_limit` | Sinais de quota, rate limit, billing ou limite externo. Categoria existente; integração como evento estruturado ainda é próxima etapa. |
 | `system` | Eventos internos gerais do framework. |

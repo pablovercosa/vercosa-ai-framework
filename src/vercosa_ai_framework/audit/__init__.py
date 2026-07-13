@@ -2,8 +2,10 @@
 
 from .event_log import EventLog, InMemoryEventLog
 from .integrations import (
+    agent_execution_event,
     context_package_event,
     guardian_decision_event,
+    model_selection_event,
     policy_resolution_event,
     record_context_package_event,
     record_guardian_decision_event,
@@ -32,6 +34,7 @@ __all__ = [
     "EventSeverity",
     "InMemoryEventLog",
     "JsonlAuditEventLog",
+    "agent_execution_event",
     "audit_event_to_json_dict",
     "batch_completed_event",
     "batch_interrupted_event",
@@ -44,6 +47,7 @@ __all__ = [
     "mission_queued_event",
     "mission_skipped_event",
     "mission_started_event",
+    "model_selection_event",
     "policy_resolution_event",
     "record_context_package_event",
     "record_guardian_decision_event",

@@ -52,6 +52,8 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Documentação da integração Task/Agent/Capability em `docs/architecture/task-agent-capability-integration.md` e exemplo mínimo em `docs/examples/minimal-task-agent-capability-flow.md`.
 - Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado por `ResolvedCapabilityExecutor` injetável, preservando rastreabilidade até `TaskExecutionOutcome` e bloqueando `RuntimeAdapter` em falhas de capability obrigatória.
 - Exemplo mínimo da cadeia Capability/Skill/Tool/Provider Gateway em dry-run em `docs/examples/minimal-capability-skill-tool-provider-dry-run.md`.
+- Integração mínima 0107 por `AgentExecutionGovernance`, compondo Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection Engine e Audit/Event Log antes de Capability/Skill/Tool/Provider Gateway em dry-run e Runtime Adapter fake ou injetado.
+- Documentação arquitetural da governança de execução 0107 em `docs/architecture/execution-governance-0107.md` e exemplo mínimo em `docs/examples/minimal-execution-governance-0107.md`.
 
 ### Alterado
 
@@ -65,6 +67,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - OpenCode documentado como runtime/laboratório inicial atrás de adapter, não como centro arquitetural do framework.
 - Status de integração atualizado para diferenciar Mission/Workflow/Task validado, Task -> Agent -> Capability Resolver validado declarativamente e Skill -> Tool -> Provider ainda futuro.
 - Status de integração atualizado para registrar Skill -> Tool -> Provider Gateway em dry-run como implementado, sem declarar provider real, rede, banco, MCP ou API externa.
+- Agent Orchestrator atualizado para preservar o comportamento legado por padrão e ativar governança completa somente por dependência explícita ou `require_execution_governance=True`.
 
 ### Documentado
 

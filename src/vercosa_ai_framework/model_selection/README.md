@@ -16,6 +16,7 @@ Selecionar modelos por política, disponibilidade e atributos declarados, sem ha
 - Pode consumir `TokenBudgetRequirements` opcional, ou mapping equivalente vindo de `ContextPackage.model_requirements`, para considerar janela mínima de contexto já estimada fora do Model Selection.
 - Registra compatibilidade determinística entre candidatos e orçamento informado em `SelectionDecision.token_budget_compatibility`.
 - Registra warnings determinísticos em `SelectionDecision.token_budget_warnings` quando candidatos não comportam o orçamento informado ou quando o modelo escolhido fica com margem apertada.
+- Participa do fluxo 0107 quando chamado por `AgentExecutionGovernance`, recebendo `ResolvedPolicySet` e `ContextPackage.model_requirements` antes do runtime.
 
 ## O Que Este Módulo Não Faz
 
@@ -84,6 +85,7 @@ Saídas:
 
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 - [Estado atual](../../../docs/alignment/current-state.md)
+- [Integração de Governança da Execução 0107](../../../docs/architecture/execution-governance-0107.md)
 
 ## Exemplo Mínimo
 

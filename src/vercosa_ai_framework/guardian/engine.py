@@ -27,7 +27,7 @@ from vercosa_ai_framework.guardian.types import (
     GuardianSeverity,
     GuardianViolation,
 )
-from vercosa_ai_framework.policy.types import PolicyEffect, PolicySeverity
+from vercosa_ai_framework.policy.types import PolicyEffect, PolicyScope, PolicySeverity
 
 
 SPEC_REF = "specs/framework/0005-guardian-engine.md"
@@ -588,6 +588,8 @@ class GuardianEngine:
         matches: list[GuardianRuleMatch] = []
         for rule in resolved_policy_set.resolved_rules:
             if rule.effect == PolicyEffect.ALLOW:
+                continue
+            if rule.effect == PolicyEffect.DENY and rule.scope == PolicyScope.MODEL:
                 continue
             action = self._guardian_action_from_policy_effect(rule.effect)
             if action is None:

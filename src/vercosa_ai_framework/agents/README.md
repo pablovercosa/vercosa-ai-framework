@@ -13,6 +13,7 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 - Seleciona agente compatível com role, capabilities e metadados.
 - Resolve capabilities obrigatórias de forma declarativa quando o `CapabilityResolver` é configurado explicitamente.
 - Executa capabilities obrigatórias por contrato injetável de alto nível quando `capability_executor` e `require_capability_execution=True` são configurados.
+- Prepara execução governada por `AgentExecutionGovernance` quando `execution_governance` é configurado explicitamente.
 - Fornece `AgentTaskExecutor` como ponte para o executor injetado do `TaskScheduler`.
 - Prepara requisição normalizada para RuntimeAdapter.
 
@@ -31,6 +32,7 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 | `types.py` | Tipos de agentes, perfis, requests e resultados. |
 | `registry.py` | `AgentRegistry` para perfis. |
 | `orchestrator.py` | `AgentOrchestrator` MVP. |
+| `governance.py` | Pipeline injetável de preparação governada 0107. |
 | `task_executor.py` | Ponte `TaskScheduler` -> `AgentOrchestrator`. |
 | `__init__.py` | Exportações públicas do módulo. |
 
@@ -45,6 +47,8 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 - `AgentExecutionResult`: resultado normalizado.
 - `AgentRegistry`: catálogo de perfis.
 - `AgentOrchestrator`: seleção e preparação de execução.
+- `AgentExecutionGovernance`: preparação governada com Policy, Context, Token Budget, Guardian, Model Selection e Audit.
+- `AgentExecutionGovernanceResult`: resultado estruturado da preparação governada.
 - `AgentTaskExecutor`: executor injetável para o scheduler de tasks.
 
 ## Entradas E Saídas
@@ -62,6 +66,7 @@ Saídas:
 
 - `../runtime/`: execução concreta por adapter.
 - `../guardian/`: avaliação quando configurada.
+- `../policy/`, `../context/`, `../model_selection/` e `../audit/`: usados pelo pipeline 0107 quando injetado explicitamente.
 - `../capabilities/`: resolução declarativa e execução opcional por contrato injetável de capabilities obrigatórias.
 
 ## Módulos Relacionados
@@ -79,6 +84,7 @@ Saídas:
 
 - [Agent Orchestrator](../../../docs/agent-orchestrator.md)
 - [Integração Task, Agent e Capability](../../../docs/architecture/task-agent-capability-integration.md)
+- [Integração de Governança da Execução 0107](../../../docs/architecture/execution-governance-0107.md)
 - [Capabilities, Skills, Tools](../../../docs/capabilities-skills-tools.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
@@ -102,8 +108,8 @@ registry.register(
 
 Status: `MVP`.
 
-Há registry, orchestrator mínimo, ponte para Task Scheduler, resolução declarativa de capabilities obrigatórias e execução opcional por `capability_executor` antes do runtime. O fluxo 0106 valida Capability -> Skill -> Tool -> Provider Gateway em dry-run, sem provider real, rede, banco, MCP ou API externa.
+Há registry, orchestrator mínimo, ponte para Task Scheduler, resolução declarativa de capabilities obrigatórias, execução opcional por `capability_executor` antes do runtime e preparação governada opcional por `AgentExecutionGovernance`. O fluxo 0106 valida Capability -> Skill -> Tool -> Provider Gateway em dry-run. O fluxo 0107 valida Policy -> Context -> Token Budget -> Guardian -> Model Selection -> Capability -> Skill -> Tool -> Provider Gateway dry-run -> Runtime fake, sem provider real, rede, banco, MCP ou API externa.
 
 ## Próximos Passos
 
-- Revisar Specs/ADRs afetadas pela integração mínima e integrar Policy, Context, Token Budget, Model Selection e Audit/Event Log em missão futura.
+- Revisar Specs/ADRs afetadas pela integração 0107 e evoluir o caminho mínimo para cenários multiagente, persistência opcional e recuperação governada futura.

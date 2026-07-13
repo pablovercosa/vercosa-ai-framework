@@ -1,6 +1,7 @@
 """Agent Orchestrator public contracts."""
 
 from vercosa_ai_framework.agents.registry import AgentRegistry, AgentRegistryError
+from vercosa_ai_framework.agents.governance import AgentExecutionGovernance, AgentExecutionGovernanceResult, ExecutionGovernanceError
 from vercosa_ai_framework.agents.orchestrator import AgentOrchestrator, AgentOrchestratorError, NoCompatibleAgentError
 from vercosa_ai_framework.agents.task_executor import AgentTaskExecutor, agent_result_to_task_outcome
 from vercosa_ai_framework.agents.types import (
@@ -17,6 +18,8 @@ __all__ = [
     "AgentCapabilityRequest",
     "AgentExecutionRequest",
     "AgentExecutionResult",
+    "AgentExecutionGovernance",
+    "AgentExecutionGovernanceResult",
     "AgentMode",
     "AgentOrchestrator",
     "AgentOrchestratorError",
@@ -26,6 +29,7 @@ __all__ = [
     "AgentRole",
     "AgentState",
     "AgentTaskExecutor",
+    "ExecutionGovernanceError",
     "NoCompatibleAgentError",
     "agent_result_to_task_outcome",
 ]

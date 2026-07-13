@@ -13,6 +13,7 @@ from typing import Any
 from uuid import uuid4
 
 from vercosa_ai_framework.agents.registry import AgentRegistry, AgentRegistryError
+from vercosa_ai_framework.agents.governance import AgentExecutionGovernance, AgentExecutionGovernanceResult, ExecutionGovernanceError
 from vercosa_ai_framework.agents.types import (
     AgentExecutionRequest,
     AgentExecutionResult,
@@ -77,6 +78,8 @@ class AgentOrchestrator:
         workspace: str = ".",
         spec_refs: tuple[str, ...] = (SPEC_REF,),
         guardian_mode: GuardianMode = GuardianMode.STANDARD,
+        execution_governance: AgentExecutionGovernance | None = None,
+        require_execution_governance: bool = False,
     ) -> None:
         self.registry = registry
         self.runtime_adapter = runtime_adapter
@@ -89,6 +92,8 @@ class AgentOrchestrator:
         self.workspace = workspace
         self.spec_refs = spec_refs
         self.guardian_mode = guardian_mode
+        self.execution_governance = execution_governance
+        self.require_execution_governance = require_execution_governance
 
     def execute_task(self, task: Task, attempt: TaskAttempt | None = None) -> AgentExecutionResult:
         """Execute one task through a selected agent and runtime adapter."""
@@ -101,21 +106,62 @@ class AgentOrchestrator:
         profile = self.select_agent(task)
         transitions.append(self._transition(AgentState.IDLE, AgentState.PLANNING))
 
-        planning_decision = self._evaluate_guardian(task, assignment_id, "agent_assignment_planning")
-        guardian_decision_refs.append(planning_decision.evaluation_id)
-        if planning_decision.decision in {GuardianAction.BLOCK, GuardianAction.REQUIRE_APPROVAL}:
+        governance_result: AgentExecutionGovernanceResult | None = None
+        if self.execution_governance is not None:
+            try:
+                governance_result = self.execution_governance.prepare(task, _attempt(task, attempt, attempt_id), profile, assignment_id=assignment_id)
+            except ExecutionGovernanceError as exc:
+                transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
+                return self._failed_result(
+                    task,
+                    attempt_id,
+                    assignment_id,
+                    profile,
+                    (str(exc),),
+                    transitions,
+                    guardian_decision_refs,
+                )
+            guardian_decision_refs.extend(governance_result.guardian_decision_refs)
+            if governance_result.blocked:
+                transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
+                return self._failed_result(
+                    task,
+                    attempt_id,
+                    assignment_id,
+                    profile,
+                    governance_result.errors or ("governed preparation blocked execution",),
+                    transitions,
+                    guardian_decision_refs,
+                    governance_result=governance_result,
+                )
+        elif self.require_execution_governance:
             transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
             return self._failed_result(
                 task,
                 attempt_id,
                 assignment_id,
                 profile,
-                tuple(planning_decision.reasons or ("guardian blocked agent assignment",)),
+                ("execution governance is required but was not configured",),
                 transitions,
                 guardian_decision_refs,
             )
 
-        model_decision = self._select_model_if_configured(task, profile, assignment_id)
+        if governance_result is None:
+            planning_decision = self._evaluate_guardian(task, assignment_id, "agent_assignment_planning")
+            guardian_decision_refs.append(planning_decision.evaluation_id)
+            if planning_decision.decision in {GuardianAction.BLOCK, GuardianAction.REQUIRE_APPROVAL}:
+                transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
+                return self._failed_result(
+                    task,
+                    attempt_id,
+                    assignment_id,
+                    profile,
+                    tuple(planning_decision.reasons or ("guardian blocked agent assignment",)),
+                    transitions,
+                    guardian_decision_refs,
+                )
+
+        model_decision = governance_result.model_selection_decision if governance_result else self._select_model_if_configured(task, profile, assignment_id)
         try:
             capability_results = self._resolve_required_capabilities(
                 task,
@@ -123,6 +169,7 @@ class AgentOrchestrator:
                 assignment_id=assignment_id,
                 profile=profile,
                 guardian_decision_refs=tuple(guardian_decision_refs),
+                governance_result=governance_result,
             )
             capability_executions = self._execute_required_capabilities(capability_results)
         except CapabilityExecutionFailed as exc:
@@ -137,6 +184,7 @@ class AgentOrchestrator:
                 guardian_decision_refs,
                 capability_resolutions=capability_results,
                 capability_executions=exc.executions,
+                governance_result=governance_result,
             )
         except CapabilityResolutionError as exc:
             transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
@@ -150,6 +198,7 @@ class AgentOrchestrator:
                 guardian_decision_refs,
                 capability_resolutions=(),
                 capability_executions=(),
+                governance_result=governance_result,
             )
         request = self.build_execution_request(
             task,
@@ -160,10 +209,15 @@ class AgentOrchestrator:
             guardian_decision_refs=tuple(guardian_decision_refs),
             capability_resolutions=capability_results,
             capability_executions=capability_executions,
+            governance_result=governance_result,
         )
 
         transitions.append(self._transition(AgentState.PLANNING, AgentState.EXECUTING))
+        if governance_result is not None and self.execution_governance is not None:
+            self.execution_governance.record_execution_start(task, _attempt(task, attempt, attempt_id), assignment_id, profile)
         runtime_result = self.runtime_adapter.execute_task(self._runtime_request(task, request, model_decision))
+        if governance_result is not None and self.execution_governance is not None:
+            self.execution_governance.record_runtime_result(task, _attempt(task, attempt, attempt_id), assignment_id, profile, runtime_result)
         transitions.append(self._transition(AgentState.EXECUTING, AgentState.VALIDATING))
 
         validation_decision = self._evaluate_guardian(
@@ -171,15 +225,30 @@ class AgentOrchestrator:
             assignment_id,
             "agent_assignment_validation",
             runtime_result=runtime_result,
+            governance_result=governance_result,
         )
         guardian_decision_refs.append(validation_decision.evaluation_id)
+        if governance_result is not None and self.execution_governance is not None:
+            self.execution_governance.record_guardian_decision(
+                validation_decision,
+                origin="agent_assignment_validation",
+                metadata={
+                    "mission_id": task.mission_id,
+                    "workflow_id": task.workflow_id,
+                    "task_id": task.task_id,
+                    "agent_assignment_id": assignment_id,
+                    "policy_resolution_id": governance_result.resolved_policy_set.resolution_id,
+                    "context_package_id": governance_result.context_package.context_package_id,
+                    "selected_model_id": governance_result.selected_model_id,
+                },
+            )
 
         runtime_success = runtime_result.status == RuntimeStatus.DONE
         guardian_success = validation_decision.decision in {GuardianAction.ALLOW, GuardianAction.WARN}
         final_state = AgentState.DONE if runtime_success and guardian_success else AgentState.FAILED
         transitions.append(self._transition(AgentState.VALIDATING, final_state))
 
-        return self._result_from_runtime(
+        result = self._result_from_runtime(
             task,
             attempt_id,
             request,
@@ -188,7 +257,11 @@ class AgentOrchestrator:
             tuple(guardian_decision_refs),
             transitions,
             validation_errors=() if guardian_success else tuple(validation_decision.reasons),
+            governance_result=governance_result,
         )
+        if governance_result is not None and self.execution_governance is not None:
+            self.execution_governance.record_final_result(task, _attempt(task, attempt, attempt_id), assignment_id, profile, result)
+        return result
 
     def select_agent(self, task: Task) -> AgentProfile:
         """Select a compatible profile deterministically or fail safely."""
@@ -224,6 +297,7 @@ class AgentOrchestrator:
         guardian_decision_refs: tuple[str, ...] = (),
         capability_resolutions: tuple[CapabilityResolutionResult, ...] = (),
         capability_executions: tuple[CapabilityExecutionResult, ...] = (),
+        governance_result: AgentExecutionGovernanceResult | None = None,
     ) -> AgentExecutionRequest:
         """Build the normalized agent request sent across the runtime boundary."""
 
@@ -231,6 +305,7 @@ class AgentOrchestrator:
         limits.update(profile.default_execution_limits)
         limits.update(_mapping(task.metadata.get("execution_limits")))
 
+        governance_metadata = _governance_metadata(governance_result)
         return AgentExecutionRequest(
             mission_id=task.mission_id,
             workflow_id=task.workflow_id,
@@ -243,7 +318,7 @@ class AgentOrchestrator:
             state=AgentState.PLANNING,
             model_selection_decision_ref=model_decision.selected_model.id if model_decision else None,
             guardian_decision_refs=guardian_decision_refs,
-            context_refs=task.context_refs,
+            context_refs=_context_refs(task, governance_result),
             expected_outputs=_tuple_str(task.metadata.get("expected_outputs")),
             acceptance_criteria=_tuple_str(task.metadata.get("acceptance_criteria")),
             execution_limits=limits,
@@ -261,6 +336,7 @@ class AgentOrchestrator:
                 "capability_executions": tuple(
                     _capability_execution_metadata(result) for result in capability_executions
                 ),
+                **governance_metadata,
             },
         )
 
@@ -272,6 +348,7 @@ class AgentOrchestrator:
         assignment_id: str,
         profile: AgentProfile,
         guardian_decision_refs: tuple[str, ...],
+        governance_result: AgentExecutionGovernanceResult | None = None,
     ) -> tuple[CapabilityResolutionResult, ...]:
         if not task.required_capabilities:
             return ()
@@ -293,6 +370,7 @@ class AgentOrchestrator:
                 profile=profile,
                 capability=capability,
                 guardian_decision_refs=guardian_decision_refs,
+                governance_result=governance_result,
             )
             results.append(self.capability_resolver.resolve(request))
         return tuple(results)
@@ -331,6 +409,7 @@ class AgentOrchestrator:
         profile: AgentProfile,
         capability: str,
         guardian_decision_refs: tuple[str, ...],
+        governance_result: AgentExecutionGovernanceResult | None = None,
     ) -> CapabilityRequest:
         capability_inputs = _mapping(task.metadata.get("capability_inputs"))
         nested_inputs = _mapping(task.metadata.get("inputs")).get("capability_inputs")
@@ -357,6 +436,10 @@ class AgentOrchestrator:
                 "declarative_resolution_only": True,
                 "allowed_tools": _allowed_tools(task, capability),
                 "allowed_effects": _allowed_effects(task, capability),
+                "policy_resolution_id": governance_result.resolved_policy_set.resolution_id if governance_result else None,
+                "matched_policy_refs": governance_result.resolved_policy_set.matched_policy_refs if governance_result else (),
+                "context_package_id": governance_result.context_package.context_package_id if governance_result else None,
+                "model_selection_decision_ref": governance_result.selected_model_id if governance_result else None,
             },
         )
 
@@ -390,6 +473,7 @@ class AgentOrchestrator:
         evaluation_type: str,
         *,
         runtime_result: RuntimeExecutionResult | None = None,
+        governance_result: AgentExecutionGovernanceResult | None = None,
     ):
         target_paths = _tuple_str(task.metadata.get("allowed_paths")) + _tuple_str(task.metadata.get("denied_paths"))
         if runtime_result is not None:
@@ -409,11 +493,15 @@ class AgentOrchestrator:
                 target_paths=target_paths,
                 execution_limits=_mapping(task.metadata.get("execution_limits")),
                 current_cycle=0,
+                resolved_policy_set=governance_result.resolved_policy_set if governance_result else None,
                 metadata={
                     "deliverables": task.metadata.get("expected_outputs", ("agent execution result",)),
                     "acceptance_criteria": task.metadata.get("acceptance_criteria", ("runtime result validated",)),
                     "task_type": task.task_type,
                     "risk_level": task.risk_level,
+                    "policy_resolution_id": governance_result.resolved_policy_set.resolution_id if governance_result else None,
+                    "context_package_id": governance_result.context_package.context_package_id if governance_result else None,
+                    "selected_model_id": governance_result.selected_model_id if governance_result else None,
                 },
             )
         )
@@ -438,6 +526,11 @@ class AgentOrchestrator:
                 "acceptance_criteria": request.acceptance_criteria,
                 "capability_resolutions": request.metadata.get("capability_resolutions", ()),
                 "capability_executions": request.metadata.get("capability_executions", ()),
+                "context_package": request.metadata.get("context_package"),
+                "policy_resolution_id": request.metadata.get("policy_resolution_id"),
+                "context_package_id": request.metadata.get("context_package_id"),
+                "model_selection_decision_ref": request.metadata.get("model_selection_decision_ref"),
+                "guardian_decision_refs": request.guardian_decision_refs,
             },
             permissions={"mcp_direct_access": False, "providers_direct_access": False},
             execution_limits=request.execution_limits,
@@ -459,6 +552,7 @@ class AgentOrchestrator:
         transitions: list[str],
         *,
         validation_errors: tuple[str, ...] = (),
+        governance_result: AgentExecutionGovernanceResult | None = None,
     ) -> AgentExecutionResult:
         errors = runtime_result.errors + validation_errors
         warnings = runtime_result.warnings
@@ -488,6 +582,7 @@ class AgentOrchestrator:
                 "runtime_id": runtime_result.runtime_id,
                 "capability_resolutions": request.metadata.get("capability_resolutions", ()),
                 "capability_executions": request.metadata.get("capability_executions", ()),
+                **_governance_result_metadata(governance_result),
             },
         )
 
@@ -503,6 +598,7 @@ class AgentOrchestrator:
         *,
         capability_resolutions: tuple[CapabilityResolutionResult, ...] = (),
         capability_executions: tuple[CapabilityExecutionResult, ...] = (),
+        governance_result: AgentExecutionGovernanceResult | None = None,
     ) -> AgentExecutionResult:
         return AgentExecutionResult(
             mission_id=task.mission_id,
@@ -524,6 +620,7 @@ class AgentOrchestrator:
                 "capability_executions": tuple(
                     _capability_execution_metadata(result) for result in capability_executions
                 ),
+                **_governance_result_metadata(governance_result),
             },
         )
 
@@ -630,6 +727,55 @@ def _capability_execution_metadata(result: CapabilityExecutionResult) -> dict[st
         "guardian_decision_refs": result.guardian_decision_refs,
         "metadata": result.metadata,
     }
+
+
+def _attempt(task: Task, attempt: TaskAttempt | None, attempt_id: str) -> TaskAttempt:
+    if attempt is not None:
+        return attempt
+    return TaskAttempt(
+        task_id=task.task_id,
+        workflow_id=task.workflow_id,
+        mission_id=task.mission_id,
+        attempt_number=max(1, task.attempt_count + 1),
+        attempt_id=attempt_id,
+    )
+
+
+def _context_refs(task: Task, governance_result: AgentExecutionGovernanceResult | None) -> tuple[str, ...]:
+    refs = list(task.context_refs)
+    if governance_result is not None:
+        refs.append(governance_result.context_package.context_package_id)
+    return tuple(dict.fromkeys(refs))
+
+
+def _governance_metadata(governance_result: AgentExecutionGovernanceResult | None) -> dict[str, Any]:
+    if governance_result is None:
+        return {}
+    model_decision = governance_result.model_selection_decision
+    context_package = governance_result.context_package
+    return {
+        "governance_preparation_id": governance_result.preparation_id,
+        "policy_resolution_id": governance_result.resolved_policy_set.resolution_id,
+        "matched_policy_refs": governance_result.resolved_policy_set.matched_policy_refs,
+        "context_request_id": governance_result.context_request.request_id,
+        "context_package_id": context_package.context_package_id,
+        "context_package": context_package,
+        "estimated_context_tokens": context_package.token_estimate.estimated_tokens,
+        "reserved_output_tokens": context_package.output_token_reservation,
+        "available_context_tokens": context_package.metadata.get("available_context_tokens"),
+        "model_selection_decision_ref": model_decision.selected_model.id if model_decision else None,
+        "selected_model_id": model_decision.selected_model.id if model_decision else None,
+        "guardian_decision_refs": governance_result.guardian_decision_refs,
+        "audit_event_refs": governance_result.audit_event_refs,
+        "approval_requirements": governance_result.approval_requirements,
+        "governance_warnings": governance_result.warnings,
+    }
+
+
+def _governance_result_metadata(governance_result: AgentExecutionGovernanceResult | None) -> dict[str, Any]:
+    metadata = _governance_metadata(governance_result)
+    metadata.pop("context_package", None)
+    return metadata
 
 
 __all__ = ["AgentOrchestrator", "AgentOrchestratorError", "NoCompatibleAgentError"]
