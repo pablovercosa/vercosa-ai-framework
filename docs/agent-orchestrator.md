@@ -11,6 +11,8 @@ Task Queue
 -> normalized AgentExecutionResult
 ```
 
+No caminho integrado da missão 0105, o orquestrador também pode receber um `CapabilityResolver` configurado explicitamente para resolver declarativamente todas as capabilities obrigatórias antes do runtime.
+
 ## Responsabilidades
 
 - Receber uma `Task`.
@@ -18,6 +20,7 @@ Task Queue
 - Consultar o Guardian Engine antes da execucao e antes de aceitar o resultado.
 - Selecionar modelo via Model Selection Engine quando `model_catalog` e `model_policy` forem fornecidos.
 - Montar um `AgentExecutionRequest` provider-neutral.
+- Resolver capabilities obrigatórias por `CapabilityResolver` quando `require_capability_resolution=True`.
 - Delegar a execucao concreta para um `RuntimeAdapter` abstrato.
 - Normalizar o retorno como `AgentExecutionResult`.
 
@@ -25,7 +28,7 @@ Task Queue
 
 - Chamar OpenCode diretamente.
 - Chamar MCPs, providers, APIs, bancos ou subprocessos.
-- Resolver capabilities para skills/tools.
+- Executar capabilities, skills ou tools.
 - Executar subagents reais.
 - Implementar paralelismo.
 - Alterar Task Queue, dependencias ou criterios de aceite.
@@ -69,10 +72,24 @@ O runtime recebe uma `RuntimeExecutionRequest` contendo:
 
 Testes devem usar runtime fake ou dry-run. O MVP nao exige OpenCode real.
 
+## Capability Resolver
+
+Quando configurado com `capability_resolver` e `require_capability_resolution=True`, o Agent Orchestrator:
+
+- cria uma `CapabilityRequest` por capability obrigatória;
+- preserva `mission_id`, `workflow_id`, `task_id`, `attempt_id` em metadata e `agent_assignment_id`;
+- usa permissões explícitas da task, como `metadata["granted_permissions"]` ou `metadata["inputs"]["granted_permissions"]`;
+- registra `capability_resolutions` no `AgentExecutionRequest` e no `AgentExecutionResult`;
+- impede chamada ao runtime quando uma capability obrigatória não existe, não tem permissão ou não possui skill declarativa compatível.
+
+A skill selecionada é apenas evidência declarativa de compatibilidade. Ela não é executada neste fluxo.
+
 ## Erros
 
 - `NoCompatibleAgentError`: nenhuma profile registrada atende a Task.
 - `AgentOrchestratorError`: selecao de modelo ou outra etapa de preparacao falhou de forma segura.
+
+Documento complementar: [Integração Task, Agent e Capability](architecture/task-agent-capability-integration.md).
 
 ## Validacao
 

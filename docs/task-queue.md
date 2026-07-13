@@ -9,6 +9,7 @@ It is intentionally in-memory and provider agnostic. It does not execute OpenCod
 - `TaskQueue` stores workflow task state, dependencies, attempts, retry counters, and deterministic selection.
 - `TaskScheduler` drains eligible queue items sequentially through an injected Python executor used by tests or future framework boundaries.
 - `TaskExecutionOutcome` is the normalized result returned by that executor.
+- `AgentTaskExecutor`, definido em `agents/`, pode ser usado como executor injetado para acionar o `AgentOrchestrator` sem criar dependência de `tasks/` para `agents/`.
 
 ## Deterministic Selection
 
@@ -46,6 +47,8 @@ The scheduler preserves every `TaskAttempt` and never retries indefinitely.
 
 This MVP is not a runtime adapter and not an agent orchestrator. Future execution layers must call the queue through explicit framework contracts and return normalized outcomes without exposing the queue to provider-specific details.
 
+No caminho integrado da missão 0105, a fila preserva referências genéricas como `agent_assignment_ref`, `runtime_result_ref`, `audit_log_ref` e metadados do outcome. Essas referências são rastreabilidade operacional; elas não tornam a Task Queue responsável por selecionar agente, resolver capability ou executar runtime.
+
 ## Uso No Fluxo Integrado
 
 No caminho integrado da missão 0104, `WorkflowEngine.execute_with_queue()` materializa `WorkflowTask` em `Task` e entrega a fila ao `TaskScheduler`.
@@ -57,4 +60,8 @@ Nesse fluxo:
 - o executor injetado chama o runtime por uma fronteira acima da fila;
 - `tasks/` não importa `workflows/`, `missions/`, runtime, providers, agentes, capabilities, skills ou tools.
 
+No caminho integrado da missão 0105, o executor injetado pode ser a ponte `AgentTaskExecutor`, que converte `AgentExecutionResult` em `TaskExecutionOutcome`. Retry continua pertencendo à Task Queue e ao scheduler.
+
 Documento arquitetural: [Integração Mission Runner, Workflow Engine e Task Queue](architecture/mission-workflow-task-integration.md).
+
+Documento complementar: [Integração Task, Agent e Capability](architecture/task-agent-capability-integration.md).

@@ -62,6 +62,7 @@ class Task:
     artifact_refs: tuple[str, ...] = field(default_factory=tuple)
     guardian_decision_refs: tuple[str, ...] = field(default_factory=tuple)
     runtime_request_ref: str | None = None
+    runtime_result_ref: str | None = None
     agent_assignment_ref: str | None = None
     attempt_count: int = 0
     max_attempts: int = 1
@@ -96,12 +97,14 @@ class TaskAttempt:
     guardian_decision_ref: str | None = None
     runtime_request_ref: str | None = None
     runtime_result_ref: str | None = None
+    agent_assignment_ref: str | None = None
     error_type: str | None = None
     error_message: str | None = None
     retry_decision: str | None = None
     cost_used: float | None = None
     tokens_used: int | None = None
     audit_log_ref: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def with_state(self, state: TaskQueueState, **changes: Any) -> "TaskAttempt":
         """Return a copy with a new attempt state."""

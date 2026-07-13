@@ -46,9 +46,9 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 | Fundacional | `core/` | [core](../../src/vercosa_ai_framework/core/README.md) | MVP | [0001](../../specs/framework/0001-framework-foundation.md) | [Mapa de arquitetura](../alignment/architecture-map.md) |
 | Missões | `missions/` | [missions](../../src/vercosa_ai_framework/missions/README.md) | MVP | [0004](../../specs/framework/0004-mission-runner.md) | [Mission Runner](../mission-runner.md), [Integração Mission/Workflow/Task](mission-workflow-task-integration.md) |
 | Workflows | `workflows/` | [workflows](../../src/vercosa_ai_framework/workflows/README.md) | MVP | [0006](../../specs/framework/0006-workflow-engine.md) | [Workflow Engine](../workflow-engine.md), [Integração Mission/Workflow/Task](mission-workflow-task-integration.md) |
-| Tarefas | `tasks/` | [tasks](../../src/vercosa_ai_framework/tasks/README.md) | MVP | [0007](../../specs/framework/0007-task-queue.md) | [Task Queue](../task-queue.md), [Integração Mission/Workflow/Task](mission-workflow-task-integration.md) |
-| Agentes | `agents/` | [agents](../../src/vercosa_ai_framework/agents/README.md) | MVP | [0008](../../specs/framework/0008-agent-orchestrator.md) | [Agent Orchestrator](../agent-orchestrator.md) |
-| Capabilities | `capabilities/` | [capabilities](../../src/vercosa_ai_framework/capabilities/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md) |
+| Tarefas | `tasks/` | [tasks](../../src/vercosa_ai_framework/tasks/README.md) | MVP | [0007](../../specs/framework/0007-task-queue.md) | [Task Queue](../task-queue.md), [Integração Mission/Workflow/Task](mission-workflow-task-integration.md), [Integração Task/Agent/Capability](task-agent-capability-integration.md) |
+| Agentes | `agents/` | [agents](../../src/vercosa_ai_framework/agents/README.md) | MVP | [0008](../../specs/framework/0008-agent-orchestrator.md) | [Agent Orchestrator](../agent-orchestrator.md), [Integração Task/Agent/Capability](task-agent-capability-integration.md) |
+| Capabilities | `capabilities/` | [capabilities](../../src/vercosa_ai_framework/capabilities/README.md) | MVP | [0009](../../specs/framework/0009-capabilities-skills-tools.md) | [Capabilities, Skills, Tools](../capabilities-skills-tools.md), [Integração Task/Agent/Capability](task-agent-capability-integration.md) |
 | Governança | `policy/` | [policy](../../src/vercosa_ai_framework/policy/README.md) | MVP | [0005](../../specs/framework/0005-guardian-engine.md) | [ADR Policy/Guardian](../../knowledge/decisions/2026-07-04-policy-engine-vs-guardian-engine.md) |
 | Governança | `guardian/` | [guardian](../../src/vercosa_ai_framework/guardian/README.md) | MVP | [0005](../../specs/framework/0005-guardian-engine.md) | [Guardian Engine](../guardian-engine.md) |
 | Governança e rastreabilidade | `audit/` | [audit](../../src/vercosa_ai_framework/audit/README.md) | contracts | [0001](../../specs/framework/0001-framework-foundation.md) | [Arquitetura de Audit/Event Log](audit-event-architecture.md) |
@@ -66,8 +66,8 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 
 - `missions/` controla ciclo operacional de missões, compõe contexto de execução por contrato base e pode delegar para `workflows/` por `MissionWorkflowProvider` e `MissionWorkflowExecutor` injetados.
 - `workflows/` define plano e execução sequencial MVP; no caminho integrado, `execute_with_queue()` usa `tasks/` como substrato de estado, elegibilidade, tentativas e retries.
-- `agents/` seleciona perfis e prepara execução, mas não chama tools, providers, MCPs ou bancos diretamente.
-- `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta.
+- `agents/` seleciona perfis, prepara execução e pode resolver capabilities obrigatórias de forma declarativa antes do runtime quando configurado explicitamente, mas não chama tools, providers, MCPs ou bancos diretamente.
+- `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta; no fluxo 0105 somente a resolução Capability -> Skill declarativa foi integrada.
 - `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/`, `context/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
 - `audit/` define contratos iniciais, implementação em memória, persistência local JSONL opt-in e helpers opcionais para eventos de decisões Policy, Guardian e Context, além de eventos básicos de ciclo de vida de missão e batch; a integração com `MissionRunner` Python é opcional e não altera scripts shell, persistência externa, banco ou fluxo operacional de diretórios. A arquitetura dedicada está em [Arquitetura de Audit/Event Log](audit-event-architecture.md).
 - `model_selection/` é transversal e decide modelos por política, catálogo local e requisitos opcionais de orçamento de tokens, não por hardcode; pode considerar políticas resolvidas opcionais para warnings, aprovação e exclusões determinísticas sem chamar providers, billing real, Context Router ou Guardian Engine.
@@ -83,7 +83,7 @@ As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto]
 
 - integração orquestrada entre Policy Engine, Context Router, Guardian Engine, Model Selection e Audit/Event Log nos fluxos completos, além das pontes iniciais via `ResolvedPolicySet` opcional, requisitos opcionais de orçamento de tokens e helpers de eventos;
 - fronteira entre Mission Runner e Mission Orchestrator;
-- integração completa a partir de Task Queue -> Agent -> Capability -> Skill -> Tool -> Provider;
+- integração completa a partir de Capability -> Skill -> Tool -> Provider, após a ponte mínima Task Queue -> Agent Orchestrator -> Capability Resolver;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;
 - integração automática de persistência local de eventos auditáveis nos fluxos operacionais;
 - Semantic Index, embeddings, pgvector e RAG semântico.

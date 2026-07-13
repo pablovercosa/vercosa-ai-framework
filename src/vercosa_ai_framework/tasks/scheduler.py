@@ -18,6 +18,10 @@ class TaskExecutionOutcome:
     error_message: str = ""
     retryable: bool = True
     next_attempt_at: str | None = None
+    agent_assignment_ref: str | None = None
+    runtime_result_ref: str | None = None
+    audit_log_ref: str | None = None
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 TaskExecutor = Callable[[Task, TaskAttempt], TaskExecutionOutcome]
@@ -114,10 +118,24 @@ class TaskScheduler:
     ) -> None:
         status = TaskQueueState(outcome.status)
         if status == TaskQueueState.DONE:
-            queue.complete_task(task_id, artifact_refs=outcome.artifact_refs)
+            queue.complete_task(
+                task_id,
+                artifact_refs=outcome.artifact_refs,
+                agent_assignment_ref=outcome.agent_assignment_ref,
+                runtime_result_ref=outcome.runtime_result_ref,
+                audit_log_ref=outcome.audit_log_ref,
+                metadata=outcome.metadata,
+            )
             return
         if status == TaskQueueState.FAILED:
-            queue.fail_task(task_id, error_message=outcome.error_message)
+            queue.fail_task(
+                task_id,
+                error_message=outcome.error_message,
+                agent_assignment_ref=outcome.agent_assignment_ref,
+                runtime_result_ref=outcome.runtime_result_ref,
+                audit_log_ref=outcome.audit_log_ref,
+                metadata=outcome.metadata,
+            )
             if outcome.retryable and queue.retry_remaining(task_id):
                 queue.requeue_failed(task_id, next_attempt_at=outcome.next_attempt_at)
             else:

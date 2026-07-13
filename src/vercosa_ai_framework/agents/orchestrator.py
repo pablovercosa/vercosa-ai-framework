@@ -20,6 +20,12 @@ from vercosa_ai_framework.agents.types import (
     AgentRole,
     AgentState,
 )
+from vercosa_ai_framework.capabilities import (
+    CapabilityRequest,
+    CapabilityResolutionError,
+    CapabilityResolutionResult,
+    CapabilityResolver,
+)
 from vercosa_ai_framework.guardian import GuardianAction, GuardianEngine, GuardianEvaluationContext, GuardianMode
 from vercosa_ai_framework.model_selection import ModelProfile, ModelSelectionError, ModelSelectionPolicy, ModelSelector, SelectionDecision
 from vercosa_ai_framework.runtime import RuntimeAdapter, RuntimeExecutionRequest, RuntimeExecutionResult, RuntimeStatus
@@ -54,6 +60,8 @@ class AgentOrchestrator:
         guardian_engine: GuardianEngine | None = None,
         model_selector: ModelSelector | None = None,
         model_catalog: tuple[ModelProfile, ...] = (),
+        capability_resolver: CapabilityResolver | None = None,
+        require_capability_resolution: bool = False,
         workspace: str = ".",
         spec_refs: tuple[str, ...] = (SPEC_REF,),
         guardian_mode: GuardianMode = GuardianMode.STANDARD,
@@ -62,6 +70,8 @@ class AgentOrchestrator:
         self.runtime_adapter = runtime_adapter
         self.guardian_engine = guardian_engine or GuardianEngine()
         self.model_selector = model_selector or (ModelSelector(model_catalog) if model_catalog else None)
+        self.capability_resolver = capability_resolver
+        self.require_capability_resolution = require_capability_resolution
         self.workspace = workspace
         self.spec_refs = spec_refs
         self.guardian_mode = guardian_mode
@@ -92,6 +102,26 @@ class AgentOrchestrator:
             )
 
         model_decision = self._select_model_if_configured(task, profile, assignment_id)
+        try:
+            capability_results = self._resolve_required_capabilities(
+                task,
+                attempt_id=attempt_id,
+                assignment_id=assignment_id,
+                profile=profile,
+                guardian_decision_refs=tuple(guardian_decision_refs),
+            )
+        except CapabilityResolutionError as exc:
+            transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
+            return self._failed_result(
+                task,
+                attempt_id,
+                assignment_id,
+                profile,
+                (str(exc),),
+                transitions,
+                guardian_decision_refs,
+                capability_resolutions=(),
+            )
         request = self.build_execution_request(
             task,
             attempt_id=attempt_id,
@@ -99,6 +129,7 @@ class AgentOrchestrator:
             profile=profile,
             model_decision=model_decision,
             guardian_decision_refs=tuple(guardian_decision_refs),
+            capability_resolutions=capability_results,
         )
 
         transitions.append(self._transition(AgentState.PLANNING, AgentState.EXECUTING))
@@ -161,6 +192,7 @@ class AgentOrchestrator:
         profile: AgentProfile,
         model_decision: SelectionDecision | None = None,
         guardian_decision_refs: tuple[str, ...] = (),
+        capability_resolutions: tuple[CapabilityResolutionResult, ...] = (),
     ) -> AgentExecutionRequest:
         """Build the normalized agent request sent across the runtime boundary."""
 
@@ -189,7 +221,82 @@ class AgentOrchestrator:
             approval_policy=_mapping(task.metadata.get("approval_policy")),
             allowed_paths=_tuple_str(task.metadata.get("allowed_paths")),
             denied_paths=_tuple_str(task.metadata.get("denied_paths")),
-            metadata={"task_title": task.title, "task_goal": task.goal},
+            metadata={
+                "task_title": task.title,
+                "task_goal": task.goal,
+                "capability_resolutions": tuple(
+                    _capability_resolution_metadata(result) for result in capability_resolutions
+                ),
+            },
+        )
+
+    def _resolve_required_capabilities(
+        self,
+        task: Task,
+        *,
+        attempt_id: str,
+        assignment_id: str,
+        profile: AgentProfile,
+        guardian_decision_refs: tuple[str, ...],
+    ) -> tuple[CapabilityResolutionResult, ...]:
+        if not task.required_capabilities:
+            return ()
+        if self.capability_resolver is None:
+            if self.require_capability_resolution:
+                raise CapabilityResolutionError("capability resolver is required for tasks with required_capabilities")
+            return ()
+
+        results: list[CapabilityResolutionResult] = []
+        seen: set[str] = set()
+        for capability in task.required_capabilities:
+            if capability in seen:
+                raise CapabilityResolutionError(f"duplicated required capability in assignment: {capability}")
+            seen.add(capability)
+            request = self._capability_request(
+                task,
+                attempt_id=attempt_id,
+                assignment_id=assignment_id,
+                profile=profile,
+                capability=capability,
+                guardian_decision_refs=guardian_decision_refs,
+            )
+            results.append(self.capability_resolver.resolve(request))
+        return tuple(results)
+
+    def _capability_request(
+        self,
+        task: Task,
+        *,
+        attempt_id: str,
+        assignment_id: str,
+        profile: AgentProfile,
+        capability: str,
+        guardian_decision_refs: tuple[str, ...],
+    ) -> CapabilityRequest:
+        capability_inputs = _mapping(task.metadata.get("capability_inputs"))
+        nested_inputs = _mapping(task.metadata.get("inputs")).get("capability_inputs")
+        if not capability_inputs:
+            capability_inputs = _mapping(nested_inputs)
+        limits = dict(profile.default_execution_limits)
+        limits.update(_mapping(task.metadata.get("execution_limits")))
+        return CapabilityRequest(
+            capability=capability,
+            mission_id=task.mission_id,
+            workflow_id=task.workflow_id,
+            task_id=task.task_id,
+            agent_assignment_id=assignment_id,
+            inputs=_mapping(capability_inputs.get(capability)),
+            context_refs=task.context_refs,
+            granted_permissions=_granted_permissions(task),
+            risk_level=task.risk_level,
+            limits=limits,
+            guardian_decision_refs=guardian_decision_refs,
+            metadata={
+                "attempt_id": attempt_id,
+                "agent_profile_id": profile.agent_profile_id,
+                "task_type": task.task_type,
+                "declarative_resolution_only": True,
+            },
         )
 
     def _select_model_if_configured(
@@ -268,6 +375,7 @@ class AgentOrchestrator:
                 "agent_role": request.agent_profile.role.value,
                 "context_refs": request.context_refs,
                 "acceptance_criteria": request.acceptance_criteria,
+                "capability_resolutions": request.metadata.get("capability_resolutions", ()),
             },
             permissions={"mcp_direct_access": False, "providers_direct_access": False},
             execution_limits=request.execution_limits,
@@ -316,6 +424,7 @@ class AgentOrchestrator:
                 "guardian_decision_refs": guardian_decision_refs,
                 "selected_model": request.model_selection_decision_ref,
                 "runtime_id": runtime_result.runtime_id,
+                "capability_resolutions": request.metadata.get("capability_resolutions", ()),
             },
         )
 
@@ -328,6 +437,8 @@ class AgentOrchestrator:
         errors: tuple[str, ...],
         transitions: list[str],
         guardian_decision_refs: list[str],
+        *,
+        capability_resolutions: tuple[CapabilityResolutionResult, ...] = (),
     ) -> AgentExecutionResult:
         return AgentExecutionResult(
             mission_id=task.mission_id,
@@ -343,6 +454,9 @@ class AgentOrchestrator:
             metadata={
                 "state_transitions": tuple(transitions),
                 "guardian_decision_refs": tuple(guardian_decision_refs),
+                "capability_resolutions": tuple(
+                    _capability_resolution_metadata(result) for result in capability_resolutions
+                ),
             },
         )
 
@@ -379,6 +493,29 @@ def _mapping(value: object) -> dict[str, Any]:
     if isinstance(value, dict):
         return dict(value)
     return {}
+
+
+def _granted_permissions(task: Task) -> tuple[str, ...]:
+    direct = _tuple_str(task.metadata.get("granted_permissions"))
+    if direct:
+        return direct
+    return _tuple_str(_mapping(task.metadata.get("inputs")).get("granted_permissions"))
+
+
+def _capability_resolution_metadata(result: CapabilityResolutionResult) -> dict[str, Any]:
+    return {
+        "request_id": result.request.request_id,
+        "capability_id": result.capability.capability_id,
+        "capability": result.capability.name,
+        "capability_version": result.capability.version,
+        "skill_id": result.skill.skill_id,
+        "skill_version": result.skill.version,
+        "fallback_applied": result.fallback_applied,
+        "fallback_from": result.fallback_from,
+        "guardian_decision_ref": result.guardian_decision.evaluation_id if result.guardian_decision else None,
+        "reasons": result.reasons,
+        "declarative_resolution_only": True,
+    }
 
 
 __all__ = ["AgentOrchestrator", "AgentOrchestratorError", "NoCompatibleAgentError"]

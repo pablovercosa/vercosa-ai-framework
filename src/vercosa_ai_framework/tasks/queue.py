@@ -144,29 +144,75 @@ class TaskQueue:
         self.updated_at = utc_now_iso()
         return self._result(True, task=running, attempt=attempt, message="attempt started")
 
-    def complete_task(self, task_id: str, *, artifact_refs: tuple[str, ...] = ()) -> TaskQueueResult:
+    def complete_task(
+        self,
+        task_id: str,
+        *,
+        artifact_refs: tuple[str, ...] = (),
+        agent_assignment_ref: str | None = None,
+        runtime_result_ref: str | None = None,
+        audit_log_ref: str | None = None,
+        metadata: dict[str, object] | None = None,
+    ) -> TaskQueueResult:
         """Mark a running task as done without invoking any runtime."""
 
         task = self._require_running(task_id)
         finished_at = utc_now_iso()
-        done = task.with_state(TaskQueueState.DONE, finished_at=finished_at, artifact_refs=artifact_refs)
+        done = task.with_state(
+            TaskQueueState.DONE,
+            finished_at=finished_at,
+            artifact_refs=artifact_refs,
+            agent_assignment_ref=agent_assignment_ref or task.agent_assignment_ref,
+            runtime_result_ref=runtime_result_ref or task.runtime_result_ref,
+            audit_log_ref=audit_log_ref or task.audit_log_ref,
+            metadata=_merge_metadata(task.metadata, metadata),
+        )
         self._tasks[task_id] = done
-        self._finish_latest_attempt(task_id, TaskQueueState.DONE, finished_at=finished_at)
+        self._finish_latest_attempt(
+            task_id,
+            TaskQueueState.DONE,
+            finished_at=finished_at,
+            agent_assignment_ref=agent_assignment_ref,
+            runtime_result_ref=runtime_result_ref,
+            audit_log_ref=audit_log_ref,
+            metadata=metadata,
+        )
         self.updated_at = utc_now_iso()
         return self._result(True, task=done, attempt=self._attempts[task_id][-1], message="task done")
 
-    def fail_task(self, task_id: str, *, error_message: str = "") -> TaskQueueResult:
+    def fail_task(
+        self,
+        task_id: str,
+        *,
+        error_message: str = "",
+        agent_assignment_ref: str | None = None,
+        runtime_result_ref: str | None = None,
+        audit_log_ref: str | None = None,
+        metadata: dict[str, object] | None = None,
+    ) -> TaskQueueResult:
         """Mark a running task as failed without retrying automatically."""
 
         task = self._require_running(task_id)
         finished_at = utc_now_iso()
-        failed = task.with_state(TaskQueueState.FAILED, finished_at=finished_at, last_error=error_message or None)
+        failed = task.with_state(
+            TaskQueueState.FAILED,
+            finished_at=finished_at,
+            last_error=error_message or None,
+            agent_assignment_ref=agent_assignment_ref or task.agent_assignment_ref,
+            runtime_result_ref=runtime_result_ref or task.runtime_result_ref,
+            audit_log_ref=audit_log_ref or task.audit_log_ref,
+            metadata=_merge_metadata(task.metadata, metadata),
+        )
         self._tasks[task_id] = failed
         self._finish_latest_attempt(
             task_id,
             TaskQueueState.FAILED,
             finished_at=finished_at,
             error_message=error_message or None,
+            agent_assignment_ref=agent_assignment_ref,
+            runtime_result_ref=runtime_result_ref,
+            audit_log_ref=audit_log_ref,
+            metadata=metadata,
         )
         self.updated_at = utc_now_iso()
         return self._result(False, task=failed, attempt=self._attempts[task_id][-1], errors=(error_message,) if error_message else ())
@@ -323,11 +369,24 @@ class TaskQueue:
         *,
         finished_at: str,
         error_message: str | None = None,
+        agent_assignment_ref: str | None = None,
+        runtime_result_ref: str | None = None,
+        audit_log_ref: str | None = None,
+        metadata: dict[str, object] | None = None,
     ) -> None:
         attempts = self._attempts[task_id]
         if not attempts:
             raise TaskQueueError(f"task has no active attempt: {task_id}")
-        latest = attempts[-1].with_state(state, finished_at=finished_at, error_message=error_message)
+        current = attempts[-1]
+        latest = current.with_state(
+            state,
+            finished_at=finished_at,
+            error_message=error_message,
+            agent_assignment_ref=agent_assignment_ref or current.agent_assignment_ref,
+            runtime_result_ref=runtime_result_ref or current.runtime_result_ref,
+            audit_log_ref=audit_log_ref or current.audit_log_ref,
+            metadata=_merge_metadata(current.metadata, metadata),
+        )
         self._attempts[task_id] = (*attempts[:-1], latest)
 
     def _result(
@@ -355,3 +414,9 @@ class TaskQueue:
 
 def _parse_iso(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def _merge_metadata(current: dict[str, object], extra: dict[str, object] | None) -> dict[str, object]:
+    if not extra:
+        return dict(current)
+    return {**current, **extra}

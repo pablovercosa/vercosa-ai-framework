@@ -11,7 +11,7 @@ Resolver intenções funcionais abstratas para skills compatíveis e autorizáve
 - Define `CapabilityProfile` e `CapabilityRequest`.
 - Mantém registry de capabilities declarativas.
 - Resolve capabilities por domínio, permissões, roles e skills candidatas.
-- Retorna resultado de resolução sem executar tools.
+- Retorna resultado de resolução com `SkillProfile` declarativa sem executar skills ou tools.
 
 ## O Que Este Módulo Não Faz
 
@@ -65,6 +65,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Capabilities, Skills, Tools](../../../docs/capabilities-skills-tools.md)
+- [Integração Task, Agent e Capability](../../../docs/architecture/task-agent-capability-integration.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
 ## Exemplo Mínimo
@@ -89,9 +90,9 @@ registry.register(
 
 Status: `MVP`.
 
-O módulo tem registry e resolver mínimos, mas ainda depende de catálogo aprovado e integração completa com agentes e skills.
+O módulo tem registry e resolver mínimos e participa do caminho integrado Task -> Agent -> Capability como resolução declarativa. Ele ainda depende de catálogo aprovado para uso real amplo e não executa skills, tools ou providers.
 
 ## Próximos Passos
 
 - Definir catálogo inicial de capabilities.
-- Integrar Agent Orchestrator -> Capability Resolver.
+- Demonstrar execução seca Capability -> Skill -> Tool -> Provider Gateway em missão futura.

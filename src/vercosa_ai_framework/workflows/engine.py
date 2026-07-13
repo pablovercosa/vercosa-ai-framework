@@ -26,6 +26,7 @@ from vercosa_ai_framework.tasks import (
     Task,
     TaskAttempt,
     TaskExecutionOutcome,
+    TaskExecutor,
     TaskQueue,
     TaskQueueState,
     TaskScheduler,
@@ -68,12 +69,14 @@ class WorkflowEngine:
         workspace: str = ".",
         guardian_mode: GuardianMode | str = GuardianMode.STANDARD,
         engine_id: str = "workflow-engine",
+        queue_task_executor: TaskExecutor | None = None,
     ) -> None:
         self.runtime = runtime
         self.guardian = guardian
         self.workspace = workspace
         self.guardian_mode = GuardianMode(guardian_mode)
         self.engine_id = engine_id
+        self.queue_task_executor = queue_task_executor
         self.audit_log: list[str] = []
         self.last_workflow: Workflow | None = None
 
@@ -310,6 +313,15 @@ class WorkflowEngine:
             reason = self._guardian_reason(guardian_decision)
             runtime_errors[task.task_id] = (f"guardian blocked task: {reason}",)
             return TaskExecutionOutcome(status=TaskQueueState.FAILED, error_message=runtime_errors[task.task_id][0], retryable=False)
+
+        if self.queue_task_executor is not None:
+            self._log(workflow, f"queue-backed agent task started task_id={task.task_id} attempt={attempt.attempt_number}")
+            outcome = self.queue_task_executor(task, attempt)
+            if outcome.status == TaskQueueState.DONE:
+                runtime_errors.pop(task.task_id, None)
+            else:
+                runtime_errors[task.task_id] = (outcome.error_message or f"task status={outcome.status.value}",)
+            return outcome
 
         runtime_result = self._execute_task_from_attempt(workflow, workflow_task, attempt)
         if runtime_result.status == RuntimeStatus.DONE:

@@ -1,10 +1,10 @@
-# Capabilities, Skills and Tools MVP
+# Capabilities, Skills E Tools MVP
 
-This MVP implements the governed resolution chain from Spec 0009:
+Este MVP implementa contratos da cadeia governada da Spec 0009:
 
-`CapabilityRequest -> CapabilityResolver -> SkillExecutor -> ToolExecutor -> ToolAdapter`
+`CapabilityRequest -> CapabilityResolver -> SkillProfile declarativa`
 
-Agents request capabilities only. They do not receive providers, MCPs, APIs, databases, subprocesses, or concrete tools.
+Agentes solicitam capabilities. Eles não recebem providers, MCPs, APIs, bancos, subprocessos ou tools concretas.
 
 ## Components
 
@@ -13,6 +13,8 @@ Agents request capabilities only. They do not receive providers, MCPs, APIs, dat
 - `ToolExecutor` validates permissions/effects, calls Guardian Engine before execution, supports `dry_run`, and invokes only an injected `ToolAdapter` or callable.
 - `ToolAdapter` is the abstract boundary where future provider, MCP, API, database, filesystem, or runtime integrations must live.
 
+No fluxo integrado da missão 0105, somente `CapabilityResolver` participa do caminho operacional. `SkillExecutor`, `ToolExecutor` e `ToolAdapter` existem como contratos/MVPs, mas não são chamados por esse fluxo.
+
 ## Governance
 
 - Permissions are explicit and denied by default when missing.
@@ -20,6 +22,7 @@ Agents request capabilities only. They do not receive providers, MCPs, APIs, dat
 - `dry_run=True` returns a plan-like result and does not call the adapter.
 - Fallback is deterministic and limited to alternatives declared in `fallback_skills` or `fallback_tools`.
 - No real tools, subprocesses, `sudo`, external APIs, or providers are executed by this MVP.
+- A skill selecionada durante a resolução é evidência declarativa, não execução de skill.
 
 ## Provider Agnostic Boundary
 

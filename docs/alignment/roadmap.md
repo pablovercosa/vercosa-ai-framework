@@ -28,6 +28,8 @@ Atualização da missão 0103: o README passou a explicitar problema, fluxo de v
 
 Atualização da missão 0104: o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi implementado por contratos injetáveis, com `TaskScheduler` como único loop operacional de tasks no caminho integrado. A próxima prioridade de integração passa a ser Task Queue -> Agent Orchestrator -> Capability Resolver, sem antecipar skills, tools ou providers reais.
 
+Atualização da missão 0105: a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi implementada por `AgentTaskExecutor` e resolução declarativa obrigatória quando configurada. A próxima prioridade passa a ser demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado, sem providers reais.
+
 ## Estado Pós-Batch Funcional
 
 O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. O estado atual considerado por este roadmap inclui:
@@ -65,7 +67,8 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - Empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, versão PEP 440 `0.1.0a1`, pacote em `src/vercosa_ai_framework` e entrypoint local `vaf`, sem publicação de pacote.
 - CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
-- Integração mínima Mission Runner -> Workflow Engine -> Task Queue validada por `tests/test_mission_workflow_task_integration.py`, sem Agent Orchestrator ou providers reais.
+- Integração mínima Mission Runner -> Workflow Engine -> Task Queue validada por `tests/test_mission_workflow_task_integration.py`.
+- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver validada por `tests/test_task_agent_capability_integration.py`, sem execução de Skills, Tools ou Providers reais.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -141,12 +144,13 @@ Implementação deve permanecer sequencial até existirem políticas de paraleli
 
 Objetivo: conectar execução de tasks ao Agent Orchestrator sem dar acesso de infraestrutura a agentes.
 
+Status: concluído como ponte mínima na missão 0105.
+
 Ações recomendadas:
 
-- Definir executor padrão de Task Queue para Agent Orchestrator.
-- Definir ciclo de vida de Agent Assignment.
-- Definir como agente solicita capabilities.
-- Definir como saída de agente vira saída de task, evidência de validação e registro de auditoria.
+- Refinar catálogo mínimo de capabilities e perfis de agente quando houver caso de uso real.
+- Preservar `AgentTaskExecutor` como ponte explícita sem mover seleção de agente para `tasks/`.
+- Manter evidências de capability como declarativas até a missão 0106.
 
 Guardrail: agentes não devem chamar tools, providers, MCPs, runtime adapters, shell ou bancos diretamente.
 
@@ -230,9 +234,9 @@ Ações recomendadas:
 
 1. Definir o fluxo de valor principal e o consumidor principal do framework.
 2. Revisar Specs/ADRs da integração mínima Mission Runner -> Workflow Engine -> Task Queue.
-3. Contrato mínimo: Task Queue -> Agent Orchestrator -> Capability Resolver.
-4. Demonstração seca: Capability -> Skill -> Tool -> Provider Gateway, com Guardian, Policy e Audit/Event Log explícitos.
-5. Integrar Context Router, Token Budget Manager, Knowledge Hub textual e Model Selection ao fluxo mínimo sem RAG semântico.
+3. Demonstração seca: Capability -> Skill -> Tool -> Provider Gateway, com Guardian, Policy e Audit/Event Log explícitos.
+4. Integrar Context Router, Token Budget Manager, Knowledge Hub textual e Model Selection ao fluxo mínimo sem RAG semântico.
+5. Revisar Specs/ADRs afetadas pela integração mínima nas missões 0104 e 0105.
 6. Atualizar Specs/ADRs apenas quando a integração mínima alterar fronteiras arquiteturais.
 7. Manter CLI `missions`, `batch-summary`, `docs-links` e `alpha-readiness` como diagnósticos somente leitura.
 8. Resolver pendências mínimas de alfa somente depois do fluxo integrado mínimo ou em paralelo sem criar tag: licença, instalação limpa, CI remoto, release notes finais e checklist pré-tag.

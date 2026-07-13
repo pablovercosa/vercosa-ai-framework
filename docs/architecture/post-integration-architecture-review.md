@@ -176,11 +176,12 @@ Integração inicial:
 - Orçamento de tokens repassado para Model Selection por metadados.
 - Eventos auditáveis opcionais para Policy, Guardian, Context e Mission Runner.
 - Usage/API Limit Guard lendo logs já produzidos.
+- Task Queue -> Agent Orchestrator -> Capability Resolver por `AgentTaskExecutor`, com resolução declarativa de capabilities obrigatórias antes do runtime.
 
 Futuro:
 
 - Mission Orchestrator distinto.
-- Fluxo completo Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider.
+- Fluxo completo Capability -> Skill -> Tool -> Provider com efeitos concretos governados.
 - Retenção, rotação e integração opcional da persistência local de eventos auditáveis.
 - Integração real com providers.
 - Múltiplos runtime adapters reais.
@@ -260,9 +261,9 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 1. Priorizar artefatos públicos mínimos antes da alfa: decisão de licença, canal público de vulnerabilidades, templates, changelog, versão inicial e validação de instalação limpa.
 2. Manter próximas implementações de CLI restritas a leitura local segura, como resumo pós-batch, sem executar Git destrutivo, providers, rede ou scripts automaticamente.
 3. Usar a persistência local JSONL opt-in do Audit/Event Log como base antes de observabilidade externa, dashboards ou bancos.
-4. Formalizar contratos Mission Runner -> Workflow Engine -> Task Queue antes de expandir loops de agentes.
-5. Formalizar Task Queue -> Agent Orchestrator -> Capability Resolver antes de dar efeitos concretos a agentes.
-6. Avaliar providers reais apenas depois de política, auditoria, limites de uso/API e Provider Gateway estarem claros.
+4. Revisar Specs/ADRs afetadas pelos contratos Mission Runner -> Workflow Engine -> Task Queue e Task Queue -> Agent Orchestrator -> Capability Resolver antes de consolidar caminho canônico final.
+5. Demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado antes de dar efeitos concretos a agentes.
+6. Avaliar providers reais apenas depois de política, auditoria, limites de uso/API e Provider Gateway em dry-run estarem claros.
 7. Adiar Semantic Index, embeddings e pgvector até Context Router, Knowledge Hub e auditoria terem contratos de segurança, citação, redaction e retenção mais estáveis.
 
 ## Conclusão

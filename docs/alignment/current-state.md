@@ -10,7 +10,7 @@ Atualização da missão 0103: o README passou a explicitar o problema central, 
 
 Classificação geral da auditoria: `ALINHADO COM RESSALVAS`.
 
-Ressalvas principais: o fluxo operacional interno por missões e batch existe, e o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi integrado por contratos injetáveis, mas o fluxo arquitetural Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta; vários motores seguem MVPs opcionais; a preparação alfa avançou antes de uma demonstração completa de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
+Ressalvas principais: o fluxo operacional interno por missões e batch existe, o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi integrado por contratos injetáveis e a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi validada com resolução declarativa. O fluxo Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta; vários motores seguem MVPs opcionais; a preparação alfa avançou antes de uma demonstração completa de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
 
 Este checkpoint é apenas documental. Ele não aprova novo código, novo comportamento de runtime, alterações de configuração global, operações privilegiadas ou expansão de funcionalidades.
 
@@ -127,8 +127,8 @@ O pacote `src/vercosa_ai_framework/` contém implementações MVP e contratos pa
 - `context/`: Context Router, Token Budget Manager e `ContextPackage` determinísticos.
 - `model_selection/`: políticas, tipos e selector MVP.
 - `runtime/`: contrato de Runtime Adapter e OpenCode Runtime Adapter MVP.
-- `agents/`: perfis, registry e orchestrator MVP.
-- `capabilities/`: perfis, registry e resolver.
+- `agents/`: perfis, registry, orchestrator MVP e ponte `AgentTaskExecutor` para scheduler.
+- `capabilities/`: perfis, registry e resolver declarativo integrado ao caminho de agente quando configurado.
 - `skills/`: perfis, registry e executor.
 - `tools/`: perfis, registry e executor.
 - `providers/`: perfis, registry, contrato de adapter e gateway.
@@ -171,6 +171,7 @@ Integrações já feitas em estado MVP ou integração inicial:
 - Audit/Event Log inicial com helpers opcionais para eventos de Policy, Guardian, Context e ciclo de vida de missão/batch.
 - `MissionRunner` Python capaz de registrar eventos de missão quando recebe `EventLog` opcional.
 - `MissionRunner` Python capaz de executar caminho integrado opcional com `WorkflowEngine.execute_with_queue()` e `TaskQueue` quando recebe `MissionWorkflowProvider` e `MissionWorkflowExecutor`.
+- `TaskScheduler` capaz de acionar `AgentOrchestrator` por `AgentTaskExecutor` injetado, com resolução declarativa de capabilities obrigatórias antes do runtime.
 - `prompt_composer` em `src/vercosa_ai_framework/missions/` capaz de compor contexto efetivo de execução com `AGENTS.md`, contrato base, agente executor base, agentes operacionais especializados declarados, permissões e missão específica.
 - Runner shell integrado ao compositor antes da chamada ao OpenCode, com restauração para `queue` quando a composição falha.
 - CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links` e `alpha-readiness`.
@@ -223,12 +224,26 @@ WorkflowEngine.execute_with_queue()
 ↓
 TaskQueue + TaskScheduler
 ↓
-RuntimeAdapter.execute_task()
+RuntimeAdapter.execute_task() ou executor injetado
 ```
 
-O runner shell e o batch operacional continuam usando o fluxo de arquivos de missão e OpenCode como runtime/laboratório. A integração Python acima é local, determinística e validada por testes, mas ainda não aciona Agent Orchestrator, capabilities, skills, tools ou providers.
+Ponte mínima validada para Agent/Capability:
 
-A cadeia capabilities/skills/tools/provider existe como contratos MVP, mas ainda não está integrada de ponta a ponta no loop missão-agente.
+```text
+TaskScheduler
+↓
+AgentTaskExecutor
+↓
+AgentOrchestrator
+↓
+CapabilityResolver
+↓
+RuntimeAdapter fake ou injetado
+```
+
+O runner shell e o batch operacional continuam usando o fluxo de arquivos de missão e OpenCode como runtime/laboratório. A integração Python acima é local, determinística e validada por testes. Ela resolve capabilities declarativamente antes do runtime, mas ainda não executa Skills, Tools ou Providers.
+
+A cadeia capabilities/skills/tools/provider existe como contratos MVP. A parte Agent -> Capability Resolver está integrada declarativamente; a execução Capability -> Skill -> Tool -> Provider continua futura.
 
 Fluxo operacional atual:
 
@@ -254,7 +269,7 @@ O projeto ainda precisa alinhar ou implementar:
 
 - Mission Orchestrator como camada distinta de Mission Runner.
 - Integração orquestrada e obrigatória entre Policy Engine, Guardian Engine, Context Router, Model Selection e Audit/Event Log nos fluxos completos, além das pontes opcionais já existentes.
-- Fluxo ponta a ponta Task Queue -> Agent Orchestrator -> Capability -> Skill -> Tool -> Provider.
+- Fluxo ponta a ponta Capability -> Skill -> Tool -> Provider, após a ponte mínima Task Queue -> Agent Orchestrator -> Capability Resolver.
 - Integração completa do Context Router ao fluxo de missão, agente, modelo e recuperação governada.
 - RAG semântico.
 - Embeddings.

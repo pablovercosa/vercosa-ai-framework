@@ -48,6 +48,8 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Consolidação local do candidato alfa em `docs/release/alpha-candidate-summary.md`, preservando os estados `REPROVADO` e `NÃO PRONTO`, sem declarar alfa publicada.
 - Solicitação futura de decisão de tag em `docs/release/tag-decision-request.md`, sem autorizar tag, release, pacote ou push.
 - Integração mínima Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis, com mapeamento explícito `WorkflowTask` -> `Task`, execução por `TaskScheduler` e teste ponta a ponta local.
+- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver por `AgentTaskExecutor`, com resolução declarativa de capabilities obrigatórias antes do runtime e teste ponta a ponta local.
+- Documentação da integração Task/Agent/Capability em `docs/architecture/task-agent-capability-integration.md` e exemplo mínimo em `docs/examples/minimal-task-agent-capability-flow.md`.
 
 ### Alterado
 
@@ -59,7 +61,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Recomendação operacional de batch normal ajustada para até 8 missões, preservando blocos menores para missões estruturais, pesadas ou de recuperação.
 - Execução individual preservada para missões sensíveis, críticas, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.
 - OpenCode documentado como runtime/laboratório inicial atrás de adapter, não como centro arquitetural do framework.
-- Status de integração atualizado para diferenciar Mission/Workflow/Task validado de Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda futuro.
+- Status de integração atualizado para diferenciar Mission/Workflow/Task validado, Task -> Agent -> Capability Resolver validado declarativamente e Skill -> Tool -> Provider ainda futuro.
 
 ### Documentado
 

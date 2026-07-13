@@ -11,13 +11,15 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 - Define perfis, roles, modos, estados e resultados de agentes.
 - Mantém registry de perfis de agentes.
 - Seleciona agente compatível com role, capabilities e metadados.
+- Resolve capabilities obrigatórias de forma declarativa quando o `CapabilityResolver` é configurado explicitamente.
+- Fornece `AgentTaskExecutor` como ponte para o executor injetado do `TaskScheduler`.
 - Prepara requisição normalizada para RuntimeAdapter.
 
 ## O Que Este Módulo Não Faz
 
 - Não executa tools, MCPs, APIs, bancos ou providers diretamente.
 - Não implementa o loop final de agente como máquina de estados completa.
-- Não resolve capabilities por conta própria.
+- Não executa capabilities, skills ou tools.
 - Não escolhe modelos sem Model Selection Engine.
 - Não altera tasks ou workflows diretamente.
 
@@ -28,6 +30,7 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 | `types.py` | Tipos de agentes, perfis, requests e resultados. |
 | `registry.py` | `AgentRegistry` para perfis. |
 | `orchestrator.py` | `AgentOrchestrator` MVP. |
+| `task_executor.py` | Ponte `TaskScheduler` -> `AgentOrchestrator`. |
 | `__init__.py` | Exportações públicas do módulo. |
 
 ## Principais Tipos, Classes E Funções
@@ -41,6 +44,7 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 - `AgentExecutionResult`: resultado normalizado.
 - `AgentRegistry`: catálogo de perfis.
 - `AgentOrchestrator`: seleção e preparação de execução.
+- `AgentTaskExecutor`: executor injetável para o scheduler de tasks.
 
 ## Entradas E Saídas
 
@@ -57,6 +61,7 @@ Saídas:
 
 - `../runtime/`: execução concreta por adapter.
 - `../guardian/`: avaliação quando configurada.
+- `../capabilities/`: resolução declarativa opcional de capabilities obrigatórias.
 
 ## Módulos Relacionados
 
@@ -72,6 +77,7 @@ Saídas:
 ## Docs Relacionadas
 
 - [Agent Orchestrator](../../../docs/agent-orchestrator.md)
+- [Integração Task, Agent e Capability](../../../docs/architecture/task-agent-capability-integration.md)
 - [Capabilities, Skills, Tools](../../../docs/capabilities-skills-tools.md)
 - [Mapa de arquitetura](../../../docs/alignment/architecture-map.md)
 
@@ -95,9 +101,8 @@ registry.register(
 
 Status: `MVP`.
 
-Há registry e orchestrator mínimos, mas o fluxo Task Queue -> Agent -> Capability ainda não está integrado de ponta a ponta.
+Há registry, orchestrator mínimo, ponte para Task Scheduler e resolução declarativa de capabilities obrigatórias no caminho integrado. O fluxo Capability -> Skill -> Tool -> Provider continua futuro.
 
 ## Próximos Passos
 
-- Definir contrato Task Queue -> Agent Orchestrator.
-- Conectar solicitações de capabilities ao `capabilities/` sem acoplamento a tools.
+- Demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado, sem acoplamento direto a agentes.

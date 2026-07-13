@@ -30,6 +30,7 @@ Decisões já encaminhadas:
 - A precedência de políticas é responsabilidade do Policy Engine no estado atual, com resultados repassados como `ResolvedPolicySet` opcional para consumidores.
 - Templates iniciais mínimos de issue e pull request foram criados em `.github/`, cobrindo bug, melhoria, documentação, proposta de missão e pull request. Refinamentos futuros dependem do amadurecimento do processo público.
 - A missão 0104 implementou handoff mínimo Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis; missão 0108 deve revisar Specs/ADRs antes de consolidar essa decisão como arquitetura final.
+- A missão 0105 implementou a ponte mínima Task Queue -> Agent Orchestrator -> Capability Resolver por `AgentTaskExecutor` e resolução declarativa, sem executar Skills, Tools ou Providers.
 
 ## Ciclo De Vida SDD
 
@@ -74,7 +75,7 @@ Decisões já encaminhadas:
 
 1. Qual é o schema mínimo de perfil de agente para uso real?
 2. Como perfis de agentes são aprovados, versionados e armazenados?
-3. Agentes podem solicitar várias capabilities em uma task ou capabilities devem ser resolvidas uma por vez?
+3. Agentes podem solicitar várias capabilities em uma task; no caminho 0105 elas são resolvidas uma por vez em ordem determinística. Ainda falta decidir política de catálogo real e limites por tipo de capability.
 4. Qual componente decide se deve delegar para subagentes?
 5. Qual é a profundidade máxima de delegação?
 6. Qual é a condição de parada padrão para loops de agente?
