@@ -66,8 +66,8 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 
 - `missions/` controla ciclo operacional de missões, compõe contexto de execução por contrato base e pode delegar para `workflows/` por `MissionWorkflowProvider` e `MissionWorkflowExecutor` injetados.
 - `workflows/` define plano e execução sequencial MVP; no caminho integrado, `execute_with_queue()` usa `tasks/` como substrato de estado, elegibilidade, tentativas e retries.
-- `agents/` seleciona perfis, prepara execução e pode resolver capabilities obrigatórias de forma declarativa antes do runtime quando configurado explicitamente, mas não chama tools, providers, MCPs ou bancos diretamente.
-- `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta; no fluxo 0105 somente a resolução Capability -> Skill declarativa foi integrada.
+- `agents/` seleciona perfis, prepara execução e pode resolver/executar capabilities obrigatórias antes do runtime por contratos injetáveis quando configurado explicitamente, mas não chama tools, providers, MCPs ou bancos diretamente.
+- `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta; no fluxo 0106 essa cadeia foi integrada em dry-run governado com Provider Gateway real e sem provider real.
 - `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/`, `context/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
 - `audit/` define contratos iniciais, implementação em memória, persistência local JSONL opt-in e helpers opcionais para eventos de decisões Policy, Guardian e Context, além de eventos básicos de ciclo de vida de missão e batch; a integração com `MissionRunner` Python é opcional e não altera scripts shell, persistência externa, banco ou fluxo operacional de diretórios. A arquitetura dedicada está em [Arquitetura de Audit/Event Log](audit-event-architecture.md).
 - `model_selection/` é transversal e decide modelos por política, catálogo local e requisitos opcionais de orçamento de tokens, não por hardcode; pode considerar políticas resolvidas opcionais para warnings, aprovação e exclusões determinísticas sem chamar providers, billing real, Context Router ou Guardian Engine.
@@ -83,7 +83,7 @@ As principais lacunas arquiteturais já estão listadas em [Perguntas em aberto]
 
 - integração orquestrada entre Policy Engine, Context Router, Guardian Engine, Model Selection e Audit/Event Log nos fluxos completos, além das pontes iniciais via `ResolvedPolicySet` opcional, requisitos opcionais de orçamento de tokens e helpers de eventos;
 - fronteira entre Mission Runner e Mission Orchestrator;
-- integração completa a partir de Capability -> Skill -> Tool -> Provider, após a ponte mínima Task Queue -> Agent Orchestrator -> Capability Resolver;
+- integração global de Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo Capability -> Skill -> Tool -> Provider Gateway;
 - Context Router integrado aos fluxos de missão, agente, modelo, Guardian e recuperação governada completa do Knowledge Hub;
 - integração automática de persistência local de eventos auditáveis nos fluxos operacionais;
 - Semantic Index, embeddings, pgvector e RAG semântico.

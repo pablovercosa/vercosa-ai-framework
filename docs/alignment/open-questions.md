@@ -31,6 +31,7 @@ Decisões já encaminhadas:
 - Templates iniciais mínimos de issue e pull request foram criados em `.github/`, cobrindo bug, melhoria, documentação, proposta de missão e pull request. Refinamentos futuros dependem do amadurecimento do processo público.
 - A missão 0104 implementou handoff mínimo Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis; missão 0108 deve revisar Specs/ADRs antes de consolidar essa decisão como arquitetura final.
 - A missão 0105 implementou a ponte mínima Task Queue -> Agent Orchestrator -> Capability Resolver por `AgentTaskExecutor` e resolução declarativa, sem executar Skills, Tools ou Providers.
+- A missão 0106 implementou Capability -> Skill -> Tool -> Provider Gateway em dry-run governado por executor de capability injetável, sem provider real, rede, banco, MCP ou API externa. A missão 0108 deve revisar Specs/ADRs afetadas antes de consolidar a decisão como arquitetura final.
 
 ## Ciclo De Vida SDD
 

@@ -152,4 +152,4 @@ Limitações:
 
 - A composição de prompt não substitui sandbox técnico completo.
 - Missões legadas continuam compatíveis e não foram reescritas.
-- O fluxo arquitetural completo Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider ainda permanece pendente.
+- O fluxo arquitetural Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider Gateway já possui demonstração mínima em dry-run governado; providers reais, rede, banco, MCP, API externa e integração global de política/contexto/auditoria permanecem pendentes.

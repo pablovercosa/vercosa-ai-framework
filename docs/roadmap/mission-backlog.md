@@ -73,7 +73,7 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 - O `MissionRunner` Python já possui integração opcional com eventos auditáveis quando recebe um `EventLog`.
 - CLI operacional inicial já possui `status`, `missions`, `batch-summary`, `validate` e `doctor`.
 - Exemplos operacionais iniciais existem em `docs/examples/`.
-- Integrações completas com Provider Gateway, persistência externa de eventos, providers reais, múltiplos runtimes reais, documentação pública completa e release alfa ainda são lacunas.
+- Integração com Provider Gateway em dry-run existe; persistência externa de eventos, providers reais, múltiplos runtimes reais, documentação pública completa e release alfa ainda são lacunas.
 
 Atualização da missão 0101: a auditoria de aderência ao objetivo e escopo classificou o projeto como `ALINHADO COM RESSALVAS`. O ciclo 0101-0110 passa a ser tratado como ciclo de auditoria, alinhamento e integração mínima. Estimativas anteriores de missões futuras são provisórias e não devem ser lidas como quantidade final de missões antes da conclusão da 0110.
 
@@ -88,7 +88,7 @@ Missões orientadoras:
 - 0103: explicitar o fluxo de valor principal, consumidores plausíveis, limites e comparação factual com OpenSpec e GitHub Spec Kit. Status: concluída documentalmente; `SpecificationProvider` registrado apenas como hipótese não implementada.
 - 0104: integrar Mission Runner, Workflow Engine e Task Queue em fluxo mínimo validável. Status: concluída como integração local por contratos injetáveis, sem Agent Orchestrator, capabilities, skills, tools ou providers.
 - 0105: integrar Task Queue, Agent Orchestrator e Capability Resolver sem dar acesso direto a tools/providers. Status: concluída como integração declarativa local por `AgentTaskExecutor`, sem executar Skills, Tools ou Providers.
-- 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado.
+- 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado. Status: concluída como integração local por contratos injetáveis, sem provider real, rede, banco, MCP ou API externa.
 - 0107: integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo.
 - 0108: revisar Specs/ADRs afetadas pela integração mínima.
 - 0109: reduzir duplicação documental apontando para `docs/alignment/implementation-status.md` como checklist canônico.
@@ -121,6 +121,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Comando CLI `alpha-readiness` para diagnóstico local de prontidão documental e operacional mínima da futura alfa, sem criar tag, publicar release, publicar pacote, executar missões, acessar rede ou substituir revisão humana.
 - Integração mínima Mission Runner -> Workflow Engine -> Task Queue concluída com `TaskScheduler` como loop operacional único de tasks no caminho integrado e teste ponta a ponta local.
 - Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver concluída com resolução declarativa de capabilities obrigatórias antes do runtime e teste ponta a ponta local.
+- Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado concluída com fakes locais e Provider Gateway real, sem provider real, rede, banco, MCP ou API externa.
 - Exemplos operacionais iniciais.
 - README principal com identidade de Harness Engineering.
 - Batch como padrão operacional quando seguro.

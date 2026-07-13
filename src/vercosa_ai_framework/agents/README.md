@@ -12,6 +12,7 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 - Mantém registry de perfis de agentes.
 - Seleciona agente compatível com role, capabilities e metadados.
 - Resolve capabilities obrigatórias de forma declarativa quando o `CapabilityResolver` é configurado explicitamente.
+- Executa capabilities obrigatórias por contrato injetável de alto nível quando `capability_executor` e `require_capability_execution=True` são configurados.
 - Fornece `AgentTaskExecutor` como ponte para o executor injetado do `TaskScheduler`.
 - Prepara requisição normalizada para RuntimeAdapter.
 
@@ -19,7 +20,7 @@ Selecionar perfis de agentes e preparar execuções de agente sem acoplar agente
 
 - Não executa tools, MCPs, APIs, bancos ou providers diretamente.
 - Não implementa o loop final de agente como máquina de estados completa.
-- Não executa capabilities, skills ou tools.
+- Não importa nem constrói ToolExecutor, ProviderGateway, adapters concretos, MCPs, APIs ou clientes de rede.
 - Não escolhe modelos sem Model Selection Engine.
 - Não altera tasks ou workflows diretamente.
 
@@ -61,7 +62,7 @@ Saídas:
 
 - `../runtime/`: execução concreta por adapter.
 - `../guardian/`: avaliação quando configurada.
-- `../capabilities/`: resolução declarativa opcional de capabilities obrigatórias.
+- `../capabilities/`: resolução declarativa e execução opcional por contrato injetável de capabilities obrigatórias.
 
 ## Módulos Relacionados
 
@@ -101,8 +102,8 @@ registry.register(
 
 Status: `MVP`.
 
-Há registry, orchestrator mínimo, ponte para Task Scheduler e resolução declarativa de capabilities obrigatórias no caminho integrado. O fluxo Capability -> Skill -> Tool -> Provider continua futuro.
+Há registry, orchestrator mínimo, ponte para Task Scheduler, resolução declarativa de capabilities obrigatórias e execução opcional por `capability_executor` antes do runtime. O fluxo 0106 valida Capability -> Skill -> Tool -> Provider Gateway em dry-run, sem provider real, rede, banco, MCP ou API externa.
 
 ## Próximos Passos
 
-- Demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado, sem acoplamento direto a agentes.
+- Revisar Specs/ADRs afetadas pela integração mínima e integrar Policy, Context, Token Budget, Model Selection e Audit/Event Log em missão futura.

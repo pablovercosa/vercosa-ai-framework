@@ -10,7 +10,7 @@ Atualização da missão 0103: o README passou a explicitar o problema central, 
 
 Classificação geral da auditoria: `ALINHADO COM RESSALVAS`.
 
-Ressalvas principais: o fluxo operacional interno por missões e batch existe, o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi integrado por contratos injetáveis e a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi validada com resolução declarativa. O fluxo Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta; vários motores seguem MVPs opcionais; a preparação alfa avançou antes de uma demonstração completa de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
+Ressalvas principais: o fluxo operacional interno por missões e batch existe, o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi integrado por contratos injetáveis, a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi validada e o caminho Capability -> Skill -> Tool -> Provider Gateway foi demonstrado em dry-run governado. Providers reais, rede, banco, MCP e API externa seguem fora do fluxo; vários motores seguem MVPs opcionais; a preparação alfa avançou antes de uma demonstração completa de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
 
 Este checkpoint é apenas documental. Ele não aprova novo código, novo comportamento de runtime, alterações de configuração global, operações privilegiadas ou expansão de funcionalidades.
 
@@ -227,7 +227,7 @@ TaskQueue + TaskScheduler
 RuntimeAdapter.execute_task() ou executor injetado
 ```
 
-Ponte mínima validada para Agent/Capability:
+Ponte mínima validada para Agent/Capability/Skill/Tool/Provider Gateway em dry-run:
 
 ```text
 TaskScheduler
@@ -238,12 +238,20 @@ AgentOrchestrator
 ↓
 CapabilityResolver
 ↓
+ResolvedCapabilityExecutor
+↓
+SkillExecutor
+↓
+ToolExecutor
+↓
+ProviderGateway em dry-run
+↓
 RuntimeAdapter fake ou injetado
 ```
 
-O runner shell e o batch operacional continuam usando o fluxo de arquivos de missão e OpenCode como runtime/laboratório. A integração Python acima é local, determinística e validada por testes. Ela resolve capabilities declarativamente antes do runtime, mas ainda não executa Skills, Tools ou Providers.
+O runner shell e o batch operacional continuam usando o fluxo de arquivos de missão e OpenCode como runtime/laboratório. A integração Python acima é local, determinística e validada por testes. Ela executa capabilities resolvidas por Skill, Tool e Provider Gateway em dry-run antes do runtime quando configurada explicitamente.
 
-A cadeia capabilities/skills/tools/provider existe como contratos MVP. A parte Agent -> Capability Resolver está integrada declarativamente; a execução Capability -> Skill -> Tool -> Provider continua futura.
+A cadeia capabilities/skills/tools/provider existe como contratos MVP e participa do caminho 0106 em dry-run. Provider real, rede, banco, MCP, API externa e integração global de Policy/Context/Token/Model/Audit continuam fora do escopo atual.
 
 Fluxo operacional atual:
 
@@ -269,7 +277,7 @@ O projeto ainda precisa alinhar ou implementar:
 
 - Mission Orchestrator como camada distinta de Mission Runner.
 - Integração orquestrada e obrigatória entre Policy Engine, Guardian Engine, Context Router, Model Selection e Audit/Event Log nos fluxos completos, além das pontes opcionais já existentes.
-- Fluxo ponta a ponta Capability -> Skill -> Tool -> Provider, após a ponte mínima Task Queue -> Agent Orchestrator -> Capability Resolver.
+- Integração global de Policy Engine, Guardian Engine, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo Capability -> Skill -> Tool -> Provider Gateway.
 - Integração completa do Context Router ao fluxo de missão, agente, modelo e recuperação governada.
 - RAG semântico.
 - Embeddings.

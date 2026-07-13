@@ -30,6 +30,7 @@ Um exemplo pode misturar quatro tipos de informação:
 - [Fluxo mínimo Mission, Workflow e Task](minimal-mission-workflow-task-flow.md)
 - [Fluxo Policy, Context e Guardian](policy-context-guardian-flow.md)
 - [Fluxo de diagnóstico da CLI operacional](cli-diagnostics-flow.md)
+- [Fluxo Capability, Skill, Tool e Provider Gateway em dry-run](minimal-capability-skill-tool-provider-dry-run.md)
 
 ## Não Substitui
 

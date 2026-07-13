@@ -30,6 +30,8 @@ Atualização da missão 0104: o fluxo mínimo Mission Runner -> Workflow Engine
 
 Atualização da missão 0105: a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi implementada por `AgentTaskExecutor` e resolução declarativa obrigatória quando configurada. A próxima prioridade passa a ser demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado, sem providers reais.
 
+Atualização da missão 0106: o caminho Capability -> Skill -> Tool -> Provider Gateway foi integrado em dry-run governado por `ResolvedCapabilityExecutor` injetável no Agent Orchestrator. A próxima prioridade passa a ser integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo sem introduzir providers reais.
+
 ## Estado Pós-Batch Funcional
 
 O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. O estado atual considerado por este roadmap inclui:
@@ -68,7 +70,8 @@ O projeto avançou da fase de fundação para uma fase operacional inicial mais 
 - CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
 - Integração mínima Mission Runner -> Workflow Engine -> Task Queue validada por `tests/test_mission_workflow_task_integration.py`.
-- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver validada por `tests/test_task_agent_capability_integration.py`, sem execução de Skills, Tools ou Providers reais.
+- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver validada por `tests/test_task_agent_capability_integration.py`.
+- Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run validada por `tests/test_capability_skill_tool_provider_dry_run.py`, sem provider real, rede, banco, MCP ou API externa.
 
 Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
 
@@ -150,13 +153,15 @@ Ações recomendadas:
 
 - Refinar catálogo mínimo de capabilities e perfis de agente quando houver caso de uso real.
 - Preservar `AgentTaskExecutor` como ponte explícita sem mover seleção de agente para `tasks/`.
-- Manter evidências de capability como declarativas até a missão 0106.
+- Manter a execução de capability atrás de contrato injetável e sem acoplamento direto a agents.
 
 Guardrail: agentes não devem chamar tools, providers, MCPs, runtime adapters, shell ou bancos diretamente.
 
 ## Bloco 6: Integração Capability-To-Provider
 
 Objetivo: tornar o caminho Capabilities -> Skills -> Tools -> Provider Gateway o padrão para efeitos concretos.
+
+Status: concluído como integração mínima em dry-run na missão 0106. Ainda não há provider real nem chamada de rede.
 
 Ações recomendadas:
 

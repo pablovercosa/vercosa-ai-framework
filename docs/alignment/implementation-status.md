@@ -31,7 +31,8 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Documentação | README, contribuição, segurança, conduta, release e arquitetura | `README.md`, `docs/`, `CHANGELOG.md` | Ampla e factual, mas volumosa. |
 | Documentação | Comparação pública com OpenSpec e GitHub Spec Kit | `docs/comparacoes.md` | Documental; não implementa integração nem adapter. |
 | Arquitetura | Mission Runner -> Workflow Engine -> Task Queue | `src/vercosa_ai_framework/missions/workflow_integration.py`, `src/vercosa_ai_framework/workflows/task_mapping.py`, `WorkflowEngine.execute_with_queue()`, `tests/test_mission_workflow_task_integration.py` | Validado localmente como fluxo mínimo; pode receber executor injetado para caminhos superiores. |
-| Arquitetura | Task Queue -> Agent Orchestrator -> Capability Resolver | `src/vercosa_ai_framework/agents/task_executor.py`, `src/vercosa_ai_framework/agents/orchestrator.py`, `tests/test_task_agent_capability_integration.py` | Validado localmente com resolução declarativa de capabilities antes do runtime; não executa Skills, Tools, MCPs, APIs, banco ou Providers. |
+| Arquitetura | Task Queue -> Agent Orchestrator -> Capability Resolver | `src/vercosa_ai_framework/agents/task_executor.py`, `src/vercosa_ai_framework/agents/orchestrator.py`, `tests/test_task_agent_capability_integration.py` | Validado localmente com resolução declarativa de capabilities antes do runtime. |
+| Arquitetura | Capability -> Skill -> Tool -> Provider Gateway em dry-run | `src/vercosa_ai_framework/capabilities/executor.py`, `src/vercosa_ai_framework/skills/executor.py`, `src/vercosa_ai_framework/tools/executor.py`, `src/vercosa_ai_framework/providers/gateway.py`, `tests/test_capability_skill_tool_provider_dry_run.py` | Validado localmente com ProviderGateway real em `dry_run=True`, sem provider real, adapter concreto, rede, banco, MCP ou API externa. |
 
 ## Implementado
 
@@ -44,7 +45,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Motores centrais | Formato compacto de missão | `missions/templates/COMPACT_MISSION_TEMPLATE.md`, `docs/operations/compact-mission-format.md` | Padrão para missões novas a partir de `0103`; legado continua compatível. |
 | Motores centrais | Workflow Engine sequencial | `src/vercosa_ai_framework/workflows/engine.py` | Implementado; `execute_with_queue()` integra Task Queue no caminho Mission Runner configurado. |
 | Motores centrais | Task Queue e scheduler | `src/vercosa_ai_framework/tasks/` | Implementado; integrado ao Workflow Engine e capaz de receber ponte injetada para Agent Orchestrator sem dependência direta. |
-| Motores centrais | Agent Orchestrator | `src/vercosa_ai_framework/agents/` | Implementado com seleção de agente, runtime injetado e resolução declarativa opcional de capabilities obrigatórias. |
+| Motores centrais | Agent Orchestrator | `src/vercosa_ai_framework/agents/` | Implementado com seleção de agente, runtime injetado, resolução declarativa opcional e execução opcional de capabilities obrigatórias por contrato injetável. |
 | Motores centrais | Policy Engine | `src/vercosa_ai_framework/policy/` | Implementado; consumidores recebem `ResolvedPolicySet` opcional. |
 | Motores centrais | Guardian Engine | `src/vercosa_ai_framework/guardian/` | Implementado e testado; aplicação obrigatória varia por fluxo. |
 | Motores centrais | Context Router e Token Budget Manager | `src/vercosa_ai_framework/context/` | Implementados; ainda dependem de candidatos explícitos. |
@@ -52,7 +53,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Motores centrais | Knowledge Hub textual | `src/vercosa_ai_framework/knowledge/` | Implementado em memória; sem Semantic Index. |
 | Motores centrais | Provider Gateway | `src/vercosa_ai_framework/providers/` | Implementado com adapters injetáveis e dry-run. |
 | Motores centrais | Runtime Adapter OpenCode | `src/vercosa_ai_framework/runtime/` | Implementado como adapter inicial. |
-| Motores centrais | Capabilities, Skills e Tools | `src/vercosa_ai_framework/capabilities/`, `skills/`, `tools/` | Implementados como cadeia MVP; Capability Resolver está integrado declarativamente ao Agent Orchestrator, execução de Skills/Tools continua fora do fluxo. |
+| Motores centrais | Capabilities, Skills e Tools | `src/vercosa_ai_framework/capabilities/`, `skills/`, `tools/` | Implementados como cadeia MVP; o fluxo 0106 executa Skill/Tool/Provider Gateway em dry-run quando injetado explicitamente no Agent Orchestrator. |
 | Auditoria | Audit/Event Log em memória | `src/vercosa_ai_framework/audit/` | Implementado; integração opcional. |
 | Auditoria | Persistência JSONL opt-in | `src/vercosa_ai_framework/audit/jsonl.py` | Implementada; sem retenção, rotação ou uso global. |
 | Segurança | Usage/API Limit Guard | `src/vercosa_ai_framework/guardian/usage_limits.py` | Implementado como classificação textual local. |
@@ -64,7 +65,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | --- | --- | --- | --- |
 | Arquitetura | Task -> Agent | `AgentTaskExecutor` em `agents` depende de `tasks` | Existe como ponte explícita e testada; `tasks` permanece sem dependência de `agents`. |
 | Arquitetura | Composição de prompt/contexto | `prompt_composer` e runner shell | Integrado ao fluxo shell; ainda não substitui Context Router arquitetural. |
-| Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Agent -> Capability Resolver está integrado de forma declarativa; Skill -> Tool -> Provider continua futuro. |
+| Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Integrado em dry-run governado; ainda falta integração global de Policy/Context/Token/Model/Audit e providers reais continuam fora do escopo. |
 | Auditoria | Eventos de decisões centrais | `audit/integrations.py` | Helpers opcionais; não obrigatórios em todos os fluxos. |
 | Release | Preparação alfa | `docs/release/` | Diagnóstico `NÃO PRONTO`, checklist `REPROVADO`, tag não autorizada. |
 | Segurança | Política pública inicial | `SECURITY.md` | Falta canal público definitivo e processo maduro. |

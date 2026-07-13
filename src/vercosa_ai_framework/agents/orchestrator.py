@@ -21,6 +21,8 @@ from vercosa_ai_framework.agents.types import (
     AgentState,
 )
 from vercosa_ai_framework.capabilities import (
+    CapabilityExecutionResult,
+    CapabilityExecutor,
     CapabilityRequest,
     CapabilityResolutionError,
     CapabilityResolutionResult,
@@ -49,6 +51,14 @@ class NoCompatibleAgentError(AgentOrchestratorError):
     """Raised when no registered agent profile is compatible with the task."""
 
 
+class CapabilityExecutionFailed(CapabilityResolutionError):
+    """Raised when a resolved capability execution fails."""
+
+    def __init__(self, message: str, executions: tuple[CapabilityExecutionResult, ...]) -> None:
+        super().__init__(message)
+        self.executions = executions
+
+
 class AgentOrchestrator:
     """Sequential Agent Orchestrator MVP from Spec 0008."""
 
@@ -62,6 +72,8 @@ class AgentOrchestrator:
         model_catalog: tuple[ModelProfile, ...] = (),
         capability_resolver: CapabilityResolver | None = None,
         require_capability_resolution: bool = False,
+        capability_executor: CapabilityExecutor | None = None,
+        require_capability_execution: bool = False,
         workspace: str = ".",
         spec_refs: tuple[str, ...] = (SPEC_REF,),
         guardian_mode: GuardianMode = GuardianMode.STANDARD,
@@ -72,6 +84,8 @@ class AgentOrchestrator:
         self.model_selector = model_selector or (ModelSelector(model_catalog) if model_catalog else None)
         self.capability_resolver = capability_resolver
         self.require_capability_resolution = require_capability_resolution
+        self.capability_executor = capability_executor
+        self.require_capability_execution = require_capability_execution
         self.workspace = workspace
         self.spec_refs = spec_refs
         self.guardian_mode = guardian_mode
@@ -110,6 +124,20 @@ class AgentOrchestrator:
                 profile=profile,
                 guardian_decision_refs=tuple(guardian_decision_refs),
             )
+            capability_executions = self._execute_required_capabilities(capability_results)
+        except CapabilityExecutionFailed as exc:
+            transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
+            return self._failed_result(
+                task,
+                attempt_id,
+                assignment_id,
+                profile,
+                (str(exc),),
+                transitions,
+                guardian_decision_refs,
+                capability_resolutions=capability_results,
+                capability_executions=exc.executions,
+            )
         except CapabilityResolutionError as exc:
             transitions.append(self._transition(AgentState.PLANNING, AgentState.FAILED))
             return self._failed_result(
@@ -121,6 +149,7 @@ class AgentOrchestrator:
                 transitions,
                 guardian_decision_refs,
                 capability_resolutions=(),
+                capability_executions=(),
             )
         request = self.build_execution_request(
             task,
@@ -130,6 +159,7 @@ class AgentOrchestrator:
             model_decision=model_decision,
             guardian_decision_refs=tuple(guardian_decision_refs),
             capability_resolutions=capability_results,
+            capability_executions=capability_executions,
         )
 
         transitions.append(self._transition(AgentState.PLANNING, AgentState.EXECUTING))
@@ -193,6 +223,7 @@ class AgentOrchestrator:
         model_decision: SelectionDecision | None = None,
         guardian_decision_refs: tuple[str, ...] = (),
         capability_resolutions: tuple[CapabilityResolutionResult, ...] = (),
+        capability_executions: tuple[CapabilityExecutionResult, ...] = (),
     ) -> AgentExecutionRequest:
         """Build the normalized agent request sent across the runtime boundary."""
 
@@ -226,6 +257,9 @@ class AgentOrchestrator:
                 "task_goal": task.goal,
                 "capability_resolutions": tuple(
                     _capability_resolution_metadata(result) for result in capability_resolutions
+                ),
+                "capability_executions": tuple(
+                    _capability_execution_metadata(result) for result in capability_executions
                 ),
             },
         )
@@ -263,6 +297,31 @@ class AgentOrchestrator:
             results.append(self.capability_resolver.resolve(request))
         return tuple(results)
 
+    def _execute_required_capabilities(
+        self,
+        resolutions: tuple[CapabilityResolutionResult, ...],
+    ) -> tuple[CapabilityExecutionResult, ...]:
+        if not resolutions:
+            return ()
+        if self.capability_executor is None:
+            if self.require_capability_execution:
+                raise CapabilityResolutionError("capability executor is required for required_capabilities execution")
+            return ()
+
+        executions: list[CapabilityExecutionResult] = []
+        for resolution in resolutions:
+            result = self.capability_executor.execute(resolution)
+            executions.append(result)
+            if not result.success:
+                details = "; ".join(result.errors) if result.errors else "capability execution failed"
+                raise CapabilityExecutionFailed(
+                    f"capability execution failed for {resolution.capability.name}: {details}",
+                    tuple(executions),
+                )
+        if len(executions) != len(resolutions):
+            raise CapabilityExecutionFailed("partial capability execution is not allowed", tuple(executions))
+        return tuple(executions)
+
     def _capability_request(
         self,
         task: Task,
@@ -296,6 +355,8 @@ class AgentOrchestrator:
                 "agent_profile_id": profile.agent_profile_id,
                 "task_type": task.task_type,
                 "declarative_resolution_only": True,
+                "allowed_tools": _allowed_tools(task, capability),
+                "allowed_effects": _allowed_effects(task, capability),
             },
         )
 
@@ -376,6 +437,7 @@ class AgentOrchestrator:
                 "context_refs": request.context_refs,
                 "acceptance_criteria": request.acceptance_criteria,
                 "capability_resolutions": request.metadata.get("capability_resolutions", ()),
+                "capability_executions": request.metadata.get("capability_executions", ()),
             },
             permissions={"mcp_direct_access": False, "providers_direct_access": False},
             execution_limits=request.execution_limits,
@@ -425,6 +487,7 @@ class AgentOrchestrator:
                 "selected_model": request.model_selection_decision_ref,
                 "runtime_id": runtime_result.runtime_id,
                 "capability_resolutions": request.metadata.get("capability_resolutions", ()),
+                "capability_executions": request.metadata.get("capability_executions", ()),
             },
         )
 
@@ -439,6 +502,7 @@ class AgentOrchestrator:
         guardian_decision_refs: list[str],
         *,
         capability_resolutions: tuple[CapabilityResolutionResult, ...] = (),
+        capability_executions: tuple[CapabilityExecutionResult, ...] = (),
     ) -> AgentExecutionResult:
         return AgentExecutionResult(
             mission_id=task.mission_id,
@@ -456,6 +520,9 @@ class AgentOrchestrator:
                 "guardian_decision_refs": tuple(guardian_decision_refs),
                 "capability_resolutions": tuple(
                     _capability_resolution_metadata(result) for result in capability_resolutions
+                ),
+                "capability_executions": tuple(
+                    _capability_execution_metadata(result) for result in capability_executions
                 ),
             },
         )
@@ -502,6 +569,32 @@ def _granted_permissions(task: Task) -> tuple[str, ...]:
     return _tuple_str(_mapping(task.metadata.get("inputs")).get("granted_permissions"))
 
 
+def _allowed_tools(task: Task, capability: str) -> tuple[str, ...]:
+    direct = task.metadata.get("allowed_tools")
+    if isinstance(direct, dict):
+        return _tuple_str(direct.get(capability))
+    values = _tuple_str(direct)
+    if values:
+        return values
+    nested = _mapping(task.metadata.get("inputs")).get("allowed_tools")
+    if isinstance(nested, dict):
+        return _tuple_str(nested.get(capability))
+    return _tuple_str(nested)
+
+
+def _allowed_effects(task: Task, capability: str) -> tuple[str, ...]:
+    direct = task.metadata.get("allowed_effects")
+    if isinstance(direct, dict):
+        return _tuple_str(direct.get(capability))
+    values = _tuple_str(direct)
+    if values:
+        return values
+    nested = _mapping(task.metadata.get("inputs")).get("allowed_effects")
+    if isinstance(nested, dict):
+        return _tuple_str(nested.get(capability))
+    return _tuple_str(nested)
+
+
 def _capability_resolution_metadata(result: CapabilityResolutionResult) -> dict[str, Any]:
     return {
         "request_id": result.request.request_id,
@@ -515,6 +608,27 @@ def _capability_resolution_metadata(result: CapabilityResolutionResult) -> dict[
         "guardian_decision_ref": result.guardian_decision.evaluation_id if result.guardian_decision else None,
         "reasons": result.reasons,
         "declarative_resolution_only": True,
+    }
+
+
+def _capability_execution_metadata(result: CapabilityExecutionResult) -> dict[str, Any]:
+    return {
+        "capability": result.capability,
+        "skill_id": result.skill,
+        "mission_id": result.mission_id,
+        "workflow_id": result.workflow_id,
+        "task_id": result.task_id,
+        "agent_assignment_id": result.agent_assignment_id,
+        "success": result.success,
+        "capability_request_id": result.capability_request_id,
+        "skill_request_id": result.skill_request_id,
+        "skill_result_ref": result.skill_result_ref,
+        "evidence_refs": result.evidence_refs,
+        "warnings": result.warnings,
+        "errors": result.errors,
+        "outputs": result.outputs,
+        "guardian_decision_refs": result.guardian_decision_refs,
+        "metadata": result.metadata,
     }
 
 

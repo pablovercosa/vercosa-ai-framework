@@ -39,6 +39,7 @@ def agent_result_to_task_outcome(task: Task, result: AgentExecutionResult) -> Ta
             "warnings": result.warnings,
             "errors": result.errors,
             "capability_resolutions": result.metadata.get("capability_resolutions", ()),
+            "capability_executions": result.metadata.get("capability_executions", ()),
             "runtime_result_ref": result.runtime_result_ref,
         },
     }

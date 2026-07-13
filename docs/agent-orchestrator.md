@@ -11,7 +11,7 @@ Task Queue
 -> normalized AgentExecutionResult
 ```
 
-No caminho integrado da missão 0105, o orquestrador também pode receber um `CapabilityResolver` configurado explicitamente para resolver declarativamente todas as capabilities obrigatórias antes do runtime.
+No caminho integrado da missão 0106, o orquestrador também pode receber um `CapabilityResolver` e um `capability_executor` configurados explicitamente para resolver e executar, em dry-run governado, todas as capabilities obrigatórias antes do runtime.
 
 ## Responsabilidades
 
@@ -21,6 +21,7 @@ No caminho integrado da missão 0105, o orquestrador também pode receber um `Ca
 - Selecionar modelo via Model Selection Engine quando `model_catalog` e `model_policy` forem fornecidos.
 - Montar um `AgentExecutionRequest` provider-neutral.
 - Resolver capabilities obrigatórias por `CapabilityResolver` quando `require_capability_resolution=True`.
+- Executar capabilities obrigatórias por contrato injetável de alto nível quando `capability_executor` e `require_capability_execution=True` forem configurados.
 - Delegar a execucao concreta para um `RuntimeAdapter` abstrato.
 - Normalizar o retorno como `AgentExecutionResult`.
 
@@ -28,7 +29,7 @@ No caminho integrado da missão 0105, o orquestrador também pode receber um `Ca
 
 - Chamar OpenCode diretamente.
 - Chamar MCPs, providers, APIs, bancos ou subprocessos.
-- Executar capabilities, skills ou tools.
+- Importar ou construir `ToolExecutor`, `ProviderGateway`, adapters concretos, MCPs, APIs ou clientes de rede.
 - Executar subagents reais.
 - Implementar paralelismo.
 - Alterar Task Queue, dependencias ou criterios de aceite.
@@ -82,7 +83,17 @@ Quando configurado com `capability_resolver` e `require_capability_resolution=Tr
 - registra `capability_resolutions` no `AgentExecutionRequest` e no `AgentExecutionResult`;
 - impede chamada ao runtime quando uma capability obrigatória não existe, não tem permissão ou não possui skill declarativa compatível.
 
-A skill selecionada é apenas evidência declarativa de compatibilidade. Ela não é executada neste fluxo.
+## Capability Executor
+
+Quando configurado com `capability_executor` e `require_capability_execution=True`, o Agent Orchestrator:
+
+- executa cada `CapabilityResolutionResult` em ordem de `task.required_capabilities`;
+- preserva a skill selecionada pelo resolver;
+- registra `capability_executions` no `AgentExecutionRequest` e no `AgentExecutionResult`;
+- bloqueia o `RuntimeAdapter` quando uma capability obrigatória falha;
+- mantém o acesso a Skill, Tool e Provider Gateway atrás do contrato injetado.
+
+O fluxo validado pela missão 0106 usa `ProviderGateway` real em `dry_run=True`, `ProviderRegistry` declarativo e provider fake/local. Nenhum provider real, adapter concreto, rede, banco, MCP, API externa ou subprocesso é chamado.
 
 ## Erros
 
@@ -90,6 +101,8 @@ A skill selecionada é apenas evidência declarativa de compatibilidade. Ela nã
 - `AgentOrchestratorError`: selecao de modelo ou outra etapa de preparacao falhou de forma segura.
 
 Documento complementar: [Integração Task, Agent e Capability](architecture/task-agent-capability-integration.md).
+
+Exemplo complementar: [Fluxo Capability, Skill, Tool e Provider Gateway em dry-run](examples/minimal-capability-skill-tool-provider-dry-run.md).
 
 ## Validacao
 

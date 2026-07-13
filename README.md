@@ -74,7 +74,7 @@ O produto maior é a camada de Harness Engineering formada, conforme o estado ap
 - Audit/Event Log;
 - Mission Runner, scripts seguros, batch e CLI operacional.
 
-Implementado hoje em MVP, contrato ou integração inicial: runners seguros, composição determinística de contexto de missão, integração mínima Mission Runner -> Workflow Engine -> Task Queue, integração declarativa Task Queue -> Agent Orchestrator -> Capability Resolver, Policy Engine, Guardian Engine, Usage/API Limit Guard, Context Router, Token Budget Manager, Knowledge Hub textual, Model Selection Engine, Runtime Adapter inicial para OpenCode, Provider Gateway, Capabilities, Skills, Tools, Agent Orchestrator, Audit/Event Log, persistência JSONL opt-in e CLI diagnóstica.
+Implementado hoje em MVP, contrato ou integração inicial: runners seguros, composição determinística de contexto de missão, integração mínima Mission Runner -> Workflow Engine -> Task Queue, integração Task Queue -> Agent Orchestrator -> Capability Resolver, integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado, Policy Engine, Guardian Engine, Usage/API Limit Guard, Context Router, Token Budget Manager, Knowledge Hub textual, Model Selection Engine, Runtime Adapter inicial para OpenCode, Provider Gateway, Capabilities, Skills, Tools, Agent Orchestrator, Audit/Event Log, persistência JSONL opt-in e CLI diagnóstica.
 
 Parcialmente integrado: pontes entre políticas, Guardian, contexto, orçamento de tokens, seleção de modelo, eventos auditáveis e fluxo operacional local. Essas pontes dependem de chamada explícita ou de integração operacional específica.
 
@@ -136,7 +136,7 @@ O VAF se posiciona como Harness Engineering: ele organiza o ambiente em que agen
 
 Status: MVP operacional inicial com fundação arquitetural e contratos em evolução.
 
-As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `src/vercosa_ai_framework/` implementa MVPs determinísticos e integrações iniciais. O trecho Mission Runner -> Workflow Engine -> Task Queue já possui fluxo mínimo validado, e o trecho Task Queue -> Agent Orchestrator -> Capability Resolver possui integração declarativa validada. O fluxo completo Capability -> Skill -> Tool -> Provider ainda não está integrado de ponta a ponta.
+As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `src/vercosa_ai_framework/` implementa MVPs determinísticos e integrações iniciais. O trecho Mission Runner -> Workflow Engine -> Task Queue já possui fluxo mínimo validado, o trecho Task Queue -> Agent Orchestrator -> Capability Resolver possui integração validada e o trecho Capability -> Skill -> Tool -> Provider Gateway possui integração em dry-run governado. Provider real, rede, banco, MCP, API externa e integração global de Policy/Context/Token/Model/Audit ainda não fazem parte desse fluxo.
 
 A documentação pública inicial está sendo preparada para uma futura alfa pública, mas isso não significa release publicada, tag criada, pacote distribuído ou estabilidade de produção. A versão alfa planejada é documentada como `0.1.0-alpha.1`, sem publicação realizada. A política inicial está em [docs/release/versioning-policy.md](docs/release/versioning-policy.md), a política de release está em [docs/release/release-policy.md](docs/release/release-policy.md), o checklist pré-tag está em [docs/release/pre-release-checklist.md](docs/release/pre-release-checklist.md), o plano alfa está em [docs/release/alpha-version-plan.md](docs/release/alpha-version-plan.md), as notas alfa preliminares estão em [docs/release/release-notes-alpha.md](docs/release/release-notes-alpha.md), o checklist documental está em [docs/release/public-alpha-readiness.md](docs/release/public-alpha-readiness.md), o diagnóstico local de prontidão alfa está em [docs/release/alpha-readiness-diagnostic.md](docs/release/alpha-readiness-diagnostic.md), a consolidação local preparatória está em [docs/release/alpha-candidate-summary.md](docs/release/alpha-candidate-summary.md), a solicitação futura de decisão de tag está em [docs/release/tag-decision-request.md](docs/release/tag-decision-request.md) e o histórico inicial está em [CHANGELOG.md](CHANGELOG.md).
 
@@ -150,7 +150,8 @@ Implementado em estado MVP ou contrato inicial:
 
 - Mission Runner local, fila em diretórios e integração opcional com eventos auditáveis em Python.
 - Integração mínima Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis e execução queue-backed.
-- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver por executor injetado, com skill selecionada apenas como evidência declarativa.
+- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver por executor injetado.
+- Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado por executor de capability injetável, sem provider real, rede, banco, MCP ou API externa.
 - Runner seguro de uma missão e runner seguro em batch por scripts operacionais.
 - Composição obrigatória de contexto de missão pelo runner, com `AGENTS.md`, contrato base versionado, agente executor base, agentes operacionais especializados declarados e missão específica.
 - Formato compacto para missões novas a partir de `0103`, com frontmatter validável e negação por padrão para capacidades perigosas.
@@ -185,7 +186,7 @@ Ainda são futuros ou lacunas:
 
 - Fluxo público completo de ponta a ponta para usuário externo.
 - CLI predominantemente diagnóstica, sem executar missões.
-- Motores centrais ainda parcialmente integrados ou acionados por chamador explícito; Task -> Agent -> Capability Resolver existe como fluxo declarativo, mas Skill -> Tool -> Provider permanece futuro.
+- Motores centrais ainda parcialmente integrados ou acionados por chamador explícito; Skill -> Tool -> Provider Gateway existe em dry-run, mas Policy/Context/Token/Model/Audit ainda não estão integrados globalmente ao fluxo.
 - Providers reais adiados.
 - Persistência externa adiada.
 - PostgreSQL, pgvector e RAG adiados.

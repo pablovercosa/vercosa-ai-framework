@@ -42,8 +42,10 @@ class SkillExecutor:
         """Build a ToolExecutionRequest for the first compatible skill tool."""
 
         selection = self.select_tool(request)
-        allowed_effects = selection.tool.effects
+        allowed_effects = _tuple_str(request.metadata.get("allowed_effects")) or selection.tool.effects
         metadata = dict(request.metadata)
+        metadata["agent_assignment_id"] = request.agent_assignment_id
+        metadata["skill_request_id"] = request.request_id
         if selection.fallback_applied:
             metadata["fallback_from"] = selection.fallback_from
             metadata["fallback_to"] = selection.tool.name
@@ -119,6 +121,7 @@ class SkillExecutor:
             raise SkillExecutionError(f"tool lacks permissions: {tool.name}")
 
     def _to_skill_result(self, request: SkillExecutionRequest, tool_result: ToolExecutionResult) -> SkillExecutionResult:
+        metadata = {**request.metadata, **tool_result.metadata, "skill_request_id": request.request_id}
         return SkillExecutionResult(
             skill=request.skill,
             capability=request.capability,
@@ -132,13 +135,25 @@ class SkillExecutor:
             warnings=tool_result.warnings,
             errors=tool_result.errors,
             audit_log_ref=tool_result.audit_log_ref,
-            metadata=tool_result.metadata,
+            metadata=metadata,
         )
 
 
 def _contains_all(values: tuple[str, ...], required: tuple[str, ...]) -> bool:
     available = set(values)
     return all(value in available for value in required)
+
+
+def _tuple_str(value: object) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        return (value,)
+    if isinstance(value, tuple):
+        return tuple(str(item) for item in value)
+    if isinstance(value, list):
+        return tuple(str(item) for item in value)
+    return (str(value),)
 
 
 __all__ = ["SkillExecutionError", "SkillExecutor", "SkillToolSelection"]

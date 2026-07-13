@@ -144,6 +144,8 @@ class ToolExecutor:
             provider_ref=profile.provider_ref,
             provider_kind=_provider_kind(profile.provider_type),
             tool_execution_request_id=request.request_id,
+            attempt_id=_str_or_none(request.metadata.get("attempt_id")),
+            agent_assignment_id=_str_or_none(request.metadata.get("agent_assignment_id")),
             skill_id=request.skill,
             input_schema_ref=profile.input_schema_ref,
             expected_output_schema_ref=profile.output_schema_ref,
@@ -157,7 +159,7 @@ class ToolExecutor:
             fallback_allowed=bool(profile.metadata.get("fallback_allowed", False)),
             dry_run=request.dry_run,
             guardian_decision_refs=self._guardian_decision_refs(request, guardian_decision),
-            metadata={"tool_request_id": request.request_id, **profile.metadata},
+            metadata={"tool_request_id": request.request_id, **request.metadata, **profile.metadata},
         )
 
     def _from_provider_result(
@@ -285,6 +287,12 @@ def _number_or_none(value: object) -> float | None:
     if isinstance(value, int | float):
         return float(value)
     return None
+
+
+def _str_or_none(value: object) -> str | None:
+    if value is None:
+        return None
+    return str(value)
 
 
 __all__ = ["CallableToolAdapter", "ToolAdapter", "ToolCallable", "ToolExecutionError", "ToolExecutor"]

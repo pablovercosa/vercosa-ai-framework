@@ -181,7 +181,7 @@ Integração inicial:
 Futuro:
 
 - Mission Orchestrator distinto.
-- Fluxo completo Capability -> Skill -> Tool -> Provider com efeitos concretos governados.
+- Fluxo completo Capability -> Skill -> Tool -> Provider com efeitos concretos governados; a missão 0106 cobre apenas dry-run, sem provider real.
 - Retenção, rotação e integração opcional da persistência local de eventos auditáveis.
 - Integração real com providers.
 - Múltiplos runtime adapters reais.
@@ -262,7 +262,7 @@ Esses limites são intencionais neste momento. Eles reduzem acoplamento prematur
 2. Manter próximas implementações de CLI restritas a leitura local segura, como resumo pós-batch, sem executar Git destrutivo, providers, rede ou scripts automaticamente.
 3. Usar a persistência local JSONL opt-in do Audit/Event Log como base antes de observabilidade externa, dashboards ou bancos.
 4. Revisar Specs/ADRs afetadas pelos contratos Mission Runner -> Workflow Engine -> Task Queue e Task Queue -> Agent Orchestrator -> Capability Resolver antes de consolidar caminho canônico final.
-5. Demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado antes de dar efeitos concretos a agentes.
+5. Revisar Specs/ADRs afetadas pela demonstração Capability -> Skill -> Tool -> Provider Gateway em dry-run antes de dar efeitos concretos a agentes.
 6. Avaliar providers reais apenas depois de política, auditoria, limites de uso/API e Provider Gateway em dry-run estarem claros.
 7. Adiar Semantic Index, embeddings e pgvector até Context Router, Knowledge Hub e auditoria terem contratos de segurança, citação, redaction e retenção mais estáveis.
 

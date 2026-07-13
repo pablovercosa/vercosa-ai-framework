@@ -47,9 +47,9 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 | Mission Orchestrator | Decidir qual workflow satisfaz uma missão | Conceitual, ainda sem módulo distinto claro | Virar runtime adapter ou comando CLI |
 | Workflow Engine | Construir/executar plano de workflow e ordem de tasks | MVP sequencial em `workflows/engine.py`, com `execute_with_queue()` para Task Queue | Controlar ciclo de missão, registry de agentes ou execução de providers |
 | Task Queue | Gerenciar estados, dependências, tentativas e retries | MVP em `tasks/`, usado como substrato operacional no fluxo integrado Mission/Workflow/Task | Executar providers concretos ou escolher agentes por conta própria |
-| Agent Orchestrator | Selecionar perfil de agente, resolver capabilities declarativas e preparar execução | MVP em `agents/`, integrado ao Capability Resolver quando configurado | Chamar OpenCode, MCPs, APIs, bancos ou tools diretamente |
+| Agent Orchestrator | Selecionar perfil de agente, resolver capabilities declarativas e preparar execução | MVP em `agents/`, integrado ao Capability Resolver e a executor de capability injetável quando configurado | Chamar OpenCode, MCPs, APIs, bancos ou tools diretamente |
 | Agents/Subagents | Executar responsabilidades por fronteiras do framework | Conceitual/MVP no nível de perfil | Conhecer providers ou infraestrutura concreta |
-| Capabilities | Representar capacidades abstratas solicitadas | MVP em `capabilities/`, com resolver integrado declarativamente ao caminho de agente | Codificar detalhes concretos de tool/provider |
+| Capabilities | Representar capacidades abstratas solicitadas | MVP em `capabilities/`, com resolver e executor de capability resolvida em dry-run governado | Codificar detalhes concretos de tool/provider |
 | Policy/Guardian | Resolver políticas declarativas e aplicar enforcement operacional em ações concretas | Policy Engine MVP resolve políticas declarativas; Guardian MVP avalia ações e riscos; pontes opcionais já alcançam Context Router, Model Selection e Audit/Event Log por resultados explícitos | Executar comandos ou mutar estado diretamente |
 | Audit/Event Log | Representar eventos internos auditáveis e rastreáveis | Contratos iniciais, implementação em memória, persistência local JSONL opt-in, helpers opcionais para decisões centrais e eventos de missão/batch; arquitetura dedicada em [Audit/Event Log](../architecture/audit-event-architecture.md) | Persistir globalmente por padrão, exportar observabilidade externa ou chamar módulos consumidores automaticamente |
 | Skills | Procedimentos reutilizáveis que implementam capabilities | MVP em `skills/` | Contornar tools ou Provider Gateway para efeitos |
@@ -111,7 +111,7 @@ MissionResult
 
 Esse fluxo foi validado localmente. Quando recebe `AgentTaskExecutor`, pode acionar o caminho mínimo Agent Orchestrator -> Capability Resolver antes do runtime.
 
-Fluxo mínimo Task/Agent/Capability validado:
+Fluxo mínimo Task/Agent/Capability/Skill/Tool/Provider Gateway em dry-run validado:
 
 ```text
 TaskScheduler
@@ -122,14 +122,22 @@ AgentOrchestrator
 ↓
 CapabilityResolver
 ↓
+ResolvedCapabilityExecutor
+↓
+SkillExecutor
+↓
+ToolExecutor
+↓
+ProviderGateway em dry-run
+↓
 RuntimeAdapter fake ou injetado
 ↓
 TaskExecutionOutcome
 ```
 
-Esse fluxo não executa SkillExecutor, ToolExecutor, Provider Gateway, MCP, API, banco ou provider real.
+Esse fluxo executa SkillExecutor, ToolExecutor e Provider Gateway em `dry_run=True`. Ele não chama provider real, adapter concreto, MCP, API externa, rede, banco ou subprocesso.
 
-Fluxo futuro ainda não integrado de ponta a ponta:
+Fluxo futuro ainda não integrado globalmente:
 
 ```text
 Mission Runner
@@ -155,7 +163,7 @@ ProviderAdapter / RuntimeAdapter / MCP adapter governado
 Audit/Event Log persistível e documentação de evidências
 ```
 
-O fluxo futuro acima não deve ser tratado como implementado. Ele orienta fronteiras e próximas decisões.
+O fluxo futuro acima não deve ser tratado como implementado com provider real. Ele orienta fronteiras e próximas decisões para Policy/Context/Token/Model/Audit, adapters reais e auditoria persistível.
 
 ## Mapa De Módulos Fonte
 

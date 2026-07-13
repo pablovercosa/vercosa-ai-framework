@@ -12,10 +12,11 @@ Resolver intenções funcionais abstratas para skills compatíveis e autorizáve
 - Mantém registry de capabilities declarativas.
 - Resolve capabilities por domínio, permissões, roles e skills candidatas.
 - Retorna resultado de resolução com `SkillProfile` declarativa sem executar skills ou tools.
+- Oferece `ResolvedCapabilityExecutor` para transformar `CapabilityResolutionResult` em `SkillExecutionRequest` e executar a skill selecionada quando o chamador injeta `SkillExecutor`.
 
 ## O Que Este Módulo Não Faz
 
-- Não executa skills ou tools.
+- Não seleciona outra skill após a resolução.
 - Não chama providers, MCPs, APIs, bancos ou runtime.
 - Não representa comandos concretos como capabilities.
 - Não substitui Guardian ou Policy Engine.
@@ -27,6 +28,7 @@ Resolver intenções funcionais abstratas para skills compatíveis e autorizáve
 | `types.py` | Tipos de capability e request. |
 | `registry.py` | `CapabilityRegistry`. |
 | `resolver.py` | `CapabilityResolver`. |
+| `executor.py` | Fronteira `CapabilityExecutor` e implementação `ResolvedCapabilityExecutor`. |
 | `__init__.py` | Exportações públicas do módulo. |
 
 ## Principais Tipos, Classes E Funções
@@ -36,6 +38,9 @@ Resolver intenções funcionais abstratas para skills compatíveis e autorizáve
 - `CapabilityRegistry`: catálogo declarativo.
 - `CapabilityResolver`: resolução para skill compatível.
 - `CapabilityResolutionResult`: saída da resolução.
+- `CapabilityExecutor`: contrato injetável de alto nível.
+- `ResolvedCapabilityExecutor`: ponte Capability resolvida -> SkillExecutionRequest -> SkillExecutor.
+- `CapabilityExecutionResult`: saída rastreável da execução de capability.
 
 ## Entradas E Saídas
 
@@ -47,6 +52,7 @@ Entradas:
 Saídas:
 
 - `CapabilityResolutionResult` com skill selecionada ou erro explícito.
+- `CapabilityExecutionResult` quando a execução opcional é acionada pelo chamador.
 
 ## Dependências Internas
 
@@ -90,9 +96,9 @@ registry.register(
 
 Status: `MVP`.
 
-O módulo tem registry e resolver mínimos e participa do caminho integrado Task -> Agent -> Capability como resolução declarativa. Ele ainda depende de catálogo aprovado para uso real amplo e não executa skills, tools ou providers.
+O módulo tem registry, resolver mínimo e executor de capability resolvida. Participa do caminho integrado Task -> Agent -> Capability -> Skill -> Tool -> Provider Gateway em dry-run quando o Agent Orchestrator recebe `capability_executor` explicitamente. Ele ainda depende de catálogo aprovado para uso real amplo e não chama providers reais.
 
 ## Próximos Passos
 
 - Definir catálogo inicial de capabilities.
-- Demonstrar execução seca Capability -> Skill -> Tool -> Provider Gateway em missão futura.
+- Revisar Specs e ADRs afetadas pela integração mínima na missão 0108.

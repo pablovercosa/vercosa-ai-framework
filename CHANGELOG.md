@@ -50,6 +50,8 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Integração mínima Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis, com mapeamento explícito `WorkflowTask` -> `Task`, execução por `TaskScheduler` e teste ponta a ponta local.
 - Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver por `AgentTaskExecutor`, com resolução declarativa de capabilities obrigatórias antes do runtime e teste ponta a ponta local.
 - Documentação da integração Task/Agent/Capability em `docs/architecture/task-agent-capability-integration.md` e exemplo mínimo em `docs/examples/minimal-task-agent-capability-flow.md`.
+- Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado por `ResolvedCapabilityExecutor` injetável, preservando rastreabilidade até `TaskExecutionOutcome` e bloqueando `RuntimeAdapter` em falhas de capability obrigatória.
+- Exemplo mínimo da cadeia Capability/Skill/Tool/Provider Gateway em dry-run em `docs/examples/minimal-capability-skill-tool-provider-dry-run.md`.
 
 ### Alterado
 
@@ -62,6 +64,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Execução individual preservada para missões sensíveis, críticas, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.
 - OpenCode documentado como runtime/laboratório inicial atrás de adapter, não como centro arquitetural do framework.
 - Status de integração atualizado para diferenciar Mission/Workflow/Task validado, Task -> Agent -> Capability Resolver validado declarativamente e Skill -> Tool -> Provider ainda futuro.
+- Status de integração atualizado para registrar Skill -> Tool -> Provider Gateway em dry-run como implementado, sem declarar provider real, rede, banco, MCP ou API externa.
 
 ### Documentado
 
