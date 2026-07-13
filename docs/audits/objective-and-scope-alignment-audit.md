@@ -33,8 +33,8 @@ Não foi inventado um objetivo novo. O texto acima consolida as fontes existente
 - [knowledge/architecture/core-architecture.md](../../knowledge/architecture/core-architecture.md): hierarquia Mission -> Mission Orchestrator -> Workflow -> Task -> Agent -> Capability -> Policy -> Skill -> Tool -> Providers.
 - [docs/alignment/current-state.md](../alignment/current-state.md): estado real declarado até a missão 0100.
 - [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md): revisão pós-integrações e limites atuais.
-- [logs/pre-audit-targeted-module-verification.md](../../logs/pre-audit-targeted-module-verification.md) e [logs/pre-audit-model-selection-core-followup.md](../../logs/pre-audit-model-selection-core-followup.md): verificação direcionada de Guardian, Core e Model Selection.
-- [logs/pre-audit-dynamic-module-usage.md](../../logs/pre-audit-dynamic-module-usage.md) e [logs/pre-audit-entrypoint-reachability.md](../../logs/pre-audit-entrypoint-reachability.md): evidências de uso por CLI, testes e entrypoints, com falsos negativos corrigidos pelas verificações direcionadas.
+- `logs/pre-audit-targeted-module-verification.md` e `logs/pre-audit-model-selection-core-followup.md`: evidências locais privadas e não versionadas da verificação direcionada de Guardian, Core e Model Selection.
+- `logs/pre-audit-dynamic-module-usage.md` e `logs/pre-audit-entrypoint-reachability.md`: evidências locais privadas e não versionadas de uso por CLI, testes e entrypoints, com falsos negativos corrigidos pelas verificações direcionadas.
 - [docs/release/alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md), [docs/release/pre-tag-checklist-execution.md](../release/pre-tag-checklist-execution.md), [docs/release/alpha-candidate-summary.md](../release/alpha-candidate-summary.md) e [docs/release/tag-decision-request.md](../release/tag-decision-request.md): evidências de release alfa ainda não pronta.
 - `src/`, `tests/`, `scripts/` e `missions/done/`: estrutura implementada, testes e histórico de missões concluídas.
 
