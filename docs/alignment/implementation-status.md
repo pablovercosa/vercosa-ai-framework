@@ -33,6 +33,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Arquitetura | Mission Runner -> Workflow Engine -> Task Queue | `src/vercosa_ai_framework/missions/workflow_integration.py`, `src/vercosa_ai_framework/workflows/task_mapping.py`, `WorkflowEngine.execute_with_queue()`, `tests/test_mission_workflow_task_integration.py` | Validado localmente como fluxo mínimo; pode receber executor injetado para caminhos superiores. |
 | Arquitetura | Task Queue -> Agent Orchestrator -> Capability Resolver | `src/vercosa_ai_framework/agents/task_executor.py`, `src/vercosa_ai_framework/agents/orchestrator.py`, `tests/test_task_agent_capability_integration.py` | Validado localmente com resolução declarativa de capabilities antes do runtime. |
 | Arquitetura | Capability -> Skill -> Tool -> Provider Gateway em dry-run | `src/vercosa_ai_framework/capabilities/executor.py`, `src/vercosa_ai_framework/skills/executor.py`, `src/vercosa_ai_framework/tools/executor.py`, `src/vercosa_ai_framework/providers/gateway.py`, `tests/test_capability_skill_tool_provider_dry_run.py` | Validado localmente com ProviderGateway real em `dry_run=True`, sem provider real, adapter concreto, rede, banco, MCP ou API externa. |
+| Arquitetura | Policy -> Context -> Token Budget -> Guardian -> Model Selection -> Capability -> Skill -> Tool -> Provider Gateway dry-run -> Runtime -> Audit/Event Log | `src/vercosa_ai_framework/agents/governance.py`, `src/vercosa_ai_framework/policy/`, `src/vercosa_ai_framework/context/`, `src/vercosa_ai_framework/model_selection/`, `src/vercosa_ai_framework/audit/`, `tests/test_agent_execution_governance_0107.py` | Validado localmente como fluxo mínimo 0107, com candidatos explícitos de contexto, catálogo de modelos em memória, EventLog injetado e ProviderGateway em dry-run. Não valida provider real, rede, banco, MCP, RAG, PostgreSQL, pgvector ou múltiplos runtimes reais. |
 
 ## Implementado
 
@@ -65,7 +66,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | --- | --- | --- | --- |
 | Arquitetura | Task -> Agent | `AgentTaskExecutor` em `agents` depende de `tasks` | Existe como ponte explícita e testada; `tasks` permanece sem dependência de `agents`. |
 | Arquitetura | Composição de prompt/contexto | `prompt_composer` e runner shell | Integrado ao fluxo shell; ainda não substitui Context Router arquitetural. |
-| Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Integrado em dry-run governado; ainda falta integração global de Policy/Context/Token/Model/Audit e providers reais continuam fora do escopo. |
+| Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Integrado em dry-run governado no fluxo 0106 e integrado ao caminho mínimo governado 0107; providers reais continuam fora do escopo. |
 | Auditoria | Eventos de decisões centrais | `audit/integrations.py` | Helpers opcionais; não obrigatórios em todos os fluxos. |
 | Release | Preparação alfa | `docs/release/` | Diagnóstico `NÃO PRONTO`, checklist `REPROVADO`, tag não autorizada. |
 | Segurança | Política pública inicial | `SECURITY.md` | Falta canal público definitivo e processo maduro. |
@@ -113,7 +114,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Produto | Fluxo de valor principal | Qual problema concreto deve ser demonstrado primeiro? |
 | Arquitetura | `SpecificationProvider` | Hipótese para integrar OpenSpec, Spec Kit ou Markdown nativo; não implementada. |
 | Arquitetura | Mission Runner vs Mission Orchestrator | Separar módulo antes da próxima integração? |
-| Arquitetura | Workflow Engine vs Task Queue | Handoff mínimo implementado por `execute_with_queue()`; missão 0108 deve revisar Specs/ADRs e decidir se o executor direto legado permanece. |
+| Arquitetura | Workflow Engine vs Task Queue | Handoff mínimo implementado por `execute_with_queue()`; Specs e ADRs 0108 registram o caminho integrado mínimo e mantêm `WorkflowEngine.execute()` como compatibilidade transitória. |
 | Arquitetura | Agentes e capabilities | Catálogo mínimo de teste existe; catálogo aprovado para uso real ainda precisa decisão. |
 | Release | Tag alfa | Deve ser adiada até fluxo de valor integrado? |
 | Documentação | Volume e repetição | Quais documentos devem apontar para este checklist em vez de repetir estado? |

@@ -860,6 +860,19 @@ A Task Queue deve emitir eventos estruturados de enfileiramento, elegibilidade, 
 15. Task Queue não deve executar tools, MCPs, providers, bancos ou comandos diretamente.
 16. Task Queue não deve alterar configurações globais nem usar `sudo`.
 
+## Estado implementado e validado em 0108
+
+`TaskScheduler`, em `src/vercosa_ai_framework/tasks/scheduler.py`, é o loop operacional de Tasks no caminho integrado mínimo. A Task Queue controla estado, dependências, tentativas e retries, recebe executor injetado e não conhece Agent, Capability, Skill, Tool, Provider, Runtime ou Workflow.
+
+Evidências:
+
+- `tests/test_task_scheduler.py` cobre o comportamento operacional do scheduler.
+- `tests/test_mission_workflow_task_integration.py` valida retries e bloqueio por dependência no fluxo Mission Runner -> Workflow Engine -> Task Queue.
+- `tests/test_task_agent_capability_integration.py` e `tests/test_capability_skill_tool_provider_dry_run.py` validam que a Task Queue recebe `AgentTaskExecutor` por injeção, sem importar camadas superiores.
+- Os testes estáticos nesses arquivos verificam ausência de imports proibidos em `src/vercosa_ai_framework/tasks/`.
+
+Retries permanecem responsabilidade da Task Queue. Agent Orchestrator, Capability Resolver, Skills, Tools e Provider Gateway não controlam tentativas operacionais da fila.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria para Task Queue em `specs/framework/0007-task-queue.md`.

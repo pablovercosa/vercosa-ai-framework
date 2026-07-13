@@ -870,6 +870,18 @@ O Agent Orchestrator deve emitir eventos estruturados de seleção, estado, capa
 18. Agent Orchestrator deve ser provider agnostic, runtime agnostic e model agnostic.
 19. Agent Orchestrator não deve alterar configurações globais nem usar `sudo`.
 
+## Estado implementado e validado em 0108
+
+`AgentTaskExecutor`, em `src/vercosa_ai_framework/agents/task_executor.py`, é a ponte desacoplada entre Task Scheduler e Agent Orchestrator. O Agent Orchestrator seleciona `AgentProfile`, pode resolver Capabilities antes do runtime e pode executar Capabilities resolvidas antes do runtime quando configurado.
+
+Evidências:
+
+- `tests/test_task_agent_capability_integration.py` valida seleção de perfil, resolução declarativa de Capability antes do runtime e compatibilidade do caminho legado.
+- `tests/test_capability_skill_tool_provider_dry_run.py` valida execução obrigatória de Capability resolvida antes do runtime quando `capability_executor` é injetado.
+- `tests/test_agent_execution_governance_0107.py` valida `AgentExecutionGovernance` como dependência explícita e opcional, incluindo falha quando governança é exigida e não configurada.
+
+O comportamento legado permanece compatível quando resolução, execução de Capability ou governança não são exigidas. O Agent Orchestrator não acessa provider, MCP, API, banco ou OpenCode diretamente; chamadas concretas passam por Runtime Adapter ou pela cadeia Capability -> Skill -> Tool -> Provider Gateway.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria para Agent Orchestrator em `specs/framework/0008-agent-orchestrator.md`.

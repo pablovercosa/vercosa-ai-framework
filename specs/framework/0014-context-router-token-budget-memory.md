@@ -471,6 +471,20 @@ Testes futuros devem cobrir:
 - storage adapter substituivel;
 - logs sem segredos.
 
+## Estado implementado e validado em 0108
+
+O MVP implementado em `src/vercosa_ai_framework/context/` possui Context Router determinístico e Token Budget Manager aplicados sobre candidatos explícitos de contexto. O Context Router não implementa RAG, não executa busca vetorial, não cria memória global automática e não acessa banco ou provider externo.
+
+Evidências:
+
+- `tests/test_context_router_mvp.py` cobre seleção, omissão determinística e pacote de contexto.
+- `tests/test_context_contracts.py` cobre contratos do pacote de contexto.
+- `tests/test_policy_context_router_integration.py` cobre uso de políticas resolvidas no roteamento de contexto.
+- `tests/test_token_budget_model_selection_integration.py` cobre produção de requisitos mínimos para Model Selection.
+- `tests/test_agent_execution_governance_0107.py` valida Context Router e Token Budget Manager no fluxo integrado governado, incluindo omissão determinística de item grande e propagação do `context_package_id`.
+
+O `ContextPackage` atual produz requisitos mínimos de janela de contexto para Model Selection. Semantic Index, embeddings, pgvector, PostgreSQL, RAG e modelo definitivo de memória permanecem decisões futuras.
+
 ## Pendencias
 
 - Definir Spec de implementacao do Context Router.

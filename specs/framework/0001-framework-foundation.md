@@ -55,3 +55,16 @@ Esta Spec cobre:
 - Existem Guardian Specs iniciais.
 - Existe estrutura de diretórios.
 - OpenCode consegue ler este projeto e trabalhar com base nesses arquivos.
+
+## Estado implementado e validado em 0108
+
+As missões 0104 a 0107 validaram uma integração mínima local, determinística e injetável entre Mission Runner, Workflow Engine, Task Queue, Agent Orchestrator, Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection, Capabilities, Skills, Tools, Provider Gateway em dry-run, Runtime Adapter e Audit/Event Log.
+
+Evidências principais:
+
+- `tests/test_mission_workflow_task_integration.py` valida Mission Runner -> Workflow Engine -> Task Queue com executor injetado e preserva caminho legado sem workflow.
+- `tests/test_task_agent_capability_integration.py` valida Task Scheduler -> AgentTaskExecutor -> Agent Orchestrator -> Capability Resolver antes do runtime.
+- `tests/test_capability_skill_tool_provider_dry_run.py` valida Capability -> Skill -> Tool -> Provider Gateway em `dry_run=True`, sem chamada a adapter concreto.
+- `tests/test_agent_execution_governance_0107.py` valida o fluxo governado com Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection e Audit/Event Log.
+
+Esse estado não valida provider real, rede, banco, MCP, PostgreSQL, pgvector, RAG, memória global automática, múltiplos runtimes reais ou release alfa. Esses itens permanecem planejados ou pendentes conforme `docs/alignment/implementation-status.md` e `docs/alignment/open-questions.md`.

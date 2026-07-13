@@ -722,6 +722,18 @@ Regras:
 12. Runtime Adapters futuros não devem fazer bypass do Guardian Engine.
 13. Toda decisão deve gerar log auditável e explicação sem expor segredos.
 
+## Estado implementado e validado em 0108
+
+O código atual separa Policy Engine e Guardian Engine. O Policy Engine resolve políticas declarativas em `ResolvedPolicySet`; o Guardian Engine faz enforcement operacional por decisões `allow`, `warn`, `block` e `require_approval`.
+
+Evidências:
+
+- `tests/test_policy_guardian_integration.py` cobre integração entre política resolvida e decisões Guardian.
+- `tests/test_guardian_engine.py` e `tests/test_guardian_context_package_checks.py` cobrem enforcement local e avaliação de pacote de contexto.
+- `tests/test_agent_execution_governance_0107.py` valida que `BLOCK` impede execução, `REQUIRE_APPROVAL` impede execução automática sem aprovação representada e `WARN` preserva referência permitindo continuidade quando o contrato permite.
+
+Decisão arquitetural: Policy Engine não executa ações e Guardian Engine não substitui resolução declarativa. `ResolvedPolicySet` deve ser propagado aos consumidores que precisam aplicar políticas em contexto, seleção de modelo e execução governada.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria para o Guardian Engine.

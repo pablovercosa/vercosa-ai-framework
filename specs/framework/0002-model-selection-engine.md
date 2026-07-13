@@ -436,6 +436,19 @@ Quando possível, o erro deve sugerir alternativas seguras, como reduzir context
 9. A decisão de modelo deve ser justificável.
 10. Falhas de seleção devem ser explícitas e seguras.
 
+## Estado implementado e validado em 0108
+
+O MVP implementado em `src/vercosa_ai_framework/model_selection/` usa catálogo em memória injetado e seleção por `ModelSelectionPolicy`. O fluxo 0107 propaga `ResolvedPolicySet` para excluir modelos por política e usa requisitos do `ContextPackage` para influenciar a janela mínima de contexto antes da chamada ao Runtime Adapter.
+
+Evidências:
+
+- `tests/test_model_selection.py` cobre seleção local em memória e falhas explícitas.
+- `tests/test_policy_model_selection_integration.py` cobre aplicação de política resolvida na seleção.
+- `tests/test_token_budget_model_selection_integration.py` cobre influência de orçamento/contexto na seleção.
+- `tests/test_agent_execution_governance_0107.py` valida que seleção ocorre antes do runtime, que modelo incompatível bloqueia execução e que política `DENY` exclui modelo.
+
+No estado atual, Model Selection não chama provider nem runtime diretamente, não descobre modelos reais em providers externos e não executa fallback externo real. Aprovação exigida por política bloqueia execução automática quando não há aprovação representada no fluxo.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria para o Model Selection Engine.

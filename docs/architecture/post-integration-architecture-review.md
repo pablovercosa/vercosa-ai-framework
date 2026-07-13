@@ -4,7 +4,7 @@ Links principais: [README principal](../../README.md) | [Índice de módulos](mo
 
 ## Objetivo
 
-Registrar uma revisão arquitetural pós-integrações do Vercosa AI Framework após as integrações concluídas até a missão 0080.
+Registrar uma revisão arquitetural pós-integrações do Vercosa AI Framework após as integrações concluídas até a missão 0107 e revisadas documentalmente na missão 0108.
 
 Este documento é factual e conservador. Ele consolida o estado atual, os eixos arquiteturais, os módulos centrais, as integrações existentes, os limites, os riscos e recomendações para próximas missões. Ele não aprova implementação nova, não altera Specs, não cria release, não cria fila executável e não promete funcionalidades futuras como existentes.
 
@@ -80,6 +80,7 @@ As integrações abaixo existem como MVP ou integração inicial. Elas devem ser
 - Policy Engine com Guardian Engine: `ResolvedPolicySet` opcional pode ser fornecido ao Guardian por chamador externo.
 - Policy Engine com Context Router: `ResolvedPolicySet` opcional pode ser fornecido em `ContextRequest`.
 - Policy Engine com Model Selection: políticas resolvidas opcionais podem influenciar warnings, aprovação e exclusões determinísticas.
+- Execution Governance 0107: Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection, Capability Executor, Provider Gateway em dry-run, Runtime Adapter fake ou injetado e Audit/Event Log foram validados no fluxo mínimo local por `tests/test_agent_execution_governance_0107.py`.
 - Token Budget Manager com Model Selection: requisitos mínimos derivados de orçamento podem ser repassados ao selector.
 - Usage/API Limit Guard com fluxo operacional: logs locais já produzidos podem ser classificados para detectar quota, rate limit, billing ou limite de uso.
 - Audit/Event Log com decisões centrais: helpers opcionais transformam resultados de Policy, Guardian e Context em eventos estruturados.
@@ -181,7 +182,7 @@ Integração inicial:
 Futuro:
 
 - Mission Orchestrator distinto.
-- Fluxo completo Capability -> Skill -> Tool -> Provider com efeitos concretos governados; a missão 0106 cobre apenas dry-run, sem provider real.
+- Fluxo completo Capability -> Skill -> Tool -> Provider com efeitos concretos governados; as missões 0106 e 0107 cobrem dry-run, sem provider real.
 - Retenção, rotação e integração opcional da persistência local de eventos auditáveis.
 - Integração real com providers.
 - Múltiplos runtime adapters reais.

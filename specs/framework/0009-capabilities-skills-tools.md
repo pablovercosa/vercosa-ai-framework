@@ -699,6 +699,18 @@ Resolução e execução devem emitir eventos estruturados suficientes para audi
 15. OpenCode é runtime inicial, não núcleo.
 16. Esta Spec não autoriza implementação de código, alteração de configurações globais ou uso de `sudo`.
 
+## Estado implementado e validado em 0108
+
+O fluxo atual separa resolução e execução de Capability. `CapabilityResolver` produz `CapabilityResolutionResult` e não executa Skill. `ResolvedCapabilityExecutor`, em `src/vercosa_ai_framework/capabilities/executor.py`, faz a ponte para `SkillExecutor`. `SkillExecutor` seleciona e chama `ToolExecutor`. `ToolExecutor` é a fronteira da cadeia que chama `ProviderGateway`.
+
+Evidências:
+
+- `tests/test_capability_resolution.py` cobre resolução declarativa.
+- `tests/test_skill_executor.py`, `tests/test_tool_executor.py` e `tests/test_tool_executor_provider_gateway.py` cobrem execução por fronteiras separadas.
+- `tests/test_capability_skill_tool_provider_dry_run.py` valida a cadeia Capability -> Skill -> Tool -> Provider Gateway em dry-run preservando IDs de mission, workflow, task, agent assignment, request e result.
+
+Cada camada preserva IDs e referências. O fluxo validado é local, injetável e sem provider real, rede, banco, MCP ou API externa.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria em `specs/framework/0009-capabilities-skills-tools.md`.

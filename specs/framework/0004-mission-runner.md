@@ -668,6 +668,14 @@ Quando possível, o erro deve sugerir alternativa segura, como reduzir escopo, a
 10. Mission Runner deve respeitar Guardian Specs, Policy Engine, Model Selection Engine e Runtime Adapters.
 11. Mission Runner deve se integrar futuramente ao Workflow Engine sem substituir sua responsabilidade.
 
+## Estado implementado e validado em 0108
+
+O Mission Runner implementado em `src/vercosa_ai_framework/missions/runner.py` controla o ciclo de vida da Mission e pode acionar o Workflow por integração explícita e injetável via `InMemoryWorkflowProvider` e `QueueBackedWorkflowExecutor`, definidos em `src/vercosa_ai_framework/missions/workflow_integration.py`.
+
+Evidência: `tests/test_mission_workflow_task_integration.py` valida Mission Runner -> Workflow Engine -> Task Queue, agregação de `WorkflowResult` em `MissionResult`, retry de task via fila e preservação do caminho legado sem workflow.
+
+Decisão arquitetural: o Mission Runner não deve absorver permanentemente o Workflow Engine. A existência de um Mission Orchestrator separado continua decisão pendente, registrada em `docs/alignment/open-questions.md`, porque ainda não há implementação comprovada desse módulo.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria para o Mission Runner.

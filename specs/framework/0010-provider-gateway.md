@@ -821,6 +821,19 @@ Provider Gateway deve emitir eventos estruturados suficientes para auditoria, di
 16. OpenCode é runtime inicial, não núcleo.
 17. Esta Spec não autoriza implementação de código, alteração de configurações globais ou uso de `sudo`.
 
+## Estado implementado e validado em 0108
+
+O Provider Gateway implementado em `src/vercosa_ai_framework/providers/gateway.py` seleciona e valida `ProviderProfile` a partir de registry injetado. No fluxo validado, o Tool Executor chama um Provider Gateway real com `dry_run=True`; o Gateway produz `ProviderRequest` e `ProviderResult`, mas não chama adapter concreto.
+
+Evidências:
+
+- `tests/test_provider_gateway.py` cobre validação de provider, bloqueios e dry-run.
+- `tests/test_tool_executor_provider_gateway.py` cobre a fronteira Tool Executor -> Provider Gateway.
+- `tests/test_capability_skill_tool_provider_dry_run.py` valida que `adapter.calls == 0`, preservando IDs e status `dry_run`.
+- `tests/test_agent_execution_governance_0107.py` valida o mesmo comportamento no fluxo governado integrado.
+
+O Provider Gateway não é Model Selector. Providers reais, rede, fallback externo real, banco, MCP e API externa continuam fora do fluxo validado atual.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria em `specs/framework/0010-provider-gateway.md`.

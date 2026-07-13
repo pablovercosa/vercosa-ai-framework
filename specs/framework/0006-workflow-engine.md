@@ -910,6 +910,18 @@ O Workflow Engine deve emitir eventos estruturados de planejamento, estado, depe
 15. Encerramento seguro deve preservar estado, logs, artefatos e evidências.
 16. Relação futura com Agent Orchestrator deve ser baseada em capabilities, não em agentes hardcoded.
 
+## Estado implementado e validado em 0108
+
+O caminho integrado mínimo é `WorkflowEngine.execute_with_queue()`, implementado em `src/vercosa_ai_framework/workflows/engine.py`. Esse caminho constrói e acompanha o Workflow, mapeia `WorkflowTask` para Task Queue por `src/vercosa_ai_framework/workflows/task_mapping.py` e delega execução operacional ao Task Scheduler.
+
+Evidências:
+
+- `tests/test_mission_workflow_task_integration.py` valida execução de tasks dependentes, retry de task obrigatória e bloqueio de dependente.
+- `tests/test_task_agent_capability_integration.py` valida o uso de executor de task injetado para alcançar Agent Orchestrator.
+- `tests/test_agent_execution_governance_0107.py` valida `execute_with_queue()` no fluxo governado 0107.
+
+O método legado `WorkflowEngine.execute()` permanece suportado como compatibilidade transitória no estado atual e não deve ser removido nesta missão. A remoção ou promoção de `execute_with_queue()` como caminho canônico exclusivo permanece decisão pendente em `docs/alignment/open-questions.md`.
+
 ## Critérios de aceite
 
 - Existe uma Spec própria para o Workflow Engine em `specs/framework/0006-workflow-engine.md`.

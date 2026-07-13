@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Registrar o estado arquitetural do Vercosa AI Framework após as integrações concluídas até a missão 0080 e antes da próxima onda de implementação.
+Registrar o estado arquitetural do Vercosa AI Framework após as integrações mínimas concluídas até a missão 0107 e a revisão documental/arquitetural 0108.
 
 Atualização da missão 0101: a auditoria estratégica de aderência ao objetivo e escopo está registrada em [docs/audits/objective-and-scope-alignment-audit.md](../audits/objective-and-scope-alignment-audit.md). O checklist canônico de implementação passa a ser [docs/alignment/implementation-status.md](implementation-status.md). Este documento deve resumir estado e apontar para o checklist, não duplicar todo o controle operacional.
 
@@ -10,7 +10,7 @@ Atualização da missão 0103: o README passou a explicitar o problema central, 
 
 Classificação geral da auditoria: `ALINHADO COM RESSALVAS`.
 
-Ressalvas principais: o fluxo operacional interno por missões e batch existe, o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi integrado por contratos injetáveis, a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi validada e o caminho Capability -> Skill -> Tool -> Provider Gateway foi demonstrado em dry-run governado. Providers reais, rede, banco, MCP e API externa seguem fora do fluxo; vários motores seguem MVPs opcionais; a preparação alfa avançou antes de uma demonstração completa de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
+Ressalvas principais: o fluxo operacional interno por missões e batch existe, o fluxo mínimo Mission Runner -> Workflow Engine -> Task Queue foi integrado por contratos injetáveis, a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi validada, o caminho Capability -> Skill -> Tool -> Provider Gateway foi demonstrado em dry-run governado e a missão 0107 validou Policy/Context/Token/Guardian/Model/Audit no caminho mínimo injetável. Providers reais, rede, banco, MCP, API externa, RAG, PostgreSQL, pgvector e múltiplos runtimes reais seguem fora do fluxo; vários motores seguem MVPs opcionais; a preparação alfa avançou antes de uma demonstração completa de valor integrado; `LICENSE` está ausente; instalação limpa e checklist pré-tag permanecem reprovados em registros locais.
 
 Este checkpoint é apenas documental. Ele não aprova novo código, novo comportamento de runtime, alterações de configuração global, operações privilegiadas ou expansão de funcionalidades.
 
@@ -85,6 +85,7 @@ Ativos principais:
 - `pyproject.toml`: empacotamento Python local mínimo com `setuptools`, descoberta do pacote em `src`, versão PEP 440 `0.1.0a1`, extra opcional `dev` para `pytest` e console script local `vaf`, sem pacote publicado.
 - `.github/workflows/ci.yml`: CI mínimo em GitHub Actions para pull requests e pushes em `main`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem publicar pacote, criar release, executar missões, acessar banco, chamar providers ou usar secrets.
 - `docs/architecture/post-integration-architecture-review.md`: revisão arquitetural pós-integrações, com estado real, limites, riscos e recomendações.
+- `docs/architecture/decisions/`: ADRs documentais da revisão 0108 para decisões comprovadas pelas integrações 0104 a 0107.
 - `.github/ISSUE_TEMPLATE/` e `.github/PULL_REQUEST_TEMPLATE.md`: templates iniciais para colaboração pública futura, sem processo público maduro ou SLA.
 - `knowledge/`: visão, princípios e notas de arquitetura central.
 - `specs/framework/`: Specs do framework.
@@ -172,6 +173,7 @@ Integrações já feitas em estado MVP ou integração inicial:
 - `MissionRunner` Python capaz de registrar eventos de missão quando recebe `EventLog` opcional.
 - `MissionRunner` Python capaz de executar caminho integrado opcional com `WorkflowEngine.execute_with_queue()` e `TaskQueue` quando recebe `MissionWorkflowProvider` e `MissionWorkflowExecutor`.
 - `TaskScheduler` capaz de acionar `AgentOrchestrator` por `AgentTaskExecutor` injetado, com resolução declarativa de capabilities obrigatórias antes do runtime.
+- `AgentExecutionGovernance` capaz de compor Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection e Audit/Event Log por dependências injetadas antes de capabilities e runtime no caminho mínimo 0107.
 - `prompt_composer` em `src/vercosa_ai_framework/missions/` capaz de compor contexto efetivo de execução com `AGENTS.md`, contrato base, agente executor base, agentes operacionais especializados declarados, permissões e missão específica.
 - Runner shell integrado ao compositor antes da chamada ao OpenCode, com restauração para `queue` quando a composição falha.
 - CLI operacional inicial com comandos `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links` e `alpha-readiness`.

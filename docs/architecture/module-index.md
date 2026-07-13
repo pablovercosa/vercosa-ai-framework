@@ -1,6 +1,6 @@
 # Índice De Módulos
 
-Links principais: [README principal](../../README.md) | [Mapa de arquitetura](../alignment/architecture-map.md) | [Revisão pós-integrações](post-integration-architecture-review.md) | [Padrão de README](../documentation/readme-standard.md) | [Política de documentação](../documentation/documentation-update-policy.md)
+Links principais: [README principal](../../README.md) | [Mapa de arquitetura](../alignment/architecture-map.md) | [Revisão pós-integrações](post-integration-architecture-review.md) | [Decisões arquiteturais](decisions/README.md) | [Padrão de README](../documentation/readme-standard.md) | [Política de documentação](../documentation/documentation-update-policy.md)
 
 ## Objetivo
 
@@ -64,9 +64,9 @@ A revisão arquitetural consolidada após as integrações até a missão 0080 e
 
 ## Relações Principais
 
-- `missions/` controla ciclo operacional de missões, compõe contexto de execução por contrato base e pode delegar para `workflows/` por `MissionWorkflowProvider` e `MissionWorkflowExecutor` injetados.
+- `missions/` controla ciclo operacional de missões, compõe contexto de execução por contrato base e pode delegar para `workflows/` por `MissionWorkflowProvider` e `MissionWorkflowExecutor` injetados; a separação entre Mission Runner, Workflow Engine e Task Queue está registrada em [ADR 0001](decisions/0001-separar-mission-runner-workflow-engine-task-queue.md).
 - `workflows/` define plano e execução sequencial MVP; no caminho integrado, `execute_with_queue()` usa `tasks/` como substrato de estado, elegibilidade, tentativas e retries.
-- `agents/` seleciona perfis, prepara execução e pode resolver/executar capabilities obrigatórias antes do runtime por contratos injetáveis quando configurado explicitamente. No caminho 0107, `AgentExecutionGovernance` compõe Policy, Context, Token Budget, Guardian, Model Selection e Audit de forma injetável antes de capabilities e runtime, sem chamar tools, providers, MCPs ou bancos diretamente.
+- `agents/` seleciona perfis, prepara execução e pode resolver/executar capabilities obrigatórias antes do runtime por contratos injetáveis quando configurado explicitamente. A ponte `AgentTaskExecutor` está registrada em [ADR 0002](decisions/0002-agent-task-executor-como-ponte-desacoplada.md). No caminho 0107, `AgentExecutionGovernance` compõe Policy, Context, Token Budget, Guardian, Model Selection e Audit de forma injetável antes de capabilities e runtime, sem chamar tools, providers, MCPs ou bancos diretamente.
 - `capabilities/`, `skills/`, `tools/` e `providers/` formam a cadeia de resolução de intenção até infraestrutura concreta; no fluxo 0106 essa cadeia foi integrada em dry-run governado com Provider Gateway real e sem provider real.
 - `policy/` resolve políticas declarativas, precedência e conflitos básicos sem enforcement operacional; `guardian/`, `context/` e `model_selection/` podem consumir `ResolvedPolicySet` opcional já resolvido, sem chamar o Policy Engine por conta própria.
 - `audit/` define contratos iniciais, implementação em memória, persistência local JSONL opt-in e helpers opcionais para eventos de decisões Policy, Guardian, Context, Model Selection e execução de Agent, além de eventos básicos de ciclo de vida de missão e batch; a integração com `MissionRunner` Python é opcional e não altera scripts shell, persistência externa, banco ou fluxo operacional de diretórios. A arquitetura dedicada está em [Arquitetura de Audit/Event Log](audit-event-architecture.md).
