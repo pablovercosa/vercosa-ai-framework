@@ -6,6 +6,8 @@ Links principais: [README principal](../../README.md) | [Índice de módulos](mo
 
 Documentar a integração mínima e local entre Policy Engine, Guardian Engine, Context Router, Token Budget Manager, Model Selection Engine e Audit/Event Log no fluxo de execução de Agent Assignment.
 
+Este documento descreve o fluxo validado na missão 0107. O estado factual vivo de implementação e validação fica em [docs/alignment/implementation-status.md](../alignment/implementation-status.md).
+
 ## Fluxo Validado
 
 ```text

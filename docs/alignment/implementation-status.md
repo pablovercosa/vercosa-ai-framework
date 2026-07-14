@@ -10,6 +10,25 @@ Ele diferencia planejado, implementado, integrado e validado. Existência de doc
 
 Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejamento futuro: [mission-backlog.md](../roadmap/mission-backlog.md).
 
+## Matriz De Fontes Canônicas
+
+Use esta matriz para evitar duplicação entre documentos vivos. Documentos históricos, auditorias e registros de release podem preservar evidências datadas, mas não devem substituir as fontes abaixo para estado atual.
+
+| Informação | Fonte canônica |
+| --- | --- |
+| Estado de implementação | `docs/alignment/implementation-status.md` |
+| Estado narrativo atual | `docs/alignment/current-state.md` |
+| Arquitetura e fronteiras | `docs/alignment/architecture-map.md` |
+| Specs normativas | `specs/framework/` |
+| Decisões arquiteturais | `docs/architecture/decisions/` |
+| Perguntas abertas | `docs/alignment/open-questions.md` |
+| Roadmap estratégico | `docs/alignment/roadmap.md` |
+| Backlog de missões | `docs/roadmap/mission-backlog.md` |
+| Histórico de missões | `docs/history/mission-milestones.md` |
+| Histórico de mudanças | `CHANGELOG.md` |
+| Evidências de release | `docs/release/` |
+| Auditorias datadas | `docs/audits/` |
+
 ## Definições
 
 - Planejado: há intenção, Spec, roadmap ou pergunta em aberto, mas não há implementação operacional.
@@ -117,7 +136,7 @@ Histórico de mudanças visíveis: [CHANGELOG.md](../../CHANGELOG.md). Planejame
 | Arquitetura | Workflow Engine vs Task Queue | Handoff mínimo implementado por `execute_with_queue()`; Specs e ADRs 0108 registram o caminho integrado mínimo e mantêm `WorkflowEngine.execute()` como compatibilidade transitória. |
 | Arquitetura | Agentes e capabilities | Catálogo mínimo de teste existe; catálogo aprovado para uso real ainda precisa decisão. |
 | Release | Tag alfa | Deve ser adiada até fluxo de valor integrado? |
-| Documentação | Volume e repetição | Quais documentos devem apontar para este checklist em vez de repetir estado? |
+| Documentação | Volume e repetição | Missão 0109 consolidou este documento como fonte canônica do checklist factual; documentos consumidores devem resumir e referenciar esta fonte. |
 
 ## Próximo Uso Deste Checklist
 

@@ -6,6 +6,8 @@ Links principais: [README principal](../../README.md) | [Índice de módulos](..
 
 A arquitetura do framework é orientada por missões e governada por especificações.
 
+Responsabilidade deste documento: descrever topologia, fronteiras e fluxos arquiteturais. O estado factual detalhado de implementação, integração e validação fica em [implementation-status.md](implementation-status.md).
+
 Cadeia canônica:
 
 ```text
@@ -58,6 +60,8 @@ Regra principal: camadas superiores expressam intenção; camadas inferiores for
 | Providers/MCPs/APIs/Runtimes | Mecanismos externos concretos | OpenCode runtime MVP; providers são contratos injetáveis | Vazar para o core ou abstrações de agentes |
 
 ## Fluxo Implementado Versus Futuro
+
+Esta seção resume os fluxos para orientar fronteiras. Ela não substitui o checklist canônico de implementação.
 
 Fluxo operacional implementado atualmente:
 
@@ -250,7 +254,7 @@ CapabilityResolver
 SkillProfile declarativa
 ```
 
-O caminho `SkillExecutor -> ToolExecutor -> ProviderGateway` existe como contratos/MVPs, mas não faz parte da integração 0105.
+O caminho `SkillExecutor -> ToolExecutor -> ProviderGateway` existe como contratos/MVPs e foi validado em dry-run governado na missão 0106. Na missão 0105, a validação parava na resolução declarativa de capabilities.
 
 Caminho de Policy, Context, Model Selection, Guardian e Audit:
 

@@ -8,6 +8,8 @@ Registrar uma revisão arquitetural pós-integrações do Vercosa AI Framework a
 
 Este documento é factual e conservador. Ele consolida o estado atual, os eixos arquiteturais, os módulos centrais, as integrações existentes, os limites, os riscos e recomendações para próximas missões. Ele não aprova implementação nova, não altera Specs, não cria release, não cria fila executável e não promete funcionalidades futuras como existentes.
 
+Responsabilidade documental: esta revisão é uma evidência datada de arquitetura pós-integrações. O checklist vivo de implementação, integração e validação fica em [docs/alignment/implementation-status.md](../alignment/implementation-status.md).
+
 ## Leitura Do Estado Atual
 
 O Vercosa AI Framework está em estado de MVP operacional inicial, com contratos, módulos Python determinísticos, documentação operacional, runners locais, CLI inicial e integrações parciais entre governança, contexto, seleção de modelo e auditoria.

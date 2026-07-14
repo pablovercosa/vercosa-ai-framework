@@ -55,6 +55,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Integração mínima 0107 por `AgentExecutionGovernance`, compondo Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection Engine e Audit/Event Log antes de Capability/Skill/Tool/Provider Gateway em dry-run e Runtime Adapter fake ou injetado.
 - Documentação arquitetural da governança de execução 0107 em `docs/architecture/execution-governance-0107.md` e exemplo mínimo em `docs/examples/minimal-execution-governance-0107.md`.
 - Relatório de auditoria 0108 em `docs/audits/spec-adr-integration-review-0108.md` e ADRs numeradas em `docs/architecture/decisions/` para decisões comprovadas pelas integrações 0104 a 0107.
+- Matriz de fontes canônicas em `docs/alignment/implementation-status.md` e relatório de auditoria documental 0109 em `docs/audits/documentation-deduplication-0109.md`.
 
 ### Alterado
 
@@ -70,6 +71,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Status de integração atualizado para registrar Skill -> Tool -> Provider Gateway em dry-run como implementado, sem declarar provider real, rede, banco, MCP ou API externa.
 - Agent Orchestrator atualizado para preservar o comportamento legado por padrão e ativar governança completa somente por dependência explícita ou `require_execution_governance=True`.
 - Specs 0001, 0002, 0004, 0005, 0006, 0007, 0008, 0009, 0010 e 0014 alinhadas ao fluxo mínimo implementado e validado, distinguindo arquitetura pretendida, integração local validada, dry-run, compatibilidade legada e decisões pendentes.
+- Documentos vivos de alinhamento, roadmap, backlog e histórico ajustados para referenciar `docs/alignment/implementation-status.md` como checklist factual canônico, reduzindo inventários duplicados.
 
 ### Documentado
 
@@ -86,6 +88,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`.
 - Índice navegável de módulos em `docs/architecture/module-index.md`.
 - Playbook de execução em batch e checklist de validação pós-batch.
+- Reserva histórica do identificador de missão `0001` como marco não executado, sem criar missão retroativa nem alterar IDs existentes.
 
 ### Segurança
 

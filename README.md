@@ -74,11 +74,7 @@ O produto maior é a camada de Harness Engineering formada, conforme o estado ap
 - Audit/Event Log;
 - Mission Runner, scripts seguros, batch e CLI operacional.
 
-Implementado hoje em MVP, contrato ou integração inicial: runners seguros, composição determinística de contexto de missão, integração mínima Mission Runner -> Workflow Engine -> Task Queue, integração Task Queue -> Agent Orchestrator -> Capability Resolver, integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado, Policy Engine, Guardian Engine, Usage/API Limit Guard, Context Router, Token Budget Manager, Knowledge Hub textual, Model Selection Engine, Runtime Adapter inicial para OpenCode, Provider Gateway, Capabilities, Skills, Tools, Agent Orchestrator, Audit/Event Log, persistência JSONL opt-in e CLI diagnóstica.
-
-Parcialmente integrado: pontes entre políticas, Guardian, contexto, orçamento de tokens, seleção de modelo, eventos auditáveis e fluxo operacional local. Essas pontes dependem de chamada explícita ou de integração operacional específica.
-
-Planejado ou adiado: providers reais múltiplos, persistência externa, Semantic Index, embeddings, pgvector, RAG semântico, múltiplos runtimes reais, observabilidade externa e internacionalização.
+O inventário factual de itens planejados, implementados, integrados, validados, parciais e adiados fica em [docs/alignment/implementation-status.md](docs/alignment/implementation-status.md). Este README mantém apenas o resumo público para evitar divergência entre documentos.
 
 ## Para Quem O Projeto É Útil
 
@@ -136,7 +132,7 @@ O VAF se posiciona como Harness Engineering: ele organiza o ambiente em que agen
 
 Status: MVP operacional inicial com fundação arquitetural e contratos em evolução.
 
-As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `src/vercosa_ai_framework/` implementa MVPs determinísticos e integrações iniciais. O trecho Mission Runner -> Workflow Engine -> Task Queue já possui fluxo mínimo validado, o trecho Task Queue -> Agent Orchestrator -> Capability Resolver possui integração validada, o trecho Capability -> Skill -> Tool -> Provider Gateway possui integração em dry-run governado e o caminho mínimo 0107 integrou Policy/Context/Token/Guardian/Model/Audit antes de Capability/Runtime por dependências injetadas. Provider real, rede, banco, MCP, API externa, RAG, PostgreSQL, pgvector e múltiplos runtimes reais ainda não fazem parte desse fluxo.
+As Specs em `specs/framework/` descrevem a arquitetura desejada. O código em `src/vercosa_ai_framework/` implementa MVPs determinísticos e integrações iniciais. O estado factual detalhado fica no [checklist canônico de implementação](docs/alignment/implementation-status.md); a fotografia narrativa fica em [docs/alignment/current-state.md](docs/alignment/current-state.md).
 
 A documentação pública inicial está sendo preparada para uma futura alfa pública, mas isso não significa release publicada, tag criada, pacote distribuído ou estabilidade de produção. A versão alfa planejada é documentada como `0.1.0-alpha.1`, sem publicação realizada. A política inicial está em [docs/release/versioning-policy.md](docs/release/versioning-policy.md), a política de release está em [docs/release/release-policy.md](docs/release/release-policy.md), o checklist pré-tag está em [docs/release/pre-release-checklist.md](docs/release/pre-release-checklist.md), o plano alfa está em [docs/release/alpha-version-plan.md](docs/release/alpha-version-plan.md), as notas alfa preliminares estão em [docs/release/release-notes-alpha.md](docs/release/release-notes-alpha.md), o checklist documental está em [docs/release/public-alpha-readiness.md](docs/release/public-alpha-readiness.md), o diagnóstico local de prontidão alfa está em [docs/release/alpha-readiness-diagnostic.md](docs/release/alpha-readiness-diagnostic.md), a consolidação local preparatória está em [docs/release/alpha-candidate-summary.md](docs/release/alpha-candidate-summary.md), a solicitação futura de decisão de tag está em [docs/release/tag-decision-request.md](docs/release/tag-decision-request.md) e o histórico inicial está em [CHANGELOG.md](CHANGELOG.md).
 
@@ -146,62 +142,7 @@ O repositório possui empacotamento Python local mínimo em `pyproject.toml`, co
 
 O repositório também possui CI mínimo em GitHub Actions em `.github/workflows/ci.yml`. O workflow roda em pull requests e pushes para `main`, instala o projeto em modo desenvolvimento com o extra `dev`, executa `pytest`, valida links Markdown relativos com `python -m vercosa_ai_framework.cli.main docs-links`, executa `alpha-readiness` como diagnóstico não bloqueante e valida `python -m compileall src`. Esse CI não publica pacote, não cria release, não usa secrets, não executa missões, não chama providers e não substitui a validação local.
 
-Implementado em estado MVP ou contrato inicial:
-
-- Mission Runner local, fila em diretórios e integração opcional com eventos auditáveis em Python.
-- Integração mínima Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis e execução queue-backed.
-- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver por executor injetado.
-- Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado por executor de capability injetável, sem provider real, rede, banco, MCP ou API externa.
-- Runner seguro de uma missão e runner seguro em batch por scripts operacionais.
-- Composição obrigatória de contexto de missão pelo runner, com `AGENTS.md`, contrato base versionado, agente executor base, agentes operacionais especializados declarados e missão específica.
-- Formato compacto para missões novas a partir de `0103`, com frontmatter validável e negação por padrão para capacidades perigosas.
-- Policy Engine declarativo e Guardian Engine determinístico.
-- Usage/API Limit Guard para classificar sinais textuais de limite externo em logs já recebidos.
-- Context Router, Token Budget Manager e `ContextPackage` determinísticos.
-- Knowledge Hub com ingestão Markdown, store em memória, busca textual e adaptação para candidatos de contexto.
-- Model Selection Engine com catálogo em memória, políticas resolvidas opcionais e requisitos opcionais de orçamento de tokens.
-- Runtime Adapter inicial para OpenCode.
-- Provider Gateway, Tools, Skills, Capabilities e Agent Orchestrator como cadeia MVP de contratos.
-- Audit/Event Log em memória com persistência local JSONL opt-in e helpers opcionais para decisões e ciclo de vida de missão; a arquitetura dedicada está em [docs/architecture/audit-event-architecture.md](docs/architecture/audit-event-architecture.md).
-- CLI operacional inicial com `status`, `missions`, `validate`, `doctor`, `batch-summary`, `docs-links` e `alpha-readiness`.
-
-O que já funciona de forma factual e resumida:
-
-- fila local de missões;
-- execução segura individual;
-- execução segura em batch;
-- parada na primeira falha;
-- recuperação operacional por estado de missão e restauração quando a composição falha;
-- commit por missão quando o fluxo operacional configurado o exige;
-- bloqueio de push automático por padrão;
-- detecção textual de sinais de limite de uso/API em logs já recebidos;
-- testes e validações locais;
-- logs operacionais e eventos auditáveis opcionais;
-- diagnósticos pela CLI;
-- contrato base de execução;
-- formato compacto para missões novas;
-- composição determinística de contexto de missão.
-
-Ainda são futuros ou lacunas:
-
-- Fluxo público completo de ponta a ponta para usuário externo.
-- CLI predominantemente diagnóstica, sem executar missões.
-- Motores centrais ainda parcialmente integrados ou acionados por chamador explícito; Skill -> Tool -> Provider Gateway existe em dry-run e Policy/Context/Token/Model/Audit foram validados no caminho mínimo 0107, mas ainda não representam provider real, rede, banco, MCP, RAG, persistência externa ou fluxo público completo de produto.
-- Providers reais adiados.
-- Persistência externa adiada.
-- PostgreSQL, pgvector e RAG adiados.
-- Internacionalização adiada.
-- Tag alfa bloqueada até demonstração do fluxo de valor e cumprimento dos gates documentados.
-- RAG semântico.
-- Embeddings.
-- pgvector como adapter real.
-- Semantic Index.
-- Múltiplos providers reais.
-- Persistência externa de eventos.
-- Retenção e rotação de eventos auditáveis.
-- Internacionalização dos READMEs.
-
-Esses recursos não devem ser interpretados como implementados no estado atual.
+Em resumo, o projeto possui runners locais, CLI diagnóstica, contratos e MVPs dos motores centrais, integrações mínimas locais validadas e documentação operacional. Ainda não possui provider real validado, rede, banco, MCP, API externa, RAG, PostgreSQL, pgvector, múltiplos runtimes reais, release alfa publicada, tag ou pacote publicado. Esses limites não devem ser interpretados como implementados no estado atual.
 
 ## Comparação Com Outras Abordagens
 
@@ -387,6 +328,7 @@ A CLI não substitui `pytest`, `python3 -m compileall src`, os scripts seguros o
 - [Checklist de validação pós-batch](docs/operations/post-batch-validation-checklist.md)
 - [Exemplos operacionais](docs/examples/README.md)
 - [Estado atual](docs/alignment/current-state.md)
+- [Checklist canônico de implementação](docs/alignment/implementation-status.md)
 - [Roadmap](docs/alignment/roadmap.md)
 - [Padrão de README](docs/documentation/readme-standard.md)
 - [Padrão de idioma e commits](docs/documentation/language-and-commit-standard.md)

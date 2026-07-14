@@ -8,6 +8,8 @@ Este documento é o backlog estratégico canônico de missões futuras do Vercos
 
 Este backlog não é fila executável e não deve ser executado automaticamente.
 
+Estado factual de implementação, integração e validação fica em [docs/alignment/implementation-status.md](../alignment/implementation-status.md). Este backlog deve registrar direção, dependências e riscos de missões futuras, não repetir o checklist completo do estado atual nem todo o histórico concluído.
+
 ## Escopo
 
 Este documento orienta planejamento operacional. Ele não aprova implementação, não substitui Specs, não cria missões em `missions/queue` e não autoriza mudanças de código por si só.
@@ -51,29 +53,9 @@ Batch de 10 não elimina governança, revisão, rastreabilidade, critérios de a
 
 ## Estado Arquitetural Considerado
 
-- Mission Runner existe.
-- Runner seguro de uma missão existe.
-- Runner seguro em batch existe.
-- Batch de 3 foi validado para teste, retomada, blocos pequenos e recuperação.
-- Batch de 10 é funcional para blocos normais revisados e seguros, com ressalva de limites externos de API.
-- Batch é o padrão operacional quando seguro; execução individual permanece necessária para missões críticas, sensíveis, arquiteturais, incertas, investigativas, de recuperação ou de alto risco.
-- Context Router possui MVP determinístico.
-- Token Budget Manager possui MVP determinístico.
-- Knowledge Hub já se integra ao Context Router por candidatos explícitos.
-- Guardian Engine avalia `ContextPackage` quando chamado explicitamente.
-- Policy Engine possui contratos iniciais.
-- Policy Engine já se integra ao Guardian Engine por `ResolvedPolicySet` opcional.
-- Policy Engine já se integra ao Context Router por `ResolvedPolicySet` opcional.
-- Policy Engine já se integra ao Model Selection por políticas resolvidas opcionais.
-- Token Budget Manager já se integra ao Model Selection por requisitos mínimos de orçamento.
-- Usage/API Limit Guard inicial existe.
-- Usage/API Limit Guard já participa do fluxo operacional por classificação determinística de logs locais já produzidos.
-- Audit/Event Log já possui contratos iniciais em memória, helpers opcionais para decisões centrais e eventos de missão/batch.
-- Audit/Event Log já possui persistência local JSONL opt-in para eventos auditáveis em arquivo controlado.
-- O `MissionRunner` Python já possui integração opcional com eventos auditáveis quando recebe um `EventLog`.
-- CLI operacional inicial já possui `status`, `missions`, `batch-summary`, `validate` e `doctor`.
-- Exemplos operacionais iniciais existem em `docs/examples/`.
-- Integração com Provider Gateway em dry-run existe; persistência externa de eventos, providers reais, múltiplos runtimes reais, documentação pública completa e release alfa ainda são lacunas.
+Este backlog considera que o projeto já possui base local de missões, runners, CLI diagnóstica, contratos e integrações mínimas locais validadas, mas ainda não possui fluxo público completo com provider real, rede, banco, MCP, RAG, PostgreSQL, pgvector, múltiplos runtimes reais, observabilidade externa, tag, release ou pacote publicado.
+
+Detalhes e evidências devem ser consultados em [implementation-status.md](../alignment/implementation-status.md). O backlog não deve duplicar esse inventário.
 
 Atualização da missão 0101: a auditoria de aderência ao objetivo e escopo classificou o projeto como `ALINHADO COM RESSALVAS`. O ciclo 0101-0110 passa a ser tratado como ciclo de auditoria, alinhamento e integração mínima. Estimativas anteriores de missões futuras são provisórias e não devem ser lidas como quantidade final de missões antes da conclusão da 0110.
 
@@ -84,14 +66,14 @@ Objetivo do ciclo: comprovar que o que foi construído serve ao objetivo real do
 Missões orientadoras:
 
 - 0101: auditar aderência ao objetivo e escopo original, criar checklist canônico de implementação e registrar marcos históricos.
-- 0102: consolidar contrato base de execução, agente executor base, formato compacto de missão e composição obrigatória pelo runner. Status: em consolidação nesta missão.
+- 0102: consolidar contrato base de execução, agente executor base, formato compacto de missão e composição obrigatória pelo runner. Status: concluída.
 - 0103: explicitar o fluxo de valor principal, consumidores plausíveis, limites e comparação factual com OpenSpec e GitHub Spec Kit. Status: concluída documentalmente; `SpecificationProvider` registrado apenas como hipótese não implementada.
 - 0104: integrar Mission Runner, Workflow Engine e Task Queue em fluxo mínimo validável. Status: concluída como integração local por contratos injetáveis, sem Agent Orchestrator, capabilities, skills, tools ou providers.
 - 0105: integrar Task Queue, Agent Orchestrator e Capability Resolver sem dar acesso direto a tools/providers. Status: concluída como integração declarativa local por `AgentTaskExecutor`, sem executar Skills, Tools ou Providers.
 - 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado. Status: concluída como integração local por contratos injetáveis, sem provider real, rede, banco, MCP ou API externa.
-- 0107: integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo.
-- 0108: revisar Specs/ADRs afetadas pela integração mínima.
-- 0109: reduzir duplicação documental apontando para `docs/alignment/implementation-status.md` como checklist canônico.
+- 0107: integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo. Status: concluída como caminho mínimo local com dry-run e fakes/injeção explícita.
+- 0108: revisar Specs/ADRs afetadas pela integração mínima. Status: concluída documentalmente.
+- 0109: reduzir duplicação documental apontando para `docs/alignment/implementation-status.md` como checklist canônico. Status: em execução nesta missão documental.
 - 0110: reavaliar prontidão alfa com base no fluxo integrado mínimo, sem criar tag ou release.
 
 Restrições do ciclo:

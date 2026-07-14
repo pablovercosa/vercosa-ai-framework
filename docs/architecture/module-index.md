@@ -6,6 +6,8 @@ Links principais: [README principal](../../README.md) | [Mapa de arquitetura](..
 
 Mapear os módulos do Vercosa AI Framework, suas responsabilidades, status, Specs e relações arquiteturais dentro da camada de Harness Engineering para agentes de IA.
 
+Este documento é mapa navegável de módulos. O checklist factual de implementação, integração e validação fica em [docs/alignment/implementation-status.md](../alignment/implementation-status.md).
+
 ## Cadeia Arquitetural
 
 ```text

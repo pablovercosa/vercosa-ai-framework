@@ -8,6 +8,8 @@ Nenhum código fonte deve ser implementado apenas com base neste documento. Cada
 
 Backlog operacional detalhado de missões futuras: [Backlog estratégico de missões](../roadmap/mission-backlog.md).
 
+Estado factual de implementação, integração e validação: [implementation-status.md](implementation-status.md). Este roadmap deve orientar direção estratégica e critérios de avanço, não repetir o checklist completo de estado.
+
 Revisão arquitetural pós-integrações: [docs/architecture/post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md).
 
 Execução em batch é o fluxo operacional padrão para blocos de missões já revisadas e seguras em `missions/queue/`. O uso seguro está documentado no [playbook de execução em batch](../operations/batch-execution-playbook.md). Execução individual continua sendo o fluxo correto para missões sensíveis, arquiteturais, incertas, investigativas ou de recuperação.
@@ -30,50 +32,19 @@ Atualização da missão 0104: o fluxo mínimo Mission Runner -> Workflow Engine
 
 Atualização da missão 0105: a ponte Task Queue -> Agent Orchestrator -> Capability Resolver foi implementada por `AgentTaskExecutor` e resolução declarativa obrigatória quando configurada. A próxima prioridade passa a ser demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado, sem providers reais.
 
-Atualização da missão 0106: o caminho Capability -> Skill -> Tool -> Provider Gateway foi integrado em dry-run governado por `ResolvedCapabilityExecutor` injetável no Agent Orchestrator. A próxima prioridade passa a ser integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo sem introduzir providers reais.
+Atualização da missão 0106: o caminho Capability -> Skill -> Tool -> Provider Gateway foi integrado em dry-run governado por `ResolvedCapabilityExecutor` injetável no Agent Orchestrator, sem providers reais.
 
-## Estado Pós-Batch Funcional
+Atualização da missão 0107: Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection, Capability Executor, Provider Gateway em dry-run, Runtime Adapter fake/injetado e Audit/Event Log foram integrados no caminho mínimo local, sem provider real, rede, banco, MCP ou RAG.
 
-O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. O estado atual considerado por este roadmap inclui:
+Atualização da missão 0108: Specs e ADRs afetadas pelas integrações 0104 a 0107 foram revisadas e decisões arquiteturais comprovadas foram registradas em `docs/architecture/decisions/`.
 
-- Runner seguro de uma missão em `scripts/vaf-run-next-safe.sh`.
-- Runner seguro em batch em `scripts/vaf-run-batch-safe.sh`.
-- Batch de 3 validado como fluxo de teste, retomada, bloco pequeno e recuperação.
-- Batch de 10 funcional para blocos normais revisados e seguros, com ressalva de interrupções por limites externos de API, quota, rate limit ou billing.
-- Batch como padrão operacional quando seguro, conforme playbook e checklist operacionais.
-- Execução individual preservada para missões críticas, sensíveis, arquiteturais, investigativas, incertas, de recuperação ou de alto risco.
-- Policy Engine integrado ao Guardian Engine por `ResolvedPolicySet` opcional.
-- Policy Engine integrado ao Context Router por `ResolvedPolicySet` opcional.
-- Policy Engine integrado ao Model Selection por políticas resolvidas opcionais.
-- Token Budget Manager integrado ao Model Selection por requisitos mínimos de orçamento.
-- Usage/API Limit Guard integrado ao fluxo operacional por classificação determinística de logs já produzidos.
-- Audit/Event Log inicial em memória, com persistência local JSONL opt-in, helpers opcionais para decisões centrais e eventos de missão/batch.
-- CLI operacional inicial com `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links` e `alpha-readiness`.
-- Exemplos operacionais iniciais em `docs/examples/`.
-- Guia inicial de instalação local para desenvolvimento em `docs/getting-started/local-installation.md`.
-- Checklist documental de instalação limpa em `docs/getting-started/clean-install-checklist.md`, com execução real registrada em 2026-07-10 e resultado `REPROVADO`.
-- Guia inicial de contribuição em `CONTRIBUTING.md`.
-- Código de conduta inicial em `CODE_OF_CONDUCT.md` e diretrizes em `docs/conduct/`, ainda sem canal público definitivo para problemas de conduta.
-- Política inicial de segurança em `SECURITY.md` e documentação inicial em `docs/security/`, ainda sem canal público definitivo de vulnerabilidades.
-- Documentação legal inicial em `docs/legal/`, com política de uso responsável e licença final ainda pendente.
-- Templates iniciais de issue e pull request em `.github/`, sem processo público completo de triagem, merge ou suporte formal.
-- Checklist de prontidão para futura alfa pública em `docs/release/public-alpha-readiness.md`, sem criação de release, tag, pacote ou changelog de release versionado.
-- Política inicial de versionamento em `docs/release/versioning-policy.md` e plano da versão alfa em `docs/release/alpha-version-plan.md`, com `0.1.0-alpha.1` apenas como versão planejada.
-- Política inicial de release em `docs/release/release-policy.md` e checklist pré-tag em `docs/release/pre-release-checklist.md`, sem criação de tag, release, pacote ou automação de deploy.
-- Release notes alfa preliminares em `docs/release/release-notes-alpha.md`, como preparação para a futura `0.1.0-alpha.1`, sem release publicada.
-- Diagnóstico local de prontidão alfa em `docs/release/alpha-readiness-diagnostic.md`, executado em 2026-07-11 com classificação `NÃO PRONTO`, sem tag, release ou pacote.
-- Execução local do checklist pré-tag alfa em `docs/release/pre-tag-checklist-execution.md`, executada em 2026-07-11 com classificação `REPROVADO`, sem tag, release, pacote, push ou confirmação de CI remoto.
-- Consolidação local do candidato alfa em `docs/release/alpha-candidate-summary.md`, como fechamento preparatório do bloco 0091-0100, sem tag, release, pacote, push ou confirmação de CI remoto.
-- Solicitação futura de decisão de tag em `docs/release/tag-decision-request.md`, sem autorização automática.
-- Changelog inicial em `CHANGELOG.md`, sem data de release, tag ou promessa de estabilidade.
-- Empacotamento Python local mínimo em `pyproject.toml`, com `setuptools`, versão PEP 440 `0.1.0a1`, pacote em `src/vercosa_ai_framework` e entrypoint local `vaf`, sem publicação de pacote.
-- CI público mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest`, validação local de links Markdown relativos, diagnóstico não bloqueante `alpha-readiness` e `python -m compileall src`, sem secrets, providers, banco, missões, release ou publicação de pacote.
-- Revisão arquitetural pós-integrações em `docs/architecture/post-integration-architecture-review.md`, sem implementação nova.
-- Integração mínima Mission Runner -> Workflow Engine -> Task Queue validada por `tests/test_mission_workflow_task_integration.py`.
-- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver validada por `tests/test_task_agent_capability_integration.py`.
-- Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run validada por `tests/test_capability_skill_tool_provider_dry_run.py`, sem provider real, rede, banco, MCP ou API externa.
+Atualização da missão 0109: `docs/alignment/implementation-status.md` foi consolidado como checklist factual canônico. Este roadmap deve referenciar essa fonte em vez de duplicar inventários de estado.
 
-Esse estado não implica integração real com providers, billing real, observabilidade externa, persistência externa de eventos, RAG semântico, embeddings, pgvector ou Semantic Index.
+## Estado Considerado Pelo Roadmap
+
+O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. Para planejar próximos blocos, este roadmap considera o resumo narrativo em [current-state.md](current-state.md), a revisão arquitetural em [post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md) e o checklist factual em [implementation-status.md](implementation-status.md).
+
+Resumo estratégico: há base local de missões, runners, CLI diagnóstica, contratos e integrações mínimas locais. Ainda não há provider real, rede, banco, MCP, API externa, RAG, PostgreSQL, pgvector, Semantic Index, múltiplos runtimes reais, observabilidade externa, tag, release ou pacote publicado.
 
 ## Bloco 0: Congelamento De Alinhamento
 

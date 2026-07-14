@@ -6,9 +6,11 @@ Links principais: [README principal](../../README.md) | [Estado atual](../alignm
 
 Registrar marcos factuais por faixa de missões concluídas. Este documento não é backlog e não autoriza novas missões.
 
-A série versionada disponível em `missions/done/` começa em `0002`. Esta auditoria não presume, sem evidência, que uma missão `0001` foi perdida ou removida.
+A série versionada disponível em `missions/done/` começa em `0002`. Não existe evidência suficiente de que uma missão `0001` tenha sido perdida, apagada ou executada.
 
-Na leitura atual, `missions/done/` contém arquivos de `0002` a `0100`, totalizando 99 entradas. A numeração alcançada sugere 99 IDs nessa faixa e não há inconsistência apenas por ausência de `0001`, pois a série disponível começa em `0002`.
+O identificador `0001` fica reservado como marco histórico da fundação prévia à série versionada. Essa reserva evita renumeração retroativa, não representa missão concluída, não aumenta contadores de missões executadas e não deve aparecer em `missions/queue`, `missions/running`, `missions/done` ou `missions/failed`.
+
+Antes da execução da missão 0109, `missions/done/` continha arquivos de `0002` a `0108`, totalizando 107 missões concluídas. O maior identificador disponível era `0108`, mas a quantidade factual concluída era 107 porque `0001` é reservado e não executado.
 
 ## 0002-0025
 
@@ -135,9 +137,9 @@ Limitações:
 
 Resultado: preparação alfa ficou documentada de forma conservadora, mas a decisão correta no estado atual é adiar publicação até resolver bloqueios e demonstrar fluxo integrado mínimo.
 
-## 0101-0102
+## 0101-0108
 
-Objetivo da faixa: auditar aderência ao objetivo original e consolidar infraestrutura de execução de missões para reduzir repetição operacional.
+Objetivo da faixa: auditar aderência ao objetivo original, consolidar infraestrutura de execução de missões, explicitar fluxo de valor, integrar caminhos mínimos entre motores centrais e revisar Specs/ADRs afetadas.
 
 Principais entregas:
 
@@ -147,9 +149,21 @@ Principais entregas:
 - Agente executor base operacional em `.opencode/agents/`.
 - Formato compacto de missão para a série a partir de `0103`.
 - Compositor obrigatório de contexto integrado ao runner shell.
+- README principal revisado para explicitar fluxo de valor, consumidores plausíveis, limites e comparação factual com OpenSpec e GitHub Spec Kit.
+- Integração mínima Mission Runner -> Workflow Engine -> Task Queue por contratos injetáveis.
+- Integração mínima Task Queue -> Agent Orchestrator -> Capability Resolver.
+- Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado.
+- Integração mínima local de Policy, Context Router, Token Budget, Guardian, Model Selection e Audit/Event Log no caminho de execução governado.
+- Revisão documental de Specs e ADRs afetadas pelas integrações 0104 a 0107.
 
 Limitações:
 
 - A composição de prompt não substitui sandbox técnico completo.
 - Missões legadas continuam compatíveis e não foram reescritas.
-- O fluxo arquitetural Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider Gateway já possui demonstração mínima em dry-run governado; providers reais, rede, banco, MCP, API externa e integração global de política/contexto/auditoria permanecem pendentes.
+- O fluxo arquitetural Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider Gateway possui demonstração mínima local e dry-run governado, mas providers reais, rede, banco, MCP, API externa, RAG, PostgreSQL, pgvector, múltiplos runtimes reais e release alfa permanecem fora do estado validado.
+
+Resultado: o ciclo 0101-0108 alinhou o projeto ao objetivo original e comprovou integrações mínimas locais, preservando limites explícitos e decisões pendentes para ciclos futuros.
+
+## Observação Sobre A Missão 0109
+
+A missão 0109 é documental e trata da redução de duplicação entre fontes de estado. Após sua conclusão pelo runner, contadores futuros devem considerar `0109` conforme o estado factual das pastas de missão, sem usar o maior ID como sinônimo automático de quantidade executada.
