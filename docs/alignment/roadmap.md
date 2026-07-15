@@ -40,7 +40,9 @@ Atualização da missão 0108: Specs e ADRs afetadas pelas integrações 0104 a 
 
 Atualização da missão 0109: `docs/alignment/implementation-status.md` foi consolidado como checklist factual canônico. Este roadmap deve referenciar essa fonte em vez de duplicar inventários de estado.
 
-Atualização da missão 0110: a prontidão alfa foi reavaliada como `NÃO PRONTO` em `docs/release/alpha-readiness-reassessment-0110.md`. O próximo ciclo deve priorizar licença, validação limpa, canais públicos, revisão final de release notes, reexecução do checklist pré-tag, confirmação de CI no candidato final e autorização explícita antes de qualquer tag, release ou pacote.
+Atualização da missão 0110: a prontidão alfa foi reavaliada como `NÃO PRONTO` em `docs/release/alpha-readiness-reassessment-0110.md`. O próximo ciclo deveria priorizar licença, validação limpa, canais públicos, revisão final de release notes, reexecução do checklist pré-tag, confirmação de CI no candidato final e autorização explícita antes de qualquer tag, release ou pacote. A licença foi tratada posteriormente na missão 0111.
+
+Atualização da missão 0111: a licença foi adotada como GNU Affero General Public License v3.0 only, `AGPL-3.0-only`, com `LICENSE` criado e metadados de empacotamento alinhados. Isso remove o bloqueio factual de licença ausente, mas não autoriza tag, release ou pacote.
 
 ## Estado Considerado Pelo Roadmap
 
@@ -217,7 +219,7 @@ Ações recomendadas:
 5. Revisar Specs/ADRs afetadas pela integração mínima nas missões 0104 e 0105.
 6. Atualizar Specs/ADRs apenas quando a integração mínima alterar fronteiras arquiteturais.
 7. Manter CLI `missions`, `batch-summary`, `docs-links` e `alpha-readiness` como diagnósticos somente leitura.
-8. Resolver pendências mínimas de alfa somente depois do fluxo integrado mínimo ou em paralelo sem criar tag: licença, instalação limpa, CI remoto, release notes finais e checklist pré-tag.
+8. Resolver pendências mínimas de alfa somente depois do fluxo integrado mínimo ou em paralelo sem criar tag: instalação limpa, canais públicos, CI remoto, release notes finais e checklist pré-tag.
 9. Adiar Semantic Index, embeddings, pgvector, RAG semântico, providers reais e múltiplos runtimes até o fluxo central estar demonstrado.
 10. Internacionalizar em fases somente após estabilizar conteúdo canônico em português do Brasil: documentação pública, depois CLI, depois demais mensagens expostas.
 
@@ -251,7 +253,7 @@ Permanecem futuros e não devem ser tratados como implementados:
 - Release notes finais revisadas para publicação real.
 - Diagnóstico local de prontidão alfa aprovado ou aprovado com ressalvas explicitamente aceitas.
 - Checklist pré-tag local aprovado ou aprovado com ressalvas explicitamente aceitas.
-- Licença final em `LICENSE`.
+- Revalidação de licença e metadados de empacotamento no candidato final.
 - Processo público maduro de segurança e canal definitivo de vulnerabilidades.
 - Release alfa.
 - Tag `v0.1.0-alpha.1`, release GitHub e changelog de release versionado.

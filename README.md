@@ -272,7 +272,9 @@ Conduta inicial para colaboração: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ## Segurança, Licença E Uso Responsável
 
-A licença final do projeto ainda está pendente e deve ser definida antes de uma release pública. O estado atual da decisão está documentado em [Notas de licença](docs/legal/license-notes.md).
+O Vercosa AI Framework é licenciado sob a GNU Affero General Public License v3.0 only, com expressão SPDX `AGPL-3.0-only`. O texto jurídico canônico está em [LICENSE](LICENSE), e as notas informativas estão em [Notas de licença](docs/legal/license-notes.md).
+
+Em resumo não jurídico, a AGPL preserva reciprocidade de código aberto em distribuição e em certos usos modificados por rede. O texto do [LICENSE](LICENSE) prevalece sobre qualquer resumo documental.
 
 Use o projeto de forma conservadora conforme a [política inicial de uso responsável](docs/legal/usage-policy.md), a [política inicial de segurança](SECURITY.md) e o [código de conduta inicial](CODE_OF_CONDUCT.md). Esta documentação não substitui revisão jurídica formal, processo público maduro de segurança, governança comunitária madura ou validação humana antes de executar missões, comandos, tools, providers ou runtimes.
 

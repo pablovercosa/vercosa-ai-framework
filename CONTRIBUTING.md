@@ -252,7 +252,13 @@ Consulte também a [política inicial de segurança](SECURITY.md) e o guia de [r
 
 ## Licença E Uso Responsável
 
-O projeto ainda não possui `LICENSE` final. A decisão de licença está registrada como pendente em [docs/legal/license-notes.md](docs/legal/license-notes.md) e deve ser resolvida antes de uma release pública.
+O projeto é licenciado sob GNU Affero General Public License v3.0 only, com expressão SPDX `AGPL-3.0-only`. O texto jurídico canônico está em [LICENSE](LICENSE), e notas informativas estão em [docs/legal/license-notes.md](docs/legal/license-notes.md).
+
+Contribuições aceitas passam a integrar o projeto sob `AGPL-3.0-only`. Ao contribuir, o contribuidor deve possuir direito de submeter o código, documentação ou outro material enviado.
+
+Não inclua código incompatível, sem autorização ou com origem/licença incerta. Dependências, trechos de terceiros e exemplos incorporados devem ter licença identificada e compatibilidade avaliada antes da inclusão.
+
+Esta política inicial não cria CLA e não exige transferência de copyright ao mantenedor.
 
 Contribuições devem respeitar a [política inicial de uso responsável](docs/legal/usage-policy.md). Não inclua secrets, credenciais, providers externos, dependências novas ou automações com efeitos destrutivos sem missão específica, justificativa e revisão proporcional ao risco.
 

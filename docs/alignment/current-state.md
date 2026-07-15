@@ -72,7 +72,7 @@ Esse estado é apenas documental:
 - não há garantia de estabilidade de produção;
 - não há promessa de compatibilidade de API.
 
-Antes de qualquer publicação, ainda são necessárias validações aplicáveis, resolução ou aceitação explícita de bloqueios, confirmação de CI remoto quando houver push, decisão explícita de tag/release e revisão das pendências de licença, instalação limpa e distribuição.
+Antes de qualquer publicação, ainda são necessárias validações aplicáveis, resolução ou aceitação explícita de bloqueios, confirmação de CI remoto quando houver push, decisão explícita de tag/release e revisão das pendências de instalação limpa, canais públicos e distribuição. A licença foi adotada como `AGPL-3.0-only`, mas isso não publica alfa, tag ou pacote.
 
 ## Responsabilidade Documental
 

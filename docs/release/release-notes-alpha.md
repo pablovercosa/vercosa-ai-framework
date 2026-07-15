@@ -10,6 +10,7 @@ Status conservador:
 - tag criada: não;
 - pacote publicado: não;
 - publicação em PyPI: não prometida;
+- licença planejada para a futura alfa: GNU Affero General Public License v3.0 only, `AGPL-3.0-only`;
 - diagnóstico local de prontidão alfa: executado em 2026-07-11 com classificação `NÃO PRONTO`;
 - checklist pré-tag local: executado em 2026-07-11 com classificação `REPROVADO`;
 - consolidação local do candidato alfa: registrada em [alpha-candidate-summary.md](alpha-candidate-summary.md), sem publicar release.
@@ -60,6 +61,7 @@ No estado atual do repositório, a alfa planejada consolida os seguintes itens c
 - `CHANGELOG.md` inicial.
 - CI mínimo em `.github/workflows/ci.yml`, com instalação editável, `pytest` e `python -m compileall src`, sem publicação de pacote ou release.
 - Empacotamento Python local mínimo em `pyproject.toml`, com versão PEP 440 `0.1.0a1` e entrypoint local `vaf` para instalação editável.
+- Licença GNU Affero General Public License v3.0 only em `LICENSE`, com expressão SPDX `AGPL-3.0-only` nos metadados de empacotamento.
 
 Esses itens não tornam o projeto pronto para produção e não significam que o fluxo completo Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider esteja integrado de ponta a ponta.
 
@@ -76,7 +78,7 @@ Esses itens não tornam o projeto pronto para produção e não significam que o
 - A validação de instalação limpa registrada está `REPROVADO` até nova execução aprovada ou decisão explícita de exceção.
 - O diagnóstico local de prontidão alfa registrado está `NÃO PRONTO` até resolução dos bloqueios ou decisão explícita de exceção compatível com o risco.
 - O checklist pré-tag local registrado está `REPROVADO` até resolução dos bloqueios ou decisão explícita de exceção compatível com o risco.
-- `LICENSE` final ainda está pendente no repositório.
+- A licença foi adotada como `AGPL-3.0-only`, mas isso não cria release, tag ou pacote publicado.
 - Não há RAG semântico.
 - Não há embeddings.
 - Não há pgvector como adapter real.
@@ -151,7 +153,7 @@ Antes de qualquer release real, ainda é necessário:
 - revisar `CHANGELOG.md`;
 - revisar estas notas preliminares e transformá-las, se aprovado, em release notes finais;
 - confirmar instalação limpa com resultado aprovado ou exceção explícita aceita;
-- confirmar licença e criar `LICENSE`, se a decisão for aprovada;
+- revalidar a licença e os metadados de empacotamento no candidato final;
 - obter autorização explícita para criar tag;
 - obter autorização explícita para publicar release;
 - decidir se haverá pacote ou somente código-fonte.

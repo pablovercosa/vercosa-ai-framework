@@ -81,7 +81,7 @@ Restrições do ciclo:
 - Não implementar PostgreSQL, pgvector ou RAG antes de decisão posterior.
 - Não iniciar internacionalização antes de estabilizar documentação canônica em português do Brasil.
 - Não criar novos providers reais antes de demonstrar Provider Gateway em dry-run governado.
-- Não criar tag alfa enquanto instalação limpa, licença, canais públicos, autorização explícita, CI remoto no candidato final e checklist pré-tag atualizado estiverem pendentes ou sem exceção explícita compatível com o risco.
+- Não criar tag alfa enquanto instalação limpa, canais públicos, autorização explícita, CI remoto no candidato final e checklist pré-tag atualizado estiverem pendentes ou sem exceção explícita compatível com o risco.
 - Não criar novos arquivos em `missions/queue` apenas por este backlog.
 
 ## Itens Já Concluídos Ou Absorvidos
@@ -109,7 +109,7 @@ Os itens abaixo não devem ser recriados como novas missões executáveis sem re
 - Batch como padrão operacional quando seguro.
 - Guia inicial de instalação local para desenvolvimento.
 - Guia inicial de contribuição.
-- Base documental legal inicial, com política de uso responsável e notas de licença pendente.
+- Base documental legal inicial, com política de uso responsável e licença adotada como `AGPL-3.0-only`.
 - `SECURITY.md` inicial e documentação inicial em `docs/security/`, sem canal público definitivo de vulnerabilidades ainda.
 - `CODE_OF_CONDUCT.md` inicial e documentação inicial em `docs/conduct/`, sem canal público definitivo para problemas de conduta ainda.
 - Templates iniciais de issue e pull request em `.github/`, sem processo público completo ou promessa de triagem madura.
@@ -278,11 +278,11 @@ Objetivo da fase: preparar uma release alfa rastreável, honesta sobre limites e
 
 Por que a fase existe: a primeira release precisa consolidar licença, documentação mínima, tag e critérios de estabilidade do MVP.
 
-Riscos se a fase for pulada: distribuição sem licença, tag prematura, changelog incompleto e usuários interpretando componentes futuros como entregues.
+Riscos se a fase for pulada: distribuição com metadados legais não revalidados, tag prematura, changelog incompleto e usuários interpretando componentes futuros como entregues.
 
 Missões prováveis:
 
-- Criar licença se ainda não existir.
+- Revalidar licença e metadados de empacotamento no candidato final.
 - Definir política pública madura de vulnerabilidades e canal de reporte.
 - Revisar checklist de release alfa.
 - Executar checklist pré-tag antes de qualquer tag alfa.
@@ -470,7 +470,7 @@ Objetivo: definir licença open source do projeto.
 Escopo permitido: adicionar arquivo de licença aprovado e referência discreta na documentação.
 Escopo proibido: escolher licença sem decisão do mantenedor ou misturar texto de licenças incompatíveis.
 Dependências: decisão explícita de licença.
-Status: base documental criada em `docs/legal/`; licença final permanece pendente por falta de decisão explícita.
+Status: concluído pela missão 0111 com `LICENSE`, `AGPL-3.0-only`, metadados de empacotamento e documentação legal alinhados.
 Critérios de aceite resumidos: licença existe, é referenciada e não conflita com objetivos do projeto.
 
 Missões futuras relacionadas:
@@ -496,7 +496,7 @@ Missões futuras relacionadas:
 - Resolver bloqueios da execução local do checklist pré-tag antes de qualquer missão de tag.
 - Confirmar CI remoto após push do bloco atual quando aplicável.
 - Revisar release notes alfa finais antes da publicação.
-- Revisar e criar `LICENSE` antes da release pública.
+- Revalidar `LICENSE` e metadados de licença antes da release pública.
 - Decidir explicitamente se haverá pacote publicado ou apenas código-fonte na alfa.
 - Executar validação final pós-batch.
 - Fazer push do bloco somente após validação local e revisão.
@@ -653,7 +653,7 @@ Pendências sustentadas por essa execução:
 - Reexecutar validação limpa após o ajuste do empacotamento local mínimo para `setuptools`.
 - Garantir diretórios operacionais obrigatórios em clones limpos.
 - Remover acoplamento de `scripts/vaf-status.sh` ao caminho absoluto do checkout principal.
-- Resolver licença pendente e decidir quando declarar metadado de licença definitivo no pacote local.
+- Reexecutar validação limpa após adoção de `AGPL-3.0-only` e metadados definitivos de licença no pacote local.
 - Reexecutar a validação limpa antes da tag alfa.
 
 33. Código sugerido: `M033-validar-links-markdown`

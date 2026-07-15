@@ -10,6 +10,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 
 ### Adicionado
 
+- Licença GNU Affero General Public License v3.0 only em `LICENSE`, com expressão SPDX `AGPL-3.0-only` nos metadados de empacotamento Python e notas legais atualizadas.
 - Comparação factual pública entre VAF, OpenSpec e GitHub Spec Kit em `docs/comparacoes.md`, com separação entre VAF atual e VAF pretendido.
 - Auditoria estratégica de aderência ao objetivo e escopo original em `docs/audits/objective-and-scope-alignment-audit.md`, com classificação geral `ALINHADO COM RESSALVAS`.
 - Checklist canônico factual de implementação em `docs/alignment/implementation-status.md`, separando planejado, implementado, integrado, validado, adiado, fora do escopo e em revisão.
@@ -60,6 +61,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 
 ### Alterado
 
+- Empacotamento Python passa a declarar `license = "AGPL-3.0-only"`, `license-files = ["LICENSE"]` e `setuptools>=77.0.3` para metadados modernos de licença.
 - README principal reorganizado para explicitar problema resolvido, fluxo de valor pretendido, consumidores plausíveis, limites, estado real e relação do VAF com Mission Runner, OpenSpec e GitHub Spec Kit.
 - Estado atual, roadmap, perguntas em aberto e backlog estratégico alinhados à auditoria de escopo, priorizando fluxo de valor integrado antes de nova preparação de tag alfa.
 - README principal consolidado com a identidade pública do VAF como framework de Harness Engineering, sem tratar modelo, runtime ou provider como núcleo do projeto.
@@ -82,7 +84,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Validação real de instalação limpa em cópia temporária local, registrada como `REPROVADO`, sem criar release, tag ou pacote.
 - Diagnóstico local de prontidão alfa executado em checkout local, com ambiente, branch, commit, estado das missões, estado Git, comandos de CLI, links Markdown, `pytest`, `compileall`, bloqueios, ressalvas e recomendações registrados.
 - Checklist pré-tag alfa local executado como gate documental, com ambiente, branch, commit, estado das missões, estado Git, comandos de CLI, links Markdown, `pytest`, `compileall`, CI remoto pendente, bloqueios, ressalvas e recomendações registrados.
-- Candidato alfa local consolidado como preparação para decisão futura, mantendo pendentes validação final pós-batch, push, confirmação de CI remoto, revisão final de release notes, revisão do changelog, licença e autorização explícita para tag.
+- Candidato alfa local consolidado como preparação para decisão futura, mantendo pendentes validação final pós-batch, push, confirmação de CI remoto, revisão final de release notes, revisão do changelog e autorização explícita para tag; a licença foi resolvida posteriormente como `AGPL-3.0-only`.
 - `SECURITY.md` inicial, com política conservadora de segurança, limites atuais e orientação para reporte responsável.
 - `CODE_OF_CONDUCT.md` inicial, com expectativas de conduta e limites de governança comunitária nesta fase.
 - Política inicial de uso responsável em `docs/legal/usage-policy.md`.
@@ -110,7 +112,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Sem versão alfa publicada.
 - Sem pacote publicado.
 - Sem publicação em PyPI.
-- Sem licença final em `LICENSE`; por isso o metadado de licença do pacote local não declara uma licença inventada nesta fase.
+- Licença final adotada como `AGPL-3.0-only`; isso remove o bloqueio factual de `LICENSE` ausente, mas não publica release, tag ou pacote.
 - Sem matriz ampla de CI, lint automatizado, validação de instalação limpa automatizada ou workflow de release.
 - Sem RAG semântico.
 - Sem embeddings.
@@ -119,7 +121,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Sem persistência externa de eventos.
 - Sem múltiplos providers reais em produção.
 - Sem internacionalização dos READMEs.
-- Instalação limpa atual reprovada até nova execução aprovada ou decisão explícita sobre as ressalvas remanescentes; o empacotamento local mínimo foi ajustado após a validação reprovada, mas diretórios operacionais vazios, script de status acoplado a caminho absoluto e licença pendente ainda exigem tratamento.
+- Instalação limpa atual reprovada até nova execução aprovada ou decisão explícita sobre as ressalvas remanescentes; o empacotamento local mínimo e a licença foram ajustados após a validação reprovada, mas diretórios operacionais vazios, script de status acoplado a caminho absoluto e reexecução limpa ainda exigem tratamento.
 - Sem promessa de compatibilidade futura, SLA ou prontidão para produção.
 
 ### Futuro

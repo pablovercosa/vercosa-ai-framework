@@ -1,55 +1,62 @@
 # Notas De Licença
 
-Links principais: [README legal](README.md) | [Política de uso responsável](usage-policy.md) | [Perguntas em aberto](../alignment/open-questions.md) | [README principal](../../README.md)
+Links principais: [README legal](README.md) | [Licença](../../LICENSE) | [Política de uso responsável](usage-policy.md) | [Perguntas em aberto](../alignment/open-questions.md) | [README principal](../../README.md)
 
 ## Objetivo
 
-Registrar o estado atual da licença do Vercosa AI Framework e as decisões pendentes antes de uma futura release pública/alfa.
+Registrar a decisão de licença do Vercosa AI Framework e explicar seus efeitos gerais em linguagem simples.
 
-Este documento é informativo, não é aconselhamento jurídico e não substitui revisão jurídica formal.
+Este documento é informativo, não é aconselhamento jurídico e não substitui revisão jurídica formal. Em caso de conflito ou dúvida, o texto jurídico vinculante é o arquivo [LICENSE](../../LICENSE).
 
-## Estado Atual
+## Decisão Adotada
 
-No estado atual do repositório, não existe arquivo `LICENSE`, `LICENSE.md` ou equivalente.
+Em 2026-07-15, o mantenedor decidiu adotar a GNU Affero General Public License v3.0 only para o Vercosa AI Framework.
 
-Como a documentação existente afirma que o projeto é open source, mas ainda não registra uma escolha explícita entre licenças reconhecidas, esta missão não cria um `LICENSE` final. A decisão de licença permanece pendente e deve ser resolvida antes de release pública.
+Identificador SPDX oficial usado pelo projeto:
 
-## Por Que A Decisão Ficou Pendente
+```text
+AGPL-3.0-only
+```
 
-A licença não foi criada nesta missão por prudência, porque:
+A decisão usa somente a versão 3 da licença. O projeto não adota a expressão `AGPL-3.0-or-later` e não concede autorização para relicenciamento unilateral fora dos termos aplicáveis.
 
-- não há decisão documental clara no repositório indicando MIT, Apache-2.0, BSD-3-Clause, GPL ou outra licença específica;
-- a escolha afeta contribuições, redistribuição, integração com terceiros e expectativas de uso;
-- o projeto ainda está em desenvolvimento e caminha para uma futura alfa pública;
-- a missão não deve transformar documentação inicial em aconselhamento jurídico.
+## Motivo Declarado
 
-## Alternativas Comuns Consideradas
+O motivo declarado pelo mantenedor é preservar reciprocidade do código aberto, especialmente em cenários nos quais modificações possam ser disponibilizadas como serviço por rede.
 
-As alternativas abaixo são citadas de forma conceitual, sem copiar textos legais longos:
+## Resumo Conservador
 
-- MIT: licença permissiva simples, frequentemente usada em projetos open source que desejam baixa fricção de adoção.
-- Apache-2.0: licença permissiva mais detalhada, frequentemente escolhida quando o projeto quer tratar patentes e condições de redistribuição com mais explicitude.
-- BSD-3-Clause: licença permissiva com cláusulas adicionais de atribuição e limitação de endosso.
-- GPL: família de licenças copyleft, geralmente usada quando o projeto deseja que redistribuições derivadas preservem obrigações de compartilhamento de código sob termos compatíveis.
-- licença proprietária: modelo em que o uso, redistribuição e modificação dependem de autorização mais restrita do titular.
+A AGPL-3.0-only permite uso, estudo, modificação, distribuição e uso comercial sob os termos da licença.
 
-## Diferenças Gerais Em Linguagem Não Jurídica
+Em linguagem não jurídica:
 
-Licença permissiva permite uso, modificação e redistribuição com poucas condições, mantendo avisos e limites definidos no texto da licença escolhida.
+- uso: executar o software é permitido nos termos da licença;
+- modificação: alterar o software é permitido, observadas as condições aplicáveis;
+- distribuição: ao distribuir cópias ou versões modificadas, é necessário preservar avisos, licença e fornecer o código-fonte correspondente nos casos cobertos;
+- serviço por rede: se uma versão modificada permitir interação remota por rede, a licença exige oferecer aos usuários dessa versão uma forma de receber o código-fonte correspondente dessa versão.
 
-Licença copyleft permite uso, modificação e redistribuição, mas normalmente exige que obras derivadas ou redistribuições sigam termos compatíveis de compartilhamento.
+Esse resumo não significa que toda modificação privada precise ser publicada. Também não significa que qualquer programa separado que apenas se comunique com o VAF se torne automaticamente AGPL. A análise depende da forma de uso, modificação, combinação, distribuição e disponibilização por rede.
 
-Licença proprietária restringe uso, modificação ou redistribuição conforme autorização específica do titular.
+## Obrigações Gerais
 
-Licença pendente significa que o projeto ainda não deve ser tratado como pronto para redistribuição pública ampla, porque os termos finais de uso e contribuição ainda não foram definidos.
+Nos casos cobertos pela licença, podem existir obrigações como:
 
-## Pontos A Resolver Antes De Release Pública
+- fornecer o código-fonte correspondente;
+- preservar avisos de copyright, avisos legais e o texto da licença;
+- indicar modificações quando aplicável;
+- não impor restrições adicionais incompatíveis com a licença;
+- manter a ausência de garantia conforme o texto da licença.
 
-Antes de uma release pública/alfa, o projeto deve decidir:
+O uso comercial é permitido sob os termos da AGPL-3.0-only. A licença também contém cláusulas de ausência de garantia e limitação de responsabilidade.
 
-- qual licença final será adotada;
-- se a licença será permissiva, copyleft ou outro modelo;
-- se haverá necessidade de política de contribuição adicional;
-- como contribuições externas serão aceitas sob a licença escolhida;
-- se será criado `NOTICE` ou documentação complementar;
-- como a política de segurança pública será publicada.
+## Contribuições E Terceiros
+
+Contribuições aceitas passam a integrar o projeto sob `AGPL-3.0-only`, conforme descrito em [CONTRIBUTING.md](../../CONTRIBUTING.md).
+
+Dependências, trechos de terceiros, exemplos incorporados e integrações complexas devem ter licença identificada e compatibilidade avaliada antes de inclusão. Este projeto não cria, por esta decisão, um CLA nem exige transferência de copyright ao mantenedor.
+
+## Limites Deste Documento
+
+Este documento não é aconselhamento jurídico individualizado. Ele não substitui o arquivo [LICENSE](../../LICENSE), não reinterpreta a AGPL e não autoriza exceções de licença.
+
+Para integrações complexas, redistribuição ampla, ofertas como serviço, combinação com outros projetos, dependências de terceiros ou uso comercial relevante, recomenda-se análise jurídica apropriada.

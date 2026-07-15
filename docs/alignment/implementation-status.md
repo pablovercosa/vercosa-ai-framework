@@ -45,7 +45,7 @@ Use esta matriz para evitar duplicação entre documentos vivos. Documentos hist
 | Runners | Composição obrigatória de contexto de missão | `src/vercosa_ai_framework/missions/prompt_composer.py`, `scripts/vaf-run-one-mission.sh`, testes de composição | Validado por testes locais; não implementa sandbox técnico completo. |
 | CLI | Comandos `status`, `missions`, `batch-summary`, `validate`, `doctor`, `docs-links`, `alpha-readiness` | `src/vercosa_ai_framework/cli/main.py`, testes CLI | CLI é leitura/diagnóstico; não executa missões. |
 | Testes | Suíte pytest | `tests/` | Testes cobrem contratos e integrações parciais; não substituem fluxo ponta a ponta. |
-| Empacotamento | Instalação editável local planejada com entrypoint `vaf` | `pyproject.toml`, `tests/test_python_packaging.py` | Validado por testes; reexecução limpa ainda pendente. |
+| Empacotamento | Instalação editável local planejada com entrypoint `vaf` e licença `AGPL-3.0-only` | `pyproject.toml`, `LICENSE`, `tests/test_python_packaging.py` | Validado por testes locais; reexecução limpa ainda pendente. |
 | CI | Workflow mínimo localmente definido | `.github/workflows/ci.yml` | Existe; confirmação remota depende de push/execução GitHub. |
 | Documentação | README, contribuição, segurança, conduta, release e arquitetura | `README.md`, `docs/`, `CHANGELOG.md` | Ampla e factual, mas volumosa. |
 | Documentação | Comparação pública com OpenSpec e GitHub Spec Kit | `docs/comparacoes.md` | Documental; não implementa integração nem adapter. |
@@ -87,7 +87,7 @@ Use esta matriz para evitar duplicação entre documentos vivos. Documentos hist
 | Arquitetura | Composição de prompt/contexto | `prompt_composer` e runner shell | Integrado ao fluxo shell; ainda não substitui Context Router arquitetural. |
 | Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Integrado em dry-run governado no fluxo 0106 e integrado ao caminho mínimo governado 0107; providers reais continuam fora do escopo. |
 | Auditoria | Eventos de decisões centrais | `audit/integrations.py` | Helpers opcionais; não obrigatórios em todos os fluxos. |
-| Release | Preparação alfa | `docs/release/` | Reavaliação 0110 classificada como `NÃO PRONTO`; fluxo mínimo integrado, testes locais, compileall e CI informado para 0109 são positivos, mas licença, instalação limpa, canais públicos, autorização, tag, release e pacote seguem bloqueando alfa pública. |
+| Release | Preparação alfa | `docs/release/` | Reavaliação 0110 classificada como `NÃO PRONTO`; a missão 0111 removeu o bloqueio factual de `LICENSE` ausente, mas instalação limpa, canais públicos, autorização, tag, release e pacote seguem bloqueando alfa pública. |
 | Segurança | Política pública inicial | `SECURITY.md` | Falta canal público definitivo e processo maduro. |
 | Produção | CI mínimo | `.github/workflows/ci.yml` | Sem matriz ampla, lint, release workflow ou validação limpa automatizada. |
 

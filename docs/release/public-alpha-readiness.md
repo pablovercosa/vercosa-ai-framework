@@ -30,7 +30,7 @@ Execução local do checklist pré-tag alfa registrada em 2026-07-11: [pre-tag-c
 
 Consolidação local do candidato alfa registrada em [alpha-candidate-summary.md](alpha-candidate-summary.md), com solicitação futura de decisão em [tag-decision-request.md](tag-decision-request.md). Esses documentos são preparatórios: não declaram alfa publicada, não criam tag, não publicam release, não publicam pacote e não substituem autorização explícita.
 
-Reavaliação factual após as integrações mínimas e a consolidação documental registrada em [alpha-readiness-reassessment-0110.md](alpha-readiness-reassessment-0110.md): classificação `NÃO PRONTO`. O relatório reconhece os gates atendidos de fluxo mínimo integrado, testes locais, compilação, documentação canônica e CI remoto informado para a missão 0109, mas mantém bloqueios persistentes de licença, instalação limpa, canais públicos, autorização, tag, release e pacote.
+Reavaliação factual após as integrações mínimas e a consolidação documental registrada em [alpha-readiness-reassessment-0110.md](alpha-readiness-reassessment-0110.md): classificação `NÃO PRONTO`. O relatório reconhece os gates atendidos de fluxo mínimo integrado, testes locais, compilação, documentação canônica e CI remoto informado para a missão 0109. Após a missão 0111, o bloqueio factual de `LICENSE` ausente foi removido, mas instalação limpa, canais públicos, autorização, tag, release e pacote continuam pendentes.
 
 ## Checklist De Documentação Mínima
 
@@ -43,16 +43,16 @@ Reavaliação factual após as integrações mínimas e a consolidação documen
 | [versioning-policy.md](versioning-policy.md) | existe | Política inicial e conservadora de versionamento. |
 | [release-policy.md](release-policy.md) | existe | Política inicial de release manual e explícita, sem tag, release ou pacote automático. |
 | [pre-release-checklist.md](pre-release-checklist.md) | existe | Checklist operacional pré-tag; não autoriza release por si só. |
-| [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) | existe | Execução local do checklist pré-tag classificada como `REPROVADO`; bloqueada por `LICENSE` ausente, missão em `running`, Git sujo, `alpha-readiness` `NÃO PRONTO` e CI remoto pendente. |
+| [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md) | existe | Execução histórica do checklist pré-tag classificada como `REPROVADO`; no commit avaliado havia `LICENSE` ausente, missão em `running`, Git sujo, `alpha-readiness` `NÃO PRONTO` e CI remoto pendente. |
 | [alpha-candidate-summary.md](alpha-candidate-summary.md) | existe | Consolidação local preparatória do candidato alfa; mantém bloqueios e pendências antes da tag. |
 | [tag-decision-request.md](tag-decision-request.md) | existe | Solicitação futura de decisão; não autoriza tag por si só. |
 | [alpha-version-plan.md](alpha-version-plan.md) | existe | Plano documental para `0.1.0-alpha.1`, sem tag ou release publicada. |
 | [release-notes-alpha.md](release-notes-alpha.md) | existe | Release notes alfa preliminares criadas como artefato preparatório; ainda exigem revisão final antes de publicação real. |
-| [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) | existe | Diagnóstico local executado com classificação `NÃO PRONTO`; bloqueado por `LICENSE` ausente, missão em `running`, Git sujo e validação limpa anterior reprovada. |
+| [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md) | existe | Diagnóstico histórico executado com classificação `NÃO PRONTO`; no commit avaliado havia `LICENSE` ausente, missão em `running`, Git sujo e validação limpa anterior reprovada. |
 | [SECURITY.md](../../SECURITY.md) | existe | Política inicial e conservadora; canal público de vulnerabilidades ainda precisa ser definido antes da alfa pública. |
-| `LICENSE` | pendente | Não existe no repositório; a pendência está documentada em [license-notes.md](../legal/license-notes.md). |
+| `LICENSE` | existe | Licença adotada como GNU Affero General Public License v3.0 only, `AGPL-3.0-only`; texto canônico em [LICENSE](../../LICENSE). |
 | [docs/legal/usage-policy.md](../legal/usage-policy.md) | existe | Precisa continuar explícita sobre ausência de segurança absoluta. |
-| [docs/legal/license-notes.md](../legal/license-notes.md) | existe | Registra licença pendente e não substitui revisão jurídica. |
+| [docs/legal/license-notes.md](../legal/license-notes.md) | existe | Registra a adoção de `AGPL-3.0-only` e não substitui revisão jurídica. |
 | [docs/getting-started/local-installation.md](../getting-started/local-installation.md) | existe | Não promete PyPI, Docker, banco, provider real ou ambiente único. |
 | `pyproject.toml` | existe | Empacotamento Python local mínimo para instalação editável, sem pacote publicado e sem promessa de PyPI. |
 | [docs/getting-started/clean-install-checklist.md](../getting-started/clean-install-checklist.md) | existe | Checklist documental criado e executado uma vez em cópia temporária local; resultado atual reprovado. |
@@ -83,7 +83,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | O guia de contribuição não promete processo público maduro. | existe | Declara processo inicial e conservador. |
 | A política de uso não promete segurança absoluta. | existe | Afirma explicitamente que não substitui revisão humana. |
 | A política inicial de segurança não promete SLA, bug bounty, conformidade regulatória ou segurança absoluta. | existe | Registra limites atuais e pendência de canal público de reporte. |
-| A documentação legal não faz aconselhamento jurídico. | existe | Mantém licença pendente e necessidade de revisão formal. |
+| A documentação legal não faz aconselhamento jurídico. | existe | Registra a licença adotada e mantém a necessidade de revisão formal para usos e integrações complexas. |
 | A documentação operacional não recomenda execução cega. | existe | Batch exige fila revisada, parada na primeira falha e validação. |
 | A CLI operacional diferencia leitura e execução. | existe | `missions` lista arquivos por estado e `batch-summary` resume pós-batch sem mover, executar ou substituir scripts seguros. |
 | O roadmap não promete funcionalidades futuras como implementadas. | existe | Mantém próximos passos conservadores e lacunas explícitas. |
@@ -114,7 +114,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 | Ausência de provider real configurado. | pendente | O estado atual não deve ser apresentado como integração real com provider externo. |
 | Ausência de RAG semântico. | pendente | Busca semântica e recuperação avançada continuam futuras. |
 | Ausência de persistência externa de eventos. | pendente | Audit/Event Log atual possui memória e JSONL local opt-in, mas não possui banco, exportador remoto, retenção, rotação ou observabilidade externa. |
-| Validação de instalação limpa reprovada. | pendente | A execução real de 2026-07-10 falhou no commit validado. O empacotamento local foi ajustado depois, mas diretórios operacionais vazios ausentes no clone, script de status acoplado ao checkout principal, licença pendente e reexecução aprovada ainda permanecem. |
+| Validação de instalação limpa reprovada. | pendente | A execução real de 2026-07-10 falhou no commit validado. O empacotamento local e a licença foram ajustados depois, mas diretórios operacionais vazios ausentes no clone, script de status acoplado ao checkout principal e reexecução aprovada ainda permanecem. |
 | Diagnóstico local de prontidão alfa reprovado. | pendente | A execução de 2026-07-11 foi classificada como `NÃO PRONTO` por bloqueios documentados em [alpha-readiness-diagnostic.md](alpha-readiness-diagnostic.md). |
 | Checklist pré-tag local reprovado. | pendente | A execução de 2026-07-11 foi classificada como `REPROVADO` por bloqueios documentados em [pre-tag-checklist-execution.md](pre-tag-checklist-execution.md). |
 
@@ -143,7 +143,7 @@ Legenda de status usada neste checklist: `existe`, `precisa de revisão`, `pende
 
 ## Pendências Antes De Release Alfa
 
-- Revisar licença final e criar `LICENSE`, se a decisão estiver aprovada.
+- Revalidar os metadados de licença e empacotamento no próximo candidato alfa.
 - Definir canal público de reporte de vulnerabilidades e política de disclosure antes da alfa pública.
 - Revisar `CODE_OF_CONDUCT.md` e definir canal público para problemas de conduta antes de abertura pública ampla.
 - Revisar templates de issue e pull request conforme o processo público amadurecer.
@@ -179,7 +179,7 @@ Uma alfa pública só deve ser considerada pronta quando todos os critérios mí
 - Prontidão alfa diagnosticada localmente com `python3 -m vercosa_ai_framework.cli.main alpha-readiness`, sabendo que `PRONTO COM RESSALVAS` retorna código `0` e ainda exige revisão humana.
 - Guia de contribuição revisado para processo público inicial, sem prometer maturidade inexistente.
 - Código de conduta inicial criado e revisado sem prometer governança comunitária madura inexistente.
-- Licença final decidida e publicada em `LICENSE` ou pendência tratada antes de distribuição pública.
+- Licença final decidida e publicada em `LICENSE`.
 - Política de uso responsável revisada e alinhada ao estado real do projeto.
 - Política pública de segurança criada ou pendência aceita explicitamente antes da abertura.
 - Templates de issue e pull request criados e revisados conforme o processo público amadurecer.

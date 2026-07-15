@@ -33,7 +33,7 @@ Decisões já encaminhadas:
 - A missão 0105 implementou a ponte mínima Task Queue -> Agent Orchestrator -> Capability Resolver por `AgentTaskExecutor` e resolução declarativa, sem executar Skills, Tools ou Providers.
 - A missão 0106 implementou Capability -> Skill -> Tool -> Provider Gateway em dry-run governado por executor de capability injetável, sem provider real, rede, banco, MCP ou API externa. A missão 0108 registrou a separação resolução/execução de Capability e o Provider Gateway em dry-run como decisões aceitas em `docs/architecture/decisions/0003-separar-resolucao-e-execucao-de-capability.md` e `docs/architecture/decisions/0004-provider-gateway-dry-run-sem-adapter-concreto.md`.
 - A missão 0107 integrou Policy Engine, Context Router, Token Budget Manager, Guardian Engine, Model Selection, Capability Executor, Provider Gateway em dry-run, Runtime Adapter fake/injetado e Audit/Event Log no caminho mínimo local. A missão 0108 registrou governança injetável, ContextPackage para Model Selection e Audit/Event Log observador como decisões aceitas em `docs/architecture/decisions/0005-policy-guardian-governanca-injetavel.md` e `docs/architecture/decisions/0006-contextpackage-model-selection-audit-observador.md`.
-- A missão 0110 reavaliou a prontidão alfa como `NÃO PRONTO`, mantendo tag, release e pacote bloqueados até resolução ou exceção explícita para os bloqueios persistentes de licença, instalação limpa, canais públicos, autorização e publicação.
+- A missão 0110 reavaliou a prontidão alfa como `NÃO PRONTO`. A missão 0111 adotou `AGPL-3.0-only` e removeu o bloqueio factual de `LICENSE` ausente, mas tag, release e pacote continuam bloqueados até resolução ou exceção explícita para instalação limpa, canais públicos, autorização e publicação.
 
 ## Ciclo De Vida SDD
 
@@ -178,7 +178,7 @@ Decisões já encaminhadas:
 
 ## Licença, Uso Público E Segurança
 
-1. Qual licença final deve ser adotada antes da release pública: MIT, Apache-2.0, BSD-3-Clause, GPL, licença proprietária ou outra opção?
+1. Como revisar compatibilidade de dependências, exemplos e integrações futuras com a licença adotada `AGPL-3.0-only`?
 2. Qual canal público será usado para vulnerabilidades antes da alfa pública?
 3. Haverá e-mail dedicado para reporte de vulnerabilidades?
 4. Quais limites devem ser documentados para uso com providers pagos?
