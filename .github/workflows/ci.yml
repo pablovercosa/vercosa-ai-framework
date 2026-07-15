@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout do repositório
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -36,8 +36,23 @@ jobs:
         run: python -m vercosa_ai_framework.cli.main docs-links
 
       - name: Diagnosticar prontidão alfa local
-        run: python -m vercosa_ai_framework.cli.main alpha-readiness
-        continue-on-error: true
+        shell: bash
+        run: |
+          status=0
+          python -m vercosa_ai_framework.cli.main alpha-readiness || status=$?
+
+          case "$status" in
+            0)
+              echo "Diagnóstico concluído sem bloqueios."
+              ;;
+            1)
+              echo "Diagnóstico concluído: projeto ainda não está pronto para alfa."
+              ;;
+            *)
+              echo "Erro inesperado no diagnóstico de prontidão alfa: código $status."
+              exit "$status"
+              ;;
+          esac
 
       - name: Validar compilação Python
         run: python -m compileall src
