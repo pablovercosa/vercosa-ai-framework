@@ -56,6 +56,7 @@ Links úteis: [README.md](README.md) | [Política de versionamento](docs/release
 - Documentação arquitetural da governança de execução 0107 em `docs/architecture/execution-governance-0107.md` e exemplo mínimo em `docs/examples/minimal-execution-governance-0107.md`.
 - Relatório de auditoria 0108 em `docs/audits/spec-adr-integration-review-0108.md` e ADRs numeradas em `docs/architecture/decisions/` para decisões comprovadas pelas integrações 0104 a 0107.
 - Matriz de fontes canônicas em `docs/alignment/implementation-status.md` e relatório de auditoria documental 0109 em `docs/audits/documentation-deduplication-0109.md`.
+- Reavaliação factual de prontidão alfa 0110 em `docs/release/alpha-readiness-reassessment-0110.md`, classificando a futura alfa pública como `NÃO PRONTO` apesar dos avanços de integração mínima, testes locais, compileall, documentação canônica e CI informado para a missão 0109.
 
 ### Alterado
 

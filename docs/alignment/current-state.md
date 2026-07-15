@@ -55,6 +55,7 @@ A documentação de release preserva registros históricos importantes:
 - validação de instalação limpa em 2026-07-10: `REPROVADO` em [clean-install-validation.md](../release/clean-install-validation.md);
 - diagnóstico local de prontidão alfa em 2026-07-11: `NÃO PRONTO` em [alpha-readiness-diagnostic.md](../release/alpha-readiness-diagnostic.md);
 - checklist pré-tag local em 2026-07-11: `REPROVADO` em [pre-tag-checklist-execution.md](../release/pre-tag-checklist-execution.md).
+- reavaliação de prontidão alfa em 2026-07-15: `NÃO PRONTO` em [alpha-readiness-reassessment-0110.md](../release/alpha-readiness-reassessment-0110.md), apesar dos avanços de integração mínima, testes locais, compileall, documentação canônica e CI informado para a missão 0109.
 
 Esses registros são históricos e não devem ser reescritos para parecer atuais. O estado factual vivo fica em [implementation-status.md](implementation-status.md).
 

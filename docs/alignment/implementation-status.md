@@ -87,7 +87,7 @@ Use esta matriz para evitar duplicação entre documentos vivos. Documentos hist
 | Arquitetura | Composição de prompt/contexto | `prompt_composer` e runner shell | Integrado ao fluxo shell; ainda não substitui Context Router arquitetural. |
 | Arquitetura | Agent -> Capability -> Skill -> Tool -> Provider | módulos existem | Integrado em dry-run governado no fluxo 0106 e integrado ao caminho mínimo governado 0107; providers reais continuam fora do escopo. |
 | Auditoria | Eventos de decisões centrais | `audit/integrations.py` | Helpers opcionais; não obrigatórios em todos os fluxos. |
-| Release | Preparação alfa | `docs/release/` | Diagnóstico `NÃO PRONTO`, checklist `REPROVADO`, tag não autorizada. |
+| Release | Preparação alfa | `docs/release/` | Reavaliação 0110 classificada como `NÃO PRONTO`; fluxo mínimo integrado, testes locais, compileall e CI informado para 0109 são positivos, mas licença, instalação limpa, canais públicos, autorização, tag, release e pacote seguem bloqueando alfa pública. |
 | Segurança | Política pública inicial | `SECURITY.md` | Falta canal público definitivo e processo maduro. |
 | Produção | CI mínimo | `.github/workflows/ci.yml` | Sem matriz ampla, lint, release workflow ou validação limpa automatizada. |
 
@@ -135,7 +135,7 @@ Use esta matriz para evitar duplicação entre documentos vivos. Documentos hist
 | Arquitetura | Mission Runner vs Mission Orchestrator | Separar módulo antes da próxima integração? |
 | Arquitetura | Workflow Engine vs Task Queue | Handoff mínimo implementado por `execute_with_queue()`; Specs e ADRs 0108 registram o caminho integrado mínimo e mantêm `WorkflowEngine.execute()` como compatibilidade transitória. |
 | Arquitetura | Agentes e capabilities | Catálogo mínimo de teste existe; catálogo aprovado para uso real ainda precisa decisão. |
-| Release | Tag alfa | Deve ser adiada até fluxo de valor integrado? |
+| Release | Tag alfa | Deve permanecer adiada até resolver ou aceitar explicitamente os bloqueios persistentes registrados na reavaliação 0110. |
 | Documentação | Volume e repetição | Missão 0109 consolidou este documento como fonte canônica do checklist factual; documentos consumidores devem resumir e referenciar esta fonte. |
 
 ## Próximo Uso Deste Checklist

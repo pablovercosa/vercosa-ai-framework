@@ -137,9 +137,9 @@ Limitações:
 
 Resultado: preparação alfa ficou documentada de forma conservadora, mas a decisão correta no estado atual é adiar publicação até resolver bloqueios e demonstrar fluxo integrado mínimo.
 
-## 0101-0108
+## 0101-0110
 
-Objetivo da faixa: auditar aderência ao objetivo original, consolidar infraestrutura de execução de missões, explicitar fluxo de valor, integrar caminhos mínimos entre motores centrais e revisar Specs/ADRs afetadas.
+Objetivo da faixa: auditar aderência ao objetivo original, consolidar infraestrutura de execução de missões, explicitar fluxo de valor, integrar caminhos mínimos entre motores centrais, revisar Specs/ADRs afetadas, reduzir duplicação documental e reavaliar prontidão alfa.
 
 Principais entregas:
 
@@ -155,6 +155,8 @@ Principais entregas:
 - Integração Capability -> Skill -> Tool -> Provider Gateway em dry-run governado.
 - Integração mínima local de Policy, Context Router, Token Budget, Guardian, Model Selection e Audit/Event Log no caminho de execução governado.
 - Revisão documental de Specs e ADRs afetadas pelas integrações 0104 a 0107.
+- Consolidação de `docs/alignment/implementation-status.md` como checklist factual canônico.
+- Reavaliação de prontidão alfa 0110 com classificação `NÃO PRONTO`, preservando gates atendidos e bloqueios persistentes.
 
 Limitações:
 
@@ -162,8 +164,4 @@ Limitações:
 - Missões legadas continuam compatíveis e não foram reescritas.
 - O fluxo arquitetural Mission -> Workflow -> Task -> Agent -> Capability -> Skill -> Tool -> Provider Gateway possui demonstração mínima local e dry-run governado, mas providers reais, rede, banco, MCP, API externa, RAG, PostgreSQL, pgvector, múltiplos runtimes reais e release alfa permanecem fora do estado validado.
 
-Resultado: o ciclo 0101-0108 alinhou o projeto ao objetivo original e comprovou integrações mínimas locais, preservando limites explícitos e decisões pendentes para ciclos futuros.
-
-## Observação Sobre A Missão 0109
-
-A missão 0109 é documental e trata da redução de duplicação entre fontes de estado. Após sua conclusão pelo runner, contadores futuros devem considerar `0109` conforme o estado factual das pastas de missão, sem usar o maior ID como sinônimo automático de quantidade executada.
+Resultado: o ciclo 0101-0110 alinhou o projeto ao objetivo original, comprovou integrações mínimas locais, consolidou fontes canônicas e concluiu que a futura alfa pública permanece `NÃO PRONTO` até resolução ou exceção explícita dos bloqueios persistentes de release, licença, instalação limpa, canais públicos, autorização, tag, release e pacote.

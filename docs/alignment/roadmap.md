@@ -40,6 +40,8 @@ Atualização da missão 0108: Specs e ADRs afetadas pelas integrações 0104 a 
 
 Atualização da missão 0109: `docs/alignment/implementation-status.md` foi consolidado como checklist factual canônico. Este roadmap deve referenciar essa fonte em vez de duplicar inventários de estado.
 
+Atualização da missão 0110: a prontidão alfa foi reavaliada como `NÃO PRONTO` em `docs/release/alpha-readiness-reassessment-0110.md`. O próximo ciclo deve priorizar licença, validação limpa, canais públicos, revisão final de release notes, reexecução do checklist pré-tag, confirmação de CI no candidato final e autorização explícita antes de qualquer tag, release ou pacote.
+
 ## Estado Considerado Pelo Roadmap
 
 O projeto avançou da fase de fundação para uma fase operacional inicial mais coerente. Para planejar próximos blocos, este roadmap considera o resumo narrativo em [current-state.md](current-state.md), a revisão arquitetural em [post-integration-architecture-review.md](../architecture/post-integration-architecture-review.md) e o checklist factual em [implementation-status.md](implementation-status.md).

@@ -73,15 +73,15 @@ Missões orientadoras:
 - 0106: demonstrar Capability -> Skill -> Tool -> Provider Gateway em dry-run governado. Status: concluída como integração local por contratos injetáveis, sem provider real, rede, banco, MCP ou API externa.
 - 0107: integrar Policy, Guardian, Context Router, Token Budget, Model Selection e Audit/Event Log ao fluxo mínimo. Status: concluída como caminho mínimo local com dry-run e fakes/injeção explícita.
 - 0108: revisar Specs/ADRs afetadas pela integração mínima. Status: concluída documentalmente.
-- 0109: reduzir duplicação documental apontando para `docs/alignment/implementation-status.md` como checklist canônico. Status: em execução nesta missão documental.
-- 0110: reavaliar prontidão alfa com base no fluxo integrado mínimo, sem criar tag ou release.
+- 0109: reduzir duplicação documental apontando para `docs/alignment/implementation-status.md` como checklist canônico. Status: concluída documentalmente.
+- 0110: reavaliar prontidão alfa com base no fluxo integrado mínimo, sem criar tag ou release. Status: concluída documentalmente como reavaliação `NÃO PRONTO` em `docs/release/alpha-readiness-reassessment-0110.md`.
 
 Restrições do ciclo:
 
 - Não implementar PostgreSQL, pgvector ou RAG antes de decisão posterior.
 - Não iniciar internacionalização antes de estabilizar documentação canônica em português do Brasil.
 - Não criar novos providers reais antes de demonstrar Provider Gateway em dry-run governado.
-- Não criar tag alfa enquanto instalação limpa, licença, CI remoto e fluxo de valor integrado estiverem pendentes.
+- Não criar tag alfa enquanto instalação limpa, licença, canais públicos, autorização explícita, CI remoto no candidato final e checklist pré-tag atualizado estiverem pendentes ou sem exceção explícita compatível com o risco.
 - Não criar novos arquivos em `missions/queue` apenas por este backlog.
 
 ## Itens Já Concluídos Ou Absorvidos
